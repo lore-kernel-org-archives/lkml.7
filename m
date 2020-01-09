@@ -2,122 +2,110 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6A1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECDFC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752442073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:49:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NecdLtd9"
+	by mail.kernel.org (Postfix) with ESMTP id 24E252077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:51:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578613863;
+	bh=ykUXH8SJ7WQHHZwVpL8LUMNyjd4pVU2K+MG0Pbbo/3Q=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=VFQ5sAspsLpt6RJgDeR6lEfjCnZVFAa60ZTMgbAbJKlYeT2sI89AGwlW8U7z4NKaz
+	 qhT72OuUJSVUZvc9fPaoubHE0KU/EKjpwrgTGCcGyEhk8OkRi8I53BtOz/xFfxqPYI
+	 DG3R+Ih2wErzWIHOykxP2wIAGaU8M5lgnn04T2TU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgAIXtx (ORCPT
+        id S1729640AbgAIXvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:49:53 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:39028 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728241AbgAIXtw (ORCPT
+        Thu, 9 Jan 2020 18:51:02 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46709 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729493AbgAIXvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:49:52 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 009Nmqum179731;
-        Thu, 9 Jan 2020 23:49:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- references : message-id : date : mime-version : in-reply-to : content-type
- : content-transfer-encoding; s=corp-2019-08-05;
- bh=d9JtxMjLZbVfmlyhMLAFcumf9Weh4khNDXMC9OowByU=;
- b=NecdLtd9CrIf1BHCVKW+DxXL8AZg4MWZI62vwXbOuT8SE/lP2jl2QAuQZBrguc0IhnEi
- wpnMbnArM4eNOp7hMEI9cxuMPvWyHwHp0fY+AYrTHART5KEi54GPypiC6WZEXsa74xRP
- tkcMkSPzldfNzutjAzFI5l2iqTR5j4LlYj0CW03iACV4t9vuawIsnkDZhU1wft+pky7q
- P0HNvFAAyz294RoLaTsVua0artLyWdddzqsUsjzuzHQjLGPuZF+jbe2t3PU0J4ARXQDZ
- iBWA8+wx9vK0PiJa3iQDz/f/RVjAE3DpjKF+FE5qH2ZxK0Omc3qzcpRshaK1tWkpRboJ ew== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xajnqe4dt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Jan 2020 23:49:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 009NmnwJ105792;
-        Thu, 9 Jan 2020 23:49:11 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2xdms0bcgn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Jan 2020 23:49:11 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 009Nn9AW008309;
-        Thu, 9 Jan 2020 23:49:09 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Jan 2020 15:49:09 -0800
-Subject: Re: [RFC PATCH V2 01/11] xen/manage: keep track of the on-going
- suspend mode
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-To:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
-        kamatam@amazon.com, sstabellini@kernel.org, konrad.wilk@oracle.co,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
-        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com,
-        dwmw@amazon.co.uk, fllinden@amaozn.com
-References: <20200107233720.GA17906@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <88721569-d425-8df3-2ab2-3aa9155b326c@oracle.com>
-Message-ID: <b0392e02-c783-8aaa-ab5e-8e29385fa281@oracle.com>
-Date:   Thu, 9 Jan 2020 18:49:07 -0500
+        Thu, 9 Jan 2020 18:51:02 -0500
+Received: by mail-io1-f65.google.com with SMTP id t26so44513ioi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 15:51:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XmSLE2UFRfRMrqOUD2/xcSkD1bd36np80kHR612bvjA=;
+        b=Tb+WHFX8eVVfPBC61iOxKAVASqGYU9JQWNVjQrlKLC+NAZ0qiXroclVl84ojhXiFVq
+         z0D/fXSrR06QaET9gf62ySqcq2NGTVRTlyzYZ+Kwhb1CbYyYmIAoczVX8P/rIOhtSSe+
+         9Vp8kh/Kw1Ujt3pz8MG6SMP+kwtFqpkD9LlLw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XmSLE2UFRfRMrqOUD2/xcSkD1bd36np80kHR612bvjA=;
+        b=NhVDFEGFy2oeenCvWz0H36YkqUB1rM23gqP4zROQN8GG+/qdUzJ518fk3LNYf8OOH1
+         G41UTwahSvfQwztCYby80zXFo9hoAf0tHd0jHJ+O5D2OWise/cEUh5bQWFeDY14rgBH5
+         Z568emg+/WhPAG4kKEVX0sq63ubrZ/Gl9rM7QNIhRchmOljFoRsmK11EnssHF7toOpfu
+         z1dZnCzJTwQeuO6kouFH4pGghnVDT5lo62TJ1V/Yxbsl3QnNqyjzboXyTFgOmGg5Rr8w
+         y7leBE2tX3LM/lUSXoXSfZ7PXD+XM2ZPoTuT1xS9CmLFtJwfy61Bww7S8N2uKC/HQkq1
+         LgIg==
+X-Gm-Message-State: APjAAAV4wMgqFzaL4c0D2mCQtV9twM7xcwiPNQinrBPQXMIj7zerrbSK
+        0OaUUTMPmUsvRH0hGYCdr2KJ7Q==
+X-Google-Smtp-Source: APXvYqwQgkVIojpGrUKkXmQA4w8X/Zv+cpiI22CrfDWtEkvUmq5+SH0J8qNsc8FDqyGlkG6ReZ13cQ==
+X-Received: by 2002:a6b:7117:: with SMTP id q23mr62004iog.153.1578613861421;
+        Thu, 09 Jan 2020 15:51:01 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id u10sm130038ilq.1.2020.01.09.15.51.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 15:51:00 -0800 (PST)
+Subject: Re: [PATCH v2] media: dvb_dummy_tuner: implement driver skeleton
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>, mchehab@kernel.org,
+        sean@mess.org, tglx@linutronix.de, gregkh@linuxfoundation.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200109233757.734008-1-dwlsalmeida@gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <74d3acbc-fa3c-7d5b-4132-42c47909c4b9@linuxfoundation.org>
+Date:   Thu, 9 Jan 2020 16:50:59 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <88721569-d425-8df3-2ab2-3aa9155b326c@oracle.com>
+In-Reply-To: <20200109233757.734008-1-dwlsalmeida@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001090199
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001090199
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/9/20 4:37 PM, Daniel W. S. Almeida wrote:
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
 
+> Implement a dummy DVB tuner as part of ongoing work
+> on a virtual DVB test driver under the 2020 Spring Linux
+> Kernel Mentorship Program.
+> 
 
-On 1/9/20 6:46 PM, Boris Ostrovsky wrote:
->
->
-> On 1/7/20 6:37 PM, Anchal Agarwal wrote:
->> +
->> +static int xen_setup_pm_notifier(void)
->> +{
->> +    if (!xen_hvm_domain())
->> +        return -ENODEV;
->
-> ARM guests are also HVM domains. Is it OK for them to register the 
-> notifier? The diffstat suggests that you are supporting ARM.
+Get rid of the above. Not relevant for the patch. No need to spin
+v3 just for this change and you can make the with other changes
+as you get comments from others.
 
-I obviously meant *not* supporting ARM, sorry.
+> The virtual DVB test driver serves as a reference DVB driver and helps
+> validate the existing APIs in the media subsystem. It can also aid developers
+>   working on userspace applications.
+> 
+> This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
+> ISDB-T and ATSC when completed.
+> 
+> For now, only a basic skeleton is available, most functions do nothing
+> whatsoever.
+> 
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
--boris
-
->
-> -boris
->
->> +
->> +    return register_pm_notifier(&xen_pm_notifier_block);
->> +}
->>
->
+thanks,
+-- Shuah
 
