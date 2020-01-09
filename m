@@ -2,38 +2,36 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59733C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C40C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34ADA2080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A860D2146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbgAIMeJ (ORCPT
+        id S1730984AbgAIMeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:34:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37972 "EHLO mx2.suse.de"
+        Thu, 9 Jan 2020 07:34:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37970 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729485AbgAIMeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730950AbgAIMeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jan 2020 07:34:09 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 72B21B2205;
+        by mx2.suse.de (Postfix) with ESMTP id 50FEFB2204;
         Thu,  9 Jan 2020 12:34:03 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Paul Burton <paulburton@kernel.org>
 Cc:     Ralf Baechle <ralf@linux-mips.org>,
         James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 01/14] MIPS: SGI-IP27: use nodemask instead of cpumask
-Date:   Thu,  9 Jan 2020 13:33:38 +0100
-Message-Id: <20200109123353.5656-2-tbogendoerfer@suse.de>
+Subject: [PATCH 00/14] Cleanup SGI-IP27 and prepare for SGI-IP35 support
+Date:   Thu,  9 Jan 2020 13:33:37 +0100
+Message-Id: <20200109123353.5656-1-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200109123353.5656-1-tbogendoerfer@suse.de>
-References: <20200109123353.5656-1-tbogendoerfer@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,65 +39,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replication is done on a per node basis, so the use of cpumask
-was a misusage here.
+SGI-IP35 alias SN1 is very similair to SGI-IP27 alias SN0, so most of the
+IP27 code could also be used for IP35. The differences will mostly be in
+header files, which are selected by CONFIG option. This series cleans up
+IP27 code/headers and prepares them for IP35 integration.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- arch/mips/sgi-ip27/ip27-klnuma.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Thomas Bogendoerfer (14):
+  MIPS: SGI-IP27: use nodemask instead of cpumask
+  MIPS: SGI-IP27: use cpu physid already present while scanning for CPUs
+  MIPS: SGI-IP27: use asm/sn/agent.h for including HUB related stuff
+  MIPS: SGI-IP27: get rid of asm/sn/sn0/ip27.h
+  MIPS: SGI-IP27: move IP27 specific macro to IP27 specific header file
+  MIPS: SGI-IP27: Move get_nasid() to a IP27 specific file
+  MIPS: SGI-IP27: Split kldir.h into generic SN and IP27 parts
+  MIPS: SGI-IP27: Use union instead of typedef
+  MIPS: SGI-IP27: Use structs for decoding error status registers
+  MIPS: SGI-IP27: Use specific get_region_shift
+  MIPS: SGI-IP27: Move all shared IP27 declarations to ip27-common.h
+  MIPS: SGI-IP27: Only reserve interrupts used in Linux
+  MIPS: SGI-IP27: Store cpu speed when scanning for CPUs and use it
+    later
+  MIPS: SGI-IP27: No need for slice_map
 
-diff --git a/arch/mips/sgi-ip27/ip27-klnuma.c b/arch/mips/sgi-ip27/ip27-klnuma.c
-index ee1c6ff4aa00..af7b98c39dce 100644
---- a/arch/mips/sgi-ip27/ip27-klnuma.c
-+++ b/arch/mips/sgi-ip27/ip27-klnuma.c
-@@ -20,7 +20,7 @@
- #include <asm/sn/mapped_kernel.h>
- #include <asm/sn/sn_private.h>
- 
--static cpumask_t ktext_repmask;
-+static nodemask_t ktext_repmask;
- 
- /*
-  * XXX - This needs to be much smarter about where it puts copies of the
-@@ -30,8 +30,8 @@ static cpumask_t ktext_repmask;
- void __init setup_replication_mask(void)
- {
- 	/* Set only the master cnode's bit.  The master cnode is always 0. */
--	cpumask_clear(&ktext_repmask);
--	cpumask_set_cpu(0, &ktext_repmask);
-+	nodes_clear(ktext_repmask);
-+	node_set(0, ktext_repmask);
- 
- #ifdef CONFIG_REPLICATE_KTEXT
- #ifndef CONFIG_MAPPED_KERNEL
-@@ -44,7 +44,7 @@ void __init setup_replication_mask(void)
- 			if (nasid == 0)
- 				continue;
- 			/* Advertise that we have a copy of the kernel */
--			cpumask_set_cpu(nasid, &ktext_repmask);
-+			node_set(nasid, ktext_repmask);
- 		}
- 	}
- #endif
-@@ -98,7 +98,7 @@ void __init replicate_kernel_text(void)
- 			continue;
- 
- 		/* Check if this node should get a copy of the kernel */
--		if (cpumask_test_cpu(client_nasid, &ktext_repmask)) {
-+		if (node_isset(client_nasid, ktext_repmask)) {
- 			server_nasid = client_nasid;
- 			copy_kernel(server_nasid);
- 		}
-@@ -122,7 +122,7 @@ unsigned long node_getfirstfree(nasid_t nasid)
- 	loadbase += 16777216;
- #endif
- 	offset = PAGE_ALIGN((unsigned long)(&_end)) - loadbase;
--	if ((nasid == 0) || (cpumask_test_cpu(nasid, &ktext_repmask)))
-+	if ((nasid == 0) || (node_isset(nasid, ktext_repmask)))
- 		return TO_NODE(nasid, offset) >> PAGE_SHIFT;
- 	else
- 		return KDM_TO_PHYS(PAGE_ALIGN(SYMMON_STK_ADDR(nasid, 0))) >> PAGE_SHIFT;
+ .../include/asm/mach-ip27/kernel-entry-init.h |  12 +-
+ arch/mips/include/asm/mach-ip27/mmzone.h      |   4 +-
+ arch/mips/include/asm/mach-ip27/topology.h    |   2 +-
+ arch/mips/include/asm/sn/arch.h               |   3 -
+ arch/mips/include/asm/sn/hub.h                |  17 --
+ arch/mips/include/asm/sn/intr.h               |  17 --
+ arch/mips/include/asm/sn/klconfig.h           |   4 -
+ arch/mips/include/asm/sn/kldir.h              | 193 +-----------------
+ arch/mips/include/asm/sn/sn0/hub.h            |  22 ++
+ arch/mips/include/asm/sn/sn0/hubni.h          |   8 +
+ arch/mips/include/asm/sn/sn0/ip27.h           |  85 --------
+ arch/mips/include/asm/sn/sn0/kldir.h          | 186 +++++++++++++++++
+ arch/mips/include/asm/sn/sn_private.h         |  19 --
+ arch/mips/include/asm/sn/types.h              |   4 +
+ arch/mips/pci/pci-ip27.c                      |   2 +-
+ arch/mips/sgi-ip27/ip27-berr.c                |  40 ++--
+ arch/mips/sgi-ip27/ip27-common.h              |  12 +-
+ arch/mips/sgi-ip27/ip27-console.c             |   5 +-
+ arch/mips/sgi-ip27/ip27-hubio.c               |   8 +-
+ arch/mips/sgi-ip27/ip27-init.c                |  25 +--
+ arch/mips/sgi-ip27/ip27-irq.c                 |   5 +-
+ arch/mips/sgi-ip27/ip27-klconfig.c            |  51 -----
+ arch/mips/sgi-ip27/ip27-klnuma.c              |  16 +-
+ arch/mips/sgi-ip27/ip27-memory.c              |  39 ++--
+ arch/mips/sgi-ip27/ip27-nmi.c                 |   5 +-
+ arch/mips/sgi-ip27/ip27-reset.c               |   2 +-
+ arch/mips/sgi-ip27/ip27-smp.c                 |  33 +--
+ arch/mips/sgi-ip27/ip27-timer.c               |  28 +--
+ arch/mips/sgi-ip27/ip27-xtalk.c               |   1 -
+ 29 files changed, 315 insertions(+), 533 deletions(-)
+ delete mode 100644 arch/mips/include/asm/sn/hub.h
+ delete mode 100644 arch/mips/include/asm/sn/sn0/ip27.h
+ create mode 100644 arch/mips/include/asm/sn/sn0/kldir.h
+ delete mode 100644 arch/mips/include/asm/sn/sn_private.h
+
 -- 
 2.24.1
 
