@@ -2,221 +2,130 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE60C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 05:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12800C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 05:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15A520678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 05:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B846A20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 05:14:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qigWHL3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgAIFNN (ORCPT
+        id S1726549AbgAIFO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 00:13:13 -0500
-Received: from mga14.intel.com ([192.55.52.115]:13929 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgAIFNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 00:13:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 21:13:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
-   d="scan'208";a="223761944"
-Received: from liujing-mobl1.ccr.corp.intel.com (HELO [10.238.130.147]) ([10.238.130.147])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jan 2020 21:13:10 -0800
-From:   "Liu, Jing2" <jing2.liu@linux.intel.com>
-Subject: Re: [virtio-dev][PATCH v1 1/2] virtio-mmio: Add MSI and different
- notification address support
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     virtio-dev@lists.oasis-open.org, slp@redhat.com,
-        linux-kernel@vger.kernel.org,
-        Chao Peng <chao.p.peng@linux.intel.com>,
-        Zha Bin <zhabin@linux.alibaba.com>,
-        Liu Jiang <gerry@linux.alibaba.com>
-References: <1576855504-34947-1-git-send-email-jing2.liu@linux.intel.com>
- <20200106161836.GB350142@stefanha-x1.localdomain>
-Message-ID: <f691fb60-8f59-e827-6a5f-569db29e0a39@linux.intel.com>
-Date:   Thu, 9 Jan 2020 13:13:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200106161836.GB350142@stefanha-x1.localdomain>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 9 Jan 2020 00:14:29 -0500
+Received: from mail-db8eur05on2062.outbound.protection.outlook.com ([40.107.20.62]:25833
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725308AbgAIFO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 00:14:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fowr2MQkUXFzEpiVezEDtHhBKaarZCBnl8Lf+74g8iF3npkIMsqyMFqTqqdVSiAFC2Nuf4DZYJRtzDOEQrlhXfHqXFol2l7Axwhi7u+dc1G2Tfx++t2TliTYkIh5zudSfLnsC72U0aWV2YhQhGWWFOn1mQ55yIeuTS7pCXXW3zfhZLJo6JHDWgB2xA6+t0aqrjacm5vkz6hKOO+sTtyzN9GxoaCrV+ubQHh9In5gMNQ03jWr2BCmgJ7VidnV02ihTA8Dcq90S0kz9k1ZFTKv1lHCGXXYMdyJXEuBYQoDJwIcNV25hJIWZ6KhG8XLYS7zMIWTmW+MH+GOrteqLipFXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bd85rFmelP/o2GcQ5qRkynq+u/o/1LJ6dLEODaLqEjE=;
+ b=b8ZMfteBVpcg6EVwbYyqLJRYfuTG71zZV39gJdkcFN1k4pZqUM9VT93yndI6WWn49HpcJUKMyPMu2M1cYNF6NPKSJXhE1W0MXeZtiSdL6MqJyamiG/YMpZf6uRWe03MHwJcZ0uFYJFKo9RC4GT6uG+6NXfzavEA0zNdC6gBEzV7B2coUhvg4fle4s4KBY9wxgQgtR7T456+llnUFXMG1JRwwzhTkuLhMJV5uhbkmFx09EUnREdw1a1U5qvGDIPzdI9IuMM1AbeaiCqj0y3EHLNVlSUivwm5bCL7jWYSFnstO5QQAEbteaNkRmehTTJueu9D63OHSY+mPMhDeJK7qkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bd85rFmelP/o2GcQ5qRkynq+u/o/1LJ6dLEODaLqEjE=;
+ b=qigWHL3O/R/GllifPFevcF7w+94paSGvSNE/3rZ+Lnz0Uft7LmflaSk1SxgeGRVwVNu7VqmiokpGr6w8S3harrbEAsvWX/CiaL96RxO7rhY0TiZCBCNWY597dxUxYOz8kXgzVdGLtaBWiG3ZnR5mczSLb9wPx1P5u96zZEZ3Muo=
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
+ DB7PR04MB5305.eurprd04.prod.outlook.com (20.176.236.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.15; Thu, 9 Jan 2020 05:14:24 +0000
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::b40b:46af:9458:f2df]) by DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::b40b:46af:9458:f2df%6]) with mapi id 15.20.2602.018; Thu, 9 Jan 2020
+ 05:14:24 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Duan <fugang.duan@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH V4 1/2] dt-bindings/irq: add binding for NXP INTMUX
+ interrupt multiplexer
+Thread-Topic: [PATCH V4 1/2] dt-bindings/irq: add binding for NXP INTMUX
+ interrupt multiplexer
+Thread-Index: AQHVtzJR1bo6WHpuN02oPlbZy7KDtKfgQkIAgAGmXnA=
+Date:   Thu, 9 Jan 2020 05:14:24 +0000
+Message-ID: <DB7PR04MB4618A1607B4E95689CBEC353E6390@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <1576845281-32675-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1576845281-32675-2-git-send-email-qiangqing.zhang@nxp.com>
+ <CAL_Jsq+ZJ0asAxaPFgiuHKC2o6UP_5Mht=EascFVpJ6AUoKPvA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+ZJ0asAxaPFgiuHKC2o6UP_5Mht=EascFVpJ6AUoKPvA@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=qiangqing.zhang@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6295e126-96b0-4591-1480-08d794c2caee
+x-ms-traffictypediagnostic: DB7PR04MB5305:|DB7PR04MB5305:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB53051090D39971DDFE2D347CE6390@DB7PR04MB5305.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 02778BF158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(189003)(199004)(13464003)(52536014)(66946007)(54906003)(7416002)(81156014)(4326008)(9686003)(66556008)(81166006)(76116006)(316002)(8676002)(66476007)(66446008)(2906002)(8936002)(186003)(55016002)(64756008)(6506007)(7696005)(26005)(4744005)(478600001)(33656002)(53546011)(5660300002)(71200400001)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5305;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: edLI4nd1Q1x/BV5aurDzrel2pXDnAd5Q6h33xx1uTXITqu3qi28rsPrfTIN4KrGgZ6PIgfc2WiZB7uVHRotOTeiJ2py3C4o+Y7yxGMq5eLvs9lrMhOa/UKZsqHd75+tsVHiv94V8THj9LJ6E60QLASDBv2q9QWuI7Lr2OfAdbYNj9NqrC/oIbJ7sCNHRLu5Ec5qlRM5Mq/vyrT/oouCOPAIbdyXfUeOz5zCe48f1GHYcqCw+oeD/jo4thFUfcygJ8SYw4Pvg6hSJh7yQaVdkPTxqVVhaoXW3V0dKf9J5VCNBC+i2yYSxJcepW5Ohkm1tZZ1H5HZ3ZTFQUa87WC2GKv7GODi5C6Flc+TESR6aOBsaNGSdjJSuNkXw/Jc+4Xs4NdkKKNVa8V6k5jAO63fW/sfm1BqPFdj7wLSGrdgm41wguapuF6wVbwUeZmy6H55uU/MTIsMwmyWEKMSAXDU4sMwcF0a8i3aPrPi8hmZ0qttTEOrCScoabPQ1Lks5Y3tv
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6295e126-96b0-4591-1480-08d794c2caee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 05:14:24.4371
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3lV6r0FlQ1nKmvvsZ8M+LYPNy4Q0Q8Y2BrebxumVqRRlzDjPhukP854ZNKOplusmYMJTGvet8l+UfaRyEcfq7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5305
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 1/7/2020 12:18 AM, Stefan Hajnoczi wrote:
-> On Fri, Dec 20, 2019 at 11:25:03PM +0800, Jing Liu wrote:
->> Upgrade virtio-mmio to version 3, with the abilities to support
->> MSI interrupt and notification features.
->>
->> The details of version 2 will be appended as part of legacy interface
->> in next patch.
-> Cool, MSI is useful.  Not a full review, but some comments below...
-
-Hi Stefan,
-
-Thanks for reviewing patches! Glad to see that MSI is welcome.
-
->> Signed-off-by: Jing Liu<jing2.liu@linux.intel.com>
->> Signed-off-by: Chao Peng<chao.p.peng@linux.intel.com>
->> Signed-off-by: Zha Bin<zhabin@linux.alibaba.com>
->> Signed-off-by: Liu Jiang<gerry@linux.alibaba.com>
->> ---
->>   content.tex  | 191 ++++++++++++++++++++++++++++++++++++++++++++++++-----------
->>   msi-status.c |   5 ++
->>   2 files changed, 163 insertions(+), 33 deletions(-)
->>   create mode 100644 msi-status.c
->>
->> diff --git a/content.tex b/content.tex
->> index d68cfaf..eaaffec 100644
->> --- a/content.tex
->> +++ b/content.tex
->> @@ -1597,9 +1597,9 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->>     }
->>     \hline
->>     \mmioreg{Version}{Device version number}{0x004}{R}{%
->> -    0x2.
->> +    0x3.
->>       \begin{note}
->> -      Legacy devices (see \ref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}~\nameref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}) used 0x1.
->> +      Legacy devices (see \ref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}~\nameref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}) used 0x1 or 0x2.
-> "Legacy devices" refers to pre-VIRTIO 1.0 devices.  0x2 is VIRTIO 1.0
-> and therefore not "Legacy".  I suggest the following wording:
->
->        Legacy devices (see \ref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}~\nameref{sec:Virtio Transport Options / Virtio Over MMIO / Legacy interface}) used 0x1.
-> +     VIRTIO 1.0 and 1.1 used 0x2.
-Thanks for the guide.
-> Did you consider using a transport feature bit instead of changing the
-> device version number?  Feature bits allow more graceful compatibility:
-> old drivers will continue to work with new devices and new drivers will
-> continue to work with old devices.
-
-Yes, we considered using a feature bit from 24~37 or above, while a 
-concern is that,
-
-the device which uses such bit only represents the behavior of mmio 
-transport layer but not common behavior
-
-of virtio device. Or am I missing some "transport" feature bit range?
-
-
->>       \end{note}
->>     }
->>     \hline
->> @@ -1671,25 +1671,23 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->>       accesses apply to the queue selected by writing to \field{QueueSel}.
->>     }
->>     \hline
->> -  \mmioreg{QueueNotify}{Queue notifier}{0x050}{W}{%
->> -    Writing a value to this register notifies the device that
->> -    there are new buffers to process in a queue.
->> +  \mmioreg{QueueNotify}{Queue notifier}{0x050}{RW}{%
->> +    Reading from the register returns the virtqueue notification configuration.
->>   
->> -    When VIRTIO_F_NOTIFICATION_DATA has not been negotiated,
->> -    the value written is the queue index.
->> +    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notification Address}
->> +    for the configuration format.
->>   
->> -    When VIRTIO_F_NOTIFICATION_DATA has been negotiated,
->> -    the \field{Notification data} value has the following format:
->> +    Writing when the notification address calculated by the notification configuration
->> +    is just located at this register.
-> I don't understand this sentence.  What happens when the driver writes
-> to this register?
-
-We're trying to define the notification mechanism that, driver MUST read 
-0x50 to get the notification configuration
-
-and calculate the notify address. The writing case here is that, the 
-notify address is just located here e.g. notify_base=0x50, notify_mul=0.
-
-
->>   
->> -    \lstinputlisting{notifications-le.c}
->> -
->> -    See \ref{sec:Virtqueues / Driver notifications}~\nameref{sec:Virtqueues / Driver notifications}
->> -    for the definition of the components.
->> +    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Available Buffer Notifications}
->> +    to see the notification data format.
->>     }
->>     \hline
->>     \mmioreg{InterruptStatus}{Interrupt status}{0x60}{R}{%
->>       Reading from this register returns a bit mask of events that
->> -    caused the device interrupt to be asserted.
->> +    caused the device interrupt to be asserted. This is only used
->> +    when MSI is not enabled.
->>       The following events are possible:
->>       \begin{description}
->>         \item[Used Buffer Notification] - bit 0 - the interrupt was asserted
->> @@ -1703,7 +1701,7 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->>     \mmioreg{InterruptACK}{Interrupt acknowledge}{0x064}{W}{%
->>       Writing a value with bits set as defined in \field{InterruptStatus}
->>       to this register notifies the device that events causing
->> -    the interrupt have been handled.
->> +    the interrupt have been handled. This is only used when MSI is not enabled.
->>     }
->>     \hline
->>     \mmioreg{Status}{Device status}{0x070}{RW}{%
->> @@ -1762,6 +1760,31 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
->>       \field{SHMSel} is unused) results in a base address of
->>       0xffffffffffffffff.
->>     }
->> +  \hline
->> +  \mmioreg{MsiStatus}{MSI status}{0x0c0}{R}{%
->> +    Reading from this register returns the global MSI enable/disable status and maximum
->> +    number of virtqueues that device supports.
->> +    \lstinputlisting{msi-status.c}
->> +  }
-> Why is it necessary to combine the number of virtqueues and global
-> MSI enable/disable into a single 16-bit field?
-
-Originally, we want this 16-bit Read-Only, so we put some RO things 
-together and separate
-
-enable setting command to next register.
-
-> virtio-mmio uses 32-bit registers.  It doesn't try hard to save register
-> space so it's strange to do it here (11-bit number of virtqueue field
-> but 32-bit QueueSel field).
-
-In order to improve performance/save register space,  we combine some 
-data together.
-
-For example, combine MSI cmd operator (e.g. enable/disable, vector 
-setup) with argument (e.g. 1/0,  queue index).
-
-But it seems we miss the consistency with QueueSel.  So do you think if 
-the max queue number should be 32-bit,
-
-which means it must be the same with QueueSel? If so, I guess we need 
-some re-organization. :)
-
->
->> +  \hline
->> +  \mmioreg{MsiCmd}{MSI command}{0x0c2}{W}{%
->> +    The driver writes to this register with appropriate operators and arguments to
->> +    execute MSI command to device.
->> +    Operators supported is setting global MSI enable/disable status
->> +    and updating MSI configuration to device.
-> If the global MSI enable/disable state is written in this register,
-> consider making this register readable too so the global MSI
-> enable/disable state can be read from it.
-
-Read enable/disable state is in 0x0c0.
-
-Thanks,
-
-Jing
-
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2Jo
+K2R0QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjDlubQx5pyIOOaXpSAxMjowMg0KPiBUbzogSm9h
+a2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gQ2M6IE1hcmMgWnluZ2llciA8
+bWF6QGtlcm5lbC5vcmc+OyBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT47DQo+
+IEphc29uIENvb3BlciA8amFzb25AbGFrZWRhZW1vbi5uZXQ+OyBNYXJrIFJ1dGxhbmQNCj4gPG1h
+cmsucnV0bGFuZEBhcm0uY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgU2Fz
+Y2hhDQo+IEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPjsgU2FzY2hhIEhhdWVyIDxrZXJu
+ZWxAcGVuZ3V0cm9uaXguZGU+Ow0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsg
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgQW5keSBEdWFuDQo+IDxmdWdhbmcuZHVhbkBu
+eHAuY29tPjsgbW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJTVggLyBNWEMgQVJNDQo+IEFS
+Q0hJVEVDVFVSRSA8bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPg0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIFY0IDEvMl0gZHQtYmluZGluZ3MvaXJxOiBhZGQgYmluZGluZyBmb3Ig
+TlhQIElOVE1VWA0KPiBpbnRlcnJ1cHQgbXVsdGlwbGV4ZXINCj4gDQo+IE9uIEZyaSwgRGVjIDIw
+LCAyMDE5IGF0IDY6MzggQU0gSm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4N
+Cj4gd3JvdGU6DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIERUIGJpbmRpbmdzIGZvciB0
+aGUgTlhQIElOVE1VWCBpbnRlcnJ1cHQNCj4gPiBtdWx0aXBsZXhlciBmb3IgaS5NWDggZmFtaWx5
+IFNvQ3MuDQo+IA0KPiA0IHZlcnNpb25zIGluIDIgZGF5cz8gRG9uJ3QgZG8gdGhhdC4gR2l2ZSBy
+ZXZpZXdlcnMgc29tZSB0aW1lLg0KPiANCj4gQ29udmVydCB0aGlzIHRvIERUIHNjaGVtYSBwbGVh
+c2UuIEFuZCBtYWtlIHN1cmUgdG8gc2VuZCB0byBEVCBsaXN0IGlmIHlvdSB3YW50DQo+IGl0IHJl
+dmlld2VkLiBZb3Ugb25seSBzZW50IHYxIHRvIHRoZSBsaXN0Lg0KDQpUaGFua3MgUm9iLiBJIHdp
+bGwgY29udmVydCB0aGlzIGludG8gRFQgc2NoZW1hLg0KDQpCZXN0IFJlZ2FyZHMsDQpKb2FraW0g
+WmhhbmcNCj4gUm9iDQo=
