@@ -2,246 +2,206 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,
-	SPF_PASS,WEIRD_PORT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965BEC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D67C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8A42073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B044E205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="hJEPs+ON"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="WeB/U327"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgAIXZd (ORCPT
+        id S1729306AbgAIX0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:25:33 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35097 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgAIXZd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:25:33 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so58811pgk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 15:25:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=UzPtNbIFdT7VgcJL3S0ZhY3HIrUCX+/Gia26wjd0jI0=;
-        b=hJEPs+ONhOQqWfIXWj7V6Mbcj3shnmoXaUyyn3KNNJnD5P99tzRQ7llto8ta7oRqQK
-         YEc2KDUEJ8Ju+aLTNP6FM7i01QGuGC50JYpdJvctBoIM8wghJXyYDZZDf4xdVJZSTN38
-         Gd9gFFgiqwssKwGOUR8JYw4/2nHuDR1yw1c+I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=UzPtNbIFdT7VgcJL3S0ZhY3HIrUCX+/Gia26wjd0jI0=;
-        b=sjBKxQid0xZ0LdYiIw2bY0t7w6g69lN99MVlVVvBZ3alwn716w3hp3g+X1cKayx2qb
-         axqIkGPnFx2Oy5zv4NbubWPXayut7enpo+EDzNqoOh8i6eR15DbecWGaz5DX+AC8crff
-         PfKnrrlmzBBfllYonvq8m4E4t58Mxoxr77weFysqV3+1m5cXhWdvsVsvLDUlqtrKVocv
-         N+uKF747YmTZ4NCv0R87s96jmybRkEB00H5KTEirUwhF4GStw/pSO6xbXV6WAyirZgSa
-         WA8EapVTeECc9I4ZS4mLRmtQGFvklcNZg5+xCjWX1+7aCIOHYdsFIZk6RfOFF0RypkM8
-         zfeQ==
-X-Gm-Message-State: APjAAAUA4+4luwYMFoC49IuPu7XUyLpKiVb1PZxdO1YW6h1jQtWtBhjp
-        J9bJbt3S/kJE6nGJphfvNA/7zA==
-X-Google-Smtp-Source: APXvYqw648aLUW4Kjylk/KqQ0glGQkNUz/yV0R2EQViSKD6ZD55FES+ogQPjAdRToPcP0UbhJyjPIg==
-X-Received: by 2002:a63:1a1f:: with SMTP id a31mr538473pga.21.1578612331836;
-        Thu, 09 Jan 2020 15:25:31 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-5cb3-ebc3-7dc6-a17b.static.ipv6.internode.on.net. [2001:44b8:1113:6700:5cb3:ebc3:7dc6:a17b])
-        by smtp.gmail.com with ESMTPSA id j125sm107356pfg.160.2020.01.09.15.25.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 15:25:30 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Alexander Potapenko <glider@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+de8d933e7d153aa0c1bb@syzkaller.appspotmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
+        Thu, 9 Jan 2020 18:26:37 -0500
+Received: from mail-eopbgr20064.outbound.protection.outlook.com ([40.107.2.64]:23681
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725840AbgAIX0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 18:26:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aUWMBUJC61Mma0kMuODmbSDPHP4m4BeCdHv+Ext1a70MKiQk4r1XUyiv3SDXTiZrq/MO4ScYUTFKN7RA0LTh2NumZ/qsHss/Mn7L1CM/aBScK7iWXiPoCdjD9Z6BtIejHaBbbXpgl/efcUWO1DrJ4JZQpSMeoPqz/ld/h+6RILBAq4yy7bH9O4FJMAQZe2XOS69otJTx4mYQXH4NrUvgQE2PZ6BqDmYZqkz9zG4x3zUnfYzuES7X+RvqsQiwsCSe/hSV6vutJ1HfGkzc14GYEEhQqy6j9SO1eYX4jli51nutEEUcNz50ZgjowtsvX7ujhQwsjFtlGQhg+vHzEFyHgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iIPL35tzUe8aLD265HECkUIaaxcEjrmQMKiY+PcYzxk=;
+ b=JtoIAXObgaejMQ7EToP5WTkNc4jdn0NAhdM8xnSVL6Ngl7vizHWuJ3popJ14jgTk1o5B9kY564uxXIOYfYVJBdiBmqMBGRHzgkQOmxZv7j4BqmDHQE4kI2LG3HEbY5aPIMcsUX9hb/F8IiNVLcnbQKXLZBG0loFz6H57Zke/0Ld24vSkiD3IsyUsATCz6svHxnc4nu1ZaP62utQGiI4xRVc/Dx4RkAcBUXoU3mIpznBwcOEjxFqYpx81joN0rK8oxvJHAU3N5rc7vGAQ0jzEyvjp39uftTrcWmAPPFQDXnpShb9Hh8Dv4i/5op6lUIo/zak8HGRhaKE0XecQfx5Krw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iIPL35tzUe8aLD265HECkUIaaxcEjrmQMKiY+PcYzxk=;
+ b=WeB/U327GfFba08Tl7HM19G+vSiaQFXn0jTh5GKI/8LsofDbsKP3ewO80BR75tGNY59zENTa4BVF/Ox004umgZrZeME7Az+ucj/H78El+P0QSR4VNqQq0uVK/p8jn5FEnbN4D9w88tc9DwA7/wT/ZKr+LidL0lnIcUuKUgbO644=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4253.eurprd05.prod.outlook.com (52.133.14.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.10; Thu, 9 Jan 2020 23:25:52 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2623.011; Thu, 9 Jan 2020
+ 23:25:52 +0000
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR20CA0046.namprd20.prod.outlook.com (2603:10b6:208:235::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10 via Frontend Transport; Thu, 9 Jan 2020 23:25:51 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1iphBU-0000xv-Kt; Thu, 09 Jan 2020 19:25:48 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: INFO: rcu detected stall in sys_kill
-In-Reply-To: <CACT4Y+axj5M4p=mZkFb1MyBw0MK1c6nWb-fKQcYSnYB8n1Cb8Q@mail.gmail.com>
-References: <00000000000036decf0598c8762e@google.com> <CACT4Y+YVMUxeLcFMray9n0+cXbVibj5X347LZr8YgvjN5nC8pw@mail.gmail.com> <CACT4Y+asdED7tYv462Ui2OhQVKXVUnC+=fumXR3qM1A4d6AvOQ@mail.gmail.com> <f7758e0a-a157-56a2-287e-3d4452d72e00@schaufler-ca.com> <87a787ekd0.fsf@dja-thinkpad.axtens.net> <87h81zax74.fsf@dja-thinkpad.axtens.net> <CACT4Y+b+Vx1FeCmhMAYq-g3ObHdMPOsWxouyXXUr7S5OjNiVGQ@mail.gmail.com> <0b60c93e-a967-ecac-07e7-67aea1a0208e@I-love.SAKURA.ne.jp> <6d009462-74d9-96e9-ab3f-396842a58011@schaufler-ca.com> <CACT4Y+bURugCpLm5TG37-7voFEeEoXo_Gb=3sy75_RELZotXHw@mail.gmail.com> <CACT4Y+avizeUd=nY2w1B_LbEC1cP5prBfpnANYaxhgS_fcL6ag@mail.gmail.com> <CACT4Y+Z3GCncV3G1=36NmDRX_XOZsdoRJ3UshZoornbSRSN28w@mail.gmail.com> <CACT4Y+ZyVi=ow+VXA9PaWEVE8qKj8_AKzeFsNdsmiSR9iL3FOw@mail.gmail.com> <CACT4Y+axj5M4p=mZkFb1MyBw0MK1c6nWb-fKQcYSnYB8n1Cb8Q@mail.gmail.com>
-Date:   Fri, 10 Jan 2020 10:25:27 +1100
-Message-ID: <87a76wnrfc.fsf@dja-thinkpad.axtens.net>
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
+ safe
+Thread-Topic: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
+ safe
+Thread-Index: AQHVtEsczeksfKC51EmFDx7aa5U3hKfi4tSAgAAlPICAABeZAA==
+Date:   Thu, 9 Jan 2020 23:25:51 +0000
+Message-ID: <20200109232548.GO20978@mellanox.com>
+References: <20191216195733.28353-1-rcampbell@nvidia.com>
+ <20191216195733.28353-2-rcampbell@nvidia.com>
+ <20200109194805.GK20978@mellanox.com>
+ <73225ded-c22d-33f2-ebcb-b9e9aa95266b@nvidia.com>
+In-Reply-To: <73225ded-c22d-33f2-ebcb-b9e9aa95266b@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR20CA0046.namprd20.prod.outlook.com
+ (2603:10b6:208:235::15) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.68.57.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d25df0d1-b9c7-43c2-9538-08d7955b4444
+x-ms-traffictypediagnostic: VI1PR05MB4253:
+x-microsoft-antispam-prvs: <VI1PR05MB4253FBFBA4D877B2CE165BD1CF390@VI1PR05MB4253.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02778BF158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(189003)(2906002)(5660300002)(36756003)(1076003)(2616005)(186003)(81156014)(7416002)(33656002)(81166006)(52116002)(66946007)(66476007)(26005)(66556008)(66446008)(64756008)(54906003)(8676002)(9786002)(6666004)(8936002)(4326008)(9746002)(6916009)(498600001)(71200400001)(15650500001)(86362001)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4253;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gkHr8W64E3DC8VAWi6KC8LHErwzDhDoM+f8sPMcV8cq4j56DYxdaEAeMo0rKDP80av0/GGUiknvmg7dxdHn4Qz98Nw4xO3JqVcjuoL9NimkKWgCWdSiwPKACeH85rGFeORYAlZ0pfqI57CLg786EP3yojqs2++1y6npmzcSwJL6dy1vSvZFOnn0Mg0tbi3ZdNIyK0stf86KUw4LL5Yn8xPfkaOUr+dEMDQNpO0sLvIele8WnPbcHfg2JAg+q5E1YYhLwjgNnPkCg/Gm+Qu+0jP2ErPilO/DIl1osWTTlhFElfvM4Kj0v84AxsIWAWCSm0+36gJbTMFPxi0ltik6PL88Gz9rPqitguwjjS6kX4euIVQE68WyiSEcJOKZaSvNeqeRk8BU4Amjl/PN8DJ+H4kecc0uB9gkbFKQW5wdXZUUkCSykAHs7XCPRG4zYw3L+bWWQCbqqEU52oo2pmb2J4yr4qQM8IY2pKIS0ERuIRBok34+GPIQ6x/5h37foo7wg
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3FD70D24FA98F84085481AF401873737@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d25df0d1-b9c7-43c2-9538-08d7955b4444
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 23:25:51.8561
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KI42QODSVd8TnXohgJAgFQkUZ0Pbsvhos+llvnnvy4Mq6cqsbD0OsydhXIJkaWtv+UDcLxh/BMl+PICvU45ZWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4253
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry Vyukov <dvyukov@google.com> writes:
+On Thu, Jan 09, 2020 at 02:01:21PM -0800, Ralph Campbell wrote:
 
-> On Thu, Jan 9, 2020 at 11:05 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->> > > > > On 1/8/2020 2:25 AM, Tetsuo Handa wrote:
->> > > > > > On 2020/01/08 15:20, Dmitry Vyukov wrote:
->> > > > > >> I temporarily re-enabled smack instance and it produced another 50
->> > > > > >> stalls all over the kernel, and now keeps spewing a dozen every hour.
->> > > > >
->> > > > > Do I have to be using clang to test this? I'm setting up to work on this,
->> > > > > and don't want to waste time using my current tool chain if the problem
->> > > > > is clang specific.
->> > > >
->> > > > Humm, interesting. Initially I was going to say that most likely it's
->> > > > not clang-related. Bug smack instance is actually the only one that
->> > > > uses clang as well (except for KMSAN of course). So maybe it's indeed
->> > > > clang-related rather than smack-related. Let me try to build a kernel
->> > > > with clang.
->> > >
->> > > +clang-built-linux, glider
->> > >
->> > > [clang-built linux is severe broken since early Dec]
->> > >
->> > > Building kernel with clang I can immediately reproduce this locally:
->> > >
->> > > $ syz-manager
->> > > 2020/01/09 09:27:15 loading corpus...
->> > > 2020/01/09 09:27:17 serving http on http://0.0.0.0:50001
->> > > 2020/01/09 09:27:17 serving rpc on tcp://[::]:45851
->> > > 2020/01/09 09:27:17 booting test machines...
->> > > 2020/01/09 09:27:17 wait for the connection from test machine...
->> > > 2020/01/09 09:29:23 machine check:
->> > > 2020/01/09 09:29:23 syscalls                : 2961/3195
->> > > 2020/01/09 09:29:23 code coverage           : enabled
->> > > 2020/01/09 09:29:23 comparison tracing      : enabled
->> > > 2020/01/09 09:29:23 extra coverage          : enabled
->> > > 2020/01/09 09:29:23 setuid sandbox          : enabled
->> > > 2020/01/09 09:29:23 namespace sandbox       : enabled
->> > > 2020/01/09 09:29:23 Android sandbox         : /sys/fs/selinux/policy
->> > > does not exist
->> > > 2020/01/09 09:29:23 fault injection         : enabled
->> > > 2020/01/09 09:29:23 leak checking           : CONFIG_DEBUG_KMEMLEAK is
->> > > not enabled
->> > > 2020/01/09 09:29:23 net packet injection    : enabled
->> > > 2020/01/09 09:29:23 net device setup        : enabled
->> > > 2020/01/09 09:29:23 concurrency sanitizer   : /sys/kernel/debug/kcsan
->> > > does not exist
->> > > 2020/01/09 09:29:23 devlink PCI setup       : PCI device 0000:00:10.0
->> > > is not available
->> > > 2020/01/09 09:29:27 corpus                  : 50226 (0 deleted)
->> > > 2020/01/09 09:29:27 VMs 20, executed 0, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:29:37 VMs 20, executed 45, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:29:47 VMs 20, executed 74, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:29:57 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:30:07 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:30:17 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:30:27 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:30:37 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:30:47 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:30:57 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:31:07 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:31:17 VMs 20, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:31:26 vm-10: crash: INFO: rcu detected stall in do_idle
->> > > 2020/01/09 09:31:27 VMs 13, executed 80, cover 0, crashes 0, repro 0
->> > > 2020/01/09 09:31:28 vm-1: crash: INFO: rcu detected stall in sys_futex
->> > > 2020/01/09 09:31:29 vm-4: crash: INFO: rcu detected stall in sys_futex
->> > > 2020/01/09 09:31:31 vm-0: crash: INFO: rcu detected stall in sys_getsockopt
->> > > 2020/01/09 09:31:33 vm-18: crash: INFO: rcu detected stall in sys_clone3
->> > > 2020/01/09 09:31:35 vm-3: crash: INFO: rcu detected stall in sys_futex
->> > > 2020/01/09 09:31:36 vm-8: crash: INFO: rcu detected stall in do_idle
->> > > 2020/01/09 09:31:37 VMs 7, executed 80, cover 0, crashes 6, repro 0
->> > > 2020/01/09 09:31:38 vm-19: crash: INFO: rcu detected stall in schedule_tail
->> > > 2020/01/09 09:31:40 vm-6: crash: INFO: rcu detected stall in schedule_tail
->> > > 2020/01/09 09:31:42 vm-2: crash: INFO: rcu detected stall in schedule_tail
->> > > 2020/01/09 09:31:44 vm-12: crash: INFO: rcu detected stall in sys_futex
->> > > 2020/01/09 09:31:46 vm-15: crash: INFO: rcu detected stall in sys_nanosleep
->> > > 2020/01/09 09:31:47 VMs 1, executed 80, cover 0, crashes 11, repro 0
->> > > 2020/01/09 09:31:48 vm-16: crash: INFO: rcu detected stall in sys_futex
->> > > 2020/01/09 09:31:50 vm-9: crash: INFO: rcu detected stall in schedule
->> > > 2020/01/09 09:31:52 vm-13: crash: INFO: rcu detected stall in schedule_tail
->> > > 2020/01/09 09:31:54 vm-11: crash: INFO: rcu detected stall in schedule_tail
->> > > 2020/01/09 09:31:56 vm-17: crash: INFO: rcu detected stall in sys_futex
->> > > 2020/01/09 09:31:57 VMs 0, executed 80, cover 0, crashes 16, repro 0
->> > > 2020/01/09 09:31:58 vm-7: crash: INFO: rcu detected stall in sys_futex
->> > > 2020/01/09 09:32:00 vm-5: crash: INFO: rcu detected stall in dput
->> > > 2020/01/09 09:32:02 vm-14: crash: INFO: rcu detected stall in sys_nanosleep
->> > >
->> > >
->> > > Then I switched LSM to selinux and I _still_ can reproduce this. So,
->> > > Casey, you may relax, this is not smack-specific :)
->> > >
->> > > Then I disabled CONFIG_KASAN_VMALLOC and CONFIG_VMAP_STACK and it
->> > > started working normally.
->> > >
->> > > So this is somehow related to both clang and KASAN/VMAP_STACK.
->> > >
->> > > The clang I used is:
->> > > https://storage.googleapis.com/syzkaller/clang-kmsan-362913.tar.gz
->> > > (the one we use on syzbot).
->> >
->> >
->> > Clustering hangs, they all happen within very limited section of the code:
->> >
->> >       1  free_thread_stack+0x124/0x590 kernel/fork.c:284
->> >       5  free_thread_stack+0x12e/0x590 kernel/fork.c:280
->> >      39  free_thread_stack+0x12e/0x590 kernel/fork.c:284
->> >       6  free_thread_stack+0x133/0x590 kernel/fork.c:280
->> >       5  free_thread_stack+0x13d/0x590 kernel/fork.c:280
->> >       2  free_thread_stack+0x141/0x590 kernel/fork.c:280
->> >       6  free_thread_stack+0x14c/0x590 kernel/fork.c:280
->> >       9  free_thread_stack+0x151/0x590 kernel/fork.c:280
->> >       3  free_thread_stack+0x15b/0x590 kernel/fork.c:280
->> >      67  free_thread_stack+0x168/0x590 kernel/fork.c:280
->> >       6  free_thread_stack+0x16d/0x590 kernel/fork.c:284
->> >       2  free_thread_stack+0x177/0x590 kernel/fork.c:284
->> >       1  free_thread_stack+0x182/0x590 kernel/fork.c:284
->> >       1  free_thread_stack+0x186/0x590 kernel/fork.c:284
->> >      16  free_thread_stack+0x18b/0x590 kernel/fork.c:284
->> >       4  free_thread_stack+0x195/0x590 kernel/fork.c:284
->> >
->> > Here is disass of the function:
->> > https://gist.githubusercontent.com/dvyukov/a283d1aaf2ef7874001d56525279ccbd/raw/ac2478bff6472bc473f57f91a75f827cd72bb6bf/gistfile1.txt
->> >
->> > But if I am not mistaken, the function only ever jumps down. So how
->> > can it loop?...
->>
->>
->> This is a miscompilation related to static branches.
->>
->> objdump shows:
->>
->> ffffffff814878f8: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
->>  ./arch/x86/include/asm/jump_label.h:25
->> asm_volatile_goto("1:"
->>
->> However, the actual instruction in memory at the time is:
->>
->>    0xffffffff814878f8 <+408>: jmpq   0xffffffff8148787f <free_thread_stack+287>
->>
->> Which jumps to a wrong location in free_thread_stack and makes it loop.
->>
->> The static branch is this:
->>
->> static inline bool memcg_kmem_enabled(void)
->> {
->>   return static_branch_unlikely(&memcg_kmem_enabled_key);
->> }
->>
->> static inline void memcg_kmem_uncharge(struct page *page, int order)
->> {
->>   if (memcg_kmem_enabled())
->>     __memcg_kmem_uncharge(page, order);
->> }
->>
->> I suspect it may have something to do with loop unrolling. It may jump
->> to the right location, but in the wrong unrolled iteration.
->
->
-> Kernel built with clang version 10.0.0
-> (https://github.com/llvm/llvm-project.git
-> c2443155a0fb245c8f17f2c1c72b6ea391e86e81) works fine.
->
-> Alex, please update clang on syzbot machines.
+> > I'd write it more like
+> >=20
+> > if (mni->updated_start =3D=3D mni->updated_end)
+> >      insert
+> > else
+> >      remove
+>=20
+> OK, but I'm using updated_end =3D=3D 0, not updated_start, and the end ca=
+n't be zero.
 
-Wow, what a bug. Very happy to be off the hook for causing it, and
-feeling a lot better about my inability to reproduce it with a GCC-built
-kernel!
+Tricky..
+=20
+> > ie an empty interval can't get a notification so it should be removed
+> > from the tree.
+> >=20
+> > I also like the name 'updated' better than deferred, it is a bit
+> > clearer..
+>=20
+> OK.
+>=20
+> > Adding release should it's own patch.
+>=20
+> The release callback is associated with mmu_interval_notifier_put()
+> (i.e., async remove). Otherwise, there is no way to know when the
+> interval can be freed.
 
-Regards,
-Daniel
+Okay, but this patch is just trying to add update?
+
+> > So why do we need this? You can't call hmm_range_fault from a
+> > notifier. You just can't.
+> >=20
+> > So there should be no reason to create an interval from the notifier,
+> > do it from where you call hmm_range_fault, and it must be safe to
+> > obtain the mmap_sem from that thread.
+>=20
+> I was thinking of the case where munmap() creates a hole in the interval.
+> The invalidate callback would need to update the interval to cover the
+> left side of the remaining interval and an insert to cover the right
+> side. Otherwise, the HW invalidation has to be extended to cover the
+> right side and rely on a fault to re-establish the right side interval.
+
+This is very tricky because this algorithm can only work correctly if
+done atomically as a batch entirely under the spinlock. Forcing it
+into the defered list while holding the lock is the only way to do
+something like that sensibly..
+
+So 'update' is not some generic API you can call, it can only be done
+while the interval tree is locked for reading. Thus 'safe' is probably
+the wrong name, it is actually 'interval tree locked for read'
+
+At the minimum this needs to be comprehensively documented and we need
+a lockdep style assertion that we are locked when doing it..
+
+And if we are defining things like that then it might as well be
+expressed as a remove/insert/insert batch operation rather than
+a somewhat confusing update.
+
+> Now the plan for v6 is to leave mmu_interval_notifier_remove() unchanged,
+> add mmu_interval_notifier_put() for async/safe removal and make 'update'
+> be asynchronous only and, as you say, rely on mmu_interval_read_begin()
+> to be sure all delayed add/remove/updates are complete.
+
+Hm, we can see what injecting reference counts would look like.
+
+> I'm also planning to add a mmu_interval_notifier_find() so that nouveau
+> and the self tests don't need to create a duplicate interval range tree
+> to track the intervals that they have registered. There isn't an existing
+> structure that the struct mmu_interval_notifier can just be added to so
+> it ends up being a separately allocated structure and would need to be
+> stored in some sort of table so I thought why not just use the itree.
+
+Okay, but for locking reasons find is also a little tricky. I suppose
+find can obtain the read side lock on the interval tree and then the
+caller would have to find_unlock once it has refcounted or finished
+accessing the object. Much like how the invalidate callback is locked.
+
+> This is all useful feedback. I am working on v6 which addresses your conc=
+erns
+> and updates nouveau to use the new API. I'm somewhat sidetracked by the l=
+ockdep
+> issue I posted about nouveau calling kmalloc(GFP_KERNEL) from the invalid=
+ation
+> callback so it may take me awhile to sort that out.
+> Since we are at -rc5, I'm guessing this won't have enough soak time to ma=
+ke 5.6.
+
+Yes, sorry for the delay, lots of travel and a mountain of emails. I
+am almost caught up now. But you can post it at least.
+
+Jason
