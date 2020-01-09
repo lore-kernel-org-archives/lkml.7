@@ -2,107 +2,134 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E796C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1DBC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79242067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578587771;
-	bh=5RgWw6lwdyzlKUQmrYNvjaKIr4jFpcu60qB64YShEeQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sml1/kqOBTJRZm/AyF7rwKIcnKjHmFkJMC6dx12Dwt5RjQTkkjufOcCHdqxPBHGXd
-	 mFz357sMJ+DFrIMidjC8Kw2LujgEfEwqjwX+W6lXuJVwO07NRtVv02suLEHszHLVLA
-	 MmthOdolmVcT01oE6XAVAAW7B6Y14Hlhzu9pphtg=
+	by mail.kernel.org (Postfix) with ESMTP id 5A40120721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:36:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387705AbgAIQgK (ORCPT
+        id S2387715AbgAIQgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:36:10 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:48787 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731362AbgAIQgJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:36:09 -0500
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 009GZtqc017274;
-        Fri, 10 Jan 2020 01:35:56 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 009GZtqc017274
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578587756;
-        bh=7XvNI2YxCo7qESWtt2JSnXGjkOVg6FyfonoIBJamMh0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hi94LVf3WXr6pLFb6llim/deUvBQso/rLntf9sz7hy/JWpqc62QG4CkQtF9Wnx9I/
-         xjdWNKS/OuXj5SPq9jNAT/fsEBuK3QI4mhqMGwuxgZ/BTZz29D3HXhl0eVNCxrZYXo
-         AoVlct3DkFgk5c90G/xCwimiOCYpe2jp1rv2ET4qwSP3LgKCimvCgVdBi5NzgGqJgi
-         xOell8csHNpBOysat2oDWZGm+mFcQ1Yu++21mOIKEwfR6jH9VLFhTFGrFCYGBkYD4p
-         d1TyySZ4YPfOgWNN+GV75HynljcTgZoWXyDrCm8iNOBS7t79+/tkzDjue98kU9pfwG
-         /qq+0RO3Q7KBg==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id c7so2742616uaf.5;
-        Thu, 09 Jan 2020 08:35:55 -0800 (PST)
-X-Gm-Message-State: APjAAAXlYUX3xIEqiRBbSGytiWk8E7iFwjsQZquokm030qcmmpkFHXs0
-        5YHAnQdlflor4u0vIpNwAzPAhMjDok/c/jus5ms=
-X-Google-Smtp-Source: APXvYqwN102hllPkb04oSSjtpK6/klNrgMFGpuMG+Mswq9WQQI25tCM85hN2Eo4/aIoLVRNo357C5LaEJ+8g6meAja8=
-X-Received: by 2002:ab0:6509:: with SMTP id w9mr7567756uam.121.1578587754564;
- Thu, 09 Jan 2020 08:35:54 -0800 (PST)
+        Thu, 9 Jan 2020 11:36:25 -0500
+Received: from mga05.intel.com ([192.55.52.43]:21216 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731354AbgAIQgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:36:24 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 08:36:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="235422089"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.69])
+  by orsmga002.jf.intel.com with ESMTP; 09 Jan 2020 08:36:24 -0800
+Date:   Thu, 9 Jan 2020 08:36:24 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: x86/mmu: Fix a benign Bitwise vs. Logical OR mixup
+Message-ID: <20200109163624.GA15001@linux.intel.com>
+References: <20200108001859.25254-1-sean.j.christopherson@intel.com>
+ <c716f793e22e4885a3dee3c91f93e517@AcuMS.aculab.com>
+ <20200109152629.GA25610@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <20200109161724.9546-1-brgl@bgdev.pl>
-In-Reply-To: <20200109161724.9546-1-brgl@bgdev.pl>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 10 Jan 2020 01:35:18 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQQcGLq46QOhqHArQvQG8DP2uQDtpn8XoUthNhwu8Aiyg@mail.gmail.com>
-Message-ID: <CAK7LNAQQcGLq46QOhqHArQvQG8DP2uQDtpn8XoUthNhwu8Aiyg@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: ignore temporary generated files
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109152629.GA25610@rani.riverdale.lan>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 1:17 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> If building gconfig fails, a temporary gtk config file is left in the
-> kconfig directory and is not ignored by git. Add an appropriate pattern
-> to .gitignore.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  scripts/kconfig/.gitignore | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/scripts/kconfig/.gitignore b/scripts/kconfig/.gitignore
-> index b5bf92f66d11..d22e6753397d 100644
-> --- a/scripts/kconfig/.gitignore
-> +++ b/scripts/kconfig/.gitignore
-> @@ -3,6 +3,7 @@
->  #
->  *.moc
->  *conf-cfg
-> +*conf-cfg.tmp
+On Thu, Jan 09, 2020 at 10:26:30AM -0500, Arvind Sankar wrote:
+> On Thu, Jan 09, 2020 at 02:13:48PM +0000, David Laight wrote:
+> > From: Sean Christopherson
+> > > Sent: 08 January 2020 00:19
+> > > 
+> > > Use a Logical OR in __is_rsvd_bits_set() to combine the two reserved bit
+> > > checks, which are obviously intended to be logical statements.  Switching
+> > > to a Logical OR is functionally a nop, but allows the compiler to better
+> > > optimize the checks.
+> > > 
+> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > ---
+> > >  arch/x86/kvm/mmu/mmu.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > > index 7269130ea5e2..72e845709027 100644
+> > > --- a/arch/x86/kvm/mmu/mmu.c
+> > > +++ b/arch/x86/kvm/mmu/mmu.c
+> > > @@ -3970,7 +3970,7 @@ __is_rsvd_bits_set(struct rsvd_bits_validate *rsvd_check, u64 pte, int level)
+> > >  {
+> > >  	int bit7 = (pte >> 7) & 1, low6 = pte & 0x3f;
+> > > 
+> > > -	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) |
+> > > +	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) ||
+> > >  		((rsvd_check->bad_mt_xwr & (1ull << low6)) != 0);
+> > 
+> > Are you sure this isn't deliberate?
+> > The best code almost certainly comes from also removing the '!= 0'.
 
-I have no idea in which situation this pattern is left.
+The '!= 0' is truly superfluous, removing it doesn't affect code
+generation.
 
-Could you tell me the way to reproduce it?
+> > You also don't want to convert the expression result to zero.
+> 
+> The function is static inline bool, so it's almost certainly a mistake
+> originally. The != 0 is superfluous, but this will get inlined anyway.
 
+Ya, the bitwise-OR was added in commit 25d92081ae2f ("nEPT: Add nEPT
+violation/misconfigration support"), and AFAICT it's unintentional.
 
->
->  #
->  # configuration programs
-> --
-> 2.23.0
->
+That being said, I was a bit hasty in stating that a logical-OR allows for
+better optimization, sort of.
 
+For FNAME(prefetch_invalid_gpte) and FNAME(walk_addr_generic), which
+branch on the result of is_rsvd_bits_set(), the logical-OR is marginally
+better.  FNAME(prefetch_invalid_gpte) is what I initially looked at when
+saying "yep, that's better!".
 
--- 
-Best Regards
-Masahiro Yamada
+But for walk_shadow_page_get_mmio_spte(), because it aggregates the result
+in a loop, the bitwise-OR is better in that it eliminates a Jcc.
+
+And all that being said, there are two vastly superior optimizations that
+can be made:
+
+  - Reorder the checks in FNAME(prefetch_invalid_gpte) to perform the
+    !PRESENT and !ACCESSED checks before checking the reserved bits, as
+    they are both more likely to fail and do not require additional memory
+    accesses.
+
+  - Rewrite __is_rsvd_bits_set() to make it templated.  The reserved MT
+    check is EPT only, i.e. bad_mt_xwr is always 0 for legacy 32/64-bit
+    paging.
+
+So, I'll scrap this patch and send a mini series to effect the above
+optimizations.
+
+> > 
+> > So:
+> > 	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) | (rsvd_check->bad_mt_xwr & (1ull << low6));
+> > The code then doesn't have any branches to get mispredicted.
+> > 
+> > 	David
+> > 
+> > -
+> > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> > Registration No: 1397386 (Wales)
+> > 
