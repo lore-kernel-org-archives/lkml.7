@@ -2,114 +2,167 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478DAC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD30C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6F220661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:56:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578589006;
-	bh=9oyg27saFaqgN0kNufIh+bWG6/4Iwy6kaQ1n0BzczVk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kF1ggJur97vAs7R/rp4kelVLJUqOFmZpa5qmIiKqTrjgCFtJwRtQ8tkWVoNi8cpRm
-	 eUJ2soLQSLS8A6d3mcXQqPbp3FXOET/lmOErxswtxDW72kQBHcBUczpBRXRvsLk5cE
-	 lSjcn8V96X3hpin+NzLluy/4XE4Ucl5vxy8LRJ7M=
+	by mail.kernel.org (Postfix) with ESMTP id 1887A2077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:00:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="i6cV77nS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cxjk8Puo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387939AbgAIQ4p (ORCPT
+        id S2387948AbgAIRAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:56:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731320AbgAIQ4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:56:43 -0500
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C9EA2075D;
-        Thu,  9 Jan 2020 16:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578589002;
-        bh=9oyg27saFaqgN0kNufIh+bWG6/4Iwy6kaQ1n0BzczVk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2CosUSQhDeszdClob89wkM5qUuLn+NGmxavbwwJtOjFrz9J9rb5rJcMgFQI1xDAQ4
-         fUXa0Ef1aePHujZvmpoUW/06Em/BF7VVOjDi5q5fkKIAJuUjWK6nHJS6vh0B+JXDfJ
-         atgBkzj5WtLXXdJkwB2Qpsf8KlWlFaaxn/mc4FF0=
-Received: by mail-qk1-f178.google.com with SMTP id r14so6552712qke.13;
-        Thu, 09 Jan 2020 08:56:42 -0800 (PST)
-X-Gm-Message-State: APjAAAWloDLS5fQEZE4v7aOsCtA5Rup0GXo5SQg8RtAKLM93Amf5aA4m
-        vCrzxnTi1CKTJIrJyR7rKHx71dJPQ1VRecow0A==
-X-Google-Smtp-Source: APXvYqwejonPhLn1c6g5UIO7dw/MXR05QYRJuuZwXtZ9dn62B4O5MWFoIh0m1SoNLfPeYaTMJ9QV835I1LSeJT6q4Lo=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr10791122qkn.254.1578589001636;
- Thu, 09 Jan 2020 08:56:41 -0800 (PST)
+        Thu, 9 Jan 2020 12:00:45 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:50517 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731320AbgAIRAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 12:00:44 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 55153214DB;
+        Thu,  9 Jan 2020 12:00:43 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Thu, 09 Jan 2020 12:00:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=hcgptnGOQIZIIhyQtpsCyNNyBT2
+        /xi/KbtsQbbxl1sM=; b=i6cV77nSAvfaICP1k5kwwfHKme5Q8VKHkYjvdeDpe0o
+        nS8qxapgapFts3bc/uQ86OmWjwKa5yulhHZ9+L69WgwC93cot5MryFjhWCrFD/Xd
+        ZgdEDf/R700vhY5ZLZvijQMkEIt28TLIYXR0gMpzJdX1ptSGCp52HoytAVcm2qzv
+        zwqcqnmpAgUDUGZ/VwGYTZnwWagNnW9Mfs0tpIXLdVyW8JTfjOZNrXditk73sI8t
+        wtIO1HJMCTS5JFI7a514Gy4SRgaVuy0u3w6YcfjWGp2R603vzZhQ7vvTuqMiINUh
+        xEE9x4n4Mhe6L8Spn+aeOcjaUfShy8+zbCDU9BWdryA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=hcgptn
+        GOQIZIIhyQtpsCyNNyBT2/xi/KbtsQbbxl1sM=; b=cxjk8PuoU8UAskb2Z2/zjc
+        Z0MkVcdGI7jx5d1ehOUaFu9u2RQquQOdE6TdiVrN0AE1yKlzLYfo2TtzXtqoM/ow
+        ihn87wsNsspehcHIBZCb35O7iKjku/A4O/9byOccNllNEuCfnI1pzQmpj2oCTdhU
+        H4uQnBtuDoly+cM5vIjDmM10DAsrGNrhLMex4dEtFgRoEGlEPKypwZqRAGUX0Pgz
+        X1mSN/rw88fT5OIlHPhoesKVspmeTFdn9LhKdaylwwPfMPplXtolI60H7ADb0GXC
+        +xlCVTp1QEZf1Je7Hlerd89G/J8fZv1OLgGgJHUm84VkD690Oyyw/h9/STNqIWLg
+        ==
+X-ME-Sender: <xms:OlwXXtmLU14-7_RSAqAhLzFI2_BAY4A5V82oqQwME8tH6iZCLNgiYQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiuddgiedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
+    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepie
+    ejrdduiedtrddvudejrddvhedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgv
+    shesrghnrghrrgiivghlrdguvgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:OlwXXq0WR0PtvZ_ri4vjXj1z9EuQmBTaPdxMeO12uG29VsZNasvPkQ>
+    <xmx:OlwXXn4AgxPb70QLFkm9qv61C2iHasXHiDx1XM8DF7mvqaORJeFaXA>
+    <xmx:OlwXXogv4koC5IyRXtFSAPeTTqMdAeVM4M-VQq9egBq_BqgCREpNUQ>
+    <xmx:O1wXXnyvNMVU5h6qFXSyJKt46evGJQD7-ISV31neF0E-Y-ST2rlQUA>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B960830602DE;
+        Thu,  9 Jan 2020 12:00:42 -0500 (EST)
+Date:   Thu, 9 Jan 2020 09:00:41 -0800
+From:   Andres Freund <andres@anarazel.de>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] perf c2c: Fix sorting.
+Message-ID: <20200109170041.wgvxcci3mkjh4uee@alap3.anarazel.de>
+References: <20200109043030.233746-1-andres@anarazel.de>
+ <20200109084822.GD52936@krava>
 MIME-Version: 1.0
-References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-5-drinkcat@chromium.org>
- <20200108132302.GA3817@sirena.org.uk> <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
-In-Reply-To: <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 9 Jan 2020 10:56:29 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKvNBCVkiE4zKn0aXdrV4Ncx2bB6+KRpM+aPpMVzS4XbQ@mail.gmail.com>
-Message-ID: <CAL_JsqKvNBCVkiE4zKn0aXdrV4Ncx2bB6+KRpM+aPpMVzS4XbQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
- for the GPU
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109084822.GD52936@krava>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 4:52 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> On Wed, Jan 8, 2020 at 9:23 PM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Wed, Jan 08, 2020 at 01:23:34PM +0800, Nicolas Boichat wrote:
-> >
-> > > Some GPUs, namely, the bifrost/g72 part on MT8183, have a second
-> > > regulator for their SRAM, let's add support for that.
-> >
-> > > +     pfdev->regulator_sram = devm_regulator_get_optional(pfdev->dev, "sram");
-> > > +     if (IS_ERR(pfdev->regulator_sram)) {
-> >
-> > This supply is required for the devices that need it so I'd therefore
-> > expect the driver to request the supply non-optionally based on the
-> > compatible string rather than just hoping that a missing regulator isn't
-> > important.
->
-> That'd be a bit awkward to match, though... Currently all bifrost
-> share the same compatible "arm,mali-bifrost", and it'd seem
-> weird/wrong to match "mediatek,mt8183-mali" in this driver? I have no
-> idea if any other Mali implementation will require a second regulator,
-> but with the MT8183 we do need it, see below.
+Hi,
 
-The current number of supported bifrost platforms is 0. It's only a
-matter of time until SoC specific compatibles need to be used in the
-driver. This is why we require them.
+On 2020-01-09 09:48:22 +0100, Jiri Olsa wrote:
+> On Wed, Jan 08, 2020 at 08:30:30PM -0800, Andres Freund wrote:
+> > Commit 722ddfde366f ("perf tools: Fix time sorting") changed -
+> > correctly so - hist_entry__sort to return int64. Unfortunately several
+> > of the builtin-c2c.c comparison routines only happened to work due the
+> > cast caused by the wrong return type.
+> > 
+> > This causes meaningless ordering of both the cacheline list, and the
+> > cacheline details page. E.g a simple
+> >   perf c2c record -a sleep 3
+> >   perf c2c report
+> > will result in cacheline table like
+> >   =================================================
+> >              Shared Data Cache Line Table
+> >   =================================================
+> >   #
+> >   #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----  ---- Store Reference ----  --- Load Dram ----      LLC    Total  ----- Core Load Hit -----  -- LLC Load Hit --
+> >   # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt    Total    L1Hit   L1Miss       Lcl       Rmt  Ld Miss    Loads       FB       L1       L2       Llc       Rmt
+> >   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  ........  ........  .......  .......  .......  .......  .......  ........  ........
+> >   #
+> >         0      0x7f0d27ffba00   N/A       0       52    0.12%       13        6        7       12       12        0         0         7       14       40        4       16        0         0         0
+> >         1      0x7f0d27ff61c0   N/A       0     6353   14.04%     1475      801      674      779      779        0         0       718     1392     5574     1299     1967        0       115         0
+> >         2      0x7f0d26d3ec80   N/A       0       71    0.15%       16        4       12       13       13        0         0        12       24       58        1       20        0         9         0
+> >         3      0x7f0d26d3ec00   N/A       0       98    0.22%       23       17        6       19       19        0         0         6       12       79        0       40        0        10         0
+> > i.e. with the list not being ordered by Total Hitm.
+> > 
+> > Fixes: 722ddfde366f ("perf tools: Fix time sorting")
+> > Signed-off-by: Andres Freund <andres@anarazel.de>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Andi Kleen <ak@linux.intel.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Michael Petlan <mpetlan@redhat.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: stable@vger.kernel.org # v3.16+
+> > ---
+> >  tools/perf/builtin-c2c.c | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > index e69f44941aad..f2e9d2b1b913 100644
+> > --- a/tools/perf/builtin-c2c.c
+> > +++ b/tools/perf/builtin-c2c.c
+> > @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+> >  {
+> >  	struct c2c_hist_entry *c2c_left;
+> >  	struct c2c_hist_entry *c2c_right;
+> > -	unsigned int tot_hitm_left;
+> > -	unsigned int tot_hitm_right;
+> > +	uint64_t tot_hitm_left;
+> > +	uint64_t tot_hitm_right;
+> 
+> that change looks right, but I can't see how that could
+> happened because of change in Fixes: tag
+> 
+> was the return statement of this function:
+> 
+>         return tot_hitm_left - tot_hitm_right;
+> 
+> considered to be 'unsigned int' and then converted to int64_t,
+> which would treat negative 'unsigned int' as big positive 'int64_t'?
 
-It could very well be that all bifrost implementations need 2
-supplies. On chip RAMs are very frequently a separate thing which are
-synthesized differently from logic. At least within a specific IP
-model, I somewhat doubt there's a variable number of supplies. It
-could be possible to connect both to the same supply, but the correct
-way to handle that is both -supply properties point to the same
-regulator.
+Correct. So e.g. when comparing 1 and 2 tot_hitm, we'd get (int64_t)
+UINT_MAX as a result, which is obviously wrong. However, due to
+hist_entry__sort() returning int at the time, this was masked, as the
+int64_t was cast to int. Thereby again yielding a negative number for
+the comparisons of hist_entry__sort()'s result.  After
+hist_entry__sort() was fixed however, there never could be negative
+return values (but 0's are possible) of hist_entry__sort() for c2c.
 
-Rob
+I briefly looked for places outside of c2c for similar issues in
+hist_entry comparison routines, but didn't find any.
+
+Greetings,
+
+Andres Freund
