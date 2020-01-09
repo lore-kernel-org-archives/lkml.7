@@ -6,94 +6,102 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C635C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458C5C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308DB20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F6D20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="ZGdO3bXa"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="F2yrOYUt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbgAIRu5 (ORCPT
+        id S2388363AbgAIRwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:50:57 -0500
-Received: from mail1.fiberby.net ([193.104.135.124]:40390 "EHLO
-        mail1.fiberby.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730326AbgAIRu4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:50:56 -0500
-X-Greylist: delayed 554 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 12:50:55 EST
-Received: from x201s.roaming.asbjorn.biz (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-        by mail1.fiberby.net (Postfix) with ESMTPSA id A759A6010C;
-        Thu,  9 Jan 2020 17:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-        s=201905; t=1578591697;
-        bh=aO90ZkWcNxvVfMQ699FY54Oi71pyX/FoCIGUYqP1+0U=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZGdO3bXag3oQlpfK+0ry+F2q+jK9NIvMoyCTZ+8g9s+A5xN6ZwndRz+s0AzM6Hjri
-         vJT0o0qp16Oooy5k36E16sHSREKf2SpYLk9WYAvXLgDD3Td2OBAqG/oGyh6Woxe45k
-         irwutle4gtBzSVE4jfjejfDbJxyt1hg9bhjwymFPIh68o9032/zKqmSOQuYI/ly/Zx
-         4EWS9aTpVexV78lZonSKKVul6ey7gZofKsCB1Q7ocC89MNvl3Ar2fS/7Wn3OpB2t4D
-         aa6nMdpgdh89WFlMINxTgHHCo6ZSVzFTtGr7B2KcwudgJilzAt9zEnqlfE9EZY9aDG
-         V5wfaYA+QQ33A==
-Received: from x201s.roaming.asbjorn.biz (localhost [127.0.0.1])
-        by x201s.roaming.asbjorn.biz (Postfix) with ESMTP id 0AC5020023E;
-        Thu,  9 Jan 2020 17:41:34 +0000 (UTC)
-Subject: Re: [Bridge] [RFC net-next Patch 0/3] net: bridge: mrp: Add support
- for Media Redundancy Protocol(MRP)
-To:     Stephen Hemminger <stephen@networkplumber.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     andrew@lunn.ch, jakub.kicinski@netronome.com,
-        nikolay@cumulusnetworks.com, netdev@vger.kernel.org,
-        roopa@cumulusnetworks.com, bridge@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, vivien.didelot@gmail.com,
-        UNGLinuxDriver@microchip.com, anirudh.venkataramanan@intel.com,
-        jiri@mellanox.com, jeffrey.t.kirsher@intel.com, dsahern@gmail.com,
-        olteanv@gmail.com, davem@davemloft.net,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-References: <20200109150640.532-1-horatiu.vultur@microchip.com>
- <20200109081907.06281c0f@hermes.lan>
-From:   =?UTF-8?Q?Asbj=c3=b8rn_Sloth_T=c3=b8nnesen?= <ast@fiberby.net>
-Message-ID: <da02006c-dc9d-ce1a-861e-4fc1c1dc2830@fiberby.net>
-Date:   Thu, 9 Jan 2020 17:41:33 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 12:52:37 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:55070 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730326AbgAIRwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 12:52:37 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47ttxG2WM3z9txHp;
+        Thu,  9 Jan 2020 18:52:34 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=F2yrOYUt; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id D9ctLdBUZqbw; Thu,  9 Jan 2020 18:52:34 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47ttxG1NMwz9txHl;
+        Thu,  9 Jan 2020 18:52:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1578592354; bh=FYx4kyu0guKehGok9fASqGVuxxVoy/XJcQO7YPTYaQc=;
+        h=From:Subject:To:Cc:References:Date:In-Reply-To:From;
+        b=F2yrOYUt44TvH+5O/nMl5vMshj2XKIRHohr5s+oeadn2dM2WIQzI2nCl/M7lAIkXW
+         JxBLJ5s3We6Cyg3fWHtSz+ys/3or+bNkpzqXxrzX1drGWe8AHYgvp4LxAr7x2nNkum
+         EEx91AF9jbgNwX3yge3UCqm+YIsT3UIhyIUywk4Y=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E09AE8B82E;
+        Thu,  9 Jan 2020 18:52:35 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id za-1hAB_sfui; Thu,  9 Jan 2020 18:52:35 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F7B48B82D;
+        Thu,  9 Jan 2020 18:52:35 +0100 (CET)
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: Surprising code generated for vdso_read_begin()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
+        tglx@linutronix.de, vincenzo.frascino@arm.com, luto@kernel.org,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org
+References: <cover.1577111363.git.christophe.leroy@c-s.fr>
+Message-ID: <bd4557a7-9715-59aa-5d8e-488c5e516a98@c-s.fr>
+Date:   Thu, 9 Jan 2020 17:52:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200109081907.06281c0f@hermes.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <cover.1577111363.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horatiu and Stephen,
+Wondering why we get something so complicated/redundant for 
+vdso_read_begin() <include/vdso/helpers.h>
 
-Horatiu, thanks for giving this a try. I am looking forward to maybe someday
-be able to run ERPS on white box switches.
+static __always_inline u32 vdso_read_begin(const struct vdso_data *vd)
+{
+	u32 seq;
 
-On 1/9/20 4:19 PM, Stephen Hemminger wrote:
-> Can this be implemented in userspace?
-> 
-> Putting STP in the kernel was a mistake (even original author says so).
-> Adding more control protocols in kernel is a security and stability risk.
+	while ((seq = READ_ONCE(vd->seq)) & 1)
+		cpu_relax();
 
-Another case is VRRP, ERPS (ITU-T G.8032), VRRP group.
+	smp_rmb();
+	return seq;
+}
 
-My use-case might not be common, but I have machines with about 10k net_dev (QinQ),
-I would like to be able to do VRRP group on the outer VLANs, which are only a few
-hundred instances without excessive context switching. I would then keep the the
-normal keep-alive state machine in kernel, basically a BPF-based timed periodic
-packet emitter facility and a XDP recieve hook. So only setup and event handling
-has to context switched to user-space.
 
-Unfortunately I haven't had time to explore this yet, but I think such an approach
-could solve a few of the reasons that scalable bridge/ring/ha protocols have to wait
-20 years before being implemented in Linux.
+  6e0:   81 05 00 f0     lwz     r8,240(r5)
+  6e4:   71 09 00 01     andi.   r9,r8,1
+  6e8:   41 82 00 10     beq     6f8 <__c_kernel_clock_gettime+0x158>
+  6ec:   81 05 00 f0     lwz     r8,240(r5)
+  6f0:   71 0a 00 01     andi.   r10,r8,1
+  6f4:   40 82 ff f8     bne     6ec <__c_kernel_clock_gettime+0x14c>
+  6f8:
 
--- 
-Best regards
-Asbjørn Sloth Tønnesen
-Network Engineer
-Fiberby ApS - AS42541
+r5 being vd pointer
+
+Why the first triplet, not only the second triplet ? Something wrong 
+with using READ_ONCE() for that ?
+
+Christophe
