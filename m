@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3C1C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4738EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1CFE206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E43F206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="YJV0pzx6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="ZmSrs3gf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731382AbgAINwj (ORCPT
+        id S1731352AbgAINwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:52:39 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46502 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731370AbgAINwg (ORCPT
+        Thu, 9 Jan 2020 08:52:33 -0500
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:55761 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731329AbgAINwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:52:36 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so7400532wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:52:36 -0800 (PST)
+        Thu, 9 Jan 2020 08:52:30 -0500
+Received: by mail-wm1-f54.google.com with SMTP id q9so2991651wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:52:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cY7VEq1SDPcCbR2gLted+yBjAeKIqKC5FGvxBvtyOjU=;
-        b=YJV0pzx6ld6r0Ittxt8eGiqDQWelxWmJaXiOraeu7kqgy6yUKEl5CjC6krtJ4rrrxp
-         4houNQ8Q8UXHox536aXCM7bWjnJil2sW4Ifwt+ACXDVydt8XuYEkC39UKfu0kzF+FufS
-         a7g15u0+b0YHpt7dOUYfYHYD9xA5DZpLdHpNvgf6yEZzC8ttI2NzhYTjJyAOiloqwbaj
-         bPWnY4DxpIgqUaZwfq9y210ggcbkH6fn+qB9lXXlVSK68lp3bFhfX08XzhhjgVZ3q8r6
-         30Q/n6atlyOxZY/9UzXlCX2VifEXBhYnOQqhehai/Oesy1RbkJkDpih43bF3FMS6g507
-         pd+A==
+        bh=5Dls9W9bj1Gd/Lpqv5BPHUUP2RvMef3FCTEyB1xcyHE=;
+        b=ZmSrs3gfZlGX9yRHbls/OTOQJMinpbZpam24OqN4vYR9asSrgRGCPLZpt0NhLiuQpb
+         wzZ5XSKUTJDyRkmIWZwv1k8GW++vcg36BoxACbhfOj7wKKVrvbWDcc/W8gmp+lKivacg
+         JIB4lQwlXP4prJWeTZ0YTg/Y68sYDKVuKZyw+9WjU7vdXRXB5KUTw42Muyk/Rjv/tZkr
+         cP/8jjSpE7H1Dsr6NtQ9j23PVU2yF0P//wNubjtDiL/s/Q7TKk90DdUGyWpGeBCQpv38
+         KJnHpdATT/CUuFXt3P/CUcv+VH/LtGVavzS3Z/qFQcWMMakOkTfbV49mIPfR+4KNDcKf
+         gF3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=cY7VEq1SDPcCbR2gLted+yBjAeKIqKC5FGvxBvtyOjU=;
-        b=oBcwU1P1CqAw2qLEYJcBSEZf8fWcCrMwet2tTIyGv7p8I0O8j2EzlQy7x2DigS0rOp
-         fCWXDU4r0zcxFd/OGT6xEXi+vYvmtI57VUMBGFsxXvNEf6wsagmAfgPNd0j+mP4qL6bF
-         uusoDB9ekeE0iDS69StH7K1QWsrgEpNSfdDjcJdt9dMv8s9ewIbT9neaEMlccL3MOV9Q
-         JHF5JlLUoplZyqyqOOFGoAu1Pe7BHNiXk9+WpYzKihgwdaIsIVjmyTZA8oFbuD6ezAyP
-         l1emZloL7NbJlyL9fx57AJatHc+7ZX/3x8gFTzH1U0CpheT2yG8J3w4Qegu+wMd2S1g5
-         p2cg==
-X-Gm-Message-State: APjAAAUdZ11pt6sRsg3i1CyZ8NJrfLptMj9h4pANzo+JJIyi1vZu5Hko
-        20QNVA/NHcbGZ2mHFyTEYorIwA==
-X-Google-Smtp-Source: APXvYqxIdhdkFDDM3qDOhD9CTVBp8Wso36d/Vi3BKD/mngqoG1YAwUgO6ZuEWuzzKIDn2YcQz8XRbw==
-X-Received: by 2002:a5d:6ca1:: with SMTP id a1mr10795256wra.36.1578577955315;
-        Thu, 09 Jan 2020 05:52:35 -0800 (PST)
+        bh=5Dls9W9bj1Gd/Lpqv5BPHUUP2RvMef3FCTEyB1xcyHE=;
+        b=hNRdm/tzTIg3WaIgH5o0lRZdHS/FzhM1xLwklkv8nopOMFTZLnPErmXLMgzSkk4R5O
+         0d9Ua4I0Wm+fNjt+SeX/5iZ0ubf2t1H/dBhu7ZW0AE9dTuzZwWr570JDpk3VIePmWcqt
+         I8yfdQn5W5GyFU8vBKl9unD7EgLacGv6OIwkYchtMkbDvT6FBJcV0l+OFucUDXnPeNp4
+         gmIe7yeAO/EmL/l2th2gOgQFbkC2Ry3p0yEwDmNeV8aOlib1keK0TPCWn75sQTvl3qw5
+         n4uc8UBJ9hMSPyq76Z03CgCiwY1AiLIQctCIEKSuP+yZuHPywTfuHvAnLZpskp6KTA6L
+         YS1g==
+X-Gm-Message-State: APjAAAXcWe9ZFwK1a8qQVzU+IUZRxs2xjFT3kge+yaLuUXIQRmBrHmKp
+        6RWMan3rVqCoMgyI0kMWbdcETQ==
+X-Google-Smtp-Source: APXvYqx0+sXU9Xa6uVSv3/rkJoMDUEUGho9XMFd9d3+XzkDYUqX5o+JlJlKdL+1KOfK8+bnYRZVCOQ==
+X-Received: by 2002:a7b:c183:: with SMTP id y3mr4957307wmi.45.1578577948805;
+        Thu, 09 Jan 2020 05:52:28 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id e6sm8476868wru.44.2020.01.09.05.52.34
+        by smtp.gmail.com with ESMTPSA id q68sm3178254wme.14.2020.01.09.05.52.28
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:52:34 -0800 (PST)
+        Thu, 09 Jan 2020 05:52:28 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/8] arm64: zynqmp: Remove broken-cd from zcu100-revC
-Date:   Thu,  9 Jan 2020 14:52:21 +0100
-Message-Id: <b068e60d4058ccb0d784a0cc35e8aecf5ffb98fd.1578577931.git.michal.simek@xilinx.com>
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/8] arm64: zynqmp: Fix address for tca6416_u97 chip on zcu104
+Date:   Thu,  9 Jan 2020 14:52:17 +0100
+Message-Id: <100294ed4d902923527de042cc87eb59648ce91f.1578577931.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1578577931.git.michal.simek@xilinx.com>
 References: <cover.1578577931.git.michal.simek@xilinx.com>
@@ -78,29 +77,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Card detect bit was broken on revA and it is working fine with revC
-board that's why this property can be removed.
+I2c address is not 0x21 but 0x20.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
 Changes in v2: None
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-index dd60f7d85cc8..2b3757dd74cc 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-@@ -226,7 +226,6 @@ &rtc {
- &sdhci0 {
- 	status = "okay";
- 	no-1-8-v;
--	broken-cd; /* CD has to be enabled by default */
- 	disable-wp;
- };
- 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+index 2d71b4431cce..7a4614e3f5fa 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+@@ -118,9 +118,9 @@ i2c@4 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <4>;
+-			tca6416_u97: gpio@21 {
++			tca6416_u97: gpio@20 {
+ 				compatible = "ti,tca6416";
+-				reg = <0x21>;
++				reg = <0x20>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+ 				/*
 -- 
 2.24.0
 
