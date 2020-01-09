@@ -2,422 +2,319 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFAAC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150A9C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08332067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFDF20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Vhqweda6"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="SM0dCH4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgAIIyH (ORCPT
+        id S1728957AbgAIIya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:54:07 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47672 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728782AbgAIIyH (ORCPT
+        Thu, 9 Jan 2020 03:54:30 -0500
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:33992 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728782AbgAIIya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:54:07 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0098s2bu109333;
-        Thu, 9 Jan 2020 02:54:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578560042;
-        bh=UtTnldwt1URYkVixdFv9rhGPFWBg52Xc2qL7CUFPZlU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Vhqweda6xGLhJagbkZX/b9rlL/NNySSJ26VVAzD1JgWjSmEbk3yxJSwPZQW3BFACf
-         ifCm7PJJUcN0jS3QGYDjGdSH1bQAEjGajR2TAoMzWxC3jI7LT76e2pbs5Kl3KMLOrd
-         BckKWAp7sWHuMZnkYqqOc1/Fr4ui3adgodT84dcU=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0098s2Pr079552
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Jan 2020 02:54:02 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
- 2020 02:54:01 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 9 Jan 2020 02:54:01 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0098rwX2114038;
-        Thu, 9 Jan 2020 02:53:59 -0600
-Subject: Re: [PATCHv4 02/14] remoteproc/omap: Add device tree support
-To:     Suman Anna <s-anna@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>
-References: <20200102131845.12992-1-t-kristo@ti.com>
- <20200102131845.12992-3-t-kristo@ti.com>
- <1f9f69df-6b92-7d29-7769-4d10811dfffe@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <37622ee3-95f0-2e05-3897-61664736a286@ti.com>
-Date:   Thu, 9 Jan 2020 10:53:57 +0200
+        Thu, 9 Jan 2020 03:54:30 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id E43EC2E129D;
+        Thu,  9 Jan 2020 11:54:22 +0300 (MSK)
+Received: from vla1-5a8b76e65344.qloud-c.yandex.net (vla1-5a8b76e65344.qloud-c.yandex.net [2a02:6b8:c0d:3183:0:640:5a8b:76e6])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 8uGaXC4kJE-sMdW4g0n;
+        Thu, 09 Jan 2020 11:54:22 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1578560062; bh=A1KziNxaGKZXmf/cTWUrFAIuSBFLSN6rQlkVurnpY7s=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=SM0dCH4/TsVxN5jQo3YyXtMsg1y6JD6+yDqrDM55IYoDdDu0DFmyyKeT1kENJ4qbc
+         XMOOFF8rdKEa5ThMzdyHX3HX+RtHq2DwGqUTLz+P764ASGGZ9mVQPROMP/7lSWkLde
+         Rvlbf3v6oFxp7RYp60XxajjFswXfGAoy1Dik4DuA=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
+        by vla1-5a8b76e65344.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id yPYyCGUU16-sMWaiTYk;
+        Thu, 09 Jan 2020 11:54:22 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH v2 1/2] mm/rmap: fix and simplify reusing mergeable
+ anon_vma as parent when fork
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Rik van Riel <riel@redhat.com>,
+        Li Xinhai <lixinhai.lxh@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <157839239609.694.10268055713935919822.stgit@buzz>
+ <20200108023211.GC13943@richard>
+ <b019b294-61fa-85fc-cf43-c6d3e9fddc71@yandex-team.ru>
+ <20200109025240.GA2000@richard>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <b8269278-85b5-9fd2-9bce-6defffcad6e8@yandex-team.ru>
+Date:   Thu, 9 Jan 2020 11:54:21 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1f9f69df-6b92-7d29-7769-4d10811dfffe@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200109025240.GA2000@richard>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/2020 19:55, Suman Anna wrote:
-> Hi Tero,
-> 
-> On 1/2/20 7:18 AM, Tero Kristo wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> OMAP4+ SoCs support device tree boot only. The OMAP remoteproc
->> driver is enhanced to support remoteproc devices created through
->> Device Tree, support for legacy platform devices has been
->> deprecated. The current DT support handles the IPU and DSP
->> processor subsystems on OMAP4 and OMAP5 SoCs.
->>
->> The OMAP remoteproc driver relies on the ti-sysc, reset, and
->> syscon layers for performing clock, reset and boot vector
->> management (DSP remoteprocs only) of the devices, but some of
->> these are limited only to the machine-specific layers
->> in arch/arm. The dependency against control module API for boot
->> vector management of the DSP remoteprocs has now been removed
->> with added logic to parse the boot register from the DT node
->> and program it appropriately directly within the driver.
->>
->> The OMAP remoteproc driver expects the firmware names to be
->> provided via device tree entries (firmware-name.) These are used
->> to load the proper firmware during boot of the remote processor.
->>
->> Cc: Tony Lindgren <tony@atomide.com>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> [t-kristo@ti.com: converted to use ti-sysc framework]
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->> v4:
->>    - error handling improvements
-> 
-> Thanks for taking care of these comments.
-> 
->>    - dropped has_bootreg from platform data (instead parsed from DT)
-> 
-> So, I originally used this to ensure that the DT node is not missing the
-> bootreg property on the required devices (since it is not present on
-> all). I guess this is no longer needed since the idea is that it would
-> be caught during the schema check, please confirm.
 
-Yes, schema will complain if you don't have bootreg on the required nodes.
 
--Tero
+On 09/01/2020 05.52, Wei Yang wrote:
+> On Wed, Jan 08, 2020 at 01:40:44PM +0300, Konstantin Khlebnikov wrote:
+>> On 08/01/2020 05.32, Wei Yang wrote:
+>>> On Tue, Jan 07, 2020 at 01:19:56PM +0300, Konstantin Khlebnikov wrote:
+>>>> This fixes some misconceptions in commit 4e4a9eb92133 ("mm/rmap.c: reuse
+>>>> mergeable anon_vma as parent when fork"). It merges anon-vma in unexpected
+>>>> way but fortunately still produces valid anon-vma tree, so nothing crashes.
+>>>>
+>>>> If in parent VMAs: SRC1 SRC2 .. SRCn share anon-vma ANON0, then after fork
+>>>> before all patches in child process related VMAs: DST1 DST2 .. DSTn will
+>>>> fork indepndent anon-vmas: ANON1 ANON2 .. ANONn (each is child of ANON0).
+>>>> Before this patch only DST1 will fork new ANON1 and following DST2 .. DSTn
+>>>> will share parent's ANON0 (i.e. anon-vma tree is valid but isn't optimal).
+>>>> With this patch DST1 will create new ANON1 and DST2 .. DSTn will share it.
+>>>>
+>>>> Root problem caused by initialization order in dup_mmap(): vma->vm_prev
+>>>> is set after calling anon_vma_fork(). Thus in anon_vma_fork() it points to
+>>>> previous VMA in parent mm.
+>>>>
+>>>> Second problem is hidden behind first one: assumption "Parent has vm_prev,
+>>>> which implies we have vm_prev" is wrong if first VMA in parent mm has set
+>>>> flag VM_DONTCOPY. Luckily prev->anon_vma doesn't dereference NULL pointer
+>>>> because in current code 'prev' actually is same as 'pprev'.
+>>>>
+>>>> Third hidden problem is linking between VMA and anon-vmas whose pages it
+>>>> could contain. Loop in anon_vma_clone() attaches only parent's anon-vmas,
+>>>> shared anon-vma isn't attached. But every mapped page stays reachable in
+>>>> rmap because we erroneously share anon-vma from parent's previous VMA.
+>>>>
+>>>> This patch moves sharing logic out of anon_vma_clone() into more specific
+>>>> anon_vma_fork() because this supposed to work only at fork() and simply
+>>>> reuses anon_vma from previous VMA if it is forked from the same anon-vma.
+>>>>
+>>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>>>> Reported-by: Li Xinhai <lixinhai.lxh@gmail.com>
+>>>> Fixes: 4e4a9eb92133 ("mm/rmap.c: reuse mergeable anon_vma as parent when fork")
+>>>> Link: https://lore.kernel.org/linux-mm/CALYGNiNzz+dxHX0g5-gNypUQc3B=8_Scp53-NTOh=zWsdUuHAw@mail.gmail.com/T/#t
+>>>> ---
+>>>> include/linux/rmap.h |    3 ++-
+>>>> kernel/fork.c        |    2 +-
+>>>> mm/rmap.c            |   23 +++++++++--------------
+>>>> 3 files changed, 12 insertions(+), 16 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+>>>> index 988d176472df..560e4480dcd0 100644
+>>>> --- a/include/linux/rmap.h
+>>>> +++ b/include/linux/rmap.h
+>>>> @@ -143,7 +143,8 @@ void anon_vma_init(void);	/* create anon_vma_cachep */
+>>>> int  __anon_vma_prepare(struct vm_area_struct *);
+>>>> void unlink_anon_vmas(struct vm_area_struct *);
+>>>> int anon_vma_clone(struct vm_area_struct *, struct vm_area_struct *);
+>>>> -int anon_vma_fork(struct vm_area_struct *, struct vm_area_struct *);
+>>>> +int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma,
+>>>> +		  struct vm_area_struct *prev);
+>>>>
+>>>> static inline int anon_vma_prepare(struct vm_area_struct *vma)
+>>>> {
+>>>> diff --git a/kernel/fork.c b/kernel/fork.c
+>>>> index 2508a4f238a3..c33626993831 100644
+>>>> --- a/kernel/fork.c
+>>>> +++ b/kernel/fork.c
+>>>> @@ -556,7 +556,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+>>>> 			tmp->anon_vma = NULL;
+>>>> 			if (anon_vma_prepare(tmp))
+>>>> 				goto fail_nomem_anon_vma_fork;
+>>>> -		} else if (anon_vma_fork(tmp, mpnt))
+>>>> +		} else if (anon_vma_fork(tmp, mpnt, prev))
+>>>> 			goto fail_nomem_anon_vma_fork;
+>>>> 		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
+>>>> 		tmp->vm_next = tmp->vm_prev = NULL;
+>>>> diff --git a/mm/rmap.c b/mm/rmap.c
+>>>> index b3e381919835..3c1e04389291 100644
+>>>> --- a/mm/rmap.c
+>>>> +++ b/mm/rmap.c
+>>>> @@ -269,19 +269,6 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>>>> {
+>>>> 	struct anon_vma_chain *avc, *pavc;
+>>>> 	struct anon_vma *root = NULL;
+>>>> -	struct vm_area_struct *prev = dst->vm_prev, *pprev = src->vm_prev;
+>>>> -
+>>>> -	/*
+>>>> -	 * If parent share anon_vma with its vm_prev, keep this sharing in in
+>>>> -	 * child.
+>>>> -	 *
+>>>> -	 * 1. Parent has vm_prev, which implies we have vm_prev.
+>>>> -	 * 2. Parent and its vm_prev have the same anon_vma.
+>>>> -	 */
+>>>> -	if (!dst->anon_vma && src->anon_vma &&
+>>>> -	    pprev && pprev->anon_vma == src->anon_vma)
+>>>> -		dst->anon_vma = prev->anon_vma;
+>>>> -
+>>>>
+>>>> 	list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
+>>>> 		struct anon_vma *anon_vma;
+>>>> @@ -332,7 +319,8 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>>>>    * the corresponding VMA in the parent process is attached to.
+>>>>    * Returns 0 on success, non-zero on failure.
+>>>>    */
+>>>> -int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
+>>>> +int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma,
+>>>> +		  struct vm_area_struct *prev)
+>>>> {
+>>>> 	struct anon_vma_chain *avc;
+>>>> 	struct anon_vma *anon_vma;
+>>>> @@ -342,6 +330,13 @@ int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
+>>>> 	if (!pvma->anon_vma)
+>>>> 		return 0;
+>>>>
+>>>> +	/* Share anon_vma with previous VMA if it has the same parent. */
+>>>> +	if (prev && prev->anon_vma &&
+>>>> +	    prev->anon_vma->parent == pvma->anon_vma) {
+>>>> +		vma->anon_vma = prev->anon_vma;
+>>>> +		return anon_vma_clone(vma, prev);
+>>>> +	}
+>>>> +
+>>>
+>>> I am afraid this one change the intended behavior. Let's put a chart to
+>>> describe.
+>>>
+>>> Commit 4e4a9eb92133 ("mm/rmap.c: reusemergeable anon_vma as parent when
+>>> fork") tries to improve the following situation.
+>>>
+>>> Before the commit, the behavior is like this:
+>>>
+>>> Parent process:
+>>>
+>>>         +-----+
+>>>         | pav |<-----------------+----------------------+
+>>>         +-----+                  |                      |
+>>>                                  |                      |
+>>>                      +-----------+          +-----------+
+>>>                      |pprev      |          |pvma       |
+>>>                      +-----------+          +-----------+
+>>>
+>>> Child Process
+>>>
+>>>
+>>>         +-----+                     +-----+
+>>>         | av1 |<-----------------+  | av2 |<------------+
+>>>         +-----+                  |  +-----+             |
+>>>                                  |                      |
+>>>                      +-----------+          +-----------+
+>>>                      |prev       |          |vma        |
+>>>                      +-----------+          +-----------+
+>>>
+>>>
+>>> Parent pprev and pvma share the same anon_vma due to
+>>> find_mergeable_anon_vma(). While the anon_vma_clone() would pick up different
+>>> anon_vma for child process's vma.
+>>>
+>>> The purpose of my commit is to give child process the following shape.
+>>>
+>>>         +-----+
+>>>         | av  |<-----------------+----------------------+
+>>>         +-----+                  |                      |
+>>>                                  |                      |
+>>>                      +-----------+          +-----------+
+>>>                      |prev       |          |vma        |
+>>>                      +-----------+          +-----------+
+>>>
+>>> After this, we reduce the extra "av2" for child process. But yes, because of
+>>> the two reasons you found, it didn't do the exact thing.
+>>>
+>>> While if my understanding is correct, the anon_vma_clone() would pick up any
+>>> anon_vma in its process tree, except parent's. If this fails to get a reusable
+>>> one, anon_vma_fork() would allocate one, whose parent is pvma->anon_vma.
+>>>
+>>> Let me summarise original behavior:
+>>>
+>>>     * if anon_vma_clone succeed, it find one anon_vma in the process tree, but
+>>>       it could not be pvma->anon_vma
+>>>     * if anon_vma_clone fail, it will allocate a new anon_vma and its parent is
+>>>       pvma->anon_vam
+>>>
+>>> Then take a look into your code here.
+>>>
+>>> "prev->anon_vma->parent == pvma->anon_vma" means prev->anon_vma parent is
+>>> pvma's anon_vma. If my understanding is correct, this just match the second
+>>> case. For "prev", we didn't find a reusable anon_vma and allocate a new one.
+>>>
+>>> But how about the first case? prev reuse an anon_vma in the process tree which
+>>> is not parent's?
+>>
+>> If anon_vma_clone() pick old anon-vma for first vma in sharing chain (prev)
+>> then second vma (vma) will fork new anon-vma (unless pick another old anon-vma),
+>> then third vma will share it. And so on.
+> 
+> No, I am afraid you are not correct here. Or I don't understand your sentence.
+> 
+> This is my understanding about the behavior before my commit. Suppose av1 and
+> av2 are both reused from old anon_vma. And if my understanding is correct,
+> they are different from pvma->anon_vma. Then how your code match this
+> situatioin?
+> 
+>          +-----+                     +-----+
+>          | av1 |<-----------------+  | av2 |<------------+
+>          +-----+                  |  +-----+             |
+>                                   |                      |
+>                       +-----------+          +-----------+
+>                       |prev       |          |vma        |
+>                       +-----------+          +-----------+
+> 
+> Would you explain your understanding the second and third vma in your
+> sentence? Which case you are trying to illustrate?
+
+series of vma in parent with shared AV:
+
+SRC1 - AV0
+SRC2 - AV0
+SRC3 - AV0
+...
+SRCn - AV0
+
+in child after fork
+
+DST1 - AV_OLD_1 (some old vma, picked by anon_vma_clone) plus DST1 is attached to same AVs as SRC1
+DST2 - AV_OLD_2 (other old vma) plus DST1 is attached to same AVs as SRC2
+DST2 - AV1 prev AV parent does not match AV0, no old vma found for reusing -> allocate new one (child of AV0)
+DST3 - AV1 - DST2->AV->parent == SRC3->AV (AV0) -> share AV with prev
+DST4 - AV1 - same thing
+...
+DSTn - AV1
 
 > 
-> regards
-> Suman
+>> Fork works left to right - we don't known about next vma to predict sharing and
+>> choose better options.
+>>
+>> But reusing old vma doesn't allocates new one. It's better to not reuse them
 > 
->>
->>   drivers/remoteproc/omap_remoteproc.c | 177 ++++++++++++++++++++++++---
->>   1 file changed, 160 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
->> index 6398194075aa..fb4902e4dacf 100644
->> --- a/drivers/remoteproc/omap_remoteproc.c
->> +++ b/drivers/remoteproc/omap_remoteproc.c
->> @@ -2,7 +2,7 @@
->>   /*
->>    * OMAP Remote Processor driver
->>    *
->> - * Copyright (C) 2011 Texas Instruments, Inc.
->> + * Copyright (C) 2011-2020 Texas Instruments Incorporated - http://www.ti.com/
->>    * Copyright (C) 2011 Google, Inc.
->>    *
->>    * Ohad Ben-Cohen <ohad@wizery.com>
->> @@ -16,27 +16,51 @@
->>   #include <linux/kernel.h>
->>   #include <linux/module.h>
->>   #include <linux/err.h>
->> +#include <linux/of_device.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/dma-mapping.h>
->>   #include <linux/remoteproc.h>
->>   #include <linux/mailbox_client.h>
->>   #include <linux/omap-mailbox.h>
->> -
->> -#include <linux/platform_data/remoteproc-omap.h>
->> +#include <linux/regmap.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/reset.h>
->>   
->>   #include "omap_remoteproc.h"
->>   #include "remoteproc_internal.h"
->>   
->> +/**
->> + * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
->> + * @syscon: regmap handle for the system control configuration module
->> + * @boot_reg: boot register offset within the @syscon regmap
->> + */
->> +struct omap_rproc_boot_data {
->> +	struct regmap *syscon;
->> +	unsigned int boot_reg;
->> +};
->> +
->>   /**
->>    * struct omap_rproc - omap remote processor state
->>    * @mbox: mailbox channel handle
->>    * @client: mailbox client to request the mailbox channel
->> + * @boot_data: boot data structure for setting processor boot address
->>    * @rproc: rproc handle
->> + * @reset: reset handle
->>    */
->>   struct omap_rproc {
->>   	struct mbox_chan *mbox;
->>   	struct mbox_client client;
->> +	struct omap_rproc_boot_data *boot_data;
->>   	struct rproc *rproc;
->> +	struct reset_control *reset;
->> +};
->> +
->> +/**
->> + * struct omap_rproc_dev_data - device data for the omap remote processor
->> + * @device_name: device name of the remote processor
->> + */
->> +struct omap_rproc_dev_data {
->> +	const char *device_name;
->>   };
->>   
->>   /**
->> @@ -92,6 +116,21 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
->>   			ret);
->>   }
->>   
->> +/**
->> + * omap_rproc_write_dsp_boot_addr - set boot address for a DSP remote processor
->> + * @rproc: handle of a remote processor
->> + *
->> + * Set boot address for a supported DSP remote processor.
->> + */
->> +static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
->> +{
->> +	struct omap_rproc *oproc = rproc->priv;
->> +	struct omap_rproc_boot_data *bdata = oproc->boot_data;
->> +	u32 offset = bdata->boot_reg;
->> +
->> +	regmap_write(bdata->syscon, offset, rproc->bootaddr);
->> +}
->> +
->>   /*
->>    * Power up the remote processor.
->>    *
->> @@ -103,13 +142,11 @@ static int omap_rproc_start(struct rproc *rproc)
->>   {
->>   	struct omap_rproc *oproc = rproc->priv;
->>   	struct device *dev = rproc->dev.parent;
->> -	struct platform_device *pdev = to_platform_device(dev);
->> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
->>   	int ret;
->>   	struct mbox_client *client = &oproc->client;
->>   
->> -	if (pdata->set_bootaddr)
->> -		pdata->set_bootaddr(rproc->bootaddr);
->> +	if (oproc->boot_data)
->> +		omap_rproc_write_dsp_boot_addr(rproc);
->>   
->>   	client->dev = dev;
->>   	client->tx_done = NULL;
->> @@ -117,7 +154,7 @@ static int omap_rproc_start(struct rproc *rproc)
->>   	client->tx_block = false;
->>   	client->knows_txdone = false;
->>   
->> -	oproc->mbox = omap_mbox_request_channel(client, pdata->mbox_name);
->> +	oproc->mbox = mbox_request_channel(client, 0);
->>   	if (IS_ERR(oproc->mbox)) {
->>   		ret = -EBUSY;
->>   		dev_err(dev, "mbox_request_channel failed: %ld\n",
->> @@ -138,9 +175,9 @@ static int omap_rproc_start(struct rproc *rproc)
->>   		goto put_mbox;
->>   	}
->>   
->> -	ret = pdata->device_enable(pdev);
->> +	ret = reset_control_deassert(oproc->reset);
->>   	if (ret) {
->> -		dev_err(dev, "omap_device_enable failed: %d\n", ret);
->> +		dev_err(dev, "reset control deassert failed: %d\n", ret);
->>   		goto put_mbox;
->>   	}
->>   
->> @@ -154,13 +191,10 @@ static int omap_rproc_start(struct rproc *rproc)
->>   /* power off the remote processor */
->>   static int omap_rproc_stop(struct rproc *rproc)
->>   {
->> -	struct device *dev = rproc->dev.parent;
->> -	struct platform_device *pdev = to_platform_device(dev);
->> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
->>   	struct omap_rproc *oproc = rproc->priv;
->>   	int ret;
->>   
->> -	ret = pdata->device_shutdown(pdev);
->> +	ret = reset_control_assert(oproc->reset);
->>   	if (ret)
->>   		return ret;
->>   
->> @@ -175,12 +209,115 @@ static const struct rproc_ops omap_rproc_ops = {
->>   	.kick		= omap_rproc_kick,
->>   };
->>   
->> +static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
->> +	.device_name	= "dsp",
->> +};
->> +
->> +static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
->> +	.device_name	= "ipu",
->> +};
->> +
->> +static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
->> +	.device_name	= "dsp",
->> +};
->> +
->> +static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
->> +	.device_name	= "ipu",
->> +};
->> +
->> +static const struct of_device_id omap_rproc_of_match[] = {
->> +	{
->> +		.compatible     = "ti,omap4-dsp",
->> +		.data           = &omap4_dsp_dev_data,
->> +	},
->> +	{
->> +		.compatible     = "ti,omap4-ipu",
->> +		.data           = &omap4_ipu_dev_data,
->> +	},
->> +	{
->> +		.compatible     = "ti,omap5-dsp",
->> +		.data           = &omap5_dsp_dev_data,
->> +	},
->> +	{
->> +		.compatible     = "ti,omap5-ipu",
->> +		.data           = &omap5_ipu_dev_data,
->> +	},
->> +	{
->> +		/* end */
->> +	},
->> +};
->> +MODULE_DEVICE_TABLE(of, omap_rproc_of_match);
->> +
->> +static const char *omap_rproc_get_firmware(struct platform_device *pdev)
->> +{
->> +	const char *fw_name;
->> +	int ret;
->> +
->> +	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
->> +				      &fw_name);
->> +	if (ret)
->> +		return ERR_PTR(ret);
->> +
->> +	return fw_name;
->> +}
->> +
->> +static int omap_rproc_get_boot_data(struct platform_device *pdev,
->> +				    struct rproc *rproc)
->> +{
->> +	struct device_node *np = pdev->dev.of_node;
->> +	struct omap_rproc *oproc = rproc->priv;
->> +	const struct omap_rproc_dev_data *data;
->> +	int ret;
->> +
->> +	data = of_device_get_match_data(&pdev->dev);
->> +	if (!data)
->> +		return -ENODEV;
->> +
->> +	if (!of_property_read_bool(np, "ti,bootreg"))
->> +		return 0;
->> +
->> +	oproc->boot_data = devm_kzalloc(&pdev->dev, sizeof(*oproc->boot_data),
->> +					GFP_KERNEL);
->> +	if (!oproc->boot_data)
->> +		return -ENOMEM;
->> +
->> +	oproc->boot_data->syscon =
->> +			syscon_regmap_lookup_by_phandle(np, "ti,bootreg");
->> +	if (IS_ERR(oproc->boot_data->syscon)) {
->> +		ret = PTR_ERR(oproc->boot_data->syscon);
->> +		return ret;
->> +	}
->> +
->> +	if (of_property_read_u32_index(np, "ti,bootreg", 1,
->> +				       &oproc->boot_data->boot_reg)) {
->> +		dev_err(&pdev->dev, "couldn't get the boot register\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int omap_rproc_probe(struct platform_device *pdev)
->>   {
->> -	struct omap_rproc_pdata *pdata = pdev->dev.platform_data;
->> +	struct device_node *np = pdev->dev.of_node;
->>   	struct omap_rproc *oproc;
->>   	struct rproc *rproc;
->> +	const char *firmware;
->>   	int ret;
->> +	struct reset_control *reset;
->> +
->> +	if (!np) {
->> +		dev_err(&pdev->dev, "only DT-based devices are supported\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	reset = devm_reset_control_array_get_exclusive(&pdev->dev);
->> +	if (IS_ERR(reset))
->> +		return PTR_ERR(reset);
->> +
->> +	firmware = omap_rproc_get_firmware(pdev);
->> +	if (IS_ERR(firmware))
->> +		return PTR_ERR(firmware);
->>   
->>   	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
->>   	if (ret) {
->> @@ -188,16 +325,21 @@ static int omap_rproc_probe(struct platform_device *pdev)
->>   		return ret;
->>   	}
->>   
->> -	rproc = rproc_alloc(&pdev->dev, pdata->name, &omap_rproc_ops,
->> -			    pdata->firmware, sizeof(*oproc));
->> +	rproc = rproc_alloc(&pdev->dev, dev_name(&pdev->dev), &omap_rproc_ops,
->> +			    firmware, sizeof(*oproc));
->>   	if (!rproc)
->>   		return -ENOMEM;
->>   
->>   	oproc = rproc->priv;
->>   	oproc->rproc = rproc;
->> +	oproc->reset = reset;
->>   	/* All existing OMAP IPU and DSP processors have an MMU */
->>   	rproc->has_iommu = true;
->>   
->> +	ret = omap_rproc_get_boot_data(pdev, rproc);
->> +	if (ret)
->> +		goto free_rproc;
->> +
->>   	platform_set_drvdata(pdev, rproc);
->>   
->>   	ret = rproc_add(rproc);
->> @@ -226,6 +368,7 @@ static struct platform_driver omap_rproc_driver = {
->>   	.remove = omap_rproc_remove,
->>   	.driver = {
->>   		.name = "omap-rproc",
->> +		.of_match_table = omap_rproc_of_match,
->>   	},
->>   };
->>   
->>
-> 
+> You mean reuse old anon_vma here?
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Picking ancestor AV in anon_vma_clone instead of allocating new one.
+
+> 
+>> second time because this makes tree less optimal (and actually not a tree anymore).
+>> This is just a trick to prevent unlimited growth anon-vma chains in background:
+>> while each anon-vma has at least one vma or two childs then their count is
+>> limited with count of vmas which are visible and limited.
+>>
+>>>
+>>>> 	/* Drop inherited anon_vma, we'll reuse existing or allocate new. */
+>>>> 	vma->anon_vma = NULL;
+>>>>
+>>>
+>>> --
+>>> Wei Yang
+>>> Help you, Help me
+>>>
+> 
