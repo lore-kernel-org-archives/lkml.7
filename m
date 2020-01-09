@@ -2,163 +2,287 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8EFC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABC3C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FE020673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E89020673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="pu7ZPFnv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iSWGkYqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgAIJKI (ORCPT
+        id S1728972AbgAIJMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:10:08 -0500
-Received: from mga09.intel.com ([134.134.136.24]:26249 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbgAIJKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:10:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 01:10:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
-   d="scan'208";a="218309625"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Jan 2020 01:10:06 -0800
-Received: from fmsmsx126.amr.corp.intel.com (10.18.125.43) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jan 2020 01:10:06 -0800
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- FMSMSX126.amr.corp.intel.com (10.18.125.43) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jan 2020 01:10:06 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.176)
- by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 9 Jan 2020 01:10:06 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JOE3+vLQD9YjWLukeaZHVTGqz1O73oCVS/9m4VLlVff3Rxb1v62EjL+rvf9hB5hpxKNPAUI3uMGCcdfUD5v9mBIUMvjuEeFo9oLrqs1OT3nJe0WEsj0J4TX2WOqD/s1qgeFh8I5kGV6sqbxID4fAsancHDe2ZxrpKvRhAbHED3GS+GWrtOimK5sGUjvGgX40zxPnKeYVpp3vkZllOnmvYAbE7XWcghxjj/uHY4brwE2P5vud+vNLClqz6oWyfE9AwfM48AxumwlEcZHYxcJalbHlu2kb6pmanC5CJyriPxv9KgIoeBwxD3Ya+AdRgNOzclxnWP8TQv1nohesLf9Ibg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yMYLDu1aayWtzGG52YnYC/SOz36wwAMfQ7Xioz6MAvg=;
- b=KumvwjZauHVmVGsjs6tm2yh8R29or7SYh7tTxYBydg+mMmfxhQZ/Tm2m/GMc80ebIxYZk+Xy1lVQ7GQpbbXpeDiLrFiPMI5q3aANVsFxbw4NPED0zNdOM4pcV7iz921q0AW5ZZGGMDxjGUYL8h4PDpBRJd7/D1KPRDM1F771B3reZbb+OlsejlREHs1uMvEsoQy2BtMHDaxq2i9Bf1RM5IwwbOohY0bKBnvwo/rIB+YQ+ER8mGa74vC6d0ni8kLaSAVnhRFERDZMRjjwKZKI+Wb/ZWniZiCuwwu25Z6Y3sctZt2XOoTDh82EKJlb+lkZtROWqY/HdEFCMKEqSKNe4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yMYLDu1aayWtzGG52YnYC/SOz36wwAMfQ7Xioz6MAvg=;
- b=pu7ZPFnv+fRdQNvx9fkAm0t6xUyasOh7hXOE6pW9HQtsj+4zo0OVqyYJlOyXqoadOMppq8lgAtCmj/umamDmyvPE3B0WUfW0zuPbvl2Vl3oEtFoW89M7a3Qpd0NTBKpeC5blAykjQZzUP3wBtA6mwo5Tt9/cieA+TG3JyDOb/GE=
-Received: from SN6PR11MB2750.namprd11.prod.outlook.com (52.135.89.148) by
- SN6PR11MB3182.namprd11.prod.outlook.com (52.135.110.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Thu, 9 Jan 2020 09:10:05 +0000
-Received: from SN6PR11MB2750.namprd11.prod.outlook.com
- ([fe80::f044:6625:17ff:3c83]) by SN6PR11MB2750.namprd11.prod.outlook.com
- ([fe80::f044:6625:17ff:3c83%3]) with mapi id 15.20.2602.017; Thu, 9 Jan 2020
- 09:10:05 +0000
-From:   "Loh, Tien Hock" <tien.hock.loh@intel.com>
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rob Herring" <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "See, Chin Liang" <chin.liang.see@intel.com>,
-        "Tan, Ley Foon" <ley.foon.tan@intel.com>,
-        Ooi <IMCEAINVALID-Ooi@namprd11.prod.outlook.com>
-Subject: RE: [PATCH] MAINTAINERS: Replace Tien Hock Loh as Altera PIO
- maintainer
-Thread-Topic: [PATCH] MAINTAINERS: Replace Tien Hock Loh as Altera PIO
- maintainer
-Thread-Index: AQHVwley8VxKb1ZtM0q5x6Av+ymvqafiFDlQ
-Date:   Thu, 9 Jan 2020 09:10:04 +0000
-Message-ID: <SN6PR11MB27508E57D63DD660ACC8ABECBD390@SN6PR11MB2750.namprd11.prod.outlook.com>
-References: <20200103170155.100743-1-joyce.ooi@intel.com>
-In-Reply-To: <20200103170155.100743-1-joyce.ooi@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjZmMjAzMTAtZWQ1My00OTdkLWJjYzMtN2YwNjE1YjlkMzQxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTTRDUDNKTndpNGY1NXhTZERVVSszRVwvdWEya3Z6ZVNPKzgxTllzYWJGbVR4V285Qk9zUm9QaXNOTDVhWE9KSXgifQ==
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tien.hock.loh@intel.com; 
-x-originating-ip: [192.198.147.206]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ab32329b-85fd-43fb-1068-08d794e3b74e
-x-ms-traffictypediagnostic: SN6PR11MB3182:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB3182B27631249A7B13478C73BD390@SN6PR11MB3182.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:313;
-x-forefront-prvs: 02778BF158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(39860400002)(376002)(346002)(136003)(13464003)(199004)(189003)(2906002)(107886003)(55016002)(76116006)(9686003)(316002)(33656002)(8936002)(71200400001)(81166006)(54906003)(110136005)(8676002)(81156014)(66446008)(66556008)(7696005)(64756008)(66476007)(53546011)(6506007)(26005)(478600001)(86362001)(186003)(4326008)(5660300002)(52536014)(66946007)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR11MB3182;H:SN6PR11MB2750.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pZahcKgFJ4A0fJh/DuOB94ZgXY0I8v3px0I7xYJDizItTp/wbdmfzySp6LFtXxHqgifgiDURjJCYC3KzGTIl2cgFb7qNgrLTQolbfpmbZ+w0fBsMD0lSyE8NRQG/JTuAvkxsQEh/wYdTEyw6b/HzFvkZjFd9m4rBRnea6OqVcaI2DMGZQLiPppEdYF6rDia7a4cjTAnrhui/t+R7D3PqWnr9/bx6A4Kpg3e9QZQ7mUQKSmeqb3mrXCVZSY4fjeqYDvl4+NtflQGirh3aw7984QHjfVyQarZiQIyAk9WuSLXwZVFjwXqP95J8kD5HljsO3veTLpMJLo2bf70VwPysn+4Tm+/oQZ6PiydKMQvzzxe3A5DrdrEfdpSBNkEEn7ARnYd9LFAk2raXKk2GCc50O85kiOcu6qswG/rcVXGIyeuTUNw0ib6HSVG3g/7h9tE+gNPIcO5O6IARdoBHQTgFwbPVG+jVz26ipUWhdcKfYMF+KM8nub8K5rfU9hiKHpT+
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jan 2020 04:12:14 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41664 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728565AbgAIJMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:12:14 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0099CCK3103646;
+        Thu, 9 Jan 2020 03:12:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578561132;
+        bh=qvfS1d11frb/j6Qof3I+09m+UPBh3+LWb8zGHKDjd4Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iSWGkYqj+YRl+4xfB6HDnc/IZwgIAVdEN0ApwB7CmBjZn2shODwKD6K9NJI3bAV4y
+         /jmichNNuyqMf+a/SShgaMyjGaLk3rdFun/FLOv9S+c1lq0na35TpkZ8xMHGvnSaXL
+         uvpEQi71+HDOi5rwlP9nmxtXT8CCuiJGaWmnxgdg=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0099CCpt109864
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Jan 2020 03:12:12 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
+ 2020 03:12:10 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Jan 2020 03:12:10 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0099C873097804;
+        Thu, 9 Jan 2020 03:12:09 -0600
+Subject: Re: [PATCHv4 04/14] remoteproc/omap: Add support to parse internal
+ memories from DT
+To:     Suman Anna <s-anna@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200102131845.12992-1-t-kristo@ti.com>
+ <20200102131845.12992-5-t-kristo@ti.com>
+ <b9690449-5edc-e8f0-2c26-5da6900e23e3@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <aef3436a-4491-e900-97cf-ac0c57e032a3@ti.com>
+Date:   Thu, 9 Jan 2020 11:12:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab32329b-85fd-43fb-1068-08d794e3b74e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 09:10:04.9058
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2zLtJlNuICnT7EmJBHUA3M6Ah5gYpGX1HnAQzReNrLPw+PHPA+JqNvC1cnDFQqOGcPGsHXR8pFN54fshnUFk6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3182
-X-OriginatorOrg: intel.com
+In-Reply-To: <b9690449-5edc-e8f0-2c26-5da6900e23e3@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Ooi, Joyce <joyce.ooi@intel.com>
-> Sent: Saturday, January 4, 2020 1:02 AM
-> To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>; David S .
-> Miller <davem@davemloft.net>; Rob Herring <robh@kernel.org>; Greg
-> Kroah-Hartman <gregkh@linuxfoundation.org>; Jonathan Cameron
-> <Jonathan.Cameron@huawei.com>
-> Cc: linux-kernel@vger.kernel.org; Ooi, Joyce <joyce.ooi@intel.com>; Loh,
-> Tien Hock <tien.hock.loh@intel.com>; See, Chin Liang
-> <chin.liang.see@intel.com>; Tan, Ley Foon <ley.foon.tan@intel.com>; Ooi
-> Subject: [PATCH] MAINTAINERS: Replace Tien Hock Loh as Altera PIO
-> maintainer
->=20
-> This patch is to replace Tien Hock Loh as Altera PIO maintainer as he has
-> moved to a different role.
->=20
+On 08/01/2020 20:05, Suman Anna wrote:
+> Hi Tero,
+> 
+> On 1/2/20 7:18 AM, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> The OMAP remoteproc driver has been enhanced to parse and store
+>> the kernel mappings for different internal RAM memories that may
+>> be present within each remote processor IP subsystem. Different
+>> devices have varying memories present on current SoCs. The current
+>> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
+>> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
+>> L2 RAM memories.
+>>
+>> IPUs are expected to have the L2RAM at a fixed device address of
+>> 0x20000000, based on the current limitations on Attribute MMU
+>> configurations.
+>>
+>> NOTE:
+>> The current logic doesn't handle the parsing of memories for DRA7
+>> remoteproc devices, and will be added alongside the DRA7 support.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo: converted to parse mem names / device addresses from pdata]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>> v4:
+>>    - moved device data mem definitions under single struct
+>>
+>>   drivers/remoteproc/omap_remoteproc.c | 89 ++++++++++++++++++++++++++++
+>>   1 file changed, 89 insertions(+)
+>>
+>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>> index 557c439571c1..e429b2296d7a 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.c
+>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>> @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
+>>   	unsigned int boot_reg;
+>>   };
+>>   
+>> +/**
+>> + * struct omap_rproc_mem - internal memory structure
+>> + * @cpu_addr: MPU virtual address of the memory region
+>> + * @bus_addr: bus address used to access the memory region
+>> + * @dev_addr: device address of the memory region from DSP view
+>> + * @size: size of the memory region
+>> + */
+>> +struct omap_rproc_mem {
+>> +	void __iomem *cpu_addr;
+>> +	phys_addr_t bus_addr;
+>> +	u32 dev_addr;
+>> +	size_t size;
+>> +};
+>> +
+>>   /**
+>>    * struct omap_rproc - omap remote processor state
+>>    * @mbox: mailbox channel handle
+>>    * @client: mailbox client to request the mailbox channel
+>>    * @boot_data: boot data structure for setting processor boot address
+>> + * @mem: internal memory regions data
+>> + * @num_mems: number of internal memory regions
+>>    * @rproc: rproc handle
+>>    * @reset: reset handle
+>>    */
+>> @@ -51,16 +67,30 @@ struct omap_rproc {
+>>   	struct mbox_chan *mbox;
+>>   	struct mbox_client client;
+>>   	struct omap_rproc_boot_data *boot_data;
+>> +	struct omap_rproc_mem *mem;
+>> +	int num_mems;
+>>   	struct rproc *rproc;
+>>   	struct reset_control *reset;
+>>   };
+>>   
+>> +/**
+>> + * struct omap_rproc_mem_data - memory definitions for an omap remote processor
+>> + * @mem_name: name for this memory entry
+>> + * @dev_addr: device address for the memory entry
+>> + */
+>> +struct omap_rproc_mem_data {
+>> +	const char *name;
+>> +	const u32 dev_addr;
+>> +};
+>> +
+>>   /**
+>>    * struct omap_rproc_dev_data - device data for the omap remote processor
+>>    * @device_name: device name of the remote processor
+>> + * @mems: memory definitions for this remote processor
+>>    */
+>>   struct omap_rproc_dev_data {
+>>   	const char *device_name;
+>> +	const struct omap_rproc_mem_data *mems;
+>>   };
+>>   
+>>   /**
+>> @@ -221,12 +251,18 @@ static const struct rproc_ops omap_rproc_ops = {
+>>   	.kick		= omap_rproc_kick,
+>>   };
+>>   
+>> +static const struct omap_rproc_mem_data ipu_mems[] = {
+>> +	{ .name = "l2ram", .dev_addr = 0x20000000 },
+>> +	{ },
+>> +};
+>> +
+>>   static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>>   	.device_name	= "dsp",
+>>   };
+>>   
+>>   static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
+>>   	.device_name	= "ipu",
+>> +	.mems		= ipu_mems,
+>>   };
+>>   
+>>   static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>> @@ -235,6 +271,7 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>>   
+>>   static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>>   	.device_name	= "ipu",
+>> +	.mems		= ipu_mems,
+>>   };
+>>   
+>>   static const struct of_device_id omap_rproc_of_match[] = {
+>> @@ -309,6 +346,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>>   	return 0;
+>>   }
+>>   
+>> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+>> +					       struct rproc *rproc)
+>> +{
+>> +	struct omap_rproc *oproc = rproc->priv;
+>> +	struct device *dev = &pdev->dev;
+>> +	const struct omap_rproc_dev_data *data;
+>> +	struct resource *res;
+>> +	int num_mems;
+>> +	int i;
+>> +
+>> +	data = of_device_get_match_data(&pdev->dev);
+>> +	if (!data)
+>> +		return -ENODEV;
+>> +
+>> +	if (!data->mems)
+>> +		return 0;
+>> +
+>> +	for (num_mems = 0; data->mems[num_mems].name; num_mems++)
+>> +		;
+> 
+> Think you can restore back the ARRAY_SIZE here? Don't think you need the
+> sentinel in the names either.
 
-ACK. Thanks Joyce.=20
+Can't do that. There is nothing to use the ARRAY_SIZE against here. I 
+either need to have the ARRAY_SIZE embedded in the device data, or have 
+the sentinel. Having the sentinel is cleaner.
 
-> Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
-> ---
->  MAINTAINERS |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a049abc..3401c4a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -726,7 +726,7 @@ S:	Maintained
->  F:	drivers/mailbox/mailbox-altera.c
->=20
->  ALTERA PIO DRIVER
-> -M:	Tien Hock Loh <thloh@altera.com>
-> +M:	Joyce Ooi <joyce.ooi@intel.com>
->  L:	linux-gpio@vger.kernel.org
->  S:	Maintained
->  F:	drivers/gpio/gpio-altera.c
-> --
-> 1.7.1
+> 
+>> +
+>> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+>> +				  GFP_KERNEL);
+>> +	if (!oproc->mem)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < num_mems; i++) {
+>> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> +						   data->mems[i].name);
+>> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
+>> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
+>> +			dev_err(dev, "failed to parse and map %s memory\n",
+>> +				data->mems[i].name);
+>> +			return PTR_ERR(oproc->mem[i].cpu_addr);
+>> +		}
+>> +		oproc->mem[i].bus_addr = res->start;
+>> +		oproc->mem[i].dev_addr = data->mems[i].dev_addr;
+>> +		oproc->mem[i].size = resource_size(res);
+>> +
+>> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
+> 
+> Would appreciate if you can fix up to use %pK here.
 
+Ok, can change those.
+
+-Tero
+
+> 
+> regards
+> Suman
+> 
+>> +			data->mems[i].name, &oproc->mem[i].bus_addr,
+>> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
+>> +			oproc->mem[i].dev_addr);
+>> +	}
+>> +	oproc->num_mems = num_mems;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int omap_rproc_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device_node *np = pdev->dev.of_node;
+>> @@ -348,6 +433,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>>   	/* All existing OMAP IPU and DSP processors have an MMU */
+>>   	rproc->has_iommu = true;
+>>   
+>> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
+>> +	if (ret)
+>> +		goto free_rproc;
+>> +
+>>   	ret = omap_rproc_get_boot_data(pdev, rproc);
+>>   	if (ret)
+>>   		goto free_rproc;
+>>
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
