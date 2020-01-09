@@ -2,561 +2,282 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CB6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2BEC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68682072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAEC2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbgAIPJd (ORCPT
+        id S1732245AbgAIPJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 9 Jan 2020 10:09:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:60812 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732220AbgAIPJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jan 2020 10:09:33 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:35105 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732107AbgAIPJb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:09:31 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 7T6uRdJI1Nk04eYA9s8NIf6sbOCEG03+a4FXSufhR4kp9CFjKqHtt3w3l6WpJ+tcaP5YCgfW6M
- PXr/BGO2oyOtYgJhfs472Bw1qyTO9dO/eegBq8b2SCVqgqW7wY0d+BbqQPoVHsxldD5FG7PXot
- 2Lsx0waFeJ9w6IJBYorX77UyomCTvPK+paTE/WLzOPTgpprv3lW6cVZvIb1UaRERZVcHJnp2ma
- 23aHH95zVV8APkoHpWV0Ec2IJBIV/xG0Ds5+n+IDAgTE9IishLmE1mucFzcbKIzdXgs2ZUdGT4
- pFg=
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="60250340"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jan 2020 08:09:30 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 9 Jan 2020 08:09:28 -0700
-Received: from soft-dev3.microsemi.net (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 9 Jan 2020 08:09:26 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>
-CC:     <davem@davemloft.net>, <roopa@cumulusnetworks.com>,
-        <nikolay@cumulusnetworks.com>, <jakub.kicinski@netronome.com>,
-        <vivien.didelot@gmail.com>, <andrew@lunn.ch>,
-        <jeffrey.t.kirsher@intel.com>, <olteanv@gmail.com>,
-        <anirudh.venkataramanan@intel.com>, <dsahern@gmail.com>,
-        <jiri@mellanox.com>, <UNGLinuxDriver@microchip.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [RFC net-next Patch 3/3] net: bridge: mrp: Add netlink support to configure MRP
-Date:   Thu, 9 Jan 2020 16:06:40 +0100
-Message-ID: <20200109150640.532-4-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200109150640.532-1-horatiu.vultur@microchip.com>
-References: <20200109150640.532-1-horatiu.vultur@microchip.com>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E08C1FB;
+        Thu,  9 Jan 2020 07:09:32 -0800 (PST)
+Received: from [10.1.27.38] (e122027.cambridge.arm.com [10.1.27.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 336333F534;
+        Thu,  9 Jan 2020 07:09:30 -0800 (PST)
+Subject: Re: [PATCH v2 6/6] KVM: arm64: Support the VCPU preemption check
+To:     Zengruan Ye <yezengruan@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Cc:     maz@kernel.org, james.morse@arm.com, linux@armlinux.org.uk,
+        suzuki.poulose@arm.com, julien.thierry.kdev@gmail.com,
+        catalin.marinas@arm.com, mark.rutland@arm.com, will@kernel.org,
+        daniel.lezcano@linaro.org
+References: <20191226135833.1052-1-yezengruan@huawei.com>
+ <20191226135833.1052-7-yezengruan@huawei.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <5a1f6745-2deb-253b-7022-f2725d8d40ba@arm.com>
+Date:   Thu, 9 Jan 2020 15:09:28 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191226135833.1052-7-yezengruan@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend br_netlink to be able to create/delete MRP instances. The current
-configurations options for each instance are:
-- set primary port
-- set secondary port
-- set MRP ring role (MRM or MRC)
-- set MRP ring id.
+On 26/12/2019 13:58, Zengruan Ye wrote:
+> Support the vcpu_is_preempted() functionality under KVM/arm64. This will
+> enhance lock performance on overcommitted hosts (more runnable VCPUs
+> than physical CPUs in the system) as doing busy waits for preempted
+> VCPUs will hurt system performance far worse than early yielding.
+> 
+> unix benchmark result:
+>    host:  kernel 5.5.0-rc1, HiSilicon Kunpeng920, 8 CPUs
+>    guest: kernel 5.5.0-rc1, 16 VCPUs
+> 
+>                 test-case                |    after-patch    |   before-patch
+> ----------------------------------------+-------------------+------------------
+>   Dhrystone 2 using register variables   | 334600751.0 lps   | 335319028.3 lps
+>   Double-Precision Whetstone             |     32856.1 MWIPS |     32849.6 MWIPS
+>   Execl Throughput                       |      3662.1 lps   |      2718.0 lps
+>   File Copy 1024 bufsize 2000 maxblocks  |    432906.4 KBps  |    158011.8 KBps
+>   File Copy 256 bufsize 500 maxblocks    |    116023.0 KBps  |     37664.0 KBps
+>   File Copy 4096 bufsize 8000 maxblocks  |   1432769.8 KBps  |    441108.8 KBps
+>   Pipe Throughput                        |   6405029.6 lps   |   6021457.6 lps
+>   Pipe-based Context Switching           |    185872.7 lps   |    184255.3 lps
+>   Process Creation                       |      4025.7 lps   |      3706.6 lps
+>   Shell Scripts (1 concurrent)           |      6745.6 lpm   |      6436.1 lpm
+>   Shell Scripts (8 concurrent)           |       998.7 lpm   |       931.1 lpm
+>   System Call Overhead                   |   3913363.1 lps   |   3883287.8 lps
+> ----------------------------------------+-------------------+------------------
+>   System Benchmarks Index Score          |      1835.1       |      1327.6
+> 
+> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
+> ---
+>   arch/arm64/include/asm/paravirt.h |   3 +
+>   arch/arm64/kernel/paravirt.c      | 117 ++++++++++++++++++++++++++++++
+>   arch/arm64/kernel/setup.c         |   2 +
+>   include/linux/cpuhotplug.h        |   1 +
+>   4 files changed, 123 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
+> index 7b1c81b544bb..ca3a2c7881f3 100644
+> --- a/arch/arm64/include/asm/paravirt.h
+> +++ b/arch/arm64/include/asm/paravirt.h
+> @@ -29,6 +29,8 @@ static inline u64 paravirt_steal_clock(int cpu)
+>   
+>   int __init pv_time_init(void);
+>   
+> +int __init pv_lock_init(void);
+> +
+>   __visible bool __native_vcpu_is_preempted(int cpu);
+>   
+>   static inline bool pv_vcpu_is_preempted(int cpu)
+> @@ -39,6 +41,7 @@ static inline bool pv_vcpu_is_preempted(int cpu)
+>   #else
+>   
+>   #define pv_time_init() do {} while (0)
+> +#define pv_lock_init() do {} while (0)
+>   
+>   #endif // CONFIG_PARAVIRT
+>   
+> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
+> index d8f1ba8c22ce..bd2ad6a17a26 100644
+> --- a/arch/arm64/kernel/paravirt.c
+> +++ b/arch/arm64/kernel/paravirt.c
+> @@ -22,6 +22,7 @@
+>   #include <asm/paravirt.h>
+>   #include <asm/pvclock-abi.h>
+>   #include <asm/smp_plat.h>
+> +#include <asm/pvlock-abi.h>
+>   
+>   struct static_key paravirt_steal_enabled;
+>   struct static_key paravirt_steal_rq_enabled;
+> @@ -35,6 +36,10 @@ struct pv_time_stolen_time_region {
+>   	struct pvclock_vcpu_stolen_time *kaddr;
+>   };
+>   
+> +struct pv_lock_state_region {
+> +	struct pvlock_vcpu_state *kaddr;
+> +};
+> +
+>   static DEFINE_PER_CPU(struct pv_time_stolen_time_region, stolen_time_region);
+>   
+>   static bool steal_acc = true;
+> @@ -158,3 +163,115 @@ int __init pv_time_init(void)
+>   
+>   	return 0;
+>   }
+> +
+> +static DEFINE_PER_CPU(struct pv_lock_state_region, lock_state_region);
+> +
+> +static bool kvm_vcpu_is_preempted(int cpu)
+> +{
+> +	struct pv_lock_state_region *reg;
+> +	__le64 preempted_le;
+> +
+> +	reg = per_cpu_ptr(&lock_state_region, cpu);
+> +	if (!reg->kaddr) {
+> +		pr_warn_once("PV lock enabled but not configured for cpu %d\n",
+> +			     cpu);
+> +		return false;
+> +	}
+> +
+> +	preempted_le = le64_to_cpu(READ_ONCE(reg->kaddr->preempted));
+> +
+> +	return !!(preempted_le & 1);
 
-To create a MRP instance on the bridge:
-$ bridge mrp add dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1
+According to the documentation preempted != 0 means preempted, but here you are checking the LSB. You need to be consistent about the ABI.
 
-Where:
-p_port, s_port: can be any port under the bridge
-ring_role: can have the value 1(MRC - Media Redundancy Client) or
-           2(MRM - Media Redundancy Manager). In a ring can be only one MRM.
-ring_id: unique id for each MRP instance.
+> +}
+> +
+> +static int pvlock_vcpu_state_dying_cpu(unsigned int cpu)
+> +{
+> +	struct pv_lock_state_region *reg;
+> +
+> +	reg = this_cpu_ptr(&lock_state_region);
+> +	if (!reg->kaddr)
+> +		return 0;
+> +
+> +	memunmap(reg->kaddr);
+> +	memset(reg, 0, sizeof(*reg));
+> +
+> +	return 0;
+> +}
+> +
+> +static int init_pvlock_vcpu_state(unsigned int cpu)
+> +{
+> +	struct pv_lock_state_region *reg;
+> +	struct arm_smccc_res res;
+> +
+> +	reg = this_cpu_ptr(&lock_state_region);
+> +
+> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_LOCK_PREEMPTED, &res);
+> +
+> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED) {
+> +		pr_warn("Failed to init PV lock data structure\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	reg->kaddr = memremap(res.a0,
+> +			      sizeof(struct pvlock_vcpu_state),
+> +			      MEMREMAP_WB);
+> +
+> +	if (!reg->kaddr) {
+> +		pr_warn("Failed to map PV lock data structure\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int kvm_arm_init_pvlock(void)
+> +{
+> +	int ret;
+> +
+> +	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVM_PVLOCK_STARTING,
+> +				"hypervisor/arm/pvlock:starting",
+> +				init_pvlock_vcpu_state,
+> +				pvlock_vcpu_state_dying_cpu);
+> +	if (ret < 0) {
+> +		pr_warn("PV-lock init failed\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static bool has_kvm_pvlock(void)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	/* To detect the presence of PV lock support we require SMCCC 1.1+ */
+> +	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
+> +		return false;
+> +
+> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+> +			     ARM_SMCCC_HV_PV_LOCK_FEATURES, &res);
 
-It is possible to create multiple instances. Each instance has to have it's own
-ring_id and a port can't be part of multiple instances:
-$ bridge mrp add dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2
+As mentioned previously we could do with something more robust to check that the hypervisor is actually KVM before assuming that vendor specific IDs are valid.
 
-To see current MRP instances and their status:
-$ bridge mrp show
-dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2 ring_state 3
-dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1 ring_state 4
+Steve
 
-Where:
-p_port, s_port, ring_role, ring_id: represent the configuration values. It is
-   possible for primary port to change the role with the secondary port.
-   It depends on the states through which the node goes.
-ring_state: depends on the ring_role. If mrp_ring_role is 1(MRC) then the values
-   of mrp_ring_state can be: 0(AC_STAT1), 1(DE_IDLE), 2(PT), 3(DE), 4(PT_IDLE).
-   If mrp_ring_role is 2(MRM) then the values of mrp_ring_state can be:
-   0(AC_STAT1), 1(PRM_UP), 2(CHK_RO), 3(CHK_RC).
-
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- include/uapi/linux/if_bridge.h |  27 ++++
- include/uapi/linux/rtnetlink.h |   7 +
- net/bridge/br_mrp.c            | 281 +++++++++++++++++++++++++++++++++
- net/bridge/br_netlink.c        |   9 ++
- net/bridge/br_private.h        |   2 +
- net/bridge/br_private_mrp.h    |   9 ++
- security/selinux/nlmsgtab.c    |   5 +-
- 7 files changed, 339 insertions(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-index 4a58e3d7de46..00f4f465d62a 100644
---- a/include/uapi/linux/if_bridge.h
-+++ b/include/uapi/linux/if_bridge.h
-@@ -265,6 +265,33 @@ enum {
- };
- #define MDBA_SET_ENTRY_MAX (__MDBA_SET_ENTRY_MAX - 1)
- 
-+#ifdef CONFIG_BRIDGE_MRP
-+enum {
-+	MRPA_UNSPEC,
-+	MRPA_MRP,
-+	__MRPA_MAX,
-+};
-+#define MRPA_MAX (__MRPA_MAX - 1)
-+
-+enum {
-+	MRPA_MRP_UNSPEC,
-+	MRPA_MRP_ENTRY,
-+	__MRPA_MRP_MAX,
-+};
-+#define MRPA_MRP_MAX (__MRPA_MRP_MAX - 1)
-+
-+enum {
-+	MRP_ATTR_UNSPEC,
-+	MRP_ATTR_P_IFINDEX,
-+	MRP_ATTR_S_IFINDEX,
-+	MRP_ATTR_RING_ROLE,
-+	MRP_ATTR_RING_NR,
-+	MRP_ATTR_RING_STATE,
-+	__MRP_ATTR_MAX,
-+};
-+#define MRP_ATTR_MAX (__MRP_ATTR_MAX - 1)
-+#endif
-+
- /* Embedded inside LINK_XSTATS_TYPE_BRIDGE */
- enum {
- 	BRIDGE_XSTATS_UNSPEC,
-diff --git a/include/uapi/linux/rtnetlink.h b/include/uapi/linux/rtnetlink.h
-index 1418a8362bb7..b1d72a5309cd 100644
---- a/include/uapi/linux/rtnetlink.h
-+++ b/include/uapi/linux/rtnetlink.h
-@@ -171,6 +171,13 @@ enum {
- 	RTM_GETLINKPROP,
- #define RTM_GETLINKPROP	RTM_GETLINKPROP
- 
-+	RTM_NEWMRP = 112,
-+#define RTM_NEWMRP	RTM_NEWMRP
-+	RTM_DELMRP,
-+#define RTM_DELMRP	RTM_DELMRP
-+	RTM_GETMRP,
-+#define RTM_GETMRP	RTM_GETMRP
-+
- 	__RTM_MAX,
- #define RTM_MAX		(((__RTM_MAX + 3) & ~3) - 1)
- };
-diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-index a84aab3f7114..4173021d3bfa 100644
---- a/net/bridge/br_mrp.c
-+++ b/net/bridge/br_mrp.c
-@@ -1234,3 +1234,284 @@ void br_mrp_port_uninit(struct net_bridge_port *port)
- 
- 	mutex_unlock(&mrp->lock);
- }
-+
-+/* Do sanity checks and obtain device and the ring */
-+static int br_mrp_parse(struct sk_buff *skb, struct nlmsghdr *nlh,
-+			struct net_device **pdev, struct br_mrp_config *conf)
-+{
-+	struct nlattr *tb[MRP_ATTR_MAX + 1];
-+	struct net *net = sock_net(skb->sk);
-+	struct br_port_msg *bpm;
-+	struct net_device *dev;
-+	int err;
-+
-+	err = nlmsg_parse_deprecated(nlh, sizeof(*bpm), tb,
-+				     MRP_ATTR_MAX, NULL, NULL);
-+	if (err < 0)
-+		return err;
-+
-+	bpm = nlmsg_data(nlh);
-+	if (bpm->ifindex == 0) {
-+		pr_info("PF_BRIDGE: %s with invalid ifindex\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	dev = __dev_get_by_index(net, bpm->ifindex);
-+	if (!dev) {
-+		pr_info("PF_BRIDGE: %s with unknown ifindex\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	if (!(dev->priv_flags & IFF_EBRIDGE)) {
-+		pr_info("PF_BRIDGE: %s with non-bridge\n", __func__);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	*pdev = dev;
-+
-+	if (tb[MRP_ATTR_P_IFINDEX])
-+		conf->p_ifindex = nla_get_u32(tb[MRP_ATTR_P_IFINDEX]);
-+	if (tb[MRP_ATTR_S_IFINDEX])
-+		conf->s_ifindex = nla_get_u32(tb[MRP_ATTR_S_IFINDEX]);
-+	if (tb[MRP_ATTR_RING_ROLE])
-+		conf->ring_role = nla_get_u8(tb[MRP_ATTR_RING_ROLE]);
-+	if (tb[MRP_ATTR_RING_NR])
-+		conf->ring_nr = nla_get_u8(tb[MRP_ATTR_RING_NR]);
-+
-+	return 0;
-+}
-+
-+static int br_mrp_fill_entry(struct sk_buff *skb, struct netlink_callback *cb,
-+			     struct net_device *dev)
-+{
-+	int idx = 0, s_idx = cb->args[1], err = 0;
-+	struct net_bridge *br = netdev_priv(dev);
-+	struct br_mrp *mrp;
-+	struct nlattr *nest, *nest2;
-+
-+	nest = nla_nest_start_noflag(skb, MRPA_MRP);
-+	if (!nest)
-+		return -EMSGSIZE;
-+
-+	list_for_each_entry_rcu(mrp, &br->mrp_list, list) {
-+		if (idx < s_idx)
-+			goto skip;
-+
-+		nest2 = nla_nest_start_noflag(skb, MRPA_MRP_ENTRY);
-+		if (!nest2) {
-+			err = -EMSGSIZE;
-+			mutex_unlock(&mrp->lock);
-+			break;
-+		}
-+
-+		mutex_lock(&mrp->lock);
-+
-+		if (mrp->p_port)
-+			nla_put_u32(skb, MRP_ATTR_P_IFINDEX,
-+				    mrp->p_port->dev->ifindex);
-+		if (mrp->s_port)
-+			nla_put_u32(skb, MRP_ATTR_S_IFINDEX,
-+				    mrp->s_port->dev->ifindex);
-+
-+		nla_put_u32(skb, MRP_ATTR_RING_NR, mrp->ring_nr);
-+		nla_put_u32(skb, MRP_ATTR_RING_ROLE, mrp->ring_role);
-+
-+		if (mrp->ring_role == BR_MRP_RING_ROLE_MRM)
-+			nla_put_u32(skb, MRP_ATTR_RING_STATE, mrp->mrm_state);
-+		if (mrp->ring_role == BR_MRP_RING_ROLE_MRC)
-+			nla_put_u32(skb, MRP_ATTR_RING_STATE, mrp->mrc_state);
-+
-+		mutex_unlock(&mrp->lock);
-+
-+		nla_nest_end(skb, nest2);
-+skip:
-+		idx++;
-+	}
-+
-+	cb->args[1] = idx;
-+	nla_nest_end(skb, nest);
-+	return err;
-+}
-+
-+static int br_mrp_dump(struct sk_buff *skb, struct netlink_callback *cb)
-+{
-+	struct net *net = sock_net(skb->sk);
-+	struct nlmsghdr *nlh = NULL;
-+	struct net_device *dev;
-+	int idx = 0, s_idx;
-+
-+	s_idx = cb->args[0];
-+
-+	rcu_read_lock();
-+
-+	cb->seq = net->dev_base_seq;
-+
-+	for_each_netdev_rcu(net, dev) {
-+		if (dev->priv_flags & IFF_EBRIDGE) {
-+			struct br_port_msg *bpm;
-+
-+			if (idx < s_idx)
-+				goto skip;
-+
-+			nlh = nlmsg_put(skb, NETLINK_CB(cb->skb).portid,
-+					cb->nlh->nlmsg_seq, RTM_GETMRP,
-+					sizeof(*bpm), NLM_F_MULTI);
-+			if (!nlh)
-+				break;
-+
-+			bpm = nlmsg_data(nlh);
-+			memset(bpm, 0, sizeof(*bpm));
-+			bpm->ifindex = dev->ifindex;
-+			if (br_mrp_fill_entry(skb, cb, dev) < 0)
-+				goto out;
-+
-+			cb->args[1] = 0;
-+			nlmsg_end(skb, nlh);
-+skip:
-+			idx++;
-+		}
-+	}
-+
-+out:
-+	if (nlh)
-+		nlmsg_end(skb, nlh);
-+	rcu_read_unlock();
-+	cb->args[0] = idx;
-+	return skb->len;
-+}
-+
-+static int br_mrp_add(struct sk_buff *skb, struct nlmsghdr *nlh,
-+		      struct netlink_ext_ack *extack)
-+{
-+	struct net_bridge_port *p_port, *s_port;
-+	struct net *net = sock_net(skb->sk);
-+	enum br_mrp_ring_role_type role;
-+	struct br_mrp_config conf;
-+	struct net_device *dev;
-+	struct net_bridge *br;
-+	struct br_mrp *mrp;
-+	u32 ring_nr;
-+	int err;
-+
-+	err = br_mrp_parse(skb, nlh, &dev, &conf);
-+	if (err < 0)
-+		return err;
-+
-+	br = netdev_priv(dev);
-+
-+	/* Get priority and secondary ports */
-+	dev = __dev_get_by_index(net, conf.p_ifindex);
-+	if (!dev)
-+		return -ENODEV;
-+
-+	p_port = br_port_get_rtnl(dev);
-+	if (!p_port || p_port->br != br)
-+		return -EINVAL;
-+
-+	dev = __dev_get_by_index(net, conf.s_ifindex);
-+	if (!dev)
-+		return -ENODEV;
-+
-+	s_port = br_port_get_rtnl(dev);
-+	if (!s_port || s_port->br != br)
-+		return -EINVAL;
-+
-+	/* Get role */
-+	role = conf.ring_role;
-+
-+	/* Get ring number */
-+	ring_nr = conf.ring_nr;
-+
-+	/* It is not possible to have MRP instances with the same ID */
-+	mrp = br_mrp_find(br, ring_nr);
-+	if (mrp)
-+		return -EINVAL;
-+
-+	/* Create the mrp instance */
-+	err = br_mrp_create(br, ring_nr);
-+	if (err < 0)
-+		return err;
-+
-+	mrp = br_mrp_find(br, ring_nr);
-+
-+	mutex_lock(&mrp->lock);
-+
-+	/* Initialize the ports */
-+	err = br_mrp_port_init(p_port, mrp, BR_MRP_PORT_ROLE_PRIMARY);
-+	if (err < 0) {
-+		mutex_unlock(&mrp->lock);
-+		goto delete_mrp;
-+	}
-+
-+	err = br_mrp_port_init(s_port, mrp, BR_MRP_PORT_ROLE_SECONDARY);
-+	if (err < 0) {
-+		mutex_unlock(&mrp->lock);
-+		goto delete_port;
-+	}
-+
-+	if (role == BR_MRP_RING_ROLE_MRM)
-+		br_mrp_set_mrm_role(mrp);
-+	if (role == BR_MRP_RING_ROLE_MRC)
-+		br_mrp_set_mrc_role(mrp);
-+
-+	mutex_unlock(&mrp->lock);
-+
-+	return 0;
-+
-+delete_port:
-+	br_mrp_port_uninit(p_port);
-+
-+delete_mrp:
-+	br_mrp_destroy(br, ring_nr);
-+	return err;
-+}
-+
-+static int br_mrp_del(struct sk_buff *skb, struct nlmsghdr *nlh,
-+		      struct netlink_ext_ack *extack)
-+{
-+	struct br_mrp_config conf;
-+	struct net_device *dev;
-+	struct net_bridge *br;
-+	struct br_mrp *mrp;
-+	u32 ring_nr;
-+	int err;
-+
-+	err = br_mrp_parse(skb, nlh, &dev, &conf);
-+	if (err < 0)
-+		return err;
-+
-+	br = netdev_priv(dev);
-+
-+	/* Get ring number */
-+	ring_nr = conf.ring_nr;
-+
-+	mrp = br_mrp_find(br, ring_nr);
-+	if (!mrp) {
-+		pr_info("PF_BRIDGE: %s with invalid ring_nr\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	br_mrp_port_uninit(mrp->p_port);
-+	br_mrp_port_uninit(mrp->s_port);
-+
-+	br_mrp_destroy(br, ring_nr);
-+
-+	return 0;
-+}
-+
-+void br_mrp_netlink_init(void)
-+{
-+	rtnl_register_module(THIS_MODULE, PF_BRIDGE, RTM_GETMRP, NULL,
-+			     br_mrp_dump, 0);
-+	rtnl_register_module(THIS_MODULE, PF_BRIDGE, RTM_NEWMRP, br_mrp_add,
-+			     NULL, 0);
-+	rtnl_register_module(THIS_MODULE, PF_BRIDGE, RTM_DELMRP, br_mrp_del,
-+			     NULL, 0);
-+}
-+
-+void br_mrp_netlink_uninit(void)
-+{
-+	rtnl_unregister(PF_BRIDGE, RTM_GETMRP);
-+	rtnl_unregister(PF_BRIDGE, RTM_NEWMRP);
-+	rtnl_unregister(PF_BRIDGE, RTM_DELMRP);
-+}
-diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
-index 60136575aea4..6d8f84ed8b0d 100644
---- a/net/bridge/br_netlink.c
-+++ b/net/bridge/br_netlink.c
-@@ -1664,6 +1664,9 @@ int __init br_netlink_init(void)
- 	int err;
- 
- 	br_mdb_init();
-+#ifdef CONFIG_BRIDGE_MRP
-+	br_mrp_netlink_init();
-+#endif
- 	rtnl_af_register(&br_af_ops);
- 
- 	err = rtnl_link_register(&br_link_ops);
-@@ -1674,12 +1677,18 @@ int __init br_netlink_init(void)
- 
- out_af:
- 	rtnl_af_unregister(&br_af_ops);
-+#ifdef CONFIG_BRIDGE_MRP
-+	br_mrp_netlink_uninit();
-+#endif
- 	br_mdb_uninit();
- 	return err;
- }
- 
- void br_netlink_fini(void)
- {
-+#ifdef CONFIG_BRIDGE_MRP
-+	br_mrp_netlink_uninit();
-+#endif
- 	br_mdb_uninit();
- 	rtnl_af_unregister(&br_af_ops);
- 	rtnl_link_unregister(&br_link_ops);
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 0c008b3d24cc..9a060c3c7713 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -1169,6 +1169,8 @@ unsigned long br_timer_value(const struct timer_list *timer);
- 
- #if IS_ENABLED(CONFIG_BRIDGE_MRP)
- /* br_mrp.c */
-+void br_mrp_netlink_init(void);
-+void br_mrp_netlink_uninit(void);
- void br_mrp_uninit(struct net_bridge *br);
- void br_mrp_port_uninit(struct net_bridge_port *p);
- void br_mrp_port_link_change(struct net_bridge_port *br, bool up);
-diff --git a/net/bridge/br_private_mrp.h b/net/bridge/br_private_mrp.h
-index 00ee20582ac9..13fd2330ccfc 100644
---- a/net/bridge/br_private_mrp.h
-+++ b/net/bridge/br_private_mrp.h
-@@ -174,6 +174,15 @@ struct br_mrp {
- 	u16				react_on_link_change;
- };
- 
-+/* Represents the configuration of the MRP instance */
-+struct br_mrp_config {
-+	u32 p_ifindex;
-+	u32 s_ifindex;
-+	u32 ring_role;
-+	u32 ring_nr;
-+	u32 ring_state;
-+};
-+
- /* br_mrp.c */
- void br_mrp_ring_test_req(struct br_mrp *mrp, u32 interval);
- void br_mrp_ring_topo_req(struct br_mrp *mrp, u32 interval);
-diff --git a/security/selinux/nlmsgtab.c b/security/selinux/nlmsgtab.c
-index c97fdae8f71b..7c110fdb9e1e 100644
---- a/security/selinux/nlmsgtab.c
-+++ b/security/selinux/nlmsgtab.c
-@@ -85,6 +85,9 @@ static const struct nlmsg_perm nlmsg_route_perms[] =
- 	{ RTM_GETNEXTHOP,	NETLINK_ROUTE_SOCKET__NLMSG_READ  },
- 	{ RTM_NEWLINKPROP,	NETLINK_ROUTE_SOCKET__NLMSG_WRITE },
- 	{ RTM_DELLINKPROP,	NETLINK_ROUTE_SOCKET__NLMSG_WRITE },
-+	{ RTM_NEWMRP,		NETLINK_ROUTE_SOCKET__NLMSG_WRITE },
-+	{ RTM_DELMRP,		NETLINK_ROUTE_SOCKET__NLMSG_WRITE },
-+	{ RTM_GETMRP,		NETLINK_ROUTE_SOCKET__NLMSG_READ  },
- };
- 
- static const struct nlmsg_perm nlmsg_tcpdiag_perms[] =
-@@ -168,7 +171,7 @@ int selinux_nlmsg_lookup(u16 sclass, u16 nlmsg_type, u32 *perm)
- 		 * structures at the top of this file with the new mappings
- 		 * before updating the BUILD_BUG_ON() macro!
- 		 */
--		BUILD_BUG_ON(RTM_MAX != (RTM_NEWLINKPROP + 3));
-+		BUILD_BUG_ON(RTM_MAX != (RTM_DELMRP + 3));
- 		err = nlmsg_perm(nlmsg_type, perm, nlmsg_route_perms,
- 				 sizeof(nlmsg_route_perms));
- 		break;
--- 
-2.17.1
+> +
+> +	if (res.a0 != SMCCC_RET_SUCCESS)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +int __init pv_lock_init(void)
+> +{
+> +	int ret;
+> +
+> +	if (is_hyp_mode_available())
+> +		return 0;
+> +
+> +	if (!has_kvm_pvlock())
+> +		return 0;
+> +
+> +	ret = kvm_arm_init_pvlock();
+> +	if (ret)
+> +		return ret;
+> +
+> +	pv_ops.lock.vcpu_is_preempted = kvm_vcpu_is_preempted;
+> +	pr_info("using PV-lock preempted\n");
+> +
+> +	return 0;
+> +}
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index 56f664561754..aa3a8b9e710f 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -341,6 +341,8 @@ void __init setup_arch(char **cmdline_p)
+>   	smp_init_cpus();
+>   	smp_build_mpidr_hash();
+>   
+> +	pv_lock_init();
+> +
+>   	/* Init percpu seeds for random tags after cpus are set up. */
+>   	kasan_init_tags();
+>   
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index e51ee772b9f5..f72ff95ab63a 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -138,6 +138,7 @@ enum cpuhp_state {
+>   	CPUHP_AP_DUMMY_TIMER_STARTING,
+>   	CPUHP_AP_ARM_XEN_STARTING,
+>   	CPUHP_AP_ARM_KVMPV_STARTING,
+> +	CPUHP_AP_ARM_KVM_PVLOCK_STARTING,
+>   	CPUHP_AP_ARM_CORESIGHT_STARTING,
+>   	CPUHP_AP_ARM64_ISNDEP_STARTING,
+>   	CPUHP_AP_SMPCFD_DYING,
+> 
 
