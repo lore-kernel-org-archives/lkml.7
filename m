@@ -2,117 +2,206 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C51C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155C8C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE16B20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="v9fnq5/H"
+	by mail.kernel.org (Postfix) with ESMTP id E943920661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbgAIN3S (ORCPT
+        id S1731148AbgAIN3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:29:18 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42741 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbgAIN3S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:29:18 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q6so7366657wro.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:29:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LeCOJsegsX9ulDaZM7NL+WaD4FSb3jvx0nwI6fIifdA=;
-        b=v9fnq5/HPFByZxwI00WPY6zovNS68zvnGe5jz1jhFyLuC6buzKp49JUO/3A/2f41Jl
-         sY03l79BGy+DC+sySd1oRvRkBxwwIj8Hg+x20jeisHL6cvGZKhHBPP1Mn4+MiEzNndHD
-         Jrbmi47ghqNCHQvkaAXXVN8UfCOFGS863mDbb3N2Bb+PjT6Qd25wvwkwHB3PoTaq+st0
-         EsYbGZIQaRDZYDmXAzFCwdjdBAh5PZiUO4Vg4hBeAEtMrzcSW3ZqSvBw+XDHkTW5Vf9c
-         s3U+LWrGIKjnCBsU23UEheg4jtu0cWZmQjLDi3ENrTD678ECxGzE42cvjz5xb+igJtoh
-         IxeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=LeCOJsegsX9ulDaZM7NL+WaD4FSb3jvx0nwI6fIifdA=;
-        b=XE10pHlF2k61isGIfjAwqjTvTmqN1qZYTFl+ppk2j+24tJFyTHWQPRQ+uL5LAKVu+Y
-         8jQ7ylbPwrMwDYE4rjBedltryN9M+qOohJhBqN8LRI2oDVaA++vcS2+mOWHQxcAVWjCQ
-         AKHFaVTBuJTE40gr2/oZsMQjt8PQBMlZsvi7pw1WPactNCpLjJdo8n0Tx++8TMjok/EL
-         OmizH5OkBhIwghfVTcLG0FfONz77fN4AbeghYx13JtXKpW1sZlWbm0gUgi1PpNNamZgb
-         7bwvPjjnnln4oXc6fDo6xfsa9raPEfnvILh1xfADN0DqBqGFJcORdjnSbpp+X7viG1L6
-         XCVA==
-X-Gm-Message-State: APjAAAXLc+S80e5Qtk3wuPCfD1F++cMYqb+d/XMOtTCnIkYu9DCmYjpq
-        cHqMKLnFWzSojoAd4U8GGHfIdVg/f6J9eg==
-X-Google-Smtp-Source: APXvYqzcczVY04puWu5OvRFstw0G3xfRrB0/WUNp7quD+IeVGyJBmzWBCYjvUh0N0h5BMN9JZDqzGw==
-X-Received: by 2002:a5d:5044:: with SMTP id h4mr10727999wrt.4.1578576555877;
-        Thu, 09 Jan 2020 05:29:15 -0800 (PST)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id t8sm8425532wrp.69.2020.01.09.05.29.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:29:15 -0800 (PST)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Cc:     Manish Narani <manish.narani@xilinx.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>
-Subject: [PATCH] microblaze: defconfig: Disable EXT2 driver and Enable EXT3 & EXT4 drivers
-Date:   Thu,  9 Jan 2020 14:29:06 +0100
-Message-Id: <f9bbfa27026d0f596dbc0a9c2e1253575d6cc82e.1578576542.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 9 Jan 2020 08:29:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:59056 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731054AbgAIN3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 08:29:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6179E31B;
+        Thu,  9 Jan 2020 05:29:42 -0800 (PST)
+Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65F263F534;
+        Thu,  9 Jan 2020 05:29:40 -0800 (PST)
+Date:   Thu, 9 Jan 2020 13:29:35 +0000
+From:   Steven Price <steven.price@arm.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        "hsinyi@chromium.org" <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
+Message-ID: <20200109132934.GA6198@arm.com>
+References: <20200108052337.65916-1-drinkcat@chromium.org>
+ <79fe7055-c11b-c9f6-64e5-48e3d5687dfe@arm.com>
+ <ca77cd74-b747-20c4-b07c-60df23421690@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ca77cd74-b747-20c4-b07c-60df23421690@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Narani <manish.narani@xilinx.com>
+On Thu, Jan 09, 2020 at 01:10:33PM +0000, Robin Murphy wrote:
+> On 09/01/2020 12:01 pm, Steven Price wrote:
+> > On 08/01/2020 05:23, Nicolas Boichat wrote:
+> >> Hi!
+> >>
+> >> Sorry for the long delay since 
+> >> https://patchwork.kernel.org/patch/11132381/,
+> >> finally got around to give this a real try.
+> >>
+> >> The main purpose of this series is to upstream the dts change and the 
+> >> binding
+> >> document, but I wanted to see how far I could probe the GPU, to check 
+> >> that the
+> >> binding is indeed correct. The rest of the patches are 
+> >> RFC/work-in-progress, but
+> >> I think some of them could already be picked up.
+> >>
+> >> So this is tested on MT8183 with a chromeos-4.19 kernel, and a ton of
+> >> backports to get the latest panfrost driver (I should probably try on
+> >> linux-next at some point but this was the path of least resistance).
+> >>
+> >> I tested it as a module as it's more challenging (originally probing 
+> >> would
+> >> work built-in, on boot, but not as a module, as I didn't have the power
+> >> domain changes, and all power domains are on by default during boot).
+> >>
+> >> Probing logs looks like this, currently:
+> >> [  221.867726] panfrost 13040000.gpu: clock rate = 511999970
+> >> [  221.867929] panfrost 13040000.gpu: Linked as a consumer to 
+> >> regulator.14
+> >> [  221.868600] panfrost 13040000.gpu: Linked as a consumer to 
+> >> regulator.31
+> >> [  221.870586] panfrost 13040000.gpu: Linked as a consumer to 
+> >> genpd:0:13040000.gpu
+> >> [  221.871492] panfrost 13040000.gpu: Linked as a consumer to 
+> >> genpd:1:13040000.gpu
+> >> [  221.871866] panfrost 13040000.gpu: Linked as a consumer to 
+> >> genpd:2:13040000.gpu
+> >> [  221.872427] panfrost 13040000.gpu: mali-g72 id 0x6221 major 0x0 
+> >> minor 0x3 status 0x0
+> >> [  221.872439] panfrost 13040000.gpu: features: 00000000,13de77ff, 
+> >> issues: 00000000,00000400
+> >> [  221.872445] panfrost 13040000.gpu: Features: L2:0x07120206 
+> >> Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
+> >> [  221.872449] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
+> >> [  221.873526] panfrost 13040000.gpu: error powering up gpu stack
+> >> [  221.878088] [drm] Initialized panfrost 1.1.0 20180908 for 
+> >> 13040000.gpu on minor 2
+> >> [  221.940817] panfrost 13040000.gpu: error powering up gpu stack
+> >> [  222.018233] panfrost 13040000.gpu: error powering up gpu stack
+> >> (repeated)
+> > 
+> > It's interesting that it's only the stack that is failing. In hardware 
+> > there's a dependency: L2->stack->shader - so in theory the shader cores 
+> > shouldn't be able to power up either. There are some known hardware bugs 
+> > here though[1]:
+> > 
+> >      MODULE_PARM_DESC(corestack_driver_control,
+> >              "Let the driver power on/off the GPU core stack 
+> > independently "
+> >              "without involving the Power Domain Controller. This should "
+> >              "only be enabled on platforms for which integration of the 
+> > PDC "
+> >              "to the Mali GPU is known to be problematic.");
+> > 
+> > [1] 
+> > https://github.com/ianmacd/d2s/blob/master/drivers/gpu/arm/b_r16p0/backend/gpu/mali_kbase_pm_driver.c#L57 
+> > 
+> > 
+> > It might be worth just dropping the code for powering up/down stacks and 
+> > let the GPU's own dependency management handle it.
+> 
+> FWIW I remember digging into that same message a while back (although 
+> I've forgotten which particular GPU I was playing with at the time), and 
+> concluded that the STACK_PWRON/STACK_READY registers might just not be 
+> implemented on some GPUs,
 
-As EXT4 filesystem driver is used for handling EXT2 file systems as
-well. There is no need to enable EXT2 driver. This patch disables EXT2
-and enables EXT3/EXT4 drivers.
+They are indeed not implemented on some GPUs. Specifically none of the
+Midgard GPUs. I believe G71 also doesn't have it. However the register
+addresses were picked so that on these older GPUs they should
+read-as-zero and write-ignore so this shouldn't actually cause any
+problems.
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+> and/or this easy-to-overlook register bit 
+> could be some kind of enable for the functionality:
+> 
+> https://github.com/ianmacd/d2s/blob/master/drivers/gpu/arm/b_r16p0/backend/gpu/mali_kbase_pm_driver.c#L1631
+> 
+> Since even in kbase this is all behind an 'expert' config option, I'm 
+> inclined to agree that just dropping it from panfrost unless and until 
+> it proves necessary is probably preferable to adding more logic and 
+> inscrutable register-magic.
 
- arch/microblaze/configs/mmu_defconfig   | 2 +-
- arch/microblaze/configs/nommu_defconfig | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Indeed - I'll post a patch removing it.
 
-diff --git a/arch/microblaze/configs/mmu_defconfig b/arch/microblaze/configs/mmu_defconfig
-index b3b433db89d8..0e2f5e1fd1ef 100644
---- a/arch/microblaze/configs/mmu_defconfig
-+++ b/arch/microblaze/configs/mmu_defconfig
-@@ -73,7 +73,7 @@ CONFIG_FB_XILINX=y
- CONFIG_UIO=y
- CONFIG_UIO_PDRV_GENIRQ=y
- CONFIG_UIO_DMEM_GENIRQ=y
--CONFIG_EXT2_FS=y
-+CONFIG_EXT3_FS=y
- # CONFIG_DNOTIFY is not set
- CONFIG_TMPFS=y
- CONFIG_CRAMFS=y
-diff --git a/arch/microblaze/configs/nommu_defconfig b/arch/microblaze/configs/nommu_defconfig
-index 377de39ccb8c..8c420782d6e4 100644
---- a/arch/microblaze/configs/nommu_defconfig
-+++ b/arch/microblaze/configs/nommu_defconfig
-@@ -70,7 +70,7 @@ CONFIG_XILINX_WATCHDOG=y
- CONFIG_FB=y
- CONFIG_FB_XILINX=y
- # CONFIG_USB_SUPPORT is not set
--CONFIG_EXT2_FS=y
-+CONFIG_EXT3_FS=y
- # CONFIG_DNOTIFY is not set
- CONFIG_CRAMFS=y
- CONFIG_ROMFS_FS=y
--- 
-2.24.0
+Thanks,
 
+Steve
+
+> Robin.
+> 
+> > 
+> > Steve
+> > 
+> >>
+> >> So the GPU is probed, but there's an issue when powering up the STACK, 
+> >> not
+> >> quite sure why, I'll try to have a deeper look, at some point.
+> >>
+> >> Thanks!
+> >>
+> >> Nicolas
+> >>
+> >> v2:
+> >>   - Use sram instead of mali_sram as SRAM supply name.
+> >>   - Rename mali@ to gpu@.
+> >>   - Add dt-bindings changes
+> >>   - Stacking patches after the device tree change that allow basic
+> >>     probing (still incomplete and broken).
+> >>
+> >> Nicolas Boichat (7):
+> >>    dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+> >>    arm64: dts: mt8183: Add node for the Mali GPU
+> >>    drm/panfrost: Improve error reporting in panfrost_gpu_power_on
+> >>    drm/panfrost: Add support for a second regulator for the GPU
+> >>    drm/panfrost: Add support for multiple power domain support
+> >>    RFC: drm/panfrost: Add bifrost compatible string
+> >>    RFC: drm/panfrost: devfreq: Add support for 2 regulators
+> >>
+> >>   .../bindings/gpu/arm,mali-bifrost.yaml        |  20 ++++
+> >>   arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   7 ++
+> >>   arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 104 +++++++++++++++++
+> >>   drivers/gpu/drm/panfrost/panfrost_devfreq.c   |  18 +++
+> >>   drivers/gpu/drm/panfrost/panfrost_device.c    | 108 ++++++++++++++++--
+> >>   drivers/gpu/drm/panfrost/panfrost_device.h    |   7 ++
+> >>   drivers/gpu/drm/panfrost/panfrost_drv.c       |   1 +
+> >>   drivers/gpu/drm/panfrost/panfrost_gpu.c       |  15 ++-
+> >>   8 files changed, 267 insertions(+), 13 deletions(-)
+> >>
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
