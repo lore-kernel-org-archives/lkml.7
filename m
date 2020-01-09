@@ -2,178 +2,176 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A08C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4107C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090D520678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C76B20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="oVpiwGh+"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="g7ADZpUp";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="TIlzKjJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgAII5r (ORCPT
+        id S1729036AbgAII7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:57:47 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:37077 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728782AbgAII5r (ORCPT
+        Thu, 9 Jan 2020 03:59:33 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:48950 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728919AbgAII7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:57:47 -0500
-Received: from [192.168.2.10] ([62.249.185.68])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id pTdLifcDmT6sRpTdPiJiDr; Thu, 09 Jan 2020 09:57:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578560264; bh=Vk/kifmXgDbLQKwwbiuGi3FO7KWx9DtEyC44qbawP/Y=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=oVpiwGh+ljBx8V9cDVtwgSxqDuL4IwsY1hPavlas1AfQQArwIpFQj+Ns9elb3td/c
-         4MxsyDMBK4HzmVD7mQWtpbGuhd8u8hoV/u5ahLCH5rcnv/M8I25xZGgT/5Skj7dxjR
-         OP8z5VZHjKHV4fkeRNKWtMvJdOVqobPxJ8ZlvmHEp+b4Duip/irkJVl5mpPYZFfIza
-         KB0vdWAPjJSRBLNL489+syB+Ky6YtdLIsvDUjraj+TajAJ8g2DZ6CJCpl9YGZjaQYU
-         zG0Rww8xUZXGDeoWa8X+Ge/kVjBKaiy4zs4V87YybYTvDNyZ81agPZ6NvstwuOeEjv
-         r/OrdClh6WiyA==
-Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
-References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
- <20200106154929.4331-5-stanimir.varbanov@linaro.org>
- <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
- <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <fb27b5cc-0eef-a7b4-f45b-a3986b77c4c9@xs4all.nl>
-Date:   Thu, 9 Jan 2020 09:57:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
-Content-Type: text/plain; charset=utf-8
+        Thu, 9 Jan 2020 03:59:33 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0BF48404C5;
+        Thu,  9 Jan 2020 08:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578560372; bh=I9it5sMMzHZOSKiILnapjKBqxViwI5B7OtpPCbqPFMg=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=g7ADZpUpWRmNfdFcSRESjcJ11fHtovrdNK/oY0TiPQzuZzWBcRyVntsdI39kl/FZ3
+         pM/bz00iHG3vajRO/SMLmMMKW7PKalqNcM9eRqJ60DFSELDF+haGUxJig65KxbB5R6
+         Bym9K6iBhZjyQ64gFR55O3Bb5qxGqxCjOpSwsjSq+cHk2GHZsf0tJAPLTNGNhYNGPb
+         oiSPRPeEROuK+am6BmsvsVXO+C4q1uXL379hP44AhnB09IaywjMFxTVeruWJWiEygs
+         E/llx9RcEU9Iorl6lGMyNXupcdyToUfly99KGYYZTeDz03vuffvGXSVZbYPUNS57kU
+         VUsyPkrvXkasA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7D2B6A0079;
+        Thu,  9 Jan 2020 08:59:28 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 9 Jan 2020 00:59:26 -0800
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 9 Jan 2020 00:59:25 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LEF28rgqyE13VomjAvpDBYuQRV9/XMTEwgVh/p+BfinDdEu4+ARwLqnRtzE74veq9M3NvqbktsM+ZMr9cPHFaJib8Ky5fwR+2nze4iTwZTpFjt6ZI/+RAQeNoEtZFiIr9AUUyiW9kxIm2WstccijQcqDBLXcYPSBIoQ3BLo67n1k+5qyjOTEpOdw9/7zARhkz8XXsjie/8zoMEiOQXIFXidfCRkEMLjrJyoX1YRjoIy+0ujAi8pBFR6WnU1lkuvBx3jf2cC0QrfRxGsT/iqLlqGys+lE8tkwgqUsEtuE+WPkcdFYGi/Dyh6tPm10wHFnL6FSJVeA2naOVn3xZhWZbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I9it5sMMzHZOSKiILnapjKBqxViwI5B7OtpPCbqPFMg=;
+ b=jsNxrrM3chv80gFcRW5+0psYk4xr8AZY/M63HvUBZMotaIPuYyDc4oCXi+1rE/sOIO0J/hy6XPl5gLBIH+5N8yxIGBvL/jQifOtNaPVR+d2q5dWx2Bg9P5B+xz7SiUIIyAoFkvzwH/rP66Cf7r5dzKCY4oGOBiUUYnen4njhiUiIA/pG5O/58n849n3MRR0vF1b8E36QvUkecxAILHEiISbheD2d1TcYL5BW72t8vYmtCS6yjV1kVCwO9CABebnyHsl0k/9lifo3bM0chjycPBm2JZQWM5PyjIu6GjjaOlMUoWEgmmMAWMvrnogrRNm+8SHB0eicfoJEUhJKm4v7lQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I9it5sMMzHZOSKiILnapjKBqxViwI5B7OtpPCbqPFMg=;
+ b=TIlzKjJp6baeKQnozdp9foliIpd2P6PgpOuoRnKWR+586Cdkk9mNICYOhZM1M+sTMKwn9RTrIxONJ3n+gGYMwiFm5iHmLYLy1z17+Cxa7qQgT+FQSUcvgUGnrokD58gv8u44tQUJ8SAVLFEsp9nkkUYF+QfgdrKLwccWXoKxm+Y=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3187.namprd12.prod.outlook.com (20.179.66.87) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Thu, 9 Jan 2020 08:59:24 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2623.010; Thu, 9 Jan 2020
+ 08:59:24 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andre Guedes <andre.guedes@linux.intel.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>
+CC:     Po Liu <po.liu@nxp.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: RE: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame
+ preemption of traffic classes
+Thread-Topic: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame
+ preemption of traffic classes
+Thread-Index: AQHVpQlV0arssjH64ECVUQFpoidQiae0UhKAgAfLu0CAAUwKgIADVrkAgAAT1YCAEke6AIAOrCuAgACCOSA=
+Date:   Thu, 9 Jan 2020 08:59:24 +0000
+Message-ID: <BN8PR12MB32663AE71CBF7CF0258C86D7D3390@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com>
+ <157603276975.18462.4638422874481955289@pipeline>
+ <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com>
+ <87eex43pzm.fsf@linux.intel.com> <20191219004322.GA20146@khorivan>
+ <87lfr9axm8.fsf@linux.intel.com>
+ <b7e1cb8b-b6b1-c0fa-3864-4036750f3164@ti.com>
+ <157853205713.36295.17877768211004089754@aguedesl-mac01.jf.intel.com>
+In-Reply-To: <157853205713.36295.17877768211004089754@aguedesl-mac01.jf.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEjH4eGnUttPRLLZn2wIUrksqeIOrr79iVk+71v2HW3c1s23i6AUvXDG6nOxpxTCJL8f4vf3BDtJS4BCsbP6tyG3MMiR+gAUSHxms1gbAZE5EBM8Em0m
- r4JMymfFTlE297FzNwczBZLXuclC8SuwpjsRAzxlCHlqYHPDihNW+ogauozlNVREAhhKrhNSCejCdPwwu6P+1ijYB/01otPI2zGCU3d7X/LsbCY1r6a1u7tS
- I/rXdzF328DG1xtzEvr78rQW8g2SIO7G+QjnHsG28CQ1h4GDmn7WwHbmLNOVcw3n3iUoKbmjvaKfeMqwNJZVjeOX+j7/7pcXw5rTdfphAPyorS9zxLMQeJnw
- hpeAi1jV1wJnd3IvkIARRU3t/JEJ3yHx4ra7YajsQUHJ3AKi3IW47BQa6Akl10Li4v5W3ikp
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 849bee75-9bfa-4057-8ff7-08d794e23966
+x-ms-traffictypediagnostic: BN8PR12MB3187:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB318731DA00D93F45CF72EC8BD3390@BN8PR12MB3187.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02778BF158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(376002)(39860400002)(346002)(199004)(189003)(316002)(107886003)(81156014)(55016002)(81166006)(2906002)(7416002)(9686003)(110136005)(4326008)(33656002)(8676002)(8936002)(54906003)(478600001)(52536014)(6506007)(5660300002)(26005)(66946007)(66446008)(86362001)(66556008)(186003)(7696005)(66476007)(71200400001)(76116006)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3187;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FmzvAnmnwXMcCT83DdQO7AuxlQf2wiyqbkK9dYsw1WcsX0hkQVvtyMsiLq0AZVtPdPFG/kLsYts/Cl0yPEyDXOfolWwOKXe0+8Wg1woGLwqX7o4XRQk6D7g0PmIK3kZXDXybAfZMEcutRmeCo1/UhkUi/+GKwDEOWxsHLDaB8d6lX6DyC47JEbmoxHkEubSfk/zzUpB8ewslLqOerkmGpDrS0evKPY4SsbOK98Zz9s4axPNZk3YlYV81EH+9XJis/7IX5qCYiZ5cAIoGHeCjFbA3PK/SLikSEMezIfRdXngG5yYqcYz9m82+UACM349WsXa7zgsYuU/1rJyDcuCMGa0JpPq2cam01e2kw0N9v++vzxCEtgfikNB3VAeP8tSMfSJtidq0Yz4KHLcITOAUC4TKPQ6GSYWZa4ClCMDUpDiTvzccRRqsIbUp5sKVhhmP
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 849bee75-9bfa-4057-8ff7-08d794e23966
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 08:59:24.1947
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7bzN26GzfobA2AzR3fKFo0XoVyUE0N8hl5O0mDCR4FlznBnssuxG31usmfMEEMHPQ+RBcoNdtl5/BTpYHj8luQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3187
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 8:41 AM, Stanimir Varbanov wrote:
-> Hi Hans,
-> 
-> On 1/8/20 6:09 PM, Hans Verkuil wrote:
->> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
->>> This event indicate that the source color bit-depth is changed
->>> during run-time. The client must get the new format and re-allocate
->>> buffers for it. This can usually happens with video decoder (encoders)
->>> when the bit-stream color bit-depth is changed from 8 to 10bits
->>> or vice versa.
->>>
->>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>> ---
->>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
->>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>>  include/uapi/linux/videodev2.h                  | 1 +
->>>  3 files changed, 9 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>> index 42659a3d1705..fad853d440cf 100644
->>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>> @@ -402,7 +402,13 @@ call.
->>>  	that many Video Capture devices are not able to recover from a temporary
->>>  	loss of signal and so restarting streaming I/O is required in order for
->>>  	the hardware to synchronize to the video signal.
->>> -
->>> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
->>> +      - 0x0002
->>> +      - This event gets triggered when color bit-depth change is detected
->>> +	from a video decoder. Applications will have to query the new pixel
->>> +	format and re-negotiate the queue. In most cases the streaming must be
->>> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
->>> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
->>
->> I think this is too specific for decoders. Something similar to the
->> CH_RESOLUTION description would be more appropriate:
->>
->>       - This event gets triggered when a color bit-depth change (but not a
->> 	resolution change!) is detected	at an input. This can come from an
-> 
-> What you mean by "but not a resolution change" here? Resolution change
-> and bit-depth change cannot occur on the same time, or something else.
-
-What I was trying to say is that a resolution change implies a possible bit-depth
-change as well, whereas V4L2_EVENT_SRC_CH_COLOR_DEPTH is only set if there is
-a bit-depth change but no resolution change.
-
-V4L2_EVENT_SRC_CH_RESOLUTION requires that userspace does a full resync to the
-new format, CH_COLOR_DEPTH implies that only the bit depth changed.
-
-Which actually makes me wonder: is there a difference between the two change flags
-w.r.t. userspace behavior? If there is, then that should be carefully documented,
-if there isn't, then is this new flag really needed?
-
-Regards,
-
-	Hans
-
-> 
-> I would say that for Venus (and probably others) on initialization time
-> both could be changed on the same time, because we cannot predict the
-> resolution and bit-depth before parsing bitstream headers.
-> 
->> 	input connector or from a video decoder. Applications will have to query
->> 	the new pixel format and re-negotiate the queue.
->>
->> 	For stateful decoders follow the guidelines in :ref:`decoder`.
->> 	Video capture devices will in most cases have to stop and restart
->> 	streaming (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>` followed by
->> 	:ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
->>
->> And update dev-decoder.rst where needed with this new event flag.
->>
->> As to your question on irc: once I've acked this patch it can be merged
->> via a venus PR.
->>
->> Regards,
->>
->> 	Hans
->>
->>>  
->>>  Return Value
->>>  ============
->>> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
->>> index cb6ccf91776e..209709114378 100644
->>> --- a/Documentation/media/videodev2.h.rst.exceptions
->>> +++ b/Documentation/media/videodev2.h.rst.exceptions
->>> @@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
->>>  replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
->>>  
->>>  replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
->>> +replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
->>>  
->>>  replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
->>>  
->>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->>> index 5f9357dcb060..1d349c9d57a7 100644
->>> --- a/include/uapi/linux/videodev2.h
->>> +++ b/include/uapi/linux/videodev2.h
->>> @@ -2332,6 +2332,7 @@ struct v4l2_event_frame_sync {
->>>  };
->>>  
->>>  #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
->>> +#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
->>>  
->>>  struct v4l2_event_src_change {
->>>  	__u32 changes;
->>>
->>
-> 
-
+RnJvbTogQW5kcmUgR3VlZGVzIDxhbmRyZS5ndWVkZXNAbGludXguaW50ZWwuY29tPg0KRGF0ZTog
+SmFuLzA5LzIwMjAsIDAxOjA3OjM3IChVVEMrMDA6MDApDQoNCj4gQWZ0ZXIgcmVhZGluZyBhbGwg
+dGhpcyBncmVhdCBkaXNjdXNzaW9uIGFuZCByZXZpc2l0aW5nIHRoZSA4MDIuMVEgYW5kIDgwMi4z
+YnINCj4gc3BlY3MsIEknbSBub3cgbGVhbmluZyB0b3dhcmRzIHRvIG5vdCBjb3VwbGluZyBGcmFt
+ZSBQcmVlbXB0aW9uIHN1cHBvcnQgdW5kZXINCj4gdGFwcmlvIHFkaXNjLiBCZXNpZGVzIHdoYXQg
+aGF2ZSBiZWVuIGRpc2N1c3NlZCwgQW5uZXggUy4yIGZyb20gODAyLjFRLTIwMTgNCj4gZm9yZXNl
+ZXMgRlAgd2l0aG91dCBFU1Qgc28gaXQgbWFrZXMgbWUgZmVlbCBsaWtlIHdlIHNob3VsZCBrZWVw
+IHRoZW0gc2VwYXJhdGUuDQoNCkkgYWdyZWUgdGhhdCBFU1QgYW5kIEZQIGNhbiBiZSB1c2VkIGlu
+ZGl2aWR1YWxseS4gQnV0IGhvdyBjYW4geW91IA0Kc3BlY2lmeSB0aGUgaG9sZCBhbmQgcmVsZWFz
+ZSBjb21tYW5kcyBmb3IgZ2F0ZXMgd2l0aG91dCBjaGFuZ2luZyB0YXByaW8gcWRpc2MgdXNlciBz
+cGFjZSBBUEkgPw0KDQo+IFJlZ2FyZGluZyB0aGUgRlAgY29uZmlndXJhdGlvbiBrbm9icywgdGhl
+IGZvbGxvd2luZyBzZWVtcyByZWFzb25hYmxlIHRvIG1lOg0KPiAgICAgKiBFbmFibGUvZGlzYWJs
+ZSBGUCBmZWF0dXJlDQo+ICAgICAqIFByZWVtcHRhYmxlIHF1ZXVlIG1hcHBpbmcNCj4gICAgICog
+RnJhZ21lbnQgc2l6ZSBtdWx0aXBsaWVyDQo+IA0KPiBJJ20gbm90IHN1cmUgYWJvdXQgdGhlIGtu
+b2IgJ3RpbWVycyAoaG9sZC9yZWxlYXNlKScgZGVzY3JpYmVkIGluIHRoZSBxdW90ZXMNCj4gYWJv
+dmUuIEkgY291bGRuJ3QgZmluZCBhIG1hdGNoIGluIHRoZSBzcGVjcy4gSWYgaXQgcmVmZXJzIHRv
+ICdob2xkQWR2YW5jZScgYW5kDQo+ICdyZWxlYXNlQWR2YW5jZScgcGFyYW1ldGVycyBkZXNjcmli
+ZWQgaW4gODAyLjFRLTIwMTgsIEkgYmVsaWV2ZSB0aGV5IGFyZSBub3QNCj4gY29uZmlndXJhYmxl
+LiBEbyB3ZSBrbm93IGFueSBoYXJkd2FyZSB3aGVyZSB0aGV5IGFyZSBjb25maWd1cmFibGU/DQoN
+ClN5bm9wc3lzJyBIVyBzdXBwb3J0cyByZWNvbmZpZ3VyaW5nIHRoZXNlIHBhcmFtZXRlcnMuIFRo
+ZXkgYXJlLCBob3dldmVyLCANCmZpeGVkIGluZGVwZW5kZW50bHkgb2YgUXVldWVzLiBpLmUuIGFs
+bCBxdWV1ZXMgd2lsbCBoYXZlIHNhbWUgaG9sZEFkdmFuY2UgLyByZWxlYXNlQWR2YW5jZS4NCg0K
+LS0tDQpUaGFua3MsDQpKb3NlIE1pZ3VlbCBBYnJldQ0K
