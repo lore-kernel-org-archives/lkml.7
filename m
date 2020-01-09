@@ -2,113 +2,165 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC1C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D3EC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A442120673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B018C20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgAIGNX (ORCPT
+        id S1728030AbgAIGPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 01:13:23 -0500
-Received: from mga01.intel.com ([192.55.52.88]:32600 "EHLO mga01.intel.com"
+        Thu, 9 Jan 2020 01:15:55 -0500
+Received: from mga06.intel.com ([134.134.136.31]:1180 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbgAIGNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 01:13:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1725893AbgAIGPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 01:15:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 22:13:22 -0800
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 22:15:54 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
-   d="scan'208";a="226400153"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 08 Jan 2020 22:13:17 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 09 Jan 2020 08:13:16 +0200
-Date:   Thu, 9 Jan 2020 08:13:16 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/36] platform/x86: Rework intel_scu_ipc and
- intel_pmc_ipc drivers
-Message-ID: <20200109061316.GB2838@lahna.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108173444.GZ32742@smile.fi.intel.com>
+   d="scan'208";a="223775552"
+Received: from liujing-mobl1.ccr.corp.intel.com (HELO [10.238.130.147]) ([10.238.130.147])
+  by orsmga003.jf.intel.com with ESMTP; 08 Jan 2020 22:15:52 -0800
+From:   "Liu, Jing2" <jing2.liu@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
+ specification version 3
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Zha Bin <zhabin@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, jasowang@redhat.com, slp@redhat.com,
+        virtio-dev@lists.oasis-open.org, gerry@linux.alibaba.com,
+        jing2.liu@intel.com, chao.p.peng@intel.com
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+ <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+ <20200105054412-mutt-send-email-mst@kernel.org>
+Message-ID: <c7a8fc93-9493-c0b3-623a-02426995f0f8@linux.intel.com>
+Date:   Thu, 9 Jan 2020 14:15:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108173444.GZ32742@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200105054412-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 07:34:44PM +0200, Andy Shevchenko wrote:
-> On Wed, Jan 08, 2020 at 02:41:25PM +0300, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > Currently both intel_scu_ipc.c and intel_pmc_ipc.c implement the same SCU
-> > IPC communications with minor differences. This duplication does not make
-> > much sense so this series reworks the two drivers so that there is only a
-> > single implementation of the SCU IPC. In addition to that the API will be
-> > updated to take SCU instance pointer as an argument, and most of the
-> > callers will be converted to this new API. The old API is left there but
-> > the plan is to get rid the callers and then the old API as well (this is
-> > something we are working with Andy Shevchenko).
-> > 
-> > The intel_pmc_ipc.c is then moved under MFD which suits better for this
-> > kind of a driver that pretty much sets up the SCU IPC and then creates a
-> > bunch of platform devices for the things sitting behind the PMC. The driver
-> > is renamed to intel_pmc_bxt.c which should follow the existing conventions
-> > under drivers/mfd (and it is only meant for Intel Broxton derivatives).
-> > 
-> > Previous version of the series:
-> > 
-> >   https://www.spinics.net/lists/platform-driver-x86/msg20359.html
-> > 
-> > Changes from the previous version:
-> > 
-> >   * Update changelog of patch 16 according to what the patch actually does.
-> >   * Add kernel-doc for struct intel_soc_pmic.
-> >   * Move octal permission patch to be before MFD conversion.
-> >   * Convert the intel_pmc_bxt.c to MFD APIs whilst it is being moved under
-> >     drivers/mfd.
-> 
-> Hmm... I didn't see you appended Lee's ACKs.
 
-I thought those were for his own reference:
+On 1/5/2020 7:04 PM, Michael S. Tsirkin wrote:
+> On Wed, Dec 25, 2019 at 10:50:23AM +0800, Zha Bin wrote:
+>> From: Liu Jiang<gerry@linux.alibaba.com>
+>>
+>> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of using
+>> virtio over mmio devices as a lightweight machine model for modern
+>> cloud. The standard virtio over MMIO transport layer only supports one
+>> legacy interrupt, which is much heavier than virtio over PCI transport
+>> layer using MSI. Legacy interrupt has long work path and causes specific
+>> VMExits in following cases, which would considerably slow down the
+>> performance:
+>>
+>> 1) read interrupt status register
+>> 2) update interrupt status register
+>> 3) write IOAPIC EOI register
+>>
+>> We proposed to update virtio over MMIO to version 3[1] to add the
+>> following new features and enhance the performance.
+>>
+>> 1) Support Message Signaled Interrupt(MSI), which increases the
+>>     interrupt performance for virtio multi-queue devices
+>> 2) Support per-queue doorbell, so the guest kernel may directly write
+>>     to the doorbells provided by virtio devices.
+> Do we need to come up with new "doorbell" terminology?
+> virtio spec calls these available event notifications,
+> let's stick to this.
 
-  For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Yes, let's keep virtio words, which just calls notifications.
 
-I can add them if that's not the case.
+>> The following is the network tcp_rr performance testing report, tested
+>> with virtio-pci device, vanilla virtio-mmio device and patched
+>> virtio-mmio device (run test 3 times for each case):
+>>
+>> 	netperf -t TCP_RR -H 192.168.1.36 -l 30 -- -r 32,1024
+>>
+>> 		Virtio-PCI    Virtio-MMIO   Virtio-MMIO(MSI)
+>> 	trans/s	    9536	6939		9500
+>> 	trans/s	    9734	7029		9749
+>> 	trans/s	    9894	7095		9318
+>>
+>> [1]https://lkml.org/lkml/2019/12/20/113
+>>
+>> Signed-off-by: Liu Jiang<gerry@linux.alibaba.com>
+>> Signed-off-by: Zha Bin<zhabin@linux.alibaba.com>
+>> Signed-off-by: Chao Peng<chao.p.peng@linux.intel.com>
+>> Signed-off-by: Jing Liu<jing2.liu@linux.intel.com>
+> Do we need a new version though? What is wrong with
+> a feature bit? This way we can create compatible devices
+> and drivers.
 
-> > I'm including all x86 maintainers just to be sure they are aware of this as
-> > I'm not sure if x86@kernel.org reaches them all. Let me know if you have
-> > issues with this series.
-> > 
-> > I would prefer this to be merged through platform/x86 or MFD trees assuming
-> > there are no objections.
-> 
-> I'm almost reviewed it (few patches left which I plan to do soon), I'm fine if
-> it goes via other tree.
+We considered using 1 feature bit of 24~37 to specify MSI capability, but
 
-Thanks a lot for the review!
+this feature bit only means for mmio transport layer, but not representing
+
+comment feature negotiation of the virtio device. So we're not sure if 
+this is a good choice.
+
+>> [...]
+>>   
+>> +static void mmio_write_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
+>> +{
+>> +	struct device *dev = desc->dev;
+>> +	struct virtio_device *vdev = dev_to_virtio(dev);
+>> +	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
+>> +	void __iomem *pos = vm_dev->base;
+>> +	uint16_t cmd = VIRTIO_MMIO_MSI_CMD(VIRTIO_MMIO_MSI_CMD_UPDATE,
+>> +			desc->platform.msi_index);
+>> +
+>> +	writel(msg->address_lo, pos + VIRTIO_MMIO_MSI_ADDRESS_LOW);
+>> +	writel(msg->address_hi, pos + VIRTIO_MMIO_MSI_ADDRESS_HIGH);
+>> +	writel(msg->data, pos + VIRTIO_MMIO_MSI_DATA);
+>> +	writew(cmd, pos + VIRTIO_MMIO_MSI_COMMAND);
+>> +}
+> All this can happen when IRQ affinity changes while device
+> is sending interrupts. An interrupt sent between the writel
+> operations will then be directed incorrectly.
+
+When investigating kernel MSI behavior, I found in most case there's no 
+action during IRQ affinity changes to avoid the interrupt coming.
+
+For example, when migrate_one_irq, it masks the irq before 
+irq_do_set_affinity. But for others, like user setting any irq affinity
+
+via /proc/, it only holds desc->lock instead of disable/mask irq. In 
+such case, how can it ensure the interrupt sending between writel ops?
+
+
+>> [...]
+>> +
+>> +/* RO: MSI feature enabled mask */
+>> +#define VIRTIO_MMIO_MSI_ENABLE_MASK	0x8000
+> I don't understand the comment. Is this a way for
+> a version 3 device to say "I want/do not want MSI"?
+> Why not just use a feature bit? We are not short on these.
+
+This is just used for current MSI enabled/disabled status, after all MSI 
+configurations setup finished.
+
+Not for showing MSI capability.
+
+In other words, since the concern of feature bit, we choose to update 
+the virtio mmio
+
+version that devices with v3 have MSI capability and notifications.
+
+
+Thanks,
+
+Jing
+
