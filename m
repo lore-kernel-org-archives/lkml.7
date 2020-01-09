@@ -2,82 +2,100 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C73C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D96C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62DA2075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4EE72077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:21:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbgAINUB (ORCPT
+        id S1729873AbgAINVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:20:01 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:40478 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729180AbgAINUB (ORCPT
+        Thu, 9 Jan 2020 08:21:32 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:58571 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgAINVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:20:01 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ipXj7-0000gk-Fu; Thu, 09 Jan 2020 13:19:53 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>, dmaengine@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next][V2] dmaengine: ti: omap-dma: don't allow a null od->plat pointer to be dereferenced
-Date:   Thu,  9 Jan 2020 13:19:53 +0000
-Message-Id: <20200109131953.157154-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 9 Jan 2020 08:21:32 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 5C8EE40004;
+        Thu,  9 Jan 2020 13:21:27 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 14:21:26 +0100
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Igor Russkikh <irusskikh@marvell.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        "Simon.Edelhaus@aquantia.com" <Simon.Edelhaus@aquantia.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        Mark Starovoytov <mstarovoitov@marvell.com>
+Subject: Re: [EXT] [PATCH net-next v4 15/15] net: macsec: add support for
+ offloading to the MAC
+Message-ID: <20200109132126.GD5472@kwain>
+References: <20191219105515.78400-1-antoine.tenart@bootlin.com>
+ <20191219105515.78400-16-antoine.tenart@bootlin.com>
+ <MN2PR18MB26387BD6B59565D21F936FE5B72E0@MN2PR18MB2638.namprd18.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <MN2PR18MB26387BD6B59565D21F936FE5B72E0@MN2PR18MB2638.namprd18.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Igor,
 
-Currently when the call to dev_get_platdata returns null the driver issues
-a warning and then later dereferences the null pointer.  Avoid this issue
-by returning -ENODEV errror rather when the platform data is null and
-change the warning to an appropriate error message.
+On Mon, Dec 23, 2019 at 11:36:48AM +0000, Igor Russkikh wrote:
+> 
+> > diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+> > index 024af2d1d0af..771371d5b996 100644
+> > --- a/include/uapi/linux/if_link.h
+> > +++ b/include/uapi/linux/if_link.h
+> > @@ -489,6 +489,7 @@ enum macsec_validation_type {
+> >  enum macsec_offload {
+> >  	MACSEC_OFFLOAD_OFF = 0,
+> >  	MACSEC_OFFLOAD_PHY = 1,
+> > +	MACSEC_OFFLOAD_MAC = 2,
+> >  	__MACSEC_OFFLOAD_END,
+> >  	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
+> 
+> So from uapi perspective user have to explicitly specify "offload mac"
+> or "offload phy"? And from non experienced user perspective he always
+> have to try these two before rolling back to "offload none" ?
+> 
+> I'm not saying this is wrong, just trying to understand if there any
+> more streamlined way to do this..
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 211010aeb097 ("dmaengine: ti: omap-dma: Pass sdma auxdata to driver and use it")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
+That is the idea, the commands will be:
+# ip macsec offload macsec0 off
+# ip macsec offload macsec0 phy
+# ip macsec offload macsec0 mac
 
-V2: return -ENODEV and change warning to an error message as suggested by
-    Peter Ujfalusi.
----
- drivers/dma/ti/omap-dma.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+We should be able to report what's supported for a given interface, for
+a more user friendly experience though. (We could include the
+information in `ip macsec show` for example). Would that improve things?
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index fc8f7b2fc7b3..a93515015dce 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1658,8 +1658,10 @@ static int omap_dma_probe(struct platform_device *pdev)
- 	if (conf) {
- 		od->cfg = conf;
- 		od->plat = dev_get_platdata(&pdev->dev);
--		if (!od->plat)
--			dev_warn(&pdev->dev, "no sdma auxdata needed?\n");
-+		if (!od->plat) {
-+			dev_err(&pdev->dev, "omap_system_dma_plat_info is missing");
-+			return -ENODEV;
-+		}
- 	} else {
- 		od->cfg = &default_cfg;
- 
+Thanks!
+Antoine
+
 -- 
-2.24.0
-
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
