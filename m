@@ -2,112 +2,202 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A45C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB72C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA122072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578556724;
-	bh=IxIDaYwn1hYLk4AjZMN5Qonq1h8D5Y/VRrDjQJUKNq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ItFK7p4N9Bt7kqO88VQSMJ3En5opw1oJ3Trmmu5jwMi0iiqKz4swUG5k1QtTR4gaf
-	 bLJaA67xOw+TbhONwBGDQxP0COy16Obe4xG22QZ0yzgB1SbJh2tgh9fs3ZogA9irJi
-	 S47Q38Z21ruDf87CbhwCyl/i6G1/ZMsUFRHE/HZ4=
+	by mail.kernel.org (Postfix) with ESMTP id 2A9D02072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TsRHMUqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgAIH6n (ORCPT
+        id S1728356AbgAIIAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:58:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbgAIH6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:58:42 -0500
-Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC10206ED;
-        Thu,  9 Jan 2020 07:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578556721;
-        bh=IxIDaYwn1hYLk4AjZMN5Qonq1h8D5Y/VRrDjQJUKNq0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q9FuoXicRdmdy8u3f4kO6XoaxwV4LHUFXa/jXJ1M8Hb5Kaj4P8nFNuYO0ld5JUzTP
-         LcKNnf/QO//ezjudN3G2NSzz0chy2/HbRRoosjYXlp156GJc5Vdueu/ym2rJfKJ55t
-         GoYrUkNzy6tzqDqUe8nm5NwIbog2TM9mBg9cNOVo=
-Date:   Thu, 9 Jan 2020 15:58:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Aapo Vienamo <aapo.vienamo@iki.fi>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: mxs: Enable usbphy1 and usb1 on apx4devkit DTS
-Message-ID: <20200109075832.GG4456@T480>
-References: <20191229131503.20843-1-aapo.vienamo@iki.fi>
+        Thu, 9 Jan 2020 03:00:07 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:15957 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbgAIIAG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 03:00:06 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200109080002epoutp015e0f93c078ab37f502c206b0852d0a6d~oKQxTWr8x0125901259epoutp01D
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 08:00:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200109080002epoutp015e0f93c078ab37f502c206b0852d0a6d~oKQxTWr8x0125901259epoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578556802;
+        bh=GISTzON3FUJxE0UCMZa11CdWc2rxeQJllnlBZ3BuxHc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=TsRHMUqZX3Guf2iCKkd2GNoRR/uAfWRJABVBfWqU6o+jjPPw5r4/Eh5LJBJabQ0UC
+         KZtRBAUY3mjbRhjO1rSXh9zlnjG/EGqvvaL2zBLo+EDkcM2FV8TSFRS32WgCdWrx8/
+         ze7TzR082JQw7M17E8H5KK23UN7sixZsxKGjvXak=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200109080001epcas1p20772340e8a3226c11cbea94714b1ff31~oKQwst8GU0984409844epcas1p2G;
+        Thu,  9 Jan 2020 08:00:01 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47tdnW0rQnzMqYkd; Thu,  9 Jan
+        2020 07:59:59 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        31.46.48019.F7DD61E5; Thu,  9 Jan 2020 16:59:59 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200109075958epcas1p47b0450efdd9444da21b6d5cf36c81b6d~oKQtZSHko1368513685epcas1p4a;
+        Thu,  9 Jan 2020 07:59:58 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200109075958epsmtrp16c5873f3ba436428b0b8ed6491d94d9c~oKQtYbNZl1123911239epsmtrp11;
+        Thu,  9 Jan 2020 07:59:58 +0000 (GMT)
+X-AuditID: b6c32a38-257ff7000001bb93-33-5e16dd7fe7e3
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D2.B5.06569.D7DD61E5; Thu,  9 Jan 2020 16:59:57 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200109075957epsmtip1b83c2225a297b974edaca976aad98f88~oKQtHY7tJ1007210072epsmtip1I;
+        Thu,  9 Jan 2020 07:59:57 +0000 (GMT)
+Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, jcrouse@codeaurora.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9c3574e8-945b-56c4-3425-28e68cd3d2a9@samsung.com>
+Date:   Thu, 9 Jan 2020 17:07:04 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191229131503.20843-1-aapo.vienamo@iki.fi>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <c1e6f324-b0c2-41ff-a015-7ba0b29ad42c@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJsWRmVeSWpSXmKPExsWy7bCmnm79XbE4g9PLWC3uz2tltDi9/x2L
+        xcQbV1gsVn98zGix5vYhRosfG04xW2xckG1xtukNu8WKux9ZLS7vmsNm8bn3CKPFwqYWdou1
+        R+6yW9xuXMHmwOexZt4aRo/Lfb1MHjvuLmH02DnrLrvHplWdbB53ru1h89j4bgeTx99Z+1k8
+        +rasYvT4vEkugCsq2yYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnF
+        J0DXLTMH6AMlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToFlgV5xYm5xaV66XnJ+
+        rpWhgYGRKVBhQnbGlM9PGQu2KVQ823WDqYHxiVgXIweHhICJxPQd2l2MXBxCAjsYJQ6+/MYO
+        4XxilGiesJkRwvnGKLGj9zhzFyMnWMe61qlMEIm9jBKrVvxihnDeM0qcOnoVrEpYwFtiftcS
+        FhBbRCBMouX6ITaQImaBTUwS7RNvs4Ik2AS0JPa/uMEGYvMLKEpc/fGYEcTmFbCTeDdrLzuI
+        zSKgIvH2XxdYvSjQoJPbWqBqBCVOznwCtoBTwFbi1JkpYHOYBcQlbj2ZzwRhy0s0b50Ndp2E
+        wCl2ia65i5ggfnCR+Lj+GwuELSzx6vgWdghbSuJlfxuUXS2x8uQRNojmDkaJLfsvsEIkjCX2
+        L53MBAo+ZgFNifW79CHCihI7f89lhFjMJ/Huaw8rJIR5JTrahCBKlCUuP7gLdYKkxOL2TrYJ
+        jEqzkLwzC8kLs5C8MAth2QJGllWMYqkFxbnpqcWGBSbI0b2JEZy8tSx2MO4553OIUYCDUYmH
+        l0FJLE6INbGsuDL3EKMEB7OSCO/RG0Ah3pTEyqrUovz4otKc1OJDjKbA0J7ILCWanA/MLHkl
+        8YamRsbGxhYmhmamhoZK4rwcPy7GCgmkJ5akZqemFqQWwfQxcXBKNTAy8s74J8nRq8gYafZo
+        0cITBSvrXniwn/64jsHf/a6+mKZU/+MKvdlJ9x7POrvupvmZ3m9n6799jF+XULHiq/N7mQUG
+        mot1Uv/OORX/QDXMxJL78C2bT4LT92yZ5s/2wGPXNf4L77NP7Ex1ey5c36XtcfBNnr5w0k6J
+        g8L+aupzVr2et5l/yvHtSizFGYmGWsxFxYkAl90mE/QDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSnG7tXbE4gzOLbSzuz2tltDi9/x2L
+        xcQbV1gsVn98zGix5vYhRosfG04xW2xckG1xtukNu8WKux9ZLS7vmsNm8bn3CKPFwqYWdou1
+        R+6yW9xuXMHmwOexZt4aRo/Lfb1MHjvuLmH02DnrLrvHplWdbB53ru1h89j4bgeTx99Z+1k8
+        +rasYvT4vEkugCuKyyYlNSezLLVI3y6BK2PK56eMBdsUKp7tusHUwPhErIuRk0NCwERiXetU
+        pi5GLg4hgd2MEt/vr2WGSEhKTLt4FMjmALKFJQ4fLoaoecso8fX7RBaQGmEBb4n5XUvAbBGB
+        MIn1t1cxghQxC2xikjjS+oMdoqOfSWLrpbWMIFVsAloS+1/cYAOx+QUUJa7+eAwW5xWwk3g3
+        ay87iM0ioCLx9l8XK4gtCjR155LHTBA1ghInZz4B28YpYCtx6swUsDnMAuoSf+ZdYoawxSVu
+        PZnPBGHLSzRvnc08gVF4FpL2WUhaZiFpmYWkZQEjyypGydSC4tz03GLDAqO81HK94sTc4tK8
+        dL3k/NxNjOA41tLawXjiRPwhRgEORiUeXgYlsTgh1sSy4srcQ4wSHMxKIrxHbwCFeFMSK6tS
+        i/Lji0pzUosPMUpzsCiJ88rnH4sUEkhPLEnNTk0tSC2CyTJxcEo1MC49/spKrd3x+vGJW1a+
+        PqhUEXRIrO5e30mtlUlWHzpY7lxkWN98q/akiHTbtlsq1779WzrhQMDaBVmcr5yk9e9x9L4O
+        PLEjKyWKT7PXYNraez88H3F9bd974cq31LyQk1wbQi88i683Y7lx3ivPir/+WvVvg+LarVec
+        XP0Evd93zbiva6M6/YYSS3FGoqEWc1FxIgDog/gq3wIAAA==
+X-CMS-MailID: 20200109075958epcas1p47b0450efdd9444da21b6d5cf36c81b6d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea
+References: <20200107090519.3231-1-cw00.choi@samsung.com>
+        <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
+        <20200107090519.3231-3-cw00.choi@samsung.com> <20200107214834.GB738324@yoga>
+        <c1e6f324-b0c2-41ff-a015-7ba0b29ad42c@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 03:15:03PM +0200, Aapo Vienamo wrote:
-> Enable the USB host port on the APx4 development board.
-> 
-> Signed-off-by: Aapo Vienamo <aapo.vienamo@iki.fi>
-> ---
->  arch/arm/boot/dts/imx28-apx4devkit.dts | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx28-apx4devkit.dts b/arch/arm/boot/dts/imx28-apx4devkit.dts
-> index 3a184d13887b..f00d201ce242 100644
-> --- a/arch/arm/boot/dts/imx28-apx4devkit.dts
-> +++ b/arch/arm/boot/dts/imx28-apx4devkit.dts
-> @@ -183,6 +183,12 @@ auart2: serial@8006e000 {
->  				pinctrl-0 = <&auart2_2pins_a>;
->  				status = "okay";
->  			};
-> +
-> +			usbphy1: usbphy@8007e000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&usb1_pins_a>;
-> +				status = "okay";
-> +			};
->  		};
->  	};
->  
-> @@ -193,6 +199,10 @@ mac0: ethernet@800f0000 {
->  			pinctrl-0 = <&mac0_pins_a>;
->  			status = "okay";
->  		};
-> +
-> +		usb1: usb@80090000 {
+Hi Bjorn and Dmitry,
 
-We want to keep nodes with unit-address sorted in that address.  That
-said, usb@80090000 should go before ethernet@800f0000.
+I replied from Bjorn and Dmitry opinion.
 
-Shawn
+On 1/8/20 11:20 PM, Dmitry Osipenko wrote:
+> 08.01.2020 00:48, Bjorn Andersson пишет:
+>> On Tue 07 Jan 01:05 PST 2020, Chanwoo Choi wrote:
+>>
+>>> Add new devfreq_transitions debugfs file to track the frequency transitions
+>>> of all devfreq devices for the simple profiling as following:
+>>> - /sys/kernel/debug/devfreq/devfreq_transitions
+>>>
+>>> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
+>>> in Kconfig in order to save the transition history.
+>>>
+>>> [Detailed description of each field of 'devfreq_transitions' debugfs file]
+>>> - time_ms	: Change time of frequency transition. (unit: millisecond)
+>>> - dev_name	: Device name of h/w.
+>>> - dev		: Device name made by devfreq core.
+>>> - parent_dev	: If devfreq device uses the passive governor,
+>>> 		  show parent devfreq device name.
+>>> - load_%	: If devfreq device uses the simple_ondemand governor,
+>>> 		  load is used by governor whene deciding the new frequency.
+>>> 		  (unit: percentage)
+>>> - old_freq_hz	: Frequency before changing. (unit: hz)
+>>> - new_freq_hz	: Frequency after changed. (unit: hz)
+>>>
+>>> [For example on Exynos5422-based Odroid-XU3 board]
+>>> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
+>>> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
+>>> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
+>>> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
+>>> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
+>>> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
+>>> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
+>>> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
+>>> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
+>>> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
+>>> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
+>>> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
+>>> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
+>>> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
+>>> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
+>>> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
+>>> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
+>>> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
+>>> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
+>>> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
+>>> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
+>>> [snip]
+>>>
+>>
+>> Wouldn't it make more sense to expose this through the tracing
+>> framework - like many other subsystems does?
+> 
+> I think devfreq core already has some tracing support and indeed it
+> should be better to extend it rather than duplicate.
+> 
 
-> +		      status = "okay";
-> +		};
->  	};
->  
->  	regulators {
-> -- 
-> 2.24.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+First of all, thanks for comments.
+
+Before developing it, I have considered what is better to
+support debugging features for devfreq device. As you commented,
+trace event is more general way to catch the detailed behavior.
+
+But, I hope to provide the very easy simple profiling way
+for user if it is not harmful to the principle of linux kernel.
+
+In order to prevent the performance regression when DEBUG_FS is enabled,
+I will add the CONFIG_DEVFREQ_TRANSITIONS_DEBUG for 'devfreq_transitions'
+to make it selectable.
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
