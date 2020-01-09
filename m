@@ -2,161 +2,139 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75531C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC1AC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FA820678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52E12072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="FxKTRHnD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fzf7yeMt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="muJ29tPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgAIEkz (ORCPT
+        id S1727975AbgAIEl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 23:40:55 -0500
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:57393 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727749AbgAIEkz (ORCPT
+        Wed, 8 Jan 2020 23:41:57 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45164 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727876AbgAIEl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 23:40:55 -0500
-X-Greylist: delayed 600 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jan 2020 23:40:54 EST
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.west.internal (Postfix) with ESMTP id 9CFC29EA;
-        Wed,  8 Jan 2020 23:30:52 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Wed, 08 Jan 2020 23:30:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=T3IpaNh6tON7Z0J6BNGMp35jqP
-        cvLlQMXYRa9Ey0PUY=; b=FxKTRHnD4I2nmGm01m/Qrb7EJgiipwTTvsfnKL6dV1
-        s0MFPFrsqYdD/E2cCt1VASFOwPnVIlTZxSM92nSFR73g8+4JM/0W7mAW3VE57ybY
-        8kAIr2bKxW2SS9RZhd9VK9bw+rPXsxUaZ/Cn6njZugYT/xQx+cF8ADbc/ZzQEhn9
-        iB/LLcvpQKtr7hAMWub89RtK9s4VqZnb1FDk1mvo19Onz5GZKzsX9iqAdoW9aIyl
-        Uk7P4j179XNu7Fi1xikWDAAuc2/vN9lm72M8zlZjYMQrVnCFngWXDyRBR1xb2AXo
-        YJj7s8aI1J7JTuZE+c//ir9wTL7GdY7soVP2BbxO3KmQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=T3IpaNh6tON7Z0J6B
-        NGMp35jqPcvLlQMXYRa9Ey0PUY=; b=fzf7yeMtz23cZcpTYXNROyfZXuDYDWxSM
-        PrUF7lFIuia0DLnBZypneihyxytRmi06aatmvWAKbjk5+rxA9cqhjB9+I7J+VYNk
-        wdbdj/5sECQyAdmjDgRSPT8NVCJe3uQLG2UE43TaFHzkA1QkZ/iS4OetQGK+vlfR
-        tj7fJ27E2115LaDLdhmNIXLdybDXM3DN9me9XJZFZMLBSWWpmxlnikGPlUjoR9lR
-        YxSxLULWNWymcB5S4DLQbncxclBg5ZnPyjzIQxA3u0119jPwyOzdTHicJwA3ODHD
-        c7Y3jrAANeBWFcVGwbOAxIghUZkyL3JsD16HrwIXs6rIX7Yo7fJjQ==
-X-ME-Sender: <xms:e6wWXgvKKBsGJIcyFg7XNPj2Fpaa9yHUz2p4azCKG6cfevK2A3v6UQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdehledgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetnhgurhgvshcu
-    hfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepieejrd
-    duiedtrddvudejrddvhedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvshes
-    rghnrghrrgiivghlrdguvgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:e6wWXi8Ip0xs3ExUbEn6_9lmGFVpX4sgqniUjJ4ffg-xivB2EQW_HQ>
-    <xmx:e6wWXkFN52PjyGQMnUJyW7wiWB99xdtKUqigRjwjvJv7C_iiYVCRHA>
-    <xmx:e6wWXhQKh4qxHJX8Y8BEpDpYMy-HE9WCfzkoBqEjyDVRPRFCsYkaHA>
-    <xmx:fKwWXmg-rKXlkTEMzsYzgteBs8zX7wYegz_5Gte9QyygyYdBetCcyB2m6Vs>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 272E18005B;
-        Wed,  8 Jan 2020 23:30:51 -0500 (EST)
-From:   Andres Freund <andres@anarazel.de>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Andres Freund <andres@anarazel.de>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
-Subject: [PATCH] perf c2c: Fix sorting.
-Date:   Wed,  8 Jan 2020 20:30:30 -0800
-Message-Id: <20200109043030.233746-1-andres@anarazel.de>
-X-Mailer: git-send-email 2.25.0.rc1
+        Wed, 8 Jan 2020 23:41:57 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b22so2013218pls.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 20:41:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TRjoVo3zj4W4LfAs9dMN4fOiIUDjAiTixS2yPeXgoDQ=;
+        b=muJ29tPvUK4BsxxgLvfXC/FDpAogqeNb4Yj0qnWwm3nQ5iHzd0PKghtKldnrwY4Asu
+         R9cMGIY1nMK4gqmHJRBCFzunPvtZ1aCuNfMKGuPpOcAJkWUl9LINrRQtCqLLE47NCqjg
+         sYTgbvZESm5lF9IUwWFAr7O8lCrPd1Lvwn2UrddOtwnUXLbvU/PgEFVxlc6kjaMFmZ/n
+         y8OoG+fKyEX9Su9Fl54aMGkD1yPcJBC8lYi0/74jl7qyf6RBghWfE0RXNJH2nTcFpbms
+         2U69QHRHaTBnPbhn1LpD82CuTXJ08AQ+fG4uK+J4boK3G2+CdK1sxstEeD2h7iq0TFPX
+         jNJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TRjoVo3zj4W4LfAs9dMN4fOiIUDjAiTixS2yPeXgoDQ=;
+        b=nKlUVbJKfFEMXfGEemLRcGcbbZT9KAEQVhj8xfrBrV4qolv3WfGF72q3pcygkXJ53t
+         8qoGfOSiagB3jBHiT50Qgn7v52xzQEP1ymU0DkmbfF9umXjGVwaUZds8FRsH6BAk1Xys
+         q2DODfO4K5SocJI5qNoBhAQhpc5LIigiiGbR8bLLprOQIEn3Za72bQXVOtid8AlY4ZXg
+         T2mBFT8BkavjlJy+Vnr0hRiFnLbVvGjlaU9gNd2yiOVQptzs488/YldIUJsCOJfkiKGx
+         aKPfTi7iR+Qq8Kk0DDfkm4EbODR/SLf+W+RQaNGGLvHP1ULiZn87c5ZZprebNX0eEltp
+         iRMw==
+X-Gm-Message-State: APjAAAU8PEtZ5k65XKYokhnTZbi67mgMel+t/Fqa/lU/X1zPEiviBCae
+        q99irEJm5v2su6TidT7ooQVQ+A==
+X-Google-Smtp-Source: APXvYqxjIkobJfEbVA0G149IgU2oFp/wmK3lj3C8cMWvXPKRJq96IVC+8GTQRvil/pY8LRz/7BA/FQ==
+X-Received: by 2002:a17:90a:d804:: with SMTP id a4mr2930341pjv.11.1578544916616;
+        Wed, 08 Jan 2020 20:41:56 -0800 (PST)
+Received: from localhost ([122.172.140.51])
+        by smtp.gmail.com with ESMTPSA id r7sm5584790pfg.34.2020.01.08.20.41.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 20:41:55 -0800 (PST)
+Date:   Thu, 9 Jan 2020 10:11:54 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 3/3] OPP: Add helper function for bandwidth OPP tables
+Message-ID: <20200109044154.u3ypodoulygemaa6@vireshk-i7>
+References: <20191207002424.201796-1-saravanak@google.com>
+ <20191207002424.201796-4-saravanak@google.com>
+ <20200108111947.q5aafrlz26tnk3nq@vireshk-i7>
+ <CAGETcx_T7VONkSd-r9CY-5OpZBZ2iD0tFoCf0+d8CY2b5zgr9g@mail.gmail.com>
+ <CAGETcx8cro3FHqZhbia6ZUy41XGHwMMSTZgX7QN_2wToWa-Yww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx8cro3FHqZhbia6ZUy41XGHwMMSTZgX7QN_2wToWa-Yww@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 722ddfde366f ("perf tools: Fix time sorting") changed -
-correctly so - hist_entry__sort to return int64. Unfortunately several
-of the builtin-c2c.c comparison routines only happened to work due the
-cast caused by the wrong return type.
+On 08-01-20, 19:36, Saravana Kannan wrote:
+> On Wed, Jan 8, 2020 at 4:58 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Wed, Jan 8, 2020 at 3:19 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 06-12-19, 16:24, Saravana Kannan wrote:
+> > > > The frequency OPP tables have helper functions to search for entries in the
+> > > > table based on frequency and get the frequency values for a given (or
+> > > > suspend) OPP entry.
+> > > >
+> > > > Add similar helper functions for bandwidth OPP tables to search for entries
+> > > > in the table based on peak bandwidth and to get the peak and average
+> > > > bandwidth for a given (or suspend) OPP entry.
+> > > >
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > >  drivers/opp/core.c     | 301 +++++++++++++++++++++++++++++++++++------
+> > > >  include/linux/pm_opp.h |  43 ++++++
+> > > >  2 files changed, 305 insertions(+), 39 deletions(-)
+> > > >
+> > > > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > > > index c79bbfac7289..3ff33a08198e 100644
+> > > > --- a/drivers/opp/core.c
+> > > > +++ b/drivers/opp/core.c
+> > > > @@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
+> > > >
+> > > > +/**
+> > > > + * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
+> > > > + * @opp:     opp for which peak bandwidth has to be returned for
+> > >
+> > > s/peak //
+> >
+> > Ack
+> 
+> Actually, isn't this correct as is? peak bandwidth is "returned".
+> Average bandwidth is updated through the pointer.
 
-This causes meaningless ordering of both the cacheline list, and the
-cacheline details page. E.g a simple
-  perf c2c record -a sleep 3
-  perf c2c report
-will result in cacheline table like
-  =================================================
-             Shared Data Cache Line Table
-  =================================================
-  #
-  #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----  ---- Store Reference ----  --- Load Dram ----      LLC    Total  ----- Core Load Hit -----  -- LLC Load Hit --
-  # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt    Total    L1Hit   L1Miss       Lcl       Rmt  Ld Miss    Loads       FB       L1       L2       Llc       Rmt
-  # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  ........  ........  .......  .......  .......  .......  .......  ........  ........
-  #
-        0      0x7f0d27ffba00   N/A       0       52    0.12%       13        6        7       12       12        0         0         7       14       40        4       16        0         0         0
-        1      0x7f0d27ff61c0   N/A       0     6353   14.04%     1475      801      674      779      779        0         0       718     1392     5574     1299     1967        0       115         0
-        2      0x7f0d26d3ec80   N/A       0       71    0.15%       16        4       12       13       13        0         0        12       24       58        1       20        0         9         0
-        3      0x7f0d26d3ec00   N/A       0       98    0.22%       23       17        6       19       19        0         0         6       12       79        0       40        0        10         0
-i.e. with the list not being ordered by Total Hitm.
+I think we return two values here, peak and avg bw. Just that we can't
+return two values from a routine, and so one is returned using a
+pointer. And so I though writing just bw may be better.
 
-Fixes: 722ddfde366f ("perf tools: Fix time sorting")
-Signed-off-by: Andres Freund <andres@anarazel.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org # v3.16+
----
- tools/perf/builtin-c2c.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e69f44941aad..f2e9d2b1b913 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- {
- 	struct c2c_hist_entry *c2c_left;
- 	struct c2c_hist_entry *c2c_right;
--	unsigned int tot_hitm_left;
--	unsigned int tot_hitm_right;
-+	uint64_t tot_hitm_left;
-+	uint64_t tot_hitm_right;
- 
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
-@@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __maybe_unused,			\
- 									\
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
--	return c2c_left->stats.__f - c2c_right->stats.__f;		\
-+	return (uint64_t) c2c_left->stats.__f -				\
-+	       (uint64_t) c2c_right->stats.__f;				\
- }
- 
- #define STAT_FN(__f)		\
-@@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	c2c_left  = container_of(left, struct c2c_hist_entry, he);
- 	c2c_right = container_of(right, struct c2c_hist_entry, he);
- 
--	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
-+	return (uint64_t) llc_miss(&c2c_left->stats) -
-+	       (uint64_t) llc_miss(&c2c_right->stats);
- }
- 
- static uint64_t total_records(struct c2c_stats *stats)
 -- 
-2.25.0.rc1
-
+viresh
