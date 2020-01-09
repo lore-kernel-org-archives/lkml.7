@@ -2,125 +2,131 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45925C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F0BC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12EEB2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578586931;
-	bh=/mP41Vv+k2rvHlBLTujW33oOuv99aKS6+WAjdYPVVpc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QY28vnQs2761AL+QA2iiLCrFHOo7ixvlP/zugx+VQS1kBfonGsFq/AzYEV6vk0J0P
-	 mUi4IVy7Z8lozADCVzfgUoNaYSL9v/BZRxp4G1JfDZF/y6R3G6ARs9XeppeIWNVOW2
-	 bRyBIcBWtnAh7qLIxdTnqVcuSZnSGhL7e2La3t6o=
+	by mail.kernel.org (Postfix) with ESMTP id 4A2C020721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:23:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="lGqemvVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387598AbgAIQWK (ORCPT
+        id S1733200AbgAIQXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:22:10 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:29762 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731343AbgAIQWJ (ORCPT
+        Thu, 9 Jan 2020 11:23:33 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36133 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731027AbgAIQXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:22:09 -0500
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 009GLifj010250;
-        Fri, 10 Jan 2020 01:21:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 009GLifj010250
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578586905;
-        bh=yo+GdRESSwyawMbYolTNwdLoskihhykp3SyuoUcakJs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YVUpxGt/Fe2PZmbdg6Ir3mJh/zq8Rji+CBU+tsr9RB56M/5+tAY2sihGybSzaTEig
-         mS8uIKIt+pFbViLgeTRJoUg4tfG6si5RZtCmWT5B+ayb9l1HQtXlAaUE2aHuhJwpao
-         rNN08ZO6cguqyY+vqC6ZG4QFhVX63OM3JD3Xqppi8Yt4Mq7OyIqxv/pXnZKyqtqRI7
-         mDinlOT8hjCRI4bc3mDpoEVhBN/mjkcyTXUO0OHFF5naiWzhaxjuzgBokvof0Bb6BT
-         BW8DSKPwr4OWrnmJAmYy4vca3BGH3olLJ8a/1ppBmew7F4FTS83LEHFHgpsP0aXkbR
-         r9NkWNgEVbnmw==
-X-Nifty-SrcIP: [209.85.221.177]
-Received: by mail-vk1-f177.google.com with SMTP id w67so2126109vkf.1;
-        Thu, 09 Jan 2020 08:21:45 -0800 (PST)
-X-Gm-Message-State: APjAAAWy4lkiGng0GHtEU5rsB7ND2rSfbsdlrTlCY/KQN3mmyWqXJO4u
-        5wErJXEafEDzpg9JRZM12fT0b8SH4/M6EfI0nMM=
-X-Google-Smtp-Source: APXvYqw5UWQ5vMiYxNxR5AgY5N4tyRgqG2rjsD3ihucIIWCZA/GENSrRZQE0dkLA16m7WBh2fMcMmBuQb4NSXyM3RYU=
-X-Received: by 2002:a1f:6344:: with SMTP id x65mr7206932vkb.26.1578586904074;
- Thu, 09 Jan 2020 08:21:44 -0800 (PST)
+        Thu, 9 Jan 2020 11:23:33 -0500
+Received: by mail-qt1-f195.google.com with SMTP id i13so1507089qtr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:23:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ic0Na07q4rKOF9CHw3HtqPOvoy8xsU/UO9GgbNroDuA=;
+        b=lGqemvVW4OOqPrDuZezl5BBtxwmAXizIMHe4UVwk+zlDPyw4FwahplSi/mvyDaJauz
+         IPX2uHyaKd0Sf/zBOrLmtA8NPONopdSqjlTG+NOjOb96VLIXBB+yr2yVp2cEwRLoJRqp
+         yiDV8+vMqRtMfB3GhV0QXLk1F5WC/zY2Ab510044lCMjzbjVKMZ8y/7O9EYtzYDbHilh
+         Vc9uFe8Ra40ZulrNrBw2Y96/ituX/7AioYo7TBQT3+I3MTJtb7WN4U7yXOcn3+uE1g2E
+         Ci+r8WAwVpaq0wpOA5DQ6XJKhopxt+nZ1AGmsEcq1Pf+z1ntw6CbPQ0HNfaSi3B0UfU3
+         CaBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ic0Na07q4rKOF9CHw3HtqPOvoy8xsU/UO9GgbNroDuA=;
+        b=QEk/trj3MkBjSyRI1tUeh3dLqZzQqaCG36FCAFkebRa+VXmx3iqT95KCDHHIz23WkF
+         HD7UJrGz7gfssFSBNCmjmeCjGHLTH4vT0tIHLSctfxzf6bWmX4/PSL7cJzQRSmQ92fQ0
+         dGOWGH6PiQtIe56IzFCZmKH2YGLGD1h3F4q+4r8TE0bUZQbWqRt3uJxevBzW2Z2Nm0yF
+         2puYaDj4855g/6riOvIVMYS7+qyBcp9gI42Nq8zJKzFkrSB4eYQcou7dzp6J3tzJ4CD6
+         dbSt6HmeinemnU6fXsXyWHtz5+YgTGDOyCSwOdXqd8/GXeChllY/ILza0xula7N5x/kA
+         b1Vw==
+X-Gm-Message-State: APjAAAVY3Vt4bXs+Xv9prFT6EJesSwQeLDnrXjnGq1DKm+5rmQJoQlOm
+        2GneENjAJnLusGDtjnUyQX3jbg==
+X-Google-Smtp-Source: APXvYqzOqTCKt2pGJzg1CPSGxDNqhRAO8deRTrmE6H7D5Urfe2sYa6m6Thv3olb273mgLSPrIdGu+g==
+X-Received: by 2002:ac8:65da:: with SMTP id t26mr8673037qto.5.1578587012176;
+        Thu, 09 Jan 2020 08:23:32 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:d72d])
+        by smtp.gmail.com with ESMTPSA id g62sm3197786qkd.25.2020.01.09.08.23.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 08:23:31 -0800 (PST)
+Date:   Thu, 9 Jan 2020 11:23:30 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Ivan Babrou <ivan@cloudflare.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Subject: Re: Lower than expected CPU pressure in PSI
+Message-ID: <20200109162330.GC8547@cmpxchg.org>
+References: <CABWYdi25Y=zrfdnitT3sSgC3UqcFHfz6-N2YP7h2TJai=JH_zg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1575979754-184896-1-git-send-email-john.garry@huawei.com>
- <7e769634-eb22-5827-e2d8-df68134056c0@huawei.com> <CAK7LNAS+XHGete9u2SV7fTj3HpROQmzfuJhV8tXW_xXkoPOYvg@mail.gmail.com>
- <538733b2-19af-9a66-f8d2-03e0f6ca7b25@huawei.com>
-In-Reply-To: <538733b2-19af-9a66-f8d2-03e0f6ca7b25@huawei.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 10 Jan 2020 01:21:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARtznvDh9fuQn5O5S-u6JNk-gcNr61Em=e7T4DN8CrX_g@mail.gmail.com>
-Message-ID: <CAK7LNARtznvDh9fuQn5O5S-u6JNk-gcNr61Em=e7T4DN8CrX_g@mail.gmail.com>
-Subject: Re: [PATCH] merge_config.sh: Add option for allmodconfig
-To:     John Garry <john.garry@huawei.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABWYdi25Y=zrfdnitT3sSgC3UqcFHfz6-N2YP7h2TJai=JH_zg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 6:19 PM John Garry <john.garry@huawei.com> wrote:
->
-> On 06/01/2020 18:04, Masahiro Yamada wrote:
-> > On Mon, Jan 6, 2020 at 6:18 PM John Garry <john.garry@huawei.com> wrote:
-> >>
-> >> On 10/12/2019 12:09, John Garry wrote:
-> >>
-> >> Hi Masahiro,
-> >>
-> >> Could you please consider this patch?
-> >>
-> >> Thanks,
-> >> John
-> >>
-> >>> Recently there has been some work in reporting and fixing bugs in booting
-> >>> an allmodconfig kernel - here are a few examples:
-> >>>
-> >>> https://lore.kernel.org/linux-edac/304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com/T/#t
-> >>> https://lore.kernel.org/linux-ide/bdf02e03-86a1-3d35-2908-28187f504495@huawei.com/T/#t
-> >>> https://lore.kernel.org/netdev/CADYN=9LCPfbpwdTWKw03B22-y3Text=RWXW7XP7wJBHYsMOgrA@mail.gmail.com/
-> >>> https://sourceforge.net/p/openipmi/mailman/message/36871567/
-> >>>
-> >>> If we want to boot an allmodconfig kernel we may still want to force some
-> >>> loadable modules built-in, like UART drivers. Or just still turn off some
-> >>> configs.
-> >
-> >
-> > I do not understand why you need to use merge_config.sh
-> > for this purpose.
-> >
-> > KCONFIG_ALLCONFIG=<path-to-your-config-fragment> make allmodconfig
-> >
-> > should work.
-> >
-> >
->
-> Right, I could use that. But generally some people like to use
-> merge_config.sh directly:
->
-> ./scripts/kconfig/merge_config.sh [-a] fragment
->
-> so nice to have -a option for completeness.
->
+On Wed, Jan 08, 2020 at 11:47:10AM -0800, Ivan Babrou wrote:
+> P.S.: ./scripts/get_maintainer.pl kernel/sched/psi.c does not say
+> Johannes Weiner is a maintainer
 
+Mostly because psi is so intertwined with the scheduler that it's been
+maintained through the scheduler tree. But let's add an entry for it,
+the sched/ directory matching will ensure it shows all pertinent CCs:
 
-Honestly, I am getting scared
-about people extending this script more and more
-to do what they want.
+$ ./scripts/get_maintainer.pl kernel/sched/psi.c 
+Johannes Weiner <hannes@cmpxchg.org> (maintainer:PRESSURE STALL INFORMATION (PSI))
+Ingo Molnar <mingo@redhat.com> (maintainer:SCHEDULER)
+Peter Zijlstra <peterz@infradead.org> (maintainer:SCHEDULER)
+Juri Lelli <juri.lelli@redhat.com> (maintainer:SCHEDULER)
+Vincent Guittot <vincent.guittot@linaro.org> (maintainer:SCHEDULER)
+Dietmar Eggemann <dietmar.eggemann@arm.com> (reviewer:SCHEDULER)
+Steven Rostedt <rostedt@goodmis.org> (reviewer:SCHEDULER)
+Ben Segall <bsegall@google.com> (reviewer:SCHEDULER)
+Mel Gorman <mgorman@suse.de> (reviewer:SCHEDULER)
+linux-kernel@vger.kernel.org (open list:SCHEDULER)
 
-Since allmodconfig works enough for this usecase,
-I do not see a good reason to add the new option.
+---
+From b865e10129c97c81fb83c368456d2c24e54badab Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Thu, 9 Jan 2020 10:36:58 -0500
+Subject: [PATCH] MAINTAINERS: add maintenance information for psi
 
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bd5847e802de..228baf0e40a6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13367,6 +13367,12 @@ F:	net/psample
+ F:	include/net/psample.h
+ F:	include/uapi/linux/psample.h
+ 
++PRESSURE STALL INFORMATION (PSI)
++M:	Johannes Weiner <hannes@cmpxchg.org>
++S:	Maintained
++F:	kernel/sched/psi.c
++F:	include/linux/psi*
++
+ PSTORE FILESYSTEM
+ M:	Kees Cook <keescook@chromium.org>
+ M:	Anton Vorontsov <anton@enomsg.org>
 -- 
-Best Regards
-Masahiro Yamada
+2.24.1
+
