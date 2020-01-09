@@ -2,123 +2,147 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB06C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB697C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38AAC20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7602067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578560681;
+	bh=1wEOto74WtWWVBt7hzzCLvY/HjBRw+30JpsajXmQoEk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=BkqeQQfoUStxSN2bR6Si8DS+NANW5OurxM/odLU+1Xe6l9wb1Fx68MVH2COgBgoaX
+	 /FmwcsHmalS+HulPEHXQNxu5lnT64wckwqATfdq0sYnzc0cR389hFqTabHIVyViQRS
+	 EjcJ0QdC7ep4ub64N4Ug4nrTlMN7QoEGedsHRNac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAIJEM (ORCPT
+        id S1729127AbgAIJEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:04:12 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:37649 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbgAIJEL (ORCPT
+        Thu, 9 Jan 2020 04:04:40 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40096 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbgAIJEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:04:11 -0500
-Received: by mail-il1-f198.google.com with SMTP id l13so4182195ilj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:04:11 -0800 (PST)
+        Thu, 9 Jan 2020 04:04:40 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u1so6364111ljk.7;
+        Thu, 09 Jan 2020 01:04:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=1wEOto74WtWWVBt7hzzCLvY/HjBRw+30JpsajXmQoEk=;
+        b=VotdQx0hBmaNiqYwnMQi/EoFgHh8UCayXB4uXSKGMi1WrsslgqIiMk59yLYmePW/jr
+         UX4X7OlHN1wka3AG+U7v53aOSLZrO6JLZiCfDYCucZVVijrOdaq/sx+VIYgYXuTddXKh
+         HErVa3kc1zbVXwjCK9ABRN80F+eWwLWplp5TcBYnDlfVdQcGmyMocfoTCSD++pWq9rZT
+         8+b4E9RJdzBq2saGIqWgAiuKRKAkLFCN22MLVOGvl564Rd6NiZXie7FPJw5lDC/L9f7E
+         ujtVV/TvXH9WuNheVFI0GN72woG0jjR6C2kwmb4Hpk6bH2UzgNZAE9Pa9zVuAB+4wwsx
+         Jn4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=q7IFi3rlnd6QovgdB12mRa4jgGBaf0v/r03gEJGH8nE=;
-        b=g2ZWDBfwn0oyHlbvLYZUcfkckHezqzHt6LpWeFTgPv1IBkMgPJgrXoC/zOn8hezbst
-         rSbZ8fQr/fETMwSa05iU9gfJ8tpcC+3RD31746tTOT8It2V+CgcR0GeT0JAf0hyvGeQ5
-         UPIi+BK1BPbOn6xOQ+qiGpIozqUAkX0Ox5siM/DMMjBWSYKVD8I+eyulbgmyvg7d+gkc
-         W0ee0zGku7QfHQOPOqz8Vb1XgZiwOBBNt8OdoRscGYVqDEqBDEOL6kAIsQLjRJPeu2FI
-         iqrR5W+19ucM1Ixa1VdDgDrWsjudZrNUkU+QdvbxPG8x+pnuyq61LtbStzKihZa2+cfB
-         XtzQ==
-X-Gm-Message-State: APjAAAXXvC1cdkkeYV0GGZGXivN9sU6x5wUJqlacGhNKeNiQzuJ4l+8N
-        0GRNt/jYgMokuuPxpdOJrQkg8NJqgGpd3i4w80UEAr7pXll+
-X-Google-Smtp-Source: APXvYqy0MsFsnh2nmiX62MCQCKTj2Wul4oHQje4BVcUufBPs8y/6bdaWaVtPCmNgIcPNMUWcVibwVcopgapRIBGFvs2RN2imcanN
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=1wEOto74WtWWVBt7hzzCLvY/HjBRw+30JpsajXmQoEk=;
+        b=YfAj7FduZ+lHwQ87EolwzgfeM7wDTHHpjco/5P2oQKeo7z+ER5MykxV6PgnTSUDyuZ
+         DRU9qeE73dBFb84jtuenHIO/54rTfXeid6jqRnuvj71nkQyApQ1xKCg7DOEVnQh3nyCn
+         dL7uWM9wn5axhJpauqSQuBQhMHBUSIBuOSWDMu9tMTVdyRzY7KfX0XFjhIa8QRMB5Dx1
+         gH6swkRSvbUHav2GcLbZnuO/A47vOinGMQaRMCFD1vufgiy+Q77no6WvnUbkc1s4ohnc
+         lBnJqQyyMAzdeB4CmnJ0VSwHfojOfq6NtF+07HwMYK2fU0ldMKZq6LvhxsXpJo1EIrCy
+         bwQw==
+X-Gm-Message-State: APjAAAVR2Kiek7kx2337kzuGVQ8AFjtn9N/YKjIfIJAvuc72XocicaeC
+        xB8uFlMwGMc2p0XJEytV+oUHR25Ztnw=
+X-Google-Smtp-Source: APXvYqzlF6/2MuHY8a8TVJoWkGCaL58M640PRwVGM5HPTEGrm05lpplLJqVg2vc2CwGADNtR1gTPSQ==
+X-Received: by 2002:a2e:804c:: with SMTP id p12mr5681606ljg.31.1578560677836;
+        Thu, 09 Jan 2020 01:04:37 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id u66sm2615261lje.7.2020.01.09.01.04.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 01:04:37 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Ran Wang <ran.wang_1@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Jun Li <jun.li@nxp.com>, Peter Chen <peter.chen@nxp.com>
+Cc:     "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Subject: Re: [PATCH] usb: dwc3: gadget: Fix controller get stuck when kicking extra transfer in wrong case
+In-Reply-To: <9f9d0193-8fe6-33b3-4f5c-95a1181e6681@synopsys.com>
+References: <20200107071441.480-1-ran.wang_1@nxp.com> <9f9d0193-8fe6-33b3-4f5c-95a1181e6681@synopsys.com>
+Date:   Thu, 09 Jan 2020 11:05:30 +0200
+Message-ID: <87woa1rodh.fsf@kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d98e:: with SMTP id r14mr7134385iln.15.1578560650977;
- Thu, 09 Jan 2020 01:04:10 -0800 (PST)
-Date:   Thu, 09 Jan 2020 01:04:10 -0800
-In-Reply-To: <00000000000038e517059bb08615@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dba877059bb14a54@google.com>
-Subject: Re: KASAN: null-ptr-deref Read in insert_char
-From:   syzbot <syzbot+7416b988c249396c5e2c@syzkaller.appspotmail.com>
-To:     daniel.vetter@ffwll.ch, ghalat@redhat.com,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com, textshell@uchuujin.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    b07f636f Merge tag 'tpmdd-next-20200108' of git://git.infr..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=102e1c85e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=18698c0c240ba616
-dashboard link: https://syzkaller.appspot.com/bug?extid=7416b988c249396c5e2c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1716da9ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10a9cc85e00000
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+7416b988c249396c5e2c@syzkaller.appspotmail.com
+Hi,
 
-==================================================================
-BUG: KASAN: null-ptr-deref in memmove include/linux/string.h:395 [inline]
-BUG: KASAN: null-ptr-deref in scr_memmovew include/linux/vt_buffer.h:68  
-[inline]
-BUG: KASAN: null-ptr-deref in insert_char+0x206/0x400  
-drivers/tty/vt/vt.c:839
-Read of size 4294967294 at addr 0000000000000010 by task  
-syz-executor700/10454
+(Tejas, please break your lines at 80-columns. You shouldn't have to be
+reminded of this)
 
-CPU: 0 PID: 10454 Comm: syz-executor700 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  __kasan_report.cold+0x5/0x41 mm/kasan/report.c:510
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  memmove+0x24/0x50 mm/kasan/common.c:116
-  memmove include/linux/string.h:395 [inline]
-  scr_memmovew include/linux/vt_buffer.h:68 [inline]
-  insert_char+0x206/0x400 drivers/tty/vt/vt.c:839
-  csi_at drivers/tty/vt/vt.c:1964 [inline]
-  do_con_trol+0x41a6/0x61b0 drivers/tty/vt/vt.c:2431
-  do_con_write.part.0+0xfd9/0x1ef0 drivers/tty/vt/vt.c:2797
-  do_con_write drivers/tty/vt/vt.c:2565 [inline]
-  con_write+0x46/0xd0 drivers/tty/vt/vt.c:3135
-  process_output_block drivers/tty/n_tty.c:595 [inline]
-  n_tty_write+0x40e/0x1080 drivers/tty/n_tty.c:2333
-  do_tty_write drivers/tty/tty_io.c:962 [inline]
-  tty_write+0x496/0x7f0 drivers/tty/tty_io.c:1046
-  __vfs_write+0x8a/0x110 fs/read_write.c:494
-  vfs_write+0x268/0x5d0 fs/read_write.c:558
-  ksys_write+0x14f/0x290 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x447b99
-Code: e8 cc 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 ab 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ff82cd33db8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000006ddc28 RCX: 0000000000447b99
-RDX: 0000000000000078 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 00000000006ddc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc2c
-R13: 00007ffff0ce099f R14: 00007ff82cd349c0 R15: 0000000000000000
-==================================================================
+Tejas Joglekar <Tejas.Joglekar@synopsys.com> writes:
 
+> Hi,
+> On 1/7/2020 12:44 PM, Ran Wang wrote:
+>> According to original commit c96e6725db9d6a ("usb: dwc3: gadget: Correct=
+ the
+>> logic for queuing sgs"), we would only kick off another transfer in case=
+ of
+>> req->num_pending_sgs > 0.
+>>=20
+> The commit 8c7d4b7b3d43 ("usb: dwc3: gadget: Fix logical condition")
+> fixes the commit f38e35dd84e2 (usb: dwc3: gadget: split
+> dwc3_gadget_ep_cleanup_completed_requests()).
+>
+>> However, current logic will do this as long as req->remaining > 0, this =
+will
+>> include the case of non-sgs (both dwc3_gadget_ep_request_completed(req) =
+and
+>> req->num_pending_sgs are 0) that we did not want to.
+>>=20
+>> Without this fix, we observed dwc3 got stuck on Layerscape plaftorms (su=
+ch as
+>> LS1088ARDB) when enabling gadget (mass storage function) as below:
+>>
+> Similar issue was reported by Thinh after my fix, and he has submitted
+> a patch for the same. You can refer the discussion
+> https://patchwork.kernel.org/patch/11292087/.
+
+Based on this, I'm assuming we don't need this patch.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4W7NoACgkQzL64meEa
+mQZPbBAAglbugDsFjPT9ikTC9/5AsAxJ+HS5SorFeA9dP3g1FIQ/m+ktbTeSnVlJ
+j4dMLFA/6URa7v+Tsfq9U8lM2BJfHOoyE89lQwTZ45emLwdt10YdOTcN6LwbC9KB
+YRsR7ezdI78Nwaq0tIIinJMefjgEtQZWXfNGAkgKCAG7j9SKgRSJYd9J7sck5+FD
+w26iKRioC/ZTcnX8XLiDDbE2s9hpshCxWmH7XiZ93+b8pPkdada+/alFDFIDbrr+
+kYsyFtFSL5w+WiNp+Ls4FSHddmF0iHs+E0Jeft7uSnPTRRcg5Ns4YcjmQgh+Bxkz
+jJwp+LnYOI3wPjpK5JiG6BuZVqOB0hzWF0Xzb/Uz57Mx3fIKpx1bvJsuH9zZMAKX
+4Qn6kmsxHs2vhuX+YJwzdMQLvF/M6Jg9+CwckLcE2TZJ7hKW26bgyfkiJG7EID7D
+E+y2MBc3MtRO5p0kO6fGpJmbWLw7y46gnu8DgRWmdcEZr7BDzx4JTeZ7pHSP0UMn
+ulJGntcsYKX2FighVVMjJCLRYjQOVfzzeh76kIoEJSMlW8qAKdVPgZp530LFWB6c
+Ak84Nxf6jhcVnj7GofYZwPUXvpedHCDQqXK+ZB5aj228ypSiVnD8yRp5/Xh0sdJD
+67ZBtVd0/rzn8Iez4RnR/psGJUNDt50tQVW9xasGn5Rjd+IywOg=
+=Q3Sj
+-----END PGP SIGNATURE-----
+--=-=-=--
