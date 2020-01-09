@@ -2,45 +2,47 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15B2C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA32AC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BB620673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E282077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XENCkjTv"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eJfKsWmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgAIJTV (ORCPT
+        id S1729396AbgAIJT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:19:21 -0500
+        Thu, 9 Jan 2020 04:19:27 -0500
 Received: from mail26.static.mailgun.info ([104.130.122.26]:37932 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729035AbgAIJTU (ORCPT
+        by vger.kernel.org with ESMTP id S1729035AbgAIJT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:19:20 -0500
+        Thu, 9 Jan 2020 04:19:26 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578561560; h=Message-Id: Date: Subject: To: From: Sender;
- bh=Hu9qqYaZoI6+5+2Lw05UTvgV7v1yjGAb7GeM8gI205E=; b=XENCkjTvtQPoK8FUIjGx4i5/kdHg/ITZtQjR+zRfihs3wRECOl5tGxZ96rYWT8A3Fg2zkPEJ
- SyHNd8Y4G6bLxA2ovLV+6asLAjiatsg/0CrDe3j1bCi5/ndhcL+b1ol3g7FgBSQ7eLgriii0
- LbYDV9oUy6ARP7wDQOT5cdQt6ck=
+ s=smtp; t=1578561565; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=DsCDgPd9+MkwQPTsWhQj1ciOTHf1IcXbC03sa6ebuEY=; b=eJfKsWmYpeaLRd9eFU35S/teOdHO2ApeW3XChDA9EmBFqxIlH2rwyZwCPNRARExZvvVBiJT0
+ ALvLgttLmCnh2ugEHtn0slV35sGkTwesoL0tdcgORJPFaIkxx2Rd0TLo9niC1F0UxZCHrjZ9
+ yh9HUu1spPa9GVsqtYT1P7vRR3s=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e16f015.7f39f238d810-smtp-out-n03;
- Thu, 09 Jan 2020 09:19:17 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e16f01a.7f8b597130d8-smtp-out-n01;
+ Thu, 09 Jan 2020 09:19:22 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AA9EDC433CB; Thu,  9 Jan 2020 09:19:15 +0000 (UTC)
+        id A5583C4479F; Thu,  9 Jan 2020 09:19:20 +0000 (UTC)
 Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F032C43383;
-        Thu,  9 Jan 2020 09:19:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F032C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 345C7C43383;
+        Thu,  9 Jan 2020 09:19:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 345C7C43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
 From:   Sricharan R <sricharan@codeaurora.org>
@@ -50,69 +52,183 @@ To:     agross@kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
         robh+dt@kernel.org, sivaprak@codeaurora.org,
         sricharan@codeaurora.org
-Subject: [PATCH V4 0/5] Add minimal boot support for IPQ6018
-Date:   Thu,  9 Jan 2020 14:48:58 +0530
-Message-Id: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
+Cc:     Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: [PATCH V4 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
+Date:   Thu,  9 Jan 2020 14:48:59 +0530
+Message-Id: <1578561543-23132-2-git-send-email-sricharan@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
+References: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IPQ6018 is Qualcomm\u2019s 802.11ax SoC for Routers,
-Gateways and Access Points.
+Add device tree binding Documentation details for ipq6018
+pinctrl driver.
 
-This series adds minimal board boot support for ipq6018-cp01 board.
+Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+---
+[V4]
+  * cleaned-up schema as per Rob's comments.
+  * Ran make dt_binding_check and no issues.
 
-[v4]
- * Addressed review comments in pinctrl bindings from Rob.
- * Ran make dt_binding_check and no issues was reported.
- * Deleted absahu email id from patch 4, since its bouncing now.
- * Patch 4 arm64: dts: Add ipq6018 SoC and CP01 board support has build
-   dependency with,
-	https://lkml.org/lkml/2020/1/9/84
-
-[V3]
- * Removed clock driver and bindings from this patch series, and added them
-   as a different series.
- * Removed qpic_padN from pinctrl driver.
- * Addressed review comments in dts, and added the remaining fixed clocks their
- * Fixed review comments in pinctrl bindings
- * Patch 4 arm64: dts: Add ipq6018 SoC and CP01 board support has build
-   dependency with,
-	https://patchwork.ozlabs.org/patch/1217293/
-
-[v2]
- * Splitted dt bindings  and driver into different patches. Added missing bindings
-   and some style changes.
- * Added ipq6018 schema
- * Addressed review comments for gcc clock bindings.
- * Removed all clk critical flags, removed 1/1 factor clocks, moved to new
-   way of specifying clk parents, and addressed other review comments.
- * Sorted nodes based on address, name, label. Removed unused clock nodes,
-   Addressed other review comments.
-
-Sricharan R (5):
-  dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
-  pinctrl: qcom: Add ipq6018 pinctrl driver
-  dt-bindings: qcom: Add ipq6018 bindings
-  arm64: dts: Add ipq6018 SoC and CP01 board support
-  arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
-
- Documentation/devicetree/bindings/arm/qcom.yaml    |    8 +
- .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     |  174 +++
- arch/arm64/boot/dts/qcom/Makefile                  |    1 +
- arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts       |   30 +
- arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  263 +++++
- arch/arm64/configs/defconfig                       |    3 +
- drivers/pinctrl/qcom/Kconfig                       |   10 +
- drivers/pinctrl/qcom/Makefile                      |    1 +
- drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1107 ++++++++++++++++++++
- 9 files changed, 1597 insertions(+)
+ .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 140 +++++++++++++++++++++
+ 1 file changed, 140 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
- create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
- create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+new file mode 100644
+index 0000000..68c3c8c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+@@ -0,0 +1,140 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
++
++maintainers:
++  - Sricharan R <sricharan@codeaurora.org>
++
++description: |
++  This binding describes the Top Level Mode Multiplexer block found in the
++  IPQ6018 platform.
++
++properties:
++  compatible:
++    const: qcom,ipq6018-pinctrl
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: Specifies the TLMM summary IRQ
++    maxItems: 1
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    description:
++      Specifies the PIN numbers and Flags, as defined in defined in
++      include/dt-bindings/interrupt-controller/irq.h
++    const: 2
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    description: Specifying the pin number and flags, as defined in
++      include/dt-bindings/gpio/gpio.h
++    const: 2
++
++  gpio-ranges:
++    description: Documentation/devicetree/bindings/gpio/gpio.txt
++    maxItems: 1
++
++#PIN CONFIGURATION NODES
++patternProperties:
++  '-pins$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    allOf:
++      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
++
++    properties:
++      pins:
++        description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/string"
++          - enum: ['gpio$', sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
++            sdc2_data, qdsd_cmd, qdsd_data0, qdsd_data1, qdsd_data2,
++            qdsd_data3]
++
++      function:
++        description:
++          Specify the alternative function to be configured for the specified
++          pins.
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/string"
++          - enum: [ adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
++            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
++            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
++            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
++            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
++            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
++            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
++            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
++            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
++            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
++            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
++            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
++            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
++            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
++            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
++            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
++            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
++            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
++            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
++            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
++            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
++            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
++            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
++            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
++            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
++            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst ]
++
++      drive-strength:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - enum: [2, 4, 6, 8, 10, 12, 14, 16]
++        description:
++          Selects the drive strength for the specified pins, in mA.
++
++    required:
++      - pins
++      - function
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - '#interrupt-cells'
++  - gpio-controller
++  - '#gpio-cells'
++  - gpio-ranges
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        tlmm: pinctrl@1000000 {
++              compatible = "qcom,ipq6018-pinctrl";
++              reg = <0x01000000 0x300000>;
++              interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++              gpio-controller;
++              #gpio-cells = <2>;
++              gpio-ranges = <&tlmm 0 80>;
++              interrupt-controller;
++              #interrupt-cells = <2>;
++
++              serial3-pinmux {
++                      pins = "gpio44", "gpio45";
++                      function = "blsp2_uart";
++                      drive-strength = <8>;
++                      bias-pull-down;
++              };
++        };
 -- 
-1.9.1
+2.7.4
