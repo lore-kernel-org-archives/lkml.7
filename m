@@ -2,184 +2,251 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC41C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4897C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90047206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB29206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="RhIcuWxZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyJZFdTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732288AbgAIPTn (ORCPT
+        id S1732298AbgAIPT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:19:43 -0500
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:39617 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727945AbgAIPTm (ORCPT
+        Thu, 9 Jan 2020 10:19:59 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45034 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727945AbgAIPT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:19:42 -0500
-Received: from [192.168.2.10] ([62.249.185.68])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id pZasihcxsT6sRpZaviL3MC; Thu, 09 Jan 2020 16:19:40 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578583180; bh=VNEi5PU7IG9NfDb52u/2pR82DSRm5KClWM9VRFCCDUo=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=RhIcuWxZ9+hiD/y9DDq/k2ryV450adLGGpoEY9pPMi8aRaHitS67FsDwMo70iZ2vP
-         g8sdS0liOzLVh9KB1/CvPIJyx8nP8CGXbSYUurfalOGLRqbgHMnV1GzGoHwSzPC/aR
-         /MWedl7UUKNI1hNfahNa/XkqD0MLopaU0EbZaAsCO/WO/SSWvKQWgnj6i8aOGe1SOC
-         acrckfmsfDrt8iAiOE91+OHWhrhBAbu3AkP0TbJZ5RwGiaTFdfFsSKaCoDdLu6GFfg
-         gr19sPlqN/gDm2AwtMSTOiQIlkHdEhe4EghCb1yWi4500WH5Qil6kasAeWcRIlxSif
-         d0mZY5Li0VXxA==
-Subject: Re: [PATCH v2 1/4] media: uapi: hevc: Add scaling matrix control
-To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     mripard@kernel.org, gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-References: <20191213160428.54303-1-jernej.skrabec@siol.net>
- <20200108151157.17cf9774@kernel.org> <20200108144336.GB229960@aptenodytes>
- <3030664.44csPzL39Z@jernej-laptop>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <16682efd-763a-8cb1-c5ee-b48ee6063c6b@xs4all.nl>
-Date:   Thu, 9 Jan 2020 16:19:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 9 Jan 2020 10:19:58 -0500
+Received: by mail-pl1-f193.google.com with SMTP id az3so2678698plb.11;
+        Thu, 09 Jan 2020 07:19:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kaoDmnIv7fq2bK3Pw8FgyMWXUExVVooadbufCm0vA28=;
+        b=lyJZFdTEmsR9yvYDQNZzfGSP/2DugXvk4aOPsCFKrQT9EZ/FM87d4Iyefb8hCBmCYY
+         BxBESnnvF2jCUGboub4ZrzhLzxkGFInZn0UxfZ/rL0ncnEVhSkeAswDKaZkYNi21b2rv
+         G+v8QpvJrB14eRmtbcprQi0mr2IwaQ2GiG8MTj7dSBSukpdNHX5Wd0b7dwwKFfPJffsL
+         8CnBoNXjca8eQ88Mi++1dqJ3Fjh7q+UYjDTQRxxwpY+x3JbyMeq2VmeGEOJdN9QVCwo8
+         H0Ge/orqiM8/imsKOvVVKiOjz4/yL0moBTrorDHigUsxOnFAEBOJWZbCQOTcKS0AN4vW
+         XzrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kaoDmnIv7fq2bK3Pw8FgyMWXUExVVooadbufCm0vA28=;
+        b=IqYeraTib9ykZLx30PH+fMomL3rpK8e9Pi8Y9EE8gxtKofM38M8E1Hmlq5NA/mWPoS
+         I8qliRgJvZ7BL7XD+ZAn+p/D0ROcAqKm35WB264HwhAbgsb7GSjDukgbDaXlZ8vlMTT4
+         xpuf0mk1NAjXQG++KOfz2LJuHdce/iDv8cZTjWa0vjlrUQo/pMhBAE6s/P7VPSnBFJFn
+         IS4ResM/1E1/tkHIa5+dRoTbA1Bi5HSmUNMxPvbIrS7akvWWtss+GCGNnnWiL/I3ATZ0
+         /GPYKqD7+RW+hpB9DiiSG2n2NdjcO3fiP1vMY35SjH7BYv+i33wZunGNTKViBwMfAAcj
+         3uNA==
+X-Gm-Message-State: APjAAAWARmleGdKzyPBCq9OxiBGyvF/f38Wx+kZODtjQc3A0UwJ/ApgT
+        Ce1bYA+P6dm5XAyWxPxFdLiQK5TpXcCR6VOhBVs=
+X-Google-Smtp-Source: APXvYqxhuE5QNaRo6ld2eSQ3WmfothXr4TxMa54D/0je9favVr1ekS9+70FUrtMomTf69mLcXfdQV46lBGB7QucFG+w=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr6005030pjq.132.1578583197418;
+ Thu, 09 Jan 2020 07:19:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <3030664.44csPzL39Z@jernej-laptop>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfOF7U22xoTpAUEvOw1tUUHvhY8l8MGCYN6pm66YVC1msyl/wb+aPV6ofqVnScSZSFqW+nC1UviknZzPIYd5r6e+AywVxKkehHqEolEDAW0goIbOeEpdT
- xYnO5Xi82/ote3XVG+kxN7/LU0Cjo7M0yO2o4lkJ/HlDHFwxSgFqdiFmckw7gLb8dizx5TpRR/ZbW0LDNmoW99uojm0xmYQr3dJ9HFwdY+JlMi4mKTMcMRo7
- M3xUSygvwUCUNPkJHqtAWpIfvdfV2vf7yYxwhLPUYXpk1RMEk1TfV2CEwDH3gyUhYo17zoIEBuFS8wr5pu49HLLhKUb+n7pPvEt87XpRHIAb07On6pfHyZ+h
- 3Qy7V+SUOQiifwumvZgQJYnsilU8xYP7ezbz4JgivjXT2/PY1KtXwv1yenNj6zcNFD7K7J/tsMy69vUwsNwMnQMAl9RQvb8BKPAuXIa+0hvNgV7CkHXjpzA1
- 5Fuli1a9Nd1fKEm2YMv2dTAIvJCr6OlYmL2oQlwcw3+tJV09eD4M7ZGzLB4=
+References: <20191231102917.24181-1-vadimp@mellanox.com> <20191231102917.24181-6-vadimp@mellanox.com>
+In-Reply-To: <20191231102917.24181-6-vadimp@mellanox.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jan 2020 17:19:48 +0200
+Message-ID: <CAHp75VfYzy9jq3c2YjszJpCb33EWYh-fvuZv_vAenfKLGDEY0A@mail.gmail.com>
+Subject: Re: [PATCH platform-next v1 5/9] platform/x86: mlx-platform: Set
+ system mux configuration based on system type
+To:     Vadim Pasternak <vadimp@mellanox.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 4:17 PM, Jernej Škrabec wrote:
-> Hi!
-> 
-> Dne sreda, 08. januar 2020 ob 15:43:36 CET je Paul Kocialkowski napisal(a):
->> Hi Mauro,
->>
->> On Wed 08 Jan 20, 15:11, Mauro Carvalho Chehab wrote:
->>> Em Fri, 13 Dec 2019 17:04:25 +0100
->>>
->>> Jernej Skrabec <jernej.skrabec@siol.net> escreveu:
->>>> HEVC has a scaling matrix concept. Add support for it.
->>>>
->>>> +struct v4l2_ctrl_hevc_scaling_matrix {
->>>> +	__u8	scaling_list_4x4[6][16];
->>>> +	__u8	scaling_list_8x8[6][64];
->>>> +	__u8	scaling_list_16x16[6][64];
->>>> +	__u8	scaling_list_32x32[2][64];
->>>> +	__u8	scaling_list_dc_coef_16x16[6];
->>>> +	__u8	scaling_list_dc_coef_32x32[2];
->>>> +};
->>>
->>> I never looked at HEVC spec, but the above seems really weird.
->>>
->>> Please correct me if I am wrong, but each of the above matrixes
->>> is independent, and the driver will use just one of the above on
->>> any specific time (for a given video output node), right?
->>
->> I am not too sure about what the specification really entails, but it is my
->> understanding that HEVC allows simultaneous block sizes between 4x4 and
->> 32x32 to exist within the same coding tree and slice. That suggests that it
->> makes sense to have specific coefficients for each case.
-> 
-> Specs ITU-T REC. H.265 (06/2019), chapter 7.3.4 shows that multiple different 
-> matrices can be present at the same time. If they are not, default values 
-> should be used instead. But in general, more than one can be needed at the 
-> same time.
-> 
-> Only real question is if default values should be also provided by userspace 
-> or by kernel. Since place has to be reserved for all different scaling lists 
-> anyway, we won't save any space by providing default values in kernel. Cedrus 
-> VPU has only bit switch for using default values for all matrices at the same 
-> time or all custom.
-> 
-> Note that this control contains slightly processed data. Frame has stored 
-> these matrices in form of deltas. But because this is the only driver that use 
-> this structure I have no idea what is the most proper form of this data (raw 
-> values or deltas). That's why this will stay in staging using private headers 
-> until we figure this out.
+On Tue, Dec 31, 2019 at 12:29 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
+>
+> Separate assignment for systems mux configuration based on system type,
+> instead of setting the same configuration for the all.
+> The motivation is to allow introduction of new systems types with the
+> different mux topology.
+>
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+>  drivers/platform/x86/mlx-platform.c | 46 ++++++++++++++++++++++++++-----------
+>  1 file changed, 33 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+> index 7e92dc52071f..0a41668b1587 100644
+> --- a/drivers/platform/x86/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -219,7 +219,7 @@ static const int mlxplat_default_channels[][MLXPLAT_CPLD_GRP_CHNL_NUM] = {
+>  static const int mlxplat_msn21xx_channels[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+>
+>  /* Platform mux data */
+> -static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
+> +static struct i2c_mux_reg_platform_data mlxplat_default_mux_data[] = {
+>         {
+>                 .parent = 1,
+>                 .base_nr = MLXPLAT_CPLD_CH1,
+> @@ -239,6 +239,11 @@ static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
+>
+>  };
+>
+> +/* Platform mux configuration variables */
+> +static int mlxplat_max_adap_num;
+> +static int mlxplat_mux_num;
+> +static struct i2c_mux_reg_platform_data *mlxplat_mux_data;
+> +
+>  /* Platform hotplug devices */
+>  static struct i2c_board_info mlxplat_mlxcpld_psu[] = {
+>         {
+> @@ -1905,7 +1910,10 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+>  {
+>         int i;
+>
+> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
+> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
+> +       mlxplat_mux_data = mlxplat_default_mux_data;
+> +       for (i = 0; i < mlxplat_mux_num; i++) {
+>                 mlxplat_mux_data[i].values = mlxplat_default_channels[i];
+>                 mlxplat_mux_data[i].n_values =
+>                                 ARRAY_SIZE(mlxplat_default_channels[i]);
+> @@ -1924,7 +1932,10 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+>  {
+>         int i;
+>
+> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
+> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
+> +       mlxplat_mux_data = mlxplat_default_mux_data;
+> +       for (i = 0; i < mlxplat_mux_num; i++) {
+>                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+>                 mlxplat_mux_data[i].n_values =
+>                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
+> @@ -1943,7 +1954,10 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+>  {
+>         int i;
+>
+> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
+> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
+> +       mlxplat_mux_data = mlxplat_default_mux_data;
+> +       for (i = 0; i < mlxplat_mux_num; i++) {
+>                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+>                 mlxplat_mux_data[i].n_values =
+>                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
+> @@ -1962,7 +1976,10 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+>  {
+>         int i;
+>
+> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
+> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
+> +       mlxplat_mux_data = mlxplat_default_mux_data;
+> +       for (i = 0; i < mlxplat_mux_num; i++) {
+>                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+>                 mlxplat_mux_data[i].n_values =
+>                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
+> @@ -1981,7 +1998,10 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+>  {
+>         int i;
+>
+> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
+> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
+> +       mlxplat_mux_data = mlxplat_default_mux_data;
+> +       for (i = 0; i < mlxplat_mux_num; i++) {
+>                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+>                 mlxplat_mux_data[i].n_values =
+>                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
+> @@ -1998,7 +2018,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+>         mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
+>
+>         return 1;
+> -}
+> +};
 
-This definitely needs to be documented! Otherwise this will be forgotten.
+And this, how does it happen?
 
-Regards,
+>
+>  static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
+>         {
+> @@ -2127,7 +2147,7 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
+>         /* Scan adapters from expected id to verify it is free. */
+>         *nr = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR;
+>         for (i = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR; i <
 
-	Hans
+> -            MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM; i++) {
+> +            mlxplat_max_adap_num; i++) {
 
-> 
-> Best regards,
-> Jernej
-> 
->>
->> Note that the hardware also has distinct registers for each scaling list.
->>
->> Cheers,
->>
->> Paul
->>
->>> If so, why would userspace be forced to update lots of matrixes, if would
->>> likely use just one at a given time?
->>>
->>> IMO, the proper way would be, instead, to use an uAPI like:
->>>
->>> /*
->>>
->>>  * Actually, as this is uAPI, we will use a fixed size integer type, like
->>>  *  unsigned int
->>>  */
->>>
->>> enum hevc_scaling_matrix_type {
->>>
->>> 	HEVC_SCALING_MATRIX_4x4,
->>> 	HEVC_SCALING_MATRIX_8x8,
->>>
->>> ...
->>>
->>> 	HEVC_SCALING_MATRIX_DC_COEF_32x32,
->>>
->>> };
->>>
->>> struct v4l2_ctrl_hevc_scaling_matrix {
->>>
->>> 	__u32	scaling_type 		/* as defined by enum 
-> hevc_scaling_matrix_type */
->>> 	
->>> 	union {
->>> 	
->>> 		__u8	scaling_list_4x4[6][16];
->>> 		__u8	scaling_list_8x8[6][64];
->>> 		__u8	scaling_list_16x16[6][64];
->>> 		__u8	scaling_list_32x32[2][64];
->>> 		__u8	scaling_list_dc_coef_16x16[6];
->>> 		__u8	scaling_list_dc_coef_32x32[2];
->>> 	
->>> 	};
->>>
->>> };
->>>
->>> And let the core use a default for each scaling matrix, if userspace
->>> doesn't set it.
->>>
->>>
->>>
->>> Cheers,
->>> Mauro
-> 
-> 
-> 
-> 
+I'm wondering why 'i <; is left on previous line, or, otherwise, the
+limit is on next one.
 
+>                 search_adap = i2c_get_adapter(i);
+>                 if (search_adap) {
+>                         i2c_put_adapter(search_adap);
+> @@ -2141,12 +2161,12 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
+>         }
+>
+>         /* Return with error if free id for adapter is not found. */
+> -       if (i == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM)
+> +       if (i == mlxplat_max_adap_num)
+>                 return -ENODEV;
+>
+>         /* Shift adapter ids, since expected parent adapter is not free. */
+>         *nr = i;
+> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+> +       for (i = 0; i < mlxplat_mux_num; i++) {
+>                 shift = *nr - mlxplat_mux_data[i].parent;
+>                 mlxplat_mux_data[i].parent = *nr;
+>                 mlxplat_mux_data[i].base_nr += shift;
+> @@ -2202,7 +2222,7 @@ static int __init mlxplat_init(void)
+>         if (nr < 0)
+>                 goto fail_alloc;
+>
+> -       nr = (nr == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM) ? -1 : nr;
+> +       nr = (nr == mlxplat_max_adap_num) ? -1 : nr;
+>         if (mlxplat_i2c)
+>                 mlxplat_i2c->regmap = priv->regmap;
+>         priv->pdev_i2c = platform_device_register_resndata(
+> @@ -2215,7 +2235,7 @@ static int __init mlxplat_init(void)
+>                 goto fail_alloc;
+>         }
+>
+> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+> +       for (i = 0; i < mlxplat_mux_num; i++) {
+>                 priv->pdev_mux[i] = platform_device_register_resndata(
+>                                                 &priv->pdev_i2c->dev,
+>                                                 "i2c-mux-reg", i, NULL,
+> @@ -2349,7 +2369,7 @@ static void __exit mlxplat_exit(void)
+>         platform_device_unregister(priv->pdev_led);
+>         platform_device_unregister(priv->pdev_hotplug);
+>
+> -       for (i = ARRAY_SIZE(mlxplat_mux_data) - 1; i >= 0 ; i--)
+
+> +       for (i = mlxplat_mux_num - 1; i >= 0 ; i--)
+
+It is basically
+  while (i--)
+
+>                 platform_device_unregister(priv->pdev_mux[i]);
+>
+>         platform_device_unregister(priv->pdev_i2c);
+> --
+> 2.11.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
