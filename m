@@ -2,113 +2,115 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D46C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EE6C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3D120721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF4320721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:46:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AC/NQy55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgAIVpg (ORCPT
+        id S1728887AbgAIVqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:45:36 -0500
-Received: from mga11.intel.com ([192.55.52.93]:48715 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgAIVpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:45:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 13:45:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="218476526"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Jan 2020 13:45:35 -0800
-Date:   Thu, 9 Jan 2020 13:50:38 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v8 04/10] iommu/vt-d: Support flushing more translation
- cache types
-Message-ID: <20200109135038.7608d059@jacob-builder>
-In-Reply-To: <24cc06da-14ec-908d-361d-a8b321b10852@linux.intel.com>
-References: <1576524252-79116-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1576524252-79116-5-git-send-email-jacob.jun.pan@linux.intel.com>
-        <24cc06da-14ec-908d-361d-a8b321b10852@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 16:46:22 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23814 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725763AbgAIVqW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 16:46:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578606381;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZbAF9d7fjB7aZO4keNV6FYG7yhXE6/ctJ0M/uR6RLjI=;
+        b=AC/NQy55Tph1GZL0hgGWTMCqWxVo1kdDpPPwf7nPaUrIUgjsCVdMSumnYDcPNY78m2tAc0
+        yp1eOdO7VuEouXqxALyS2mSyxBK/fkAMil/Ajag8p7I/FsxYf2ZFSzXDqwSgsaU2wUaY8t
+        W0k+OZbId2cUYtx3+4y+6Mk9QfJZKMI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276--ATCng3CP3KnlYqAzwkAQA-1; Thu, 09 Jan 2020 16:46:17 -0500
+X-MC-Unique: -ATCng3CP3KnlYqAzwkAQA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5709010054E3;
+        Thu,  9 Jan 2020 21:46:16 +0000 (UTC)
+Received: from krava (ovpn-204-81.brq.redhat.com [10.40.204.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2DD59620A6;
+        Thu,  9 Jan 2020 21:46:13 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 22:46:11 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andres Freund <andres@anarazel.de>
+Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] perf c2c: Fix sorting.
+Message-ID: <20200109214611.GC82989@krava>
+References: <20200109043030.233746-1-andres@anarazel.de>
+ <20200109084822.GD52936@krava>
+ <20200109170041.wgvxcci3mkjh4uee@alap3.anarazel.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109170041.wgvxcci3mkjh4uee@alap3.anarazel.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 10:46:51 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Thu, Jan 09, 2020 at 09:00:41AM -0800, Andres Freund wrote:
 
-> Hi,
-> 
-> On 12/17/19 3:24 AM, Jacob Pan wrote:
-> > When Shared Virtual Memory is exposed to a guest via vIOMMU,
-> > scalable IOTLB invalidation may be passed down from outside IOMMU
-> > subsystems. This patch adds invalidation functions that can be used
-> > for additional translation cache types.
+SNIP
+
+> > >  tools/perf/builtin-c2c.c | 10 ++++++----
+> > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > > index e69f44941aad..f2e9d2b1b913 100644
+> > > --- a/tools/perf/builtin-c2c.c
+> > > +++ b/tools/perf/builtin-c2c.c
+> > > @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+> > >  {
+> > >  	struct c2c_hist_entry *c2c_left;
+> > >  	struct c2c_hist_entry *c2c_right;
+> > > -	unsigned int tot_hitm_left;
+> > > -	unsigned int tot_hitm_right;
+> > > +	uint64_t tot_hitm_left;
+> > > +	uint64_t tot_hitm_right;
 > > 
-> > Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
-> > ---
-> >   drivers/iommu/dmar.c        | 46
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> > drivers/iommu/intel-pasid.c |  3 ++- include/linux/intel-iommu.h |
-> > 21 +++++++++++++++++---- 3 files changed, 65 insertions(+), 5
-> > deletions(-)
+> > that change looks right, but I can't see how that could
+> > happened because of change in Fixes: tag
 > > 
-> > diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> > index 3acfa6a25fa2..f2f5d75da94a 100644
-> > --- a/drivers/iommu/dmar.c
-> > +++ b/drivers/iommu/dmar.c
-> > @@ -1348,6 +1348,20 @@ void qi_flush_iotlb(struct intel_iommu
-> > *iommu, u16 did, u64 addr, qi_submit_sync(&desc, iommu);
-> >   }
-> >   
-> > +/* PASID-based IOTLB Invalidate */
-> > +void qi_flush_iotlb_pasid(struct intel_iommu *iommu, u16 did, u64
-> > addr, u32 pasid,
-> > +		unsigned int size_order, u64 granu, int ih)
-> > +{
-> > +	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
-> > +
-> > +	desc.qw0 = QI_EIOTLB_PASID(pasid) | QI_EIOTLB_DID(did) |
-> > +		QI_EIOTLB_GRAN(granu) | QI_EIOTLB_TYPE;
-> > +	desc.qw1 = QI_EIOTLB_ADDR(addr) | QI_EIOTLB_IH(ih) |
-> > +		QI_EIOTLB_AM(size_order);
-> > +
-> > +	qi_submit_sync(&desc, iommu);
-> > +}  
+> > was the return statement of this function:
+> > 
+> >         return tot_hitm_left - tot_hitm_right;
+> > 
+> > considered to be 'unsigned int' and then converted to int64_t,
+> > which would treat negative 'unsigned int' as big positive 'int64_t'?
 > 
-> There's another version of pasid-based iotlb invalidation.
-> 
-> https://lkml.org/lkml/2019/12/10/2128
-> 
-> Let's consider merging them.
-> 
-Absolutely, the difference i see is that the granularity is explicit
-here. Here we do invalidation request from the guest. Perhaps, we can
-look at consolidation once this use case is supported?
+> Correct. So e.g. when comparing 1 and 2 tot_hitm, we'd get (int64_t)
+> UINT_MAX as a result, which is obviously wrong. However, due to
+> hist_entry__sort() returning int at the time, this was masked, as the
+> int64_t was cast to int. Thereby again yielding a negative number for
+> the comparisons of hist_entry__sort()'s result.  After
+> hist_entry__sort() was fixed however, there never could be negative
+> return values (but 0's are possible) of hist_entry__sort() for c2c.
 
-> Best regards,
-> baolu
+I see.. ok
 
-[Jacob Pan]
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
