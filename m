@@ -2,180 +2,192 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE674C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93721C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B872067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1B12067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDWegXXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731881AbgAIOyt (ORCPT
+        id S1731892AbgAIO5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:54:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39634 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728737AbgAIOyt (ORCPT
+        Thu, 9 Jan 2020 09:57:37 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26666 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728737AbgAIO5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:54:49 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009Eq42M044161
-        for <linux-kernel@vger.kernel.org>; Thu, 9 Jan 2020 09:54:48 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xdyh2gmx1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 09:54:47 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Thu, 9 Jan 2020 14:54:45 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 Jan 2020 14:54:38 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 009EsaDt56557640
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jan 2020 14:54:36 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B693BA4055;
-        Thu,  9 Jan 2020 14:54:36 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 99DAAA404D;
-        Thu,  9 Jan 2020 14:54:35 +0000 (GMT)
-Received: from bali.tlslab.ibm.com (unknown [9.101.4.17])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jan 2020 14:54:35 +0000 (GMT)
-Subject: Re: [PATCH v2 09/27] ocxl: Free detached contexts in
- ocxl_context_detach_all()
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
- <20191203034655.51561-10-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Thu, 9 Jan 2020 15:54:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 09:57:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578581854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=dTjYPWrRS50vXb+awZBlOczchH8zUZfJ4o80FlJt42o=;
+        b=FDWegXXHxYzNa6lCSVyQe0vfFYGJ3aR3lP+GpqWEEnFBhJGeai9LJUSRAvjkiTofbx2vYX
+        +lkZCjc7iQFtHF4AKA8vf4JA6SB8qY9sVveSIUDsyXytCo/cp7PkEvTQghCO6dEhO0nwh0
+        uLTnQmSh4AS3hxI2hEHixeTuWyf/CHI=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-254-E4SXzBt6MsGqaHoxgZNjyA-1; Thu, 09 Jan 2020 09:57:33 -0500
+X-MC-Unique: E4SXzBt6MsGqaHoxgZNjyA-1
+Received: by mail-qt1-f198.google.com with SMTP id e37so4347222qtk.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dTjYPWrRS50vXb+awZBlOczchH8zUZfJ4o80FlJt42o=;
+        b=gyNx4fMahBCvY2LfT30ILc2U+SJKqxmrFef57fdBpjKLW/e5bgeUg5aRq+F0NKwYvK
+         dfmr0k/JiLhFqiuXixt+ZHaJPGvklI40OIuNrRKFU8YlWlETrvg866joBYkhc5kkQ1Cj
+         IdbYuZUEYV/pqe+jN9YdGU406K1ljpVCMVskFq1F7D5pqyCECXSeFzOlcCEurRfBJSe0
+         OglXy3Tqf4Kx6ekqKMZ9Hsnj9T2kP3MGdnhA8E/wwGH/Gi6/vzNCqtK5Q1ztinWj/kRe
+         NMnxgnFfIq9i4kgSvrtBLsDEUEMW6Xqn9lk+aj9MMArXFrRJkyz4LpzFgDVSCaom+we1
+         tqvg==
+X-Gm-Message-State: APjAAAUkgwan/J9Q2wZnMENxmlZrhQxYLkh+bvnv5UzCvOgLmFQJ6xwY
+        GxcJtM/jpS5kL+c1sNxCko0UVgoErHLI911P8tJiVp8ywSaJ9zqJKqzvcewVHFY9X6LWH7sgeP4
+        VXSd68OZT7ugYcDJ66EZxVZ1+
+X-Received: by 2002:ae9:f442:: with SMTP id z2mr10147922qkl.130.1578581852980;
+        Thu, 09 Jan 2020 06:57:32 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwvlKadDyijtWYeJ2Wd9k4rTi/vdyU+ZnfMwnSTOg0LZPt/qEGbYJRt3o/7E1ao7PmCs8P0Ng==
+X-Received: by 2002:ae9:f442:: with SMTP id z2mr10147895qkl.130.1578581852605;
+        Thu, 09 Jan 2020 06:57:32 -0800 (PST)
+Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 06:57:31 -0800 (PST)
+From:   Peter Xu <peterx@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Christophe de Dinechin <dinechin@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, peterx@redhat.com,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: [PATCH v3 00/21] KVM: Dirty ring interface
+Date:   Thu,  9 Jan 2020 09:57:08 -0500
+Message-Id: <20200109145729.32898-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20191203034655.51561-10-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010914-0012-0000-0000-0000037BF30D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010914-0013-0000-0000-000021B814C0
-Message-Id: <4c9da9a0-55f4-6cf4-53b8-e8a69744bf98@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_02:2020-01-09,2020-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- malwarescore=0 bulkscore=0 suspectscore=2 lowpriorityscore=0
- mlxlogscore=999 mlxscore=0 priorityscore=1501 adultscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001090130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
+(based on kvm/queue)
 
+Please refer to either the previous cover letters, or documentation
+update in patch 12 for the big picture.  Previous posts:
 
-Le 03/12/2019 à 04:46, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> ocxl_context_detach_all() is called from ocxl_function_close(), so
-> there is no reason to leave the contexts allocated, as the caller
-> can do nothing useful with them at that point.
-> 
-> This also has the side-effect of freeing any allocated IRQs
-> within the context.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
+V1: https://lore.kernel.org/kvm/20191129213505.18472-1-peterx@redhat.com
+V2: https://lore.kernel.org/kvm/20191221014938.58831-1-peterx@redhat.com
 
+The major change in V3 is that we dropped the whole waitqueue and the
+global lock. With that, we have clean per-vcpu ring and no default
+ring any more.  The two kvmgt refactoring patches were also included
+to show the dependency of the works.
 
-I think this is wrong and probably unneeded. In ocxl (and I would assume 
-most drivers), we separate pretty clearly what is setup by the driver 
-framework when a device is probed, and what is allocated by the users 
-(userland or scm). Contexts are allocated by the users. So they should 
-be freed by them only. That separation is also why we have some 
-reference counting on the afu and function structs, to make sure the 
-core data remains valid for as long as required.
-Though it's a bit asking for troubles, it can be seen when unbinding a 
-function from the driver through sysfs. That will end up calling 
-ocxl_function_close() and therefore ocxl_context_detach_all(). However 
-it's possible for a user process to still have a file descriptor opened. 
-The context is detached and marked as CLOSED, so any interaction with it 
-from the user will fail, but it should still be allocated so that it is 
-valid if the user process makes a system call to the driver. The context 
-will be freed when the file descriptor is closed.
-I don't think this is needed for scm either, since you've now added the 
-context detach and free call in free_scm()
-I would just drop this patch.
+Patchset layout:
 
-   Fred
+Patch 1-2:         Picked up from kvmgt refactoring
+Patch 3-6:         Small patches that are not directly related,
+                   (So can be acked/nacked/picked as standalone)
+Patch 7-11:        Prepares for the dirty ring interface
+Patch 12:          Major implementation
+Patch 13-14:       Quick follow-ups for patch 8
+Patch 15-21:       Test cases
 
+V3 changelog:
 
+- fail userspace writable maps on dirty ring ranges [Jason]
+- commit message fixups [Paolo]
+- change __x86_set_memory_region to return hva [Paolo]
+- cacheline align for indices [Paolo, Jason]
+- drop waitqueue, global lock, etc., include kvmgt rework patchset
+- take lock for __x86_set_memory_region() (otherwise it triggers a
+  lockdep in latest kvm/queue) [Paolo]
+- check KVM_DIRTY_LOG_PAGE_OFFSET in kvm_vm_ioctl_enable_dirty_log_ring
+- one more patch to drop x86_set_memory_region [Paolo]
+- one more patch to remove extra srcu usage in init_rmode_identity_map()
+- add some r-bs for Paolo
 
->   drivers/misc/ocxl/context.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-> index 994563a078eb..6cb36ef96e09 100644
-> --- a/drivers/misc/ocxl/context.c
-> +++ b/drivers/misc/ocxl/context.c
-> @@ -259,10 +259,11 @@ void ocxl_context_detach_all(struct ocxl_afu *afu)
->   {
->   	struct ocxl_context *ctx;
->   	int tmp;
-> +	int rc;
->   
->   	mutex_lock(&afu->contexts_lock);
->   	idr_for_each_entry(&afu->contexts_idr, ctx, tmp) {
-> -		ocxl_context_detach(ctx);
-> +		rc = ocxl_context_detach(ctx);
->   		/*
->   		 * We are force detaching - remove any active mmio
->   		 * mappings so userspace cannot interfere with the
-> @@ -274,6 +275,9 @@ void ocxl_context_detach_all(struct ocxl_afu *afu)
->   		if (ctx->mapping)
->   			unmap_mapping_range(ctx->mapping, 0, 0, 1);
->   		mutex_unlock(&ctx->mapping_lock);
-> +
-> +		if (rc != -EBUSY)
-> +			ocxl_context_free(ctx);
->   	}
->   	mutex_unlock(&afu->contexts_lock);
->   }
-> 
+Please review, thanks.
+
+Paolo Bonzini (1):
+  KVM: Move running VCPU from ARM to common code
+
+Peter Xu (18):
+  KVM: Remove kvm_read_guest_atomic()
+  KVM: Add build-time error check on kvm_run size
+  KVM: X86: Change parameter for fast_page_fault tracepoint
+  KVM: X86: Don't take srcu lock in init_rmode_identity_map()
+  KVM: Cache as_id in kvm_memory_slot
+  KVM: X86: Drop x86_set_memory_region()
+  KVM: X86: Don't track dirty for KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+  KVM: Pass in kvm pointer into mark_page_dirty_in_slot()
+  KVM: X86: Implement ring-based dirty memory tracking
+  KVM: Make dirty ring exclusive to dirty bitmap log
+  KVM: Don't allocate dirty bitmap if dirty ring is enabled
+  KVM: selftests: Always clear dirty bitmap after iteration
+  KVM: selftests: Sync uapi/linux/kvm.h to tools/
+  KVM: selftests: Use a single binary for dirty/clear log test
+  KVM: selftests: Introduce after_vcpu_run hook for dirty log test
+  KVM: selftests: Add dirty ring buffer test
+  KVM: selftests: Let dirty_log_test async for dirty ring test
+  KVM: selftests: Add "-c" parameter to dirty log test
+
+Yan Zhao (2):
+  vfio: introduce vfio_iova_rw to read/write a range of IOVAs
+  drm/i915/gvt: subsitute kvm_read/write_guest with vfio_iova_rw
+
+ Documentation/virt/kvm/api.txt                |  96 ++++
+ arch/arm/include/asm/kvm_host.h               |   2 -
+ arch/arm64/include/asm/kvm_host.h             |   2 -
+ arch/x86/include/asm/kvm_host.h               |   7 +-
+ arch/x86/include/uapi/asm/kvm.h               |   1 +
+ arch/x86/kvm/Makefile                         |   3 +-
+ arch/x86/kvm/mmu/mmu.c                        |   6 +
+ arch/x86/kvm/mmutrace.h                       |   9 +-
+ arch/x86/kvm/svm.c                            |   3 +-
+ arch/x86/kvm/vmx/vmx.c                        |  86 ++--
+ arch/x86/kvm/x86.c                            |  43 +-
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |  25 +-
+ drivers/vfio/vfio.c                           |  45 ++
+ drivers/vfio/vfio_iommu_type1.c               |  81 ++++
+ include/linux/kvm_dirty_ring.h                |  55 +++
+ include/linux/kvm_host.h                      |  37 +-
+ include/linux/vfio.h                          |   5 +
+ include/trace/events/kvm.h                    |  78 ++++
+ include/uapi/linux/kvm.h                      |  33 ++
+ tools/include/uapi/linux/kvm.h                |  38 ++
+ tools/testing/selftests/kvm/Makefile          |   2 -
+ .../selftests/kvm/clear_dirty_log_test.c      |   2 -
+ tools/testing/selftests/kvm/dirty_log_test.c  | 420 ++++++++++++++++--
+ .../testing/selftests/kvm/include/kvm_util.h  |   4 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  72 +++
+ .../selftests/kvm/lib/kvm_util_internal.h     |   3 +
+ virt/kvm/arm/arch_timer.c                     |   2 +-
+ virt/kvm/arm/arm.c                            |  29 --
+ virt/kvm/arm/perf.c                           |   6 +-
+ virt/kvm/arm/vgic/vgic-mmio.c                 |  15 +-
+ virt/kvm/dirty_ring.c                         | 162 +++++++
+ virt/kvm/kvm_main.c                           | 215 +++++++--
+ 32 files changed, 1379 insertions(+), 208 deletions(-)
+ create mode 100644 include/linux/kvm_dirty_ring.h
+ delete mode 100644 tools/testing/selftests/kvm/clear_dirty_log_test.c
+ create mode 100644 virt/kvm/dirty_ring.c
+
+-- 
+2.24.1
 
