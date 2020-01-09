@@ -2,257 +2,108 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407A7C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDBFC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C152072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578561366;
-	bh=MdVSJRM+XiTSM3BMCfg4mQ79vWe50lYbOVZ92kj9+QY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=quoo5MfuqNiouT2BxA/H07ENJj+DVZ2Ozyy88OxvDEV2jSb8us5OQqjS4zEg56LkG
-	 o3fUYDz6DeKg5/zzQ/PBvldkGTbokNmo71EVth0nspQAdGvCkp9137RsITadmbSZ0a
-	 yS3FUvuPy9LjXseLqcNpdAvNqruYtc7SUW2uuTeY=
+	by mail.kernel.org (Postfix) with ESMTP id 710D920673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cnRPew3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbgAIJQF (ORCPT
+        id S1729338AbgAIJQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:16:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728946AbgAIJQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:16:04 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DD3B20673;
-        Thu,  9 Jan 2020 09:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578561363;
-        bh=MdVSJRM+XiTSM3BMCfg4mQ79vWe50lYbOVZ92kj9+QY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=S+Fbk9kweZIwO+UapBHl3+6E9spys8FrmIsH9HikCZf5MRbnwZFNwCaxtQ3X8d36C
-         yIsvn60iStl50Z3Kqyw8/a4njJ+zeZYumK1AKbKnXbAyxUNgLBQzU0lbkohVrGs5JH
-         W3QJFOrudOtN15HZgQq9m88tQcYABcMIHDMgnUDo=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1ipTv7-0002GW-MZ; Thu, 09 Jan 2020 09:16:01 +0000
+        Thu, 9 Jan 2020 04:16:18 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35250 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729320AbgAIJQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:16:18 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i23so3097189pfo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LhceEG3UhA0whwHt1MK3h6+cCL04vTq3JH/shOvFsrQ=;
+        b=cnRPew3XWiPXqcRGiN7BEZsnaW0ivBrmTgYDkqDwMIeibcDlESn0xD67dJ7Hz+B8y+
+         Smxe57Zyi9Paz8ABIUBUPcZkV+fqootaT1SgxRAGR7NzM+lty6dI7lmFmSwu6lBJYYdA
+         FAHgr/YMtOObVtFEzer6wvXdAcDDBNuPOv8rQGXTRVinSSkKt1nQ961Hg38bz3dMbb7c
+         KYCXcXghI9+Nq3YDK5cyhpY8fcFaN4SexwEgSfXWhZEs96Hynh/iI6NJow+ahStMfaB+
+         mMiSPeWKHUgoU37yccqkGn7+iR8Ii1KKBK2fgpsTPGcVyjKcQ6CJGnJAgs8gRiF3E2SK
+         N1Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LhceEG3UhA0whwHt1MK3h6+cCL04vTq3JH/shOvFsrQ=;
+        b=mtwIkbF0KLJ1kLhh4m6ddXuX6xSnzom/k/StOYt6+lMi8634j5MrkzdJaQdc97S4CT
+         XvYuD8WE/roVeCXCweQGzvVeReH4JyrqEA7AXXcB1Ykvp2idIk3wdse7gcnwxJT46/uF
+         Q4GrRDZSD/4vejtg0VeET55WGkhsjWuzeZfxcPSzgXMpBqxxX55ZzVec0QEK1Y4u0LwI
+         q3VTGOvKJYMtkiN1nbazTIcct/JP3hhojMHFR/QuwRf9UBssC5sQbqDuw07kYF15p/2n
+         9QLDxtWqxXuaTE9MjaqG92pO6ICts4hdD/56+i0gx0jNLfcfVtGDLH2Qgp/F57ETykeP
+         XS1A==
+X-Gm-Message-State: APjAAAXyVtelLNze2QmmmEiwlPrecj0zpfDLTfn6Wd2O55WqoLEik6/d
+        QdCBTt8PJ49BXwhYwtciHiezxD4tHug=
+X-Google-Smtp-Source: APXvYqwVlE2aRDWxTdxtk/WQvDtvsNKnq/FDp4We/vNa60vMihisUPjSivxC/byqI4W23qZOZe+56Q==
+X-Received: by 2002:a65:4c82:: with SMTP id m2mr9844041pgt.432.1578561376259;
+        Thu, 09 Jan 2020 01:16:16 -0800 (PST)
+Received: from localhost ([122.172.140.51])
+        by smtp.gmail.com with ESMTPSA id j94sm2335952pje.8.2020.01.09.01.16.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Jan 2020 01:16:15 -0800 (PST)
+Date:   Thu, 9 Jan 2020 14:46:13 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
+ transport type
+Message-ID: <20200109091613.fx2ggmmjvgjempks@vireshk-i7>
+References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
+ <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 09 Jan 2020 09:16:01 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
-In-Reply-To: <HE1PR0801MB1676AB738138AB24E2158AD4F4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-References: <20191210034026.45229-1-jianyong.wu@arm.com>
- <20191210034026.45229-7-jianyong.wu@arm.com>
- <7383dc06897bba253f174cd21a19b5c0@kernel.org>
- <HE1PR0801MB1676AB738138AB24E2158AD4F4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-Message-ID: <099a26ffef5d554b88a5e33d7f2a6e3a@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-09 05:45, Jianyong Wu wrote:
-> Hi Marc,
+On 09-01-20, 09:18, Arnd Bergmann wrote:
+> > +static int mailbox_chan_free(int id, void *p, void *data)
+> > +{
+> > +       struct scmi_chan_info *cinfo = p;
+> > +       struct scmi_mailbox *smbox = cinfo->transport_info;
+> > +
+> > +       if (!IS_ERR_OR_NULL(smbox->chan)) {
+> > +               mbox_free_channel(smbox->chan);
+> > +               cinfo->transport_info = NULL;
+> > +               smbox->chan = NULL;
+> > +               smbox->cinfo = NULL;
+> > +       }
 > 
->> -----Original Message-----
->> From: Marc Zyngier <maz@kernel.org>
->> Sent: Tuesday, January 7, 2020 5:16 PM
->> To: Jianyong Wu <Jianyong.Wu@arm.com>
->> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
->> tglx@linutronix.de; pbonzini@redhat.com; 
->> sean.j.christopherson@intel.com;
->> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
->> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
->> <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
->> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Kaly Xin
->> <Kaly.Xin@arm.com>; Justin He <Justin.He@arm.com>; nd <nd@arm.com>
->> Subject: Re: [RFC PATCH v9 6/8] psci: Add hvc call service for 
->> ptp_kvm.
->> 
->> On 2019-12-10 03:40, Jianyong Wu wrote:
->> > ptp_kvm modules will call hvc to get this service.
->> > The service offers real time and counter cycle of host for guest.
->> >
->> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
->> > ---
->> >  include/linux/arm-smccc.h | 12 ++++++++++++
->> >  virt/kvm/arm/psci.c       | 22 ++++++++++++++++++++++
->> >  2 files changed, 34 insertions(+)
->> >
->> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
->> > index 6f82c87308ed..aafb6bac167d 100644
->> > --- a/include/linux/arm-smccc.h
->> > +++ b/include/linux/arm-smccc.h
->> > @@ -94,6 +94,7 @@
->> >
->> >  /* KVM "vendor specific" services */
->> >  #define ARM_SMCCC_KVM_FUNC_FEATURES		0
->> > +#define ARM_SMCCC_KVM_PTP			1
->> >  #define ARM_SMCCC_KVM_FUNC_FEATURES_2		127
->> >  #define ARM_SMCCC_KVM_NUM_FUNCS			128
->> >
->> > @@ -103,6 +104,17 @@
->> >  			   ARM_SMCCC_OWNER_VENDOR_HYP,
->> 		\
->> >  			   ARM_SMCCC_KVM_FUNC_FEATURES)
->> >
->> > +/*
->> > + * This ID used for virtual ptp kvm clock and it will pass second
->> > value
->> > + * and nanosecond value of host real time and system counter by vcpu
->> > + * register to guest.
->> > + */
->> > +#define ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID
->> 		\
->> > +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,
->> 		\
->> > +			   ARM_SMCCC_SMC_32,
->> 	\
->> > +			   ARM_SMCCC_OWNER_VENDOR_HYP,
->> 		\
->> > +			   ARM_SMCCC_KVM_PTP)
->> > +
->> 
->> All of this depends on patches that have never need posted to any ML, 
->> and
->> just linger in Will's tree. You need to pick them up and post them as 
->> part of
->> this series so that they can at least be reviewed.
->> 
-> Ok, I will add them next version.
+> There is something wrong if smbox->chan can be be one of
+> three things (a valid pointer, a NULL pointer, or an error value).
 > 
->> >  #ifndef __ASSEMBLY__
->> >
->> >  #include <linux/linkage.h>
->> > diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c index
->> > 0debf49bf259..682d892d6717 100644
->> > --- a/virt/kvm/arm/psci.c
->> > +++ b/virt/kvm/arm/psci.c
->> > @@ -9,6 +9,7 @@
->> >  #include <linux/kvm_host.h>
->> >  #include <linux/uaccess.h>
->> >  #include <linux/wait.h>
->> > +#include <linux/clocksource_ids.h>
->> >
->> >  #include <asm/cputype.h>
->> >  #include <asm/kvm_emulate.h>
->> > @@ -389,6 +390,8 @@ static int kvm_psci_call(struct kvm_vcpu *vcpu)
->> >
->> >  int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)  {
->> > +	struct system_time_snapshot systime_snapshot;
->> > +	u64 cycles;
->> >  	u32 func_id = smccc_get_function(vcpu);
->> >  	u32 val[4] = {};
->> >  	u32 option;
->> > @@ -431,6 +434,25 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
->> >  	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
->> >  		val[0] = BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
->> >  		break;
->> > +	/*
->> > +	 * This will used for virtual ptp kvm clock. three
->> > +	 * values will be passed back.
->> > +	 * reg0 stores high 32-bit host ktime;
->> > +	 * reg1 stores low 32-bit host ktime;
->> > +	 * reg2 stores high 32-bit difference of host cycles and cntvoff;
->> > +	 * reg3 stores low 32-bit difference of host cycles and cntvoff.
->> 
->> That's either two or four values, and not three as you claim above.
->> 
-> Sorry, I'm not sure what do you mean "three", the registers here is 4
-> from reg0 to reg3.
+> I see this is a preexisting problem, but please add a patch to
+> make it consistently use either NULL pointers or error codes
+> and remove all instances of IS_ERR_OR_NULL() from this
+> subsystem.
 
-Please read the comment you have written above...
+This isn't a subsystem problem actually. mbox_request_channel() never
+returns NULL on error.
 
->> Also, I fail to understand the meaning of the host cycle vs cntvoff 
->> comparison.
->> This is something that guest can perform on its own (it has access to 
->> both
->> physical and virtual timers, and can compute cntvoff without 
->> intervention of
->> the hypervisor).
->> 
-> To keep consistency and precision, clock time and counter cycle must
-> captured at the same time. It will perform at ktime_get_snapshot.
+@Sudeep, do we really need the IS_ERR_OR_NULL() check in
+scmi_mbox_free_channel() helper ? Or can it just be IS_ERR() ?
 
-Fair enough. It would vertainly help if you documented it. It would also
-help if you explained why it is so much worse to read the counter in the
-guest before *and* after the call, and assume that the clock time read
-happened right in the middle?
-
-That aside, what you are returning is something that *looks* like
-the virtual counter. What if the guest is using the physical counter,
-which is likely to be the case with nested virt? Do you expect the guest
-to always use the virtual counter? This isn't going to fly.
-
->> Finally, how does it work with nested virt, where cntvoff is for the 
->> the vEL2
->> guest?
->> 
-> For now, I have not considered ptp_kvm in nested virtualization. Also
-> I'm not sure about if nested virtualization is
-> ready on arm64 , as I need test ptp_kvm on it. If so, I can consider 
-> it.
-
-It is not about testing. It is about taking the architecture into 
-account.
-And ready or not doesn't come into play here. What you're defining here 
-is
-an ABI, and it better be totally future proof.
-
-But if you want to test, help yourself to [1] and have fun!
-> 
->> > +	 */
->> > +	case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
->> > +		ktime_get_snapshot(&systime_snapshot);
->> > +		if (systime_snapshot.cs_id != CSID_ARM_ARCH_COUNTER)
->> > +			return kvm_psci_call(vcpu);
->> 
->> What does this mean? Calling PSCI because you've failed to identify 
->> the clock
->> source? What result do you expect from this? Hint: this isn't a PSCI 
->> call.
->> 
-> Sorry, what I want to do here is that return to guest with the error 
-> info.
-> Maybe I should set val[0] to -1 and break to let the guest know that
-> error comes, as
-> the guest will check if val[0] is positive to determine the next step.
-
-What you should do is handle it like a normal SMCCC failure.
-
-         M.
-
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=kvm-arm64/nv-5.5-rc4-WIP
 -- 
-Jazz is not dead. It just smells funny...
+viresh
