@@ -2,251 +2,150 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616B9C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3A2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA4E206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:05:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N89t4tjX"
+	by mail.kernel.org (Postfix) with ESMTP id 5E5A7206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578585957;
+	bh=E+4soxqfhxfGquTmA4RcmwB0tyse1BamCGTUnkYpNUs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=iL66ZcvN/Uci6PVNQet1sO/0GR101LNbXhtz9QMKPu7Ed1iMdHBUxRF5M+EItPMFH
+	 Ai8c6/c8UaGyBosWoeLtv/NXvuAsTo4Y8PMtFze9wrer0iHkLYMfbiE+HQMK11MICW
+	 e7yPH5DVI9ivJ6hxopyt/uE3zuqSSxLr42j9nrUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733016AbgAIQFw (ORCPT
+        id S1733029AbgAIQF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:05:52 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58298 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728584AbgAIQFv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:05:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578585949;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5AHYV2UMb6QFH2KrZdQF90S4dwnJAUXmqxV2bgFAoj4=;
-        b=N89t4tjXjOxRl7daN2LnYJirp32GTCBLzQ7cgfoZ5OZkhiaq91acRleE7zp/yJiZpLOWg/
-        mINEvVU5wy0SaAGWrMn0jE1VpiDxKcN6jV6oOAOG+tMT915NlSOJiQ0EOyIiXHiCXVJMum
-        4iyLB6cxIhlp7Q35dqEQ4NZjqBJ9Fh8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-NkQLUOjOM22M4QRIHq31tA-1; Thu, 09 Jan 2020 11:05:47 -0500
-X-MC-Unique: NkQLUOjOM22M4QRIHq31tA-1
-Received: by mail-wm1-f72.google.com with SMTP id t4so1102144wmf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:05:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5AHYV2UMb6QFH2KrZdQF90S4dwnJAUXmqxV2bgFAoj4=;
-        b=Qv/G3JBn2BWuSvcx35ciQs5WDGZrEkBlbUGUq2BDGm3emQu8sOhVNAEpL1J1EYIISJ
-         1qXhjJvSNJTfM4xWrNjWnNojR5b+i1aOp+r1CDTAFXeBOObGep0W1jGDyXvqc8J6sqIm
-         lYpItXdYFA21vI4Z4gNzXmavdKBWaJt4bydCQ/azLprw9tjnpUbUsiwyWo7cE9nGeFHX
-         W4tjSmIrcyI7WoP9yIfKxz3PPd9MxUw3lHfuKuPd1mCpljdU2I+p1E+RNJtw2kiKszOR
-         4piZcT2EBoMGnkP3whSjikE9HUQp8U9CqcANV9e8mRvZo/u4TezrRnKZvbgUc/nQVRqX
-         8sCw==
-X-Gm-Message-State: APjAAAWFyQ41OIRbyiJQTKG01Yjgp6w0hIQGEwnsQWFspSV1v+ZTc/ji
-        65+uVK4jIobhJlf81HTDGL94Sgwvu8IcsCjgrr9dBYo7Bltk7Rx4GV3oxqtiEKf8YHvW39qfG60
-        Z7Opa4cWArMMlakax4EREiJBl
-X-Received: by 2002:adf:ee88:: with SMTP id b8mr12352667wro.249.1578585944493;
-        Thu, 09 Jan 2020 08:05:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqziyrPjjwc6jFBPwhewcMunWuDhPtWfMzeeejSLNUTdBAiUMf1lRurJ4PQYCUI/+LBPOsBfYw==
-X-Received: by 2002:adf:ee88:: with SMTP id b8mr12352633wro.249.1578585944225;
-        Thu, 09 Jan 2020 08:05:44 -0800 (PST)
-Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id a16sm8545544wrt.37.2020.01.09.08.05.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:05:43 -0800 (PST)
-From:   Julien Thierry <jthierry@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        Julien Thierry <jthierry@redhat.com>
-Subject: [RFC v5 21/57] objtool: arm64: Decode simple data processing instructions
-Date:   Thu,  9 Jan 2020 16:02:24 +0000
-Message-Id: <20200109160300.26150-22-jthierry@redhat.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
-References: <20200109160300.26150-1-jthierry@redhat.com>
+        Thu, 9 Jan 2020 11:05:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728584AbgAIQFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:05:54 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E8562072E;
+        Thu,  9 Jan 2020 16:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578585953;
+        bh=E+4soxqfhxfGquTmA4RcmwB0tyse1BamCGTUnkYpNUs=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Ft1LzzTY7zNPdOi90ZeMSvPTVYCq+XFqhKAjHJl2td3VS3ZZEA7AgBwZ8P68BlVAe
+         mlj6Q8B20E2e0eOi3Pq5cmXxFhCgOCBsVEb1NQFgKPOZ7jZ1TZaIvJ5s5bqIvpZc6I
+         R5AaShIfRWCZkkdAdcN5nB1J8L2Pk1XfNRsaqaTs=
+Message-ID: <0c8566e39221cc475840da0f93913aeaa77dc0e4.camel@kernel.org>
+Subject: Re: [RFC PATCH v4] ceph: use 'copy-from2' operation in
+ copy_file_range
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Ilya Dryomov <idryomov@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>
+Cc:     Sage Weil <sage@redhat.com>, "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 09 Jan 2020 11:05:50 -0500
+In-Reply-To: <CAOi1vP-YbPswsmk5TicVwnspBSkz9_8HreOWmpU=kZeTWWiV-A@mail.gmail.com>
+References: <20200108100353.23770-1-lhenriques@suse.com>
+         <913eb28e6bb698f27f1831f75ea5250497ee659c.camel@kernel.org>
+         <20200109143011.GA14582@brahms>
+         <CAOi1vP-YbPswsmk5TicVwnspBSkz9_8HreOWmpU=kZeTWWiV-A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Decode data processing instructions that do not constitute stack
-operations.
+On Thu, 2020-01-09 at 15:53 +0100, Ilya Dryomov wrote:
+> On Thu, Jan 9, 2020 at 3:30 PM Luis Henriques <lhenriques@suse.com> wrote:
+> > On Thu, Jan 09, 2020 at 08:06:17AM -0500, Jeff Layton wrote:
+> > > On Wed, 2020-01-08 at 10:03 +0000, Luis Henriques wrote:
+> > > > Instead of using the 'copy-from' operation, switch copy_file_range to the
+> > > > new 'copy-from2' operation, which allows to send the truncate_seq and
+> > > > truncate_size parameters.
+> > > > 
+> > > > If an OSD does not support the 'copy-from2' operation it will return
+> > > > -EOPNOTSUPP.  In that case, the kernel client will stop trying to do
+> > > > remote object copies for this fs client and will always use the generic
+> > > > VFS copy_file_range.
+> > > > 
+> > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > > ---
+> > > > Hi Jeff,
+> > > > 
+> > > > This is a follow-up to the discussion in [1].  Since PR [2] has been
+> > > > merged, it's now time to change the kernel client to use the new
+> > > > 'copy-from2'.  And that's what this patch does.
+> > > > 
+> > > > [1] https://lore.kernel.org/lkml/20191118120935.7013-1-lhenriques@suse.com/
+> > > > [2] https://github.com/ceph/ceph/pull/31728
+> > > > 
+> > > >  fs/ceph/file.c                  | 13 ++++++++++++-
+> > > >  fs/ceph/super.c                 |  1 +
+> > > >  fs/ceph/super.h                 |  3 +++
+> > > >  include/linux/ceph/osd_client.h |  1 +
+> > > >  include/linux/ceph/rados.h      |  2 ++
+> > > >  net/ceph/osd_client.c           | 18 ++++++++++++------
+> > > >  6 files changed, 31 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > > index 11929d2bb594..1e6cdf2dfe90 100644
+> > > > --- a/fs/ceph/file.c
+> > > > +++ b/fs/ceph/file.c
+> > > > @@ -1974,6 +1974,10 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >     if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
+> > > >             return -EOPNOTSUPP;
+> > > > 
+> > > > +   /* Do the OSDs support the 'copy-from2' operation? */
+> > > > +   if (!src_fsc->have_copy_from2)
+> > > > +           return -EOPNOTSUPP;
+> > > > +
+> > > >     /*
+> > > >      * Striped file layouts require that we copy partial objects, but the
+> > > >      * OSD copy-from operation only supports full-object copies.  Limit
+> > > > @@ -2101,8 +2105,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >                     CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+> > > >                     &dst_oid, &dst_oloc,
+> > > >                     CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> > > > -                   CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
+> > > > +                   CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > > > +                   dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > > > +                   CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > >             if (err) {
+> > > > +                   if (err == -EOPNOTSUPP) {
+> > > > +                           src_fsc->have_copy_from2 = false;
+> > > > +                           pr_notice("OSDs don't support 'copy-from2'; "
+> > > > +                                     "disabling copy_file_range\n");
+> > > > +                   }
+> > > >                     dout("ceph_osdc_copy_from returned %d\n", err);
+> > > >                     if (!ret)
+> > > >                             ret = err;
+> > > 
+> > > The patch itself looks fine to me. I'll not merge yet, since you sent it
+> > > as an RFC, but I don't have any objection to it at first glance.
+> > 
+> > I was going to drop the RFC, but then at the last minute decided to leave.
+> > 
+> > >                                                                    The
+> > > only other comment I'd make is that you should probably split this into
+> > > two patches -- one for the libceph changes and one for cephfs.
+> > 
+> > Hmm... TBH I didn't thought about that, but since the libceph patch would
+> > be changing its API (ceph_osdc_copy_from would have 2 extra parameters), I
+> > don't think that's a good idea.  Bisection would be broken between these 2
+> > patches.
+> 
 
-Suggested-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
----
- tools/objtool/arch/arm64/decode.c             | 104 ++++++++++++++++++
- .../objtool/arch/arm64/include/insn_decode.h  |  18 +++
- 2 files changed, 122 insertions(+)
-
-diff --git a/tools/objtool/arch/arm64/decode.c b/tools/objtool/arch/arm64/decode.c
-index 04358f41ef1d..6c8db9335fc9 100644
---- a/tools/objtool/arch/arm64/decode.c
-+++ b/tools/objtool/arch/arm64/decode.c
-@@ -81,6 +81,7 @@ static arm_decode_class aarch64_insn_class_decode_table[NR_INSN_CLASS] = {
- 	[INSN_RESERVED]			= arm_decode_unknown,
- 	[INSN_UNKNOWN]			= arm_decode_unknown,
- 	[INSN_UNALLOC]			= arm_decode_unknown,
-+	[0b1000 ... INSN_DP_IMM]	= arm_decode_dp_imm,
- };
- 
- /*
-@@ -145,3 +146,106 @@ int arm_decode_unknown(u32 instr, enum insn_type *type,
- 
- 	return 0;
- }
-+
-+#define NR_DP_IMM_SUBCLASS	8
-+#define INSN_DP_IMM_SUBCLASS(opcode)			\
-+	(((opcode) >> 23) & (NR_DP_IMM_SUBCLASS - 1))
-+
-+static arm_decode_class aarch64_insn_dp_imm_decode_table[NR_DP_IMM_SUBCLASS] = {
-+	[0 ... INSN_PCREL]	= arm_decode_pcrel,
-+	[INSN_MOVE_WIDE]	= arm_decode_move_wide,
-+	[INSN_BITFIELD]		= arm_decode_bitfield,
-+	[INSN_EXTRACT]		= arm_decode_extract,
-+};
-+
-+int arm_decode_dp_imm(u32 instr, enum insn_type *type,
-+		      unsigned long *immediate, struct list_head *ops_list)
-+{
-+	arm_decode_class decode_fun;
-+
-+	decode_fun = aarch64_insn_dp_imm_decode_table[INSN_DP_IMM_SUBCLASS(instr)];
-+	if (!decode_fun)
-+		return -1;
-+	return decode_fun(instr, type, immediate, ops_list);
-+}
-+
-+int arm_decode_pcrel(u32 instr, enum insn_type *type,
-+		     unsigned long *immediate, struct list_head *ops_list)
-+{
-+	unsigned char page = 0;
-+	u32 immhi = 0, immlo = 0;
-+
-+	page = EXTRACT_BIT(instr, 31);
-+	immhi = (instr >> 5) & ONES(19);
-+	immlo = (instr >> 29) & ONES(2);
-+
-+	*immediate = SIGN_EXTEND((immhi << 2) | immlo, 21);
-+
-+	if (page)
-+		*immediate = SIGN_EXTEND(*immediate << 12, 33);
-+
-+	*type = INSN_OTHER;
-+
-+	return 0;
-+}
-+
-+int arm_decode_move_wide(u32 instr, enum insn_type *type,
-+			 unsigned long *immediate, struct list_head *ops_list)
-+{
-+	u32 imm16 = 0;
-+	unsigned char hw = 0, opc = 0, sf = 0;
-+
-+	sf = EXTRACT_BIT(instr, 31);
-+	opc = (instr >> 29) & ONES(2);
-+	hw = (instr >> 21) & ONES(2);
-+	imm16 = (instr >> 5) & ONES(16);
-+
-+	if ((sf == 0 && (hw & 0x2)) || opc == 0x1)
-+		return arm_decode_unknown(instr, type, immediate, ops_list);
-+
-+	*type = INSN_OTHER;
-+	*immediate = imm16;
-+
-+	return 0;
-+}
-+
-+int arm_decode_bitfield(u32 instr, enum insn_type *type,
-+			unsigned long *immediate, struct list_head *ops_list)
-+{
-+	unsigned char sf = 0, opc = 0, N = 0;
-+
-+	sf = EXTRACT_BIT(instr, 31);
-+	opc = (instr >> 29) & ONES(2);
-+	N = EXTRACT_BIT(instr, 22);
-+
-+	if (opc == 0x3 || sf != N)
-+		return arm_decode_unknown(instr, type, immediate, ops_list);
-+
-+	*type = INSN_OTHER;
-+
-+	return 0;
-+}
-+
-+int arm_decode_extract(u32 instr, enum insn_type *type,
-+		       unsigned long *immediate, struct list_head *ops_list)
-+{
-+	unsigned char sf = 0, op21 = 0, N = 0, o0 = 0;
-+	unsigned char imms = 0;
-+	unsigned char decode_field = 0;
-+
-+	sf = EXTRACT_BIT(instr, 31);
-+	op21 = (instr >> 29) & ONES(2);
-+	N = EXTRACT_BIT(instr, 22);
-+	o0 = EXTRACT_BIT(instr, 21);
-+	imms = (instr >> 10) & ONES(6);
-+
-+	decode_field = (sf << 4) | (op21 << 2) | (N << 1) | o0;
-+	*type = INSN_OTHER;
-+	*immediate = imms;
-+
-+	if ((decode_field == 0 && !EXTRACT_BIT(imms, 5)) ||
-+	    decode_field == 0b10010)
-+		return 0;
-+
-+	return arm_decode_unknown(instr, type, immediate, ops_list);
-+}
-diff --git a/tools/objtool/arch/arm64/include/insn_decode.h b/tools/objtool/arch/arm64/include/insn_decode.h
-index 16066f8fca0d..06235d81300c 100644
---- a/tools/objtool/arch/arm64/include/insn_decode.h
-+++ b/tools/objtool/arch/arm64/include/insn_decode.h
-@@ -8,15 +8,33 @@
- #define INSN_RESERVED	0b0000
- #define INSN_UNKNOWN	0b0001
- #define INSN_UNALLOC	0b0011
-+#define INSN_DP_IMM	0b1001	//0x100x
- 
- #define NR_INSN_CLASS	16
- #define INSN_CLASS(opcode)	(((opcode) >> 25) & (NR_INSN_CLASS - 1))
- 
-+#define INSN_PCREL	0b001	//0b00x
-+#define INSN_MOVE_WIDE	0b101
-+#define INSN_BITFIELD	0b110
-+#define INSN_EXTRACT	0b111
-+
- typedef int (*arm_decode_class)(u32 instr, enum insn_type *type,
- 				unsigned long *immediate,
- 				struct list_head *ops_list);
- 
- /* arm64 instruction classes */
-+int arm_decode_dp_imm(u32 instr, enum insn_type *type,
-+		      unsigned long *immediate, struct list_head *ops_list);
- int arm_decode_unknown(u32 instr, enum insn_type *type,
- 		       unsigned long *immediate, struct list_head *ops_list);
-+
-+/* arm64 data processing -- immediate subclasses */
-+int arm_decode_pcrel(u32 instr, enum insn_type *type,
-+		     unsigned long *immediate, struct list_head *ops_list);
-+int arm_decode_move_wide(u32 instr, enum insn_type *type,
-+			 unsigned long *immediate, struct list_head *ops_list);
-+int arm_decode_bitfield(u32 instr, enum insn_type *type,
-+			unsigned long *immediate, struct list_head *ops_list);
-+int arm_decode_extract(u32 instr, enum insn_type *type,
-+		       unsigned long *immediate, struct list_head *ops_list);
- #endif /* _ARM_INSN_DECODE_H */
+In that case, I'll just go ahead and do some testing with this patch and
+will plan to merge it as-is, assuming that goes ok.
 -- 
-2.21.0
+Jeff Layton <jlayton@kernel.org>
 
