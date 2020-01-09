@@ -2,140 +2,175 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A06C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA1DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7326D2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BF3206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbgAIBFF (ORCPT
+        id S1727790AbgAIBHj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 20:05:05 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22392 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726913AbgAIBFF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 20:05:05 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00912O10035646;
-        Wed, 8 Jan 2020 20:04:25 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xdcdhbv65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jan 2020 20:04:25 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 00912QvP035861;
-        Wed, 8 Jan 2020 20:04:25 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xdcdhbv5s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jan 2020 20:04:25 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0090xp1b003470;
-        Thu, 9 Jan 2020 01:04:30 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma01wdc.us.ibm.com with ESMTP id 2xajb6sa18-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 01:04:30 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00914OvB12518100
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jan 2020 01:04:24 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E98D0124052;
-        Thu,  9 Jan 2020 01:04:23 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8094124054;
-        Thu,  9 Jan 2020 01:04:21 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.182.239])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jan 2020 01:04:21 +0000 (GMT)
-Message-ID: <1578531860.3852.7.camel@linux.ibm.com>
-Subject: Re: [PATCH v1] driver core: Use list_del_init to replace list_del
- at device_links_purge()
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     John Garry <john.garry@huawei.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
+        Wed, 8 Jan 2020 20:07:39 -0500
+Received: from mga09.intel.com ([134.134.136.24]:25129 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgAIBHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 20:07:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 17:07:38 -0800
+X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
+   d="scan'208";a="218223786"
+Received: from aguedesl-mac01.jf.intel.com (HELO localhost) ([10.24.12.236])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 17:07:37 -0800
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <b7e1cb8b-b6b1-c0fa-3864-4036750f3164@ti.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com> <157603276975.18462.4638422874481955289@pipeline> <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com> <87eex43pzm.fsf@linux.intel.com> <20191219004322.GA20146@khorivan> <87lfr9axm8.fsf@linux.intel.com> <b7e1cb8b-b6b1-c0fa-3864-4036750f3164@ti.com>
+Subject: Re: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
+From:   Andre Guedes <andre.guedes@linux.intel.com>
+Cc:     Po Liu <po.liu@nxp.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "saravanak@google.com" <saravanak@google.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 08 Jan 2020 17:04:20 -0800
-In-Reply-To: <3826a83d-a220-2f7d-59f6-efe8a4b995d7@huawei.com>
-References: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
-         <20200108122658.GA2365903@kroah.com>
-         <73252c08-ac46-5d0d-23ec-16c209bd9b9a@huawei.com>
-         <1578498695.3260.5.camel@linux.ibm.com>
-         <20200108155700.GA2459586@kroah.com>
-         <1578499287.3260.7.camel@linux.ibm.com>
-         <4b185c9f-7fa2-349d-9f72-3c787ac30377@huawei.com>
-         <3826a83d-a220-2f7d-59f6-efe8a4b995d7@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_07:2020-01-08,2020-01-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- suspectscore=0 clxscore=1011 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 malwarescore=0 phishscore=0 spamscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001090008
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Message-ID: <157853205713.36295.17877768211004089754@aguedesl-mac01.jf.intel.com>
+User-Agent: alot/0.8.1
+Date:   Wed, 08 Jan 2020 17:07:37 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-08 at 17:10 +0000, John Garry wrote:
-> On 08/01/2020 16:08, John Garry wrote:
-> > On 08/01/2020 16:01, James Bottomley wrote:
-> > > > > >     cdev->dev = NULL;
-> > > > > >             return device_add(&cdev->cdev);
-> > > > > >         }
-> > > > > >     }
-> > > > > >     return -ENODEV;
-> > > > > > }
-> > > > > 
-> > > > > The design of the code is simply to remove the link to the
-> > > > > inserted device which has been removed.
-> > > > > 
-> > > > > I*think*  this means the calls to device_del and device_add
-> > > > > are unnecessary and should go.  enclosure_remove_links and
-> > > > > the put of the enclosed device should be sufficient.
-> > > > 
-> > > > That would make more sense than trying to "reuse" the device
-> > > > structure here by tearing it down and adding it back.
-> > > 
-> > > OK, let's try that.  This should be the patch if someone can try
-> > > it (I've compile tested it, but the enclosure system is under a
-> > > heap of stuff in the garage).
+Hi,
+
+> >>> 1. add support in taprio to be configured without any schedule in the
+> >>> "full offload" mode. In practice, allowing taprio to work somewhat
+> >>> similar to (mqprio + frame-preemption), changes in the code should de
+> >>> fairly small;
+> >>
+> >> +
+> >>
+> >> And if follow mqprio settings logic then preemption also can be enabled
+> >> immediately while configuring taprio first time, and similarly new ADMIN
+> >> can't change it and can be set w/o preemption option afterwards.
+> >>
+> >> So that following is correct:
+> >>
+> >> OPER
+> >> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+> >>        base-time 10000000 \
+> >>        num_tc 3 \
+> >>        map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+> >>        queues 1@0 1@1 2@2 \
+> >>        preemption 0 1 1 1
+> >>        flags 1
+> >>
+> >> then
+> >> ADMIN
+> >> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+> >>        base-time 12000000 \
+> >>        num_tc 3 \
+> >>        map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+> >>        queues 1@0 1@1 2@2 \
+> >>        preemption 0 1 1 1
+> >>        sched-entry S 01 300000 \
+> >>        sched-entry S 02 300000 \
+> >>        flags 1
+> >>
+> >> then
+> >> ADMIN
+> >> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+> >>        base-time 13000000 \
+> >>        sched-entry S 01 300000 \
+> >>        sched-entry S 02 300000 \
+> >>        flags 1
+> >>
+> >> BUT:
+> >>
+> >> 1) The question is only should it be in this way? I mean preemption to be
+> >> enabled immediately? Also should include other parameters like
+> >> fragment size.
 > > 
-> > I can test it now.
+> > We can decide what things are allowed/useful here. For example, it might
+> > make sense to allow "preemption" to be changed. We can extend taprio to
+> > support changing the fragment size, if that makes sense.
 > > 
+> >>
+> >> 2) What if I want to use frame preemption with another "transmission selection
+> >> algorithm"? Say another one "time sensitive" - CBS? How is it going to be
+> >> stacked?
+> > 
+> > I am not seeing any (conceptual*) problems when plugging a cbs (for
+> > example) qdisc into one of taprio children. Or, are you talking about a
+> > more general problem?
+> > 
+> > * here I am considering that support for taprio without an schedule is
+> >   added.
+> > 
+> >>
+> >> In this case ethtool looks better, allowing this "MAC level" feature, to be
+> >> configured separately.
+> > 
+> > My only issue with using ethtool is that then we would have two
+> > different interfaces for "complementary" features. And it would make
+> > things even harder to configure and debug. The fact that one talks about
+> > traffic classes and the other transmission queues doesn't make me more
+> > comfortable as well.
+> > 
+> > On the other hand, as there isn't a way to implement frame preemption in
+> > software, I agree that it makes it kind of awkward to have it in the tc
+> > subsystem.
+> Absolutely. I think frame pre-emption feature flag, per queue express/
+> pre-empt state, frag size, timers (hold/release) to be configured
+> independently (perhaps through ethtool) and then taprio should check
+> this with the lower device and then allow supporting additional Gate
+> operations such as Hold/release if supported by underlying device.
 > 
-> Yeah, that looks to have worked ok. SES disk locate was also fine
-> after losing and rediscovering the disk.
-
-OK, I'll spin up a patch with fixes/reported and tested tags.
-
-> Thanks,
-> John
+> What do you think? Why to abuse tc for this?
 > 
-> > But it is a bit suspicious that we had the device_del() and
-> > device_add() at all, especially since the code change makes it look
-> > a bit more like pre-43d8eb9cfd0 ("ses: add support for enclosure
-> > component hot removal")
 
-I think the original reason was to clean out the links.  I vaguely
-remember there was once a time when you couldn't clear all the links
-simply with sysfs_remove_link.  However, nowadays you can.
+After reading all this great discussion and revisiting the 802.1Q and 802.3br
+specs, I'm now leaning towards to not coupling Frame Preemption support under
+taprio qdisc. Besides what have been discussed, Annex S.2 from 802.1Q-2018
+foresees FP without EST so it makes me feel like we should keep them separate.
 
-James
+Regarding the FP configuration knobs, the following seems reasonable to me:
+    * Enable/disable FP feature
+    * Preemptable queue mapping
+    * Fragment size multiplier
 
+I'm not sure about the knob 'timers (hold/release)' described in the quotes
+above. I couldn't find a match in the specs. If it refers to 'holdAdvance' and
+'releaseAdvance' parameters described in 802.1Q-2018, I believe they are not
+configurable. Do we know any hardware where they are configurable?
+
+Regards,
+
+Andre
