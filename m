@@ -2,113 +2,137 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418BEC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4173C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1711620721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578530645;
-	bh=Go188rL5tikNt03I4uWv26oj+FUof0Vk+S7a6HlvT1A=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=2ua0XcR/JAMlKxxcyrTjM9miRijBIdX4Eago7AyHoQlLjZwyMvglJrrLmjMo+DRrH
-	 LUv2VqA8/0luwA0HXjxaJJXw7ivj9SDrOafOr7GfoR1YSHJwFO3fVi8c5GGjGp1J29
-	 NZt5EhTwjg6vVtAGnIZ1uLizOceVPifbKzr5G9RQ=
+	by mail.kernel.org (Postfix) with ESMTP id B05732070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:47:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vlXw4X09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbgAIAoC (ORCPT
+        id S1727685AbgAIArq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:44:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgAIAoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:44:02 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5ABD2070E;
-        Thu,  9 Jan 2020 00:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578530642;
-        bh=Go188rL5tikNt03I4uWv26oj+FUof0Vk+S7a6HlvT1A=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=wVjR5/sPmfzWsNjUYs7iAFkDuAiMFnOpPCjdP+oU0s+4tHE0RLgbXYKiXuSJulplY
-         WZVBvVyNaV7D1gkAtlMQFENto0ov9x31m3PyRs1uW7fKs78RbYeEqMnDd0yifwYvyL
-         QJQ799I/TfvKrDuKHFPYFjkL73uGZt3h28MFnhyU=
-Message-ID: <064b5f5318fd433f03242ed234fe7c370899e224.camel@kernel.org>
-Subject: Re: [PATCH v5 2/2] tmpfs: Support 64-bit inums per-sb
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Hugh Dickins <hughd@google.com>, Chris Mason <clm@fb.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Chris Down <chris@chrisdown.name>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Date:   Wed, 08 Jan 2020 19:43:52 -0500
-In-Reply-To: <alpine.LSU.2.11.2001080259350.1884@eggly.anvils>
-References: <cover.1578225806.git.chris@chrisdown.name>
-         <ae9306ab10ce3d794c13b1836f5473e89562b98c.1578225806.git.chris@chrisdown.name>
-         <20200107001039.GM23195@dread.disaster.area>
-         <20200107001643.GA485121@chrisdown.name>
-         <20200107003944.GN23195@dread.disaster.area>
-         <CAOQ4uxjvH=UagqjHP_71_p9_dW9wKqiaWujzY1xKe7yZVFPoTA@mail.gmail.com>
-         <alpine.LSU.2.11.2001070002040.1496@eggly.anvils>
-         <CAOQ4uxiMQ3Oz4M0wKo5FA_uamkMpM1zg7ydD8FXv+sR9AH_eFA@mail.gmail.com>
-         <20200107210715.GQ23195@dread.disaster.area>
-         <4E9DF932-C46C-4331-B88D-6928D63B8267@fb.com>
-         <alpine.LSU.2.11.2001080259350.1884@eggly.anvils>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Wed, 8 Jan 2020 19:47:46 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35851 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbgAIArq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 19:47:46 -0500
+Received: by mail-pl1-f194.google.com with SMTP id a6so1815800plm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 16:47:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rSfEEcmQyCUqfvgCiTT6mkGa4l0lidjR/v02Uy320aQ=;
+        b=vlXw4X09XtxJmnvAJpjDx+iHGbAhzR8xoLQkJQBDx0HyHh04Cy/pvVg8AWPKiH1i14
+         JHUj3TzmajSF4cRTHkQYxyNL/bJU+Wmt+CkIcjZiAotEGEGxmT/03D46hSWJEcxHvnSw
+         auKTtM5a4oXh6YD+9rqg8h8jMFhhRuaDVBNNfaTnLxiG3XxV81N/+YbeJ6E68PnVlbmV
+         EeMn4TWWovHmHBASdO480YbZIuMh/BaswVryM/GELCxzf5O/2ieWsLn0ZemGdaWy7dHg
+         Ac1rxyw1VvR/+AV3gGkGBx+4XWGXQm3B7rHRCAtaiLGKIu9xyAMHJeMh72SlPrB5WnVM
+         zfhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=rSfEEcmQyCUqfvgCiTT6mkGa4l0lidjR/v02Uy320aQ=;
+        b=Cign3MneRqAjdgaQT9ZTTEybma/Krc445yXWvDb09mgc6NWBcZt3Lh3hsPcASh2/EX
+         AHbTHFR/dTLJm19YA1w+nzgh7rkRRvxWzZyVSXfsjnoA5Zvs3BFZgoDBO7XrrbNLHbFx
+         5bLl5cd17Q+CCeUEAgKcB4KGGEKRVCPiLvr2KExs7cUFdAY7xCC0MQyjaJLX+9ZjUjcx
+         MmXf5nJmh6q+5XGUwgqJvPdyIkhMrJcZcFOAq3h28ivZmwcSxjXJvpPcMCfgGU9kqcgd
+         1oTaKCvrHbhs2pvydtA1kPBf3WC4J7zQWGf/EHkOqv2RJkIF5uuneLFqu3v+Vl4ssaPk
+         jK7w==
+X-Gm-Message-State: APjAAAVhO8HFFJ92aqiSwL37NVCHu9fnXu7KQ8lSTRLFeQCgf6hKnKbz
+        0ghunpi2PycX/DDlY/PANxqjmw==
+X-Google-Smtp-Source: APXvYqw7WGHnX/QpyTD8r1wwlNVnsgyvHRNaXQv42JH5+fdbom1in8GXTZi8DnCxNlaJBf7Bd6EUMQ==
+X-Received: by 2002:a17:902:9a08:: with SMTP id v8mr8665290plp.134.1578530865394;
+        Wed, 08 Jan 2020 16:47:45 -0800 (PST)
+Received: from linaro.org ([121.95.100.191])
+        by smtp.googlemail.com with ESMTPSA id b8sm5099312pfr.64.2020.01.08.16.47.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 16:47:44 -0800 (PST)
+Date:   Thu, 9 Jan 2020 09:46:55 +0900
+From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     pasha.tatashin@soleen.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com,
+        bhsharma@redhat.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, james.morse@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 2/2] arm64: kexec_file: add crash dump support
+Message-ID: <20200109004654.GA28530@linaro.org>
+Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Will Deacon <will@kernel.org>, pasha.tatashin@soleen.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org,
+        frowand.list@gmail.com, bhsharma@redhat.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        james.morse@arm.com, linux-arm-kernel@lists.infradead.org
+References: <20191216021247.24950-1-takahiro.akashi@linaro.org>
+ <20191216021247.24950-3-takahiro.akashi@linaro.org>
+ <20200108174839.GB21242@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108174839.GB21242@willie-the-truck>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-08 at 03:24 -0800, Hugh Dickins wrote:
-> On Tue, 7 Jan 2020, Chris Mason wrote:
-> > On 7 Jan 2020, at 16:07, Dave Chinner wrote:
+On Wed, Jan 08, 2020 at 05:48:39PM +0000, Will Deacon wrote:
+> On Mon, Dec 16, 2019 at 11:12:47AM +0900, AKASHI Takahiro wrote:
+> > Enabling crash dump (kdump) includes
+> > * prepare contents of ELF header of a core dump file, /proc/vmcore,
+> >   using crash_prepare_elf64_headers(), and
+> > * add two device tree properties, "linux,usable-memory-range" and
+> >   "linux,elfcorehdr", which represent respectively a memory range
+> >   to be used by crash dump kernel and the header's location
 > > 
-> > > IOWs, there are *lots* of 64bit inode numbers out there on XFS
-> > > filesystems....
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Reviewed-by: James Morse <james.morse@arm.com>
+> > Tested-and-reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > ---
+> >  arch/arm64/include/asm/kexec.h         |   4 +
+> >  arch/arm64/kernel/kexec_image.c        |   4 -
+> >  arch/arm64/kernel/machine_kexec_file.c | 106 ++++++++++++++++++++++++-
+> >  3 files changed, 106 insertions(+), 8 deletions(-)
 > > 
-> > It's less likely in btrfs but +1 to all of Dave's comments.  I'm happy 
-> > to run a scan on machines in the fleet and see how many have 64 bit 
-> > inodes (either buttery or x-y), but it's going to be a lot.
+> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> > index 12a561a54128..d24b527e8c00 100644
+> > --- a/arch/arm64/include/asm/kexec.h
+> > +++ b/arch/arm64/include/asm/kexec.h
+> > @@ -96,6 +96,10 @@ static inline void crash_post_resume(void) {}
+> >  struct kimage_arch {
+> >  	void *dtb;
+> >  	unsigned long dtb_mem;
+> > +	/* Core ELF header buffer */
+> > +	void *elf_headers;
+> > +	unsigned long elf_headers_mem;
+> > +	unsigned long elf_headers_sz;
+> >  };
 > 
-> Dave, Amir, Chris, many thanks for the info you've filled in -
-> and absolutely no need to run any scan on your fleet for this,
-> I think we can be confident that even if fb had some 15-year-old tool
-> in use on its fleet of 2GB-file filesystems, it would not be the one
-> to insist on a kernel revert of 64-bit tmpfs inos.
+> This conflicts with the cleanup work from Pavel. Please can you check my
+> resolution? [1]
+
+I don't know why we need to change a type of dtb_mem,
+otherwise it looks good.
+
+(I also assume that you notice that kimage_arch is of no use for kexec.)
+
+Thank you for the merge,
+-Takahiro Akashi
+
+
+> Will
 > 
-> The picture looks clear now: while ChrisD does need to hold on to his
-> config option and inode32/inode64 mount option patch, it is much better
-> left out of the kernel until (very unlikely) proved necessary.
-
-This approach seems like the best course to me.
-
-FWIW, at the time we capped this at 32-bits (2007), 64-bit machines were
-really just becoming widely available, and it was quite common to run
-32-bit, non-LFS apps on a 64-bit kernel. Users were hitting spurious
-EOVERFLOW errors all over the place so this seemed like the best way to
-address it.
-
-The world has changed a lot since then though, and one would hope that
-almost everything these days is compiled with FILE_OFFSET_BITS=64.
-
-Fingers crossed!
--- 
-Jeff Layton <jlayton@kernel.org>
-
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/diff/?h=for-kernelci&id=aef73191765a88cadc0a627cdc070e5a0086b015
+>
