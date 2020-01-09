@@ -2,172 +2,305 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E90C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F16DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D40A820721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42BA220838
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="mH7lfthJ";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="zCGoKrhw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xy0GMMRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgAIEQn (ORCPT
+        id S1727840AbgAIEbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 23:16:43 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:62910 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727417AbgAIEQn (ORCPT
+        Wed, 8 Jan 2020 23:31:13 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35125 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbgAIEbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 23:16:43 -0500
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0094F2ie021000;
-        Wed, 8 Jan 2020 20:16:28 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=gqd8kDyiNWjov9R7Xvryp/rFu0JGZ+ZcDYmXO05ugQY=;
- b=mH7lfthJzGNIASoFzhO0BoGu4iXHwLTB6rAsYpPMnb1dTAYHiP/1dxpF0QxhAmQtax+L
- jkI/jq6YHU+/IRqczPTYyZ3jm/gRfeKzRRueH/RLTMoArI5T2GZQyBmMmMlQ9zDweF4B
- EPEmgjRYNs7POATBuxEpwDIVE6OEolKXC1IhlAs+3lKQ8jLYS8LAuJD2GWJwl096VfNm
- oN1E5jqTdC1DeoK5dK7ZUummAPAzdlvv5LKVMqcLSTl1wXI6HamMcNQx9cZDiy7dDn2K
- L66QoyL4nZ/VhVYQmVd7/W9IAugfscOwx2G/iqjaGpWgLp6w8mj37tfcWeT/APN13MnK Rw== 
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2172.outbound.protection.outlook.com [104.47.57.172])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2xaq620e9n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jan 2020 20:16:28 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XYO1SZrLME6QPcphSSlhUzlXQsfpOraiz0N59rA1kHPcm3AtZH8iq24AS/Uoab6OHBnm7e3loXndvQsJcq32Ux+MR32dXlAkSnKnoXlpzmjsczvSLZVRqetNBCcDxebtIC34n0hsp3LyQvhP1KsKtNptO8kn2SQNN4u4f18XMenIn8ICbiqhaZiKrWQj2ApaW6ugSf7uGDSBs4kBatPwVq7T7W3sw54tXNLQ9qj+ZSYz44814knCqU6X12JunEgI32wzZiVebhMtcEOLoYzajv3VYOAZoDD4WTANvOPq4sQPw4hu1bvKXMpC0vI4rROULADrZcmSXeHpn3WSdVh4WA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gqd8kDyiNWjov9R7Xvryp/rFu0JGZ+ZcDYmXO05ugQY=;
- b=JIJGsOBRuu1ew050VB2OiaMoj4PYKROgeCVqy6twQ4szsBFaGUyUKa5m4REAYU0YKSZ9WJn9/hS7Ttc+mKgLiT88v195i9iIyB3McresRRkzqXtA5BGRNOAH9Qr7LUMeA1r06IXI7P0PZ7pUDtd1Vo5H0Gp60Aj/x3IG/CjcRwBb7HEIbjIJwWVARxsjn/AH1IJEd8KJtycx7LUBYoTTWVWzfQMAlrlqfP0pXmrurX8U5Rcw1AfbHFVOH8VGcozut7xYprwfAiKwULNLxsQoleoBT5/vbGc3JpeOJUq8aIucWVDoETW7sjPywk6WnBFIjTXjL9Fzr7TCObfhJsik4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gqd8kDyiNWjov9R7Xvryp/rFu0JGZ+ZcDYmXO05ugQY=;
- b=zCGoKrhwWr6/NNQ1W/hk1w3ewesAtw4dLpfRrqIy+6j+z1g9kty1CLZE+Zp/gyAl9a94z9FJNVhO0E/K7A5DIbOZlJcSZQPWhiLAOBIbp1ib01XY5KvFv/bEnJ06mR/Jh5xS9r1RzRbjRf10doqFeElpfcImVmb8EAFbrJQRkeE=
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com (52.135.204.159) by
- BYAPR07MB5096.namprd07.prod.outlook.com (20.177.125.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.15; Thu, 9 Jan 2020 04:16:26 +0000
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::d01d:9089:7310:db3a]) by BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::d01d:9089:7310:db3a%6]) with mapi id 15.20.2623.008; Thu, 9 Jan 2020
- 04:16:26 +0000
-From:   Pawel Laszczak <pawell@cadence.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "jbergsagel@ti.com" <jbergsagel@ti.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        Sanket Parmar <sparmar@cadence.com>,
-        Peter Chan <peter.chan@nxp.com>
-Subject: RE: [PATCH] usb: cdns3: Fix: ARM core hang after connect/disconnect
- operation.
-Thread-Topic: [PATCH] usb: cdns3: Fix: ARM core hang after connect/disconnect
- operation.
-Thread-Index: AQHVxhgd/L7cK1vWyke0JuU/54YkXqfg0gYAgADnxWA=
-Date:   Thu, 9 Jan 2020 04:16:26 +0000
-Message-ID: <BYAPR07MB4709DB56EF568E410881E7EFDD390@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <20200108113719.21551-1-pawell@cadence.com>
- <20200108142250.GA2383861@kroah.com>
-In-Reply-To: <20200108142250.GA2383861@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctY2IzY2ZkZGQtMzI5Ni0xMWVhLTg3NTItMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XGNiM2NmZGRmLTMyOTYtMTFlYS04NzUyLTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iMTQ1MyIgdD0iMTMyMjMwMTY5ODM0Njc2MjA5IiBoPSJjTnA2T3ZJajdraWVwWnpjaWV4ZldXaTg4QjA9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-x-originating-ip: [185.217.253.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2c843d81-9b7c-47d6-4fc3-08d794bab1b7
-x-ms-traffictypediagnostic: BYAPR07MB5096:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR07MB509660050736DA61CA5A71A1DD390@BYAPR07MB5096.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02778BF158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(366004)(396003)(199004)(36092001)(189003)(71200400001)(81156014)(8676002)(478600001)(7696005)(8936002)(52536014)(2906002)(9686003)(316002)(4326008)(33656002)(55016002)(66446008)(66946007)(6506007)(76116006)(186003)(5660300002)(6916009)(26005)(54906003)(81166006)(86362001)(66476007)(64756008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB5096;H:BYAPR07MB4709.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: h3eRbb7wlZBiwt5IvzF7ElUhk6dfOJLhzX2q/Bmg9FnkqYBbZir8AlDTBHRx27XMIKdRM3a/kyjq+MGkDW3CWdzF2nbezyDMfAag1atNFykuU9bZV9DKnsmHxu62cSfSrW+QJhdkUfUEOrROGGZ43ZJE4V1E52uNIIFXV9BmuHa+1drS2SzTy67NDUsOHI5sNQIvsRo1XJ+UMijDGy81C2ONCZ4hiXBu0GpyYvB8gXXiK4xcggSoXlkEC+XtxXabg2Futqo3bO1t9bidmxyDoqDgSi3v8TasgsbkxWiVyDwKN7tlDqY9q3ucZnABOj47Kv1qt46v8qGfpLGe3mFNl8rFSfD/LFLuA4EJDpdzI6iazlp85fqPk7puoONjpOy+c0mMxDc5x1iK0XzmJXnn/1pGFyEvJfiFqkyU/VegSKmTStpv2ktpskXGJABDblOq46Zcxw0er9fMRCE4bGZLy51JjtiNT9GYGksnxWHxEiqTAUvHfd42OVXT9E2p5b3h
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 Jan 2020 23:31:13 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i23so2729322pfo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 20:31:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RbHjM0wg62cWEianIkLtCJW1X5EzJpKvrs71soaeoPo=;
+        b=xy0GMMRi3LpivqEhjmd3Niy/3CDXdyzZc4meM+jjBObf/6hOF1cWTN7l/ZdK4B41sQ
+         kxXIhOG0+DqTmlX5BoJvnO70csEiuOfsQgIWnoTF9z+xjKfquLw0G2HPYQUhRgWkZrbm
+         RmERBCidfmC6Sad+LyNZ2MHl5KvGin5CuBlvbsv5fN8uj8NotL5S5Rhj1mPf9BqM56bL
+         QjOfXz9hod/P/9shnZCXDktla8gpMQOqscKKwAJXk15FUSXRNrEtvJ867yY0rnV+0zV/
+         3mhA29y1DdjTlw9UrctKvz3GD28jt1IwmfROrCx9vctZGTiBqMnCvOE0HWwhXxbVGstY
+         PAyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RbHjM0wg62cWEianIkLtCJW1X5EzJpKvrs71soaeoPo=;
+        b=U/IdIx0HV1f3N59wU2E0Kqhc3ehnoM6diejAKzRloRxj+YX7eExlLTypEocUDSZubp
+         gjoPYz6058ox5N2pN/CWzxlUEZ3mCEU9c4+kkyPz3z9j6C51s8ghRgvKgrd5So1GgXeO
+         6TRVQZz0d0ke6+WnSDewYf0FpbJugOWXaLSXfjUoR+kC2A8KZGHHyTUPMFRPph1KdDBi
+         0CpBqTnjT0OYu5jpCxMCe4UjHaTrZRUnDXnJAKRH+LpzpceKukK9OXBqvPJaHkiitm/P
+         +Y5KQv+6OCqOXprvHqBaHxNRcgSrTqSy/xLYLTToIAaVbGZbO3r9GfikNDIqA9078JXf
+         dNIA==
+X-Gm-Message-State: APjAAAXCPjBXt8eCYNxtdqe6VL4skg72Mlr9LdAn27YULRk87ZJJ8IGV
+        8oWvPO55FmFYatUSRn5//TDINg==
+X-Google-Smtp-Source: APXvYqyPPlKBAwfC//N4cbCcGppvgRthgjc5wns7FMRVy/ezHB4QROyqdIP/FxTlFcM7wvRUTUXQjQ==
+X-Received: by 2002:a63:2ac2:: with SMTP id q185mr9172175pgq.417.1578544271706;
+        Wed, 08 Jan 2020 20:31:11 -0800 (PST)
+Received: from localhost ([122.172.140.51])
+        by smtp.gmail.com with ESMTPSA id w11sm5647434pfi.77.2020.01.08.20.31.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 20:31:10 -0800 (PST)
+Date:   Thu, 9 Jan 2020 10:01:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
+Message-ID: <20200109043108.fzvk3hp7vodtw6zy@vireshk-i7>
+References: <20191207002424.201796-1-saravanak@google.com>
+ <20191207002424.201796-3-saravanak@google.com>
+ <20200108105348.p4y3s2mbuchiu4mf@vireshk-i7>
+ <CAGETcx8QEV+_+d2yt_+bE09mi4qyHZDHPJqPiDXv_HgJPgQJoQ@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c843d81-9b7c-47d6-4fc3-08d794bab1b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 04:16:26.1453
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sLS/ynXNB7W2abAimK0DVK78MdPPbftMvsCz7blsv9qw618yp+YSfrVi73cguelH39IBkGWsWvywVlpmqRF+RVb5yVA2Xu1N8+3mtMcF5v0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5096
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_07:2020-01-08,2020-01-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxlogscore=999
- impostorscore=0 suspectscore=0 clxscore=1011 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001090037
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx8QEV+_+d2yt_+bE09mi4qyHZDHPJqPiDXv_HgJPgQJoQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 08-01-20, 16:58, Saravana Kannan wrote:
+> On Wed, Jan 8, 2020 at 2:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 06-12-19, 16:24, Saravana Kannan wrote:
+> > > Not all devices quantify their performance points in terms of frequency.
+> > > Devices like interconnects quantify their performance points in terms of
+> > > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> > > add support for parsing bandwidth OPPs from DT.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/opp/core.c | 15 +++++++++--
+> > >  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
+> > >  drivers/opp/opp.h  |  5 ++++
+> > >  3 files changed, 62 insertions(+), 21 deletions(-)
+> > >
+> > > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > > index be7a7d332332..c79bbfac7289 100644
+> > > --- a/drivers/opp/core.c
+> > > +++ b/drivers/opp/core.c
+> > > @@ -1282,11 +1282,21 @@ static bool _opp_supported_by_regulators(struct dev_pm_opp *opp,
+> > >       return true;
+> > >  }
+> > >
+> > > +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
+> > > +{
+> > > +     if (opp1->rate != opp2->rate)
+> > > +             return opp1->rate < opp2->rate ? -1 : 1;
+> > > +     if (opp1->peak_bw != opp2->peak_bw)
+> > > +             return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
+> >
+> > Please also add level here.
+> 
+> I can, but I vaguely remember finding opp-levels could have
+> duplicates? Am I wrong? If so I can add the opp-level comparison too.
 
->
->
->On Wed, Jan 08, 2020 at 12:37:18PM +0100, Pawel Laszczak wrote:
->> The ARM core hang when access USB register after tens of thousands
->> connect/disconnect operation.
->>
->> The issue was observed on platform with android system and is not easy
->> to reproduce. During test controller works at HS device mode with host
->> connected.
->>
->> The test is based on continuous disabling/enabling USB device function
->> what cause continuous setting DEVDS/DEVEN bit in USB_CONF register.
->>
->> For testing was used composite device consisting from ADP and RNDIS
->> function.
->>
->> Presumably the problem was caused by DMA transfer made after setting
->> DEVDS bit. To resolve this issue fix stops all DMA transfer before
->> setting DEVDS bit.
->>
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
->> Signed-off-by: Peter Chan <peter.chan@nxp.com>
->> Reported-by: Peter Chan <peter.chan@nxp.com>
->> Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
->> ---
->>  drivers/usb/cdns3/gadget.c | 84 ++++++++++++++++++++++++++------------
->>  drivers/usb/cdns3/gadget.h |  1 +
->>  2 files changed, 58 insertions(+), 27 deletions(-)
->
->Any reason to forget linux-usb@vger.kernel.org for usb patches?
+No they can't have duplicates.
 
-No reason. I missed it.=20
-+ linux-usb@vger.kernel.org
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
+> > >                            struct opp_table *opp_table,
+> > >                            struct list_head **head)
+> > >  {
+> > >       struct dev_pm_opp *opp;
+> > > +     int opp_cmp;
+> > >
+> > >       /*
+> > >        * Insert new OPP in order of increasing frequency and discard if
+> > > @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
+> > >        * loop.
+> > >        */
+> > >       list_for_each_entry(opp, &opp_table->opp_list, node) {
+> > > -             if (new_opp->rate > opp->rate) {
+> > > +             opp_cmp = opp_compare_key(new_opp, opp);
+> > > +             if (opp_cmp > 0) {
+> > >                       *head = &opp->node;
+> > >                       continue;
+> > >               }
+> > >
+> > > -             if (new_opp->rate < opp->rate)
+> > > +             if (opp_cmp < 0)
+> > >                       return 0;
+> > >
+> > >               /* Duplicate OPPs */
+> > > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > > index 1cbb58240b80..b565da5a2b1f 100644
+> > > --- a/drivers/opp/of.c
+> > > +++ b/drivers/opp/of.c
+> > > @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> > >
+> > > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+> > > +                      bool *rate_not_available)
+> > > +{
+> > > +     int ret;
+> > > +     u64 rate;
+> > > +     u32 bw;
+> > > +
+> > > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > > +     if (!ret) {
+> > > +             /*
+> > > +              * Rate is defined as an unsigned long in clk API, and so
+> > > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > > +              * bit guaranteed in clk API.
+> > > +              */
+> > > +             new_opp->rate = (unsigned long)rate;
+> > > +             goto out;
+> > > +     }
+> > > +
+> > > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> > > +     if (!ret) {
+> > > +             new_opp->peak_bw = bw;
+> > > +
+> > > +             if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
+> > > +                     new_opp->avg_bw = bw;
+> >
+> > Maybe
+> >                 of_property_read_u32(np, "opp-avg-kBps", &new_opp->avg_bw);
+> >
+> > and same for opp-peak-kbps as well.
+> 
+> But those are not u32. Is it always safe to directly read into it
+> across all endian-ness and unsigned int sizes? I get tripped up by
+> that occasionally.
 
-Thanks,
-Pawell
+It may not be safe.
 
->
->thanks,
->
->greg k-h
+> > > +     }
+> > > +
+> > > +out:
+> > > +     *rate_not_available = !!ret;
+> > > +     /*
+> > > +      * If ret is 0 at this point, we have already found a key. If we
+> > > +      * haven't found a key yet, then ret already has an error value. In
+> > > +      * either case, we don't need to update ret.
+> > > +      */
+> > > +     of_property_read_u32(np, "opp-level", &new_opp->level);
+> >
+> > Yes, it wasn't done earlier but we should do it now. Check level as
+> > well and treat it as any other key.
+> >
+> > I think add a preparatory patch first which does all the cleanup
+> > before bandwidth thing is added.
+> 
+> Ah come on man! You are making this too painful. It's okay to add a
+> few more error checks as part of implementing a new feature. Please
+> don't make me add more patches before this.
+
+It will only make your life easier and not painful in my opinion as
+the reviews are getting mixed/confused between the new things and the
+old fields right now. With a separate patch introducing just the
+bandwidth part, it will get reviewed in maximum 1-2 versions, else you
+will keep updating the unrelated patch and I will keep reviewing it as
+it is all a single patch.
+
+It is always suggested to break patches into the smallest possible
+meaningful separate things you want to achieve. You are introducing
+something here and adding cleanup to that.
+
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > >  /**
+> > >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+> > >   * @opp_table:       OPP table
+> > > @@ -558,26 +596,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> > >       if (!new_opp)
+> > >               return ERR_PTR(-ENOMEM);
+> > >
+> > > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > > -     if (ret < 0) {
+> > > -             /* "opp-hz" is optional for devices like power domains. */
+> > > -             if (!opp_table->is_genpd) {
+> > > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > > -                     goto free_opp;
+> > > -             }
+> > > -
+> > > -             rate_not_available = true;
+> > > -     } else {
+> > > -             /*
+> > > -              * Rate is defined as an unsigned long in clk API, and so
+> > > -              * casting explicitly to its type. Must be fixed once rate is 64
+> > > -              * bit guaranteed in clk API.
+> > > -              */
+> > > -             new_opp->rate = (unsigned long)rate;
+> > > +     ret = _read_opp_key(new_opp, np, &rate_not_available);
+> > > +     if (ret) {
+> > > +             dev_err(dev, "%s: opp key field not found\n", __func__);
+> > > +             goto free_opp;
+> > >       }
+> > >
+> > > -     of_property_read_u32(np, "opp-level", &new_opp->level);
+> > > -
+> > >       /* Check if the OPP supports hardware's hierarchy of versions or not */
+> > >       if (!_opp_is_supported(dev, opp_table, np)) {
+> > >               dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
+> > > @@ -616,7 +640,8 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> > >       if (of_property_read_bool(np, "opp-suspend")) {
+> > >               if (opp_table->suspend_opp) {
+> > >                       /* Pick the OPP with higher rate as suspend OPP */
+> > > -                     if (new_opp->rate > opp_table->suspend_opp->rate) {
+> > > +                     if (opp_compare_key(new_opp,
+> > > +                                         opp_table->suspend_opp) > 1) {
+> >
+> > Maybe leave this place as is as we never want to compare anything else
+> > but rate.
+> 
+> We do want to support suspend bandwidth.
+
+Yeah, I understood that from a later patch.
+
+> So I think I should have this
+> fix here so it works in general. Also, why not suspend opp-level?
+
+Because we don't want/need to set a specific value to the
+voltage-corners during suspend directly from the PM domain driver.
+This should happen automatically via a call from the underlying
+cpufreq or device driver.
+
+And that's what I expected out of the interconnect thing. For example,
+say during suspend you put the interconnect or PM domains to a low
+bandwidth/level value, while the underlying device driver (which uses
+the interconnect or domain) never requested for it. Who will be
+responsible to restore the value during resume as we would be out of
+sync here.
+
+-- 
+viresh
