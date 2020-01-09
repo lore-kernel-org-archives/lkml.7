@@ -2,88 +2,104 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D13C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3B2C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC6020721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="mimi3IN9"
+	by mail.kernel.org (Postfix) with ESMTP id 720442072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgAIVCe (ORCPT
+        id S1728679AbgAIVDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:02:34 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:34362 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgAIVCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:02:33 -0500
-Received: from zn.tnic (p200300EC2F0C57004DD84C0E473AA3AE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5700:4dd8:4c0e:473a:a3ae])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 659911EC0CAD;
-        Thu,  9 Jan 2020 22:02:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578603752;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=L9ctHWAEoAxB6qWkfJNvezN/3ut+326++8UFDKa+VH0=;
-        b=mimi3IN90JDCdnLLXjFsXBwc2bpx9kyR9bbApbdRZ9MjN4zWTKOP7tRm0fjmvU9NCPLj6P
-        dwjkaG0KeVdmrygkWwgzFjFSuv+2Bmv/r7ISR35sTWfKCYVl4N8Ts0ZxxoZ5x1FLVvK16I
-        +8Wh4GBKmmfe8XFixCRqVJo42MUWihQ=
-Date:   Thu, 9 Jan 2020 22:02:25 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com, x86@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/nmi: remove the irqwork from long duration nmi
- handler
-Message-ID: <20200109210225.GK5603@zn.tnic>
-References: <20200101072017.82990-1-changbin.du@gmail.com>
- <877e20bb8o.fsf@nanos.tec.linutronix.de>
+        Thu, 9 Jan 2020 16:03:11 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33572 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgAIVDL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 16:03:11 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E97671C25CE; Thu,  9 Jan 2020 22:03:07 +0100 (CET)
+Date:   Thu, 9 Jan 2020 22:03:07 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Subject: Re: OOM killer not nearly agressive enough?
+Message-ID: <20200109210307.GA1553@duo.ucw.cz>
+References: <20200107204412.GA29562@amd>
+ <20200109115633.GR4951@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
 Content-Disposition: inline
-In-Reply-To: <877e20bb8o.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200109115633.GR4951@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:55:51PM +0100, Thomas Gleixner wrote:
-> Changbin Du <changbin.du@gmail.com> writes:
-> 
-> > First, printk is NMI context safe now since the safe printk has been
-> > implemented. The safe printk already has an irqwork to make NMI context
-> > safe.
-> >
-> > Second, the NMI irqwork actually does not work if a NMI handler causes
-> > panic by watchdog timeout. This NMI irqwork have no chance to run in such
-> > case, while the safe printk will flush its per-cpu buffer before panic.
-> >
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> 
-> Looks about right.
-> 
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
-I'm wondering why is this thing being moved:
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--             if (delta < nmi_longest_ns || delta < a->max_duration)
--                     continue;
+On Thu 2020-01-09 12:56:33, Michal Hocko wrote:
+> On Tue 07-01-20 21:44:12, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > I updated my userspace to x86-64, and now chromium likes to eat all
+> > the memory and bring the system to standstill.
+> >=20
+> > Unfortunately, OOM killer does not react:
+> >=20
+> > I'm now running "ps aux", and it prints one line every 20 seconds or
+> > more. Do we agree that is "unusable" system? I attempted to do kill
+> > from other session.
+>=20
+> Does sysrq+f help?
 
-into nmi_check_duration() and not remaining where it is?
+May try that next time.
 
--- 
-Regards/Gruss,
-    Boris.
+> > Do we agree that OOM killer should have reacted way sooner?
+>=20
+> This is impossible to answer without knowing what was going on at the
+> time. Was the system threshing over page cache/swap? In other words, is
+> the system completely out of memory or refaulting the working set all
+> the time because it doesn't fit into memory?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Swap was full, so "completely out of memory", I guess. Chromium does
+that fairly often :-(.
+
+> > Is there something I can tweak to make it behave more reasonably?
+>=20
+> PSI based early OOM killing might help. See https://github.com/facebookin=
+cubator/oomd
+
+Um. Before doing that... is there some knob somewhere saying "hey
+oomkiller, one hour to recover machine is a bit too much, can you
+please react sooner"? PSI is completely different system, but I guess
+I should attempt to tweak the existing one first...
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--zYM0uCDKw75PZbzx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXheVCwAKCRAw5/Bqldv6
+8jrTAJ9SOcPY4NOLGrJdYUYmDZU8C4lEWgCdGX9JQcRf8oSwH2dqDYw5xIx8L+o=
+=ZCiY
+-----END PGP SIGNATURE-----
+
+--zYM0uCDKw75PZbzx--
