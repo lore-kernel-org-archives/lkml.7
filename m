@@ -2,245 +2,244 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201ABC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501F1C33CA3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26D620882
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B22220705
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:18:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VORrxRgU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgAIDSB (ORCPT
+        id S1727924AbgAIDSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 22:18:01 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:56410 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgAIDSA (ORCPT
+        Wed, 8 Jan 2020 22:18:05 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39373 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgAIDSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 22:18:00 -0500
-Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 9 Jan 2020
- 11:18:24 +0800
-From:   Jian Hu <jian.hu@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v4] arm64: dts: meson-a1: add I2C nodes
-Date:   Thu, 9 Jan 2020 11:17:56 +0800
-Message-ID: <20200109031756.176547-1-jian.hu@amlogic.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 8 Jan 2020 22:18:03 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a67so4676979oib.6;
+        Wed, 08 Jan 2020 19:18:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kMxWLP5AvH5IYgX1VCW6zdr/ftmh1hngWdvNnRgFFEo=;
+        b=VORrxRgUgexswE69vnqeV3cEteMR/wL4/MP/ugnNqwzaG8qb0/EYuGXD9dfy0ok58Q
+         szjzntt3xTayYNs2JivFfdo1bGiD74e1tJLw9EGPHRkbsSZR0KdeuuH/vFN/I99iQhoE
+         /AHdT3JZxfO1ktbSFwNfB9V6h1qxLc+m3tnho1LY6k+uCwcez4GWD/ZSHpsf59YPlkJa
+         rkI/I/WW+Ynurv98B8yetNiECHrpsuRp3kBTccow53UrxzD8M6bGnk9zsxGXMup8T7Ei
+         ZQm3qizDkrUC2Seuc4o51Iw0ObBc386cTUfRqgNg4xNbw7Ywr4r/Ca378xm/5D2bQRBR
+         SNeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kMxWLP5AvH5IYgX1VCW6zdr/ftmh1hngWdvNnRgFFEo=;
+        b=EW2nWBFcgEklz08gt9XiQOi1eoL77zNlVjp/mWqXh8ZKC6h0Yhge49WvIiL+WcZO5n
+         al1vJguCBpDg5APX86tZSJaeaZuyYaRXSfVvO6MQtBWLCM9PlNcwpNC9ttecVH8jmzc5
+         4Wuso+eo0z8p40dUc2vRJsPIty7fh8qak5NQPPwKnbZNx7meQl/k/giDCDMzlZG+YGmU
+         NIiWlizsz4lb0MT4p5v9rUw1mB4ktVug6KVxOt+bOAy33kU2Ba8eqPEpuR6+VCYTBmVj
+         SktIPS9AJSYZekhpG2VzjpHuqHl/vSiS6MTxAMDTV85q4OoCRFYM7gvzGws8sX//wvA+
+         hubg==
+X-Gm-Message-State: APjAAAXTOLx5x9z+T4GDG5hTgnU8pfCfFRz7NGGOey6xZOXBa1uC/GxB
+        O37+YxjSzz9P4HowiNlfC7OtiP7vhucMZWdudSCqSTua
+X-Google-Smtp-Source: APXvYqwdVp2OHdNEgJxcl5S2pNXZoxvcSAVzYDvDyacbeid2izqY0SHOzen+JhS83JzgsuXoF9HZSqLjnIC+rselkPY=
+X-Received: by 2002:aca:c3c4:: with SMTP id t187mr1533945oif.89.1578539883135;
+ Wed, 08 Jan 2020 19:18:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.8.25]
+References: <CAHhAz+ijBTp55gZYAejWthnvdmR_qyQJpVV4r1gyQ-Kud6t9qg@mail.gmail.com>
+ <20200108201511.GA195980@google.com>
+In-Reply-To: <20200108201511.GA195980@google.com>
+From:   Muni Sekhar <munisekharrms@gmail.com>
+Date:   Thu, 9 Jan 2020 08:47:51 +0530
+Message-ID: <CAHhAz+iy9b8Cyc6O=tjzjjixUQqKpTchrQWc+Y4JicAxB_HY5A@mail.gmail.com>
+Subject: Re: pcie: xilinx: kernel hang - ISR readl()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are four I2C controllers in A1 series,
-Share the same comptible with AXG. Compared to AXG,
-Drive strength feature is newly added in A1.
+On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
+> > Hi,
+> >
+> > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+> > parallel I/O and interfaces them to the Host CPU via PCI Express bus.
+> > I see that my system freezes without capturing the crash dump for
+> > certain tests. I debugged this issue and it was tracked down to the
+> > below mentioned interrupt handler code.
+> >
+> >
+> > In ISR, first reads the Interrupt Status register using =E2=80=98readl(=
+)=E2=80=99 as
+> > given below.
+> >     status =3D readl(ctrl->reg + INT_STATUS);
+> >
+> >
+> > And then clears the pending interrupts using =E2=80=98writel()=E2=80=99=
+ as given blow.
+> >         writel(status, ctrl->reg + INT_STATUS);
+> >
+> >
+> > I've noticed a kernel hang if INT_STATUS register read again after
+> > clearing the pending interrupts.
+> >
+> > Can someone clarify me why the kernel hangs without crash dump incase
+> > if I read the INT_STATUS register using readl() after clearing the
+> > pending bits?
+> >
+> > Can readl() block?
+>
+> readl() should not block in software.  Obviously at the hardware CPU
+> instruction level, the read instruction has to wait for the result of
+> the read.  Since that data is provided by the device, i.e., your FPGA,
+> it's possible there's a problem there.
 
-Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+Thank you very much for your reply.
+Where can I find the details about what is protocol for reading the
+=E2=80=98memory mapped IO=E2=80=99? Can you point me to any useful links..
+I tried locate the exact point of the kernel code where CPU waits for
+read instruction as given below.
+readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
+Do I need to check for the assembly instructions, here?
 
----
-This patch depends on A1 clock patchset at [0][3]
+>
+> Can you tell whether the FPGA has received the Memory Read for
+> INT_STATUS and sent the completion?
 
-Changes since v3 at [4]:
--put the i2c pins under periphs_pinctrl
--replace bias-pull-up as bias-disable
--add missing space in i2c pins node
+Is there a way to know this with the help of software debugging(either
+enabling dynamic debugging or adding new debug prints)? Can you please
+point some tools\hw needed to find this?
 
-Changes since v2 at [2]:
--remove the dependence the commit description
--remove i2c alias in dtsi
--reorder the i2c nodes
--reorder the i2c pins
 
-Changes since v1 at [1]:
--change reg length to 0x20
--assign i2c bus alias in dts file
--add new feature note compared to AXG in changelog
+>
+> On the architectures I'm familiar with, if a device doesn't respond,
+> something would eventually time out so the CPU doesn't wait forever.
 
-[0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
-[1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
-[2] https://lkml.kernel.org/r/20191211032802.83309-1-jian.hu@amlogic.com
-[3] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
-[4] https://lkml.kernel.org/r/20191220091611.36319-1-jian.hu@amlogic.com
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 140 ++++++++++++++++++++++
- 1 file changed, 140 insertions(+)
+What is timeout here? I mean how long CPU waits for completion? Since
+this code runs from interrupt context, does it causes the system to
+freeze if timeout is more?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index eab2ecd36aa8..009c8c496b58 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -115,6 +115,116 @@
- 				       #gpio-cells = <2>;
- 				       gpio-ranges = <&periphs_pinctrl 0 0 62>;
- 				};
-+
-+				i2c0_f9_pins: i2c0-f9 {
-+					mux {
-+						groups = "i2c0_sck_f9",
-+							"i2c0_sda_f10";
-+						function = "i2c0";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c0_f11_pins: i2c0-f11 {
-+					mux {
-+						groups = "i2c0_sck_f11",
-+							"i2c0_sda_f12";
-+						function = "i2c0";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c1_a_pins: i2c1-a {
-+					mux {
-+						groups = "i2c1_sck_a",
-+							"i2c1_sda_a";
-+						function = "i2c1";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c1_x_pins: i2c1-x {
-+					mux {
-+						groups = "i2c1_sck_x",
-+							"i2c1_sda_x";
-+						function = "i2c1";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c2_a4_pins: i2c2-a4 {
-+					mux {
-+						groups = "i2c2_sck_a4",
-+							"i2c2_sda_a5";
-+						function = "i2c2";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c2_a8_pins: i2c2-a8 {
-+					mux {
-+						groups = "i2c2_sck_a8",
-+							"i2c2_sda_a9";
-+						function = "i2c2";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c2_x0_pins: i2c2-x0 {
-+					mux {
-+						groups = "i2c2_sck_x0",
-+							"i2c2_sda_x1";
-+						function = "i2c2";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c2_x15_pins: i2c2-x15 {
-+					mux {
-+						groups = "i2c2_sck_x15",
-+							"i2c2_sda_x16";
-+						function = "i2c2";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c3_f_pins: i2c3-f {
-+					mux {
-+						groups = "i2c3_sck_f",
-+							"i2c3_sda_f";
-+						function = "i2c3";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+
-+				i2c3_x_pins: i2c3-x {
-+					mux {
-+						groups = "i2c3_sck_x",
-+							"i2c3_sda_x";
-+						function = "i2c3";
-+						bias-disable;
-+						drive-strength-microamp = <3000>;
-+					};
-+				};
-+			};
-+
-+			i2c0: i2c@1400 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x1400 0x0 0x20>;
-+				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_A>;
-+				status = "disabled";
- 			};
- 
- 			uart_AO: serial@1c00 {
-@@ -136,6 +246,36 @@
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-+
-+			i2c1: i2c@5c00 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x5c00 0x0 0x20>;
-+				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_B>;
-+				status = "disabled";
-+			};
-+
-+			i2c2: i2c@6800 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x6800 0x0 0x20>;
-+				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_C>;
-+				status = "disabled";
-+			};
-+
-+			i2c3: i2c@6c00 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x6c00 0x0 0x20>;
-+				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_D>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		gic: interrupt-controller@ff901000 {
--- 
-2.24.0
+lspci output:
+$ lspci
+00:00.0 Host bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
+Series SoC Transaction Register (rev 11)
+00:02.0 VGA compatible controller: Intel Corporation Atom Processor
+Z36xxx/Z37xxx Series Graphics & Display (rev 11)
+00:13.0 SATA controller: Intel Corporation Atom Processor E3800 Series
+SATA AHCI Controller (rev 11)
+00:14.0 USB controller: Intel Corporation Atom Processor
+Z36xxx/Z37xxx, Celeron N2000 Series USB xHCI (rev 11)
+00:1a.0 Encryption controller: Intel Corporation Atom Processor
+Z36xxx/Z37xxx Series Trusted Execution Engine (rev 11)
+00:1b.0 Audio device: Intel Corporation Atom Processor Z36xxx/Z37xxx
+Series High Definition Audio Controller (rev 11)
+00:1c.0 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+Express Root Port 1 (rev 11)
+00:1c.2 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+Express Root Port 3 (rev 11)
+00:1c.3 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+Express Root Port 4 (rev 11)
+00:1d.0 USB controller: Intel Corporation Atom Processor Z36xxx/Z37xxx
+Series USB EHCI (rev 11)
+00:1f.0 ISA bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
+Series Power Control Unit (rev 11)
+00:1f.3 SMBus: Intel Corporation Atom Processor E3800 Series SMBus
+Controller (rev 11)
+01:00.0 RAM memory: PLDA Device 5555
+03:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network
+Connection (rev 03)
 
+>
+> > Snippet of the ISR code is given blow:
+> >
+> > https://pastebin.com/WdnZJZF5
+> >
+> >
+> >
+> > static irqreturn_t pcie_isr(int irq, void *dev_id)
+> >
+> > {
+> >
+> >         struct test_device *ctrl =3D data;
+> >
+> >         u32 status;
+> >
+> > =E2=80=A6
+> >
+> >
+> >
+> >         status =3D readl(ctrl->reg + INT_STATUS);
+> >
+> >         /*
+> >
+> >          * Check to see if it was our interrupt
+> >
+> >          */
+> >
+> >         if (!(status & 0x000C))
+> >
+> >                 return IRQ_NONE;
+> >
+> >
+> >
+> >         /* Clear the interrupt */
+> >
+> >         writel(status, ctrl->reg + INT_STATUS);
+> >
+> >
+> >
+> >         if (status & 0x0004) {
+> >
+> >                 /*
+> >
+> >                  * Tx interrupt pending.
+> >
+> >                  */
+> >
+> >                  ....
+> >
+> >        }
+> >
+> >
+> >
+> >         if (status & 0x0008) {
+> >
+> >                 /* Rx interrupt Pending */
+> >
+> >                 /* The system freezes if I read again the INT_STATUS
+> > register as given below */
+> >
+> >                 status =3D readl(ctrl->reg + INT_STATUS);
+> >
+> >                 ....
+> >
+> >         }
+> >
+> > ..
+> >
+> >         return IRQ_HANDLED;
+> > }
+> >
+> >
+> >
+> > --
+> > Thanks,
+> > Sekhar
+
+
+
+--=20
+Thanks,
+Sekhar
