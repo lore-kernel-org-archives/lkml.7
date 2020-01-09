@@ -2,111 +2,113 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0538FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA317C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6532072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD8620721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0n1pscxi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DwCnLZNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732848AbgAIQDY (ORCPT
+        id S1732858AbgAIQD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:03:24 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:41198 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732830AbgAIQDW (ORCPT
+        Thu, 9 Jan 2020 11:03:28 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26357 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731296AbgAIQDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:03:22 -0500
-Received: by mail-qv1-f65.google.com with SMTP id x1so3151764qvr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:03:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=E1MKOCVOwb/QWH9ymW870ivoEvWZNM75twwy+HJECjA=;
-        b=0n1pscxioDUMOfwhYFeCu4B4/sz6Dp3ab6Y+ojs3hzylVsi0xi1rlmLZKw6UxOAKiZ
-         rWsqDdB7SGavyeR/Y6Njd6sugUJVQJxUhpZOyL2R8IWiS6Tafuovhh6LwZogSd2NQNmy
-         nX9hGS7Yfnv3c94pfudRiN/Vfx54sy9RnUFC7FJoCmsQRt5l8LuCzdH4EiO6qNh5w9No
-         PZH9sDoycwOjguBIysKCXoGgnULR9lNRtPeRedZX++XSd6JZ6X5Ru9zQGM5j755Bx6f/
-         bmITQKZDwMGUlMC79MVrbN+8ac4Fve95GL3ojBKdnoVfDt4UxSUCr3LRYaN/h7Eb8uEc
-         Z0GA==
+        Thu, 9 Jan 2020 11:03:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578585802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+U+nGKdjMx0B4G/fm6acyvjMMXdjwiUkB11cChVUwvw=;
+        b=DwCnLZNPUdqRx93VvGsc0D0Hg7SNXi0oOu+yNg6mgkt2NOrdEtJjrwtibqmX40jkDmXksZ
+        m0VdFiQbXRRcNXQxBGtrA6CefZ1F8MTMzwMGg4ITdHw6VlWwXzpx79o/qoG/Os7N3BK0rw
+        04u/vSBUmaeVCaRd90JoY53A6PCE85k=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-300-VgLJAzLcOvSJ0roM2BW5Kw-1; Thu, 09 Jan 2020 11:03:18 -0500
+X-MC-Unique: VgLJAzLcOvSJ0roM2BW5Kw-1
+Received: by mail-wm1-f71.google.com with SMTP id p2so1097970wma.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:03:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=E1MKOCVOwb/QWH9ymW870ivoEvWZNM75twwy+HJECjA=;
-        b=Z6D6SVsqkCCxlkr2RFTnkDWQ7DKG2epZP8biSv5sUOk74Rm+whV5F0WH9SwWqVwdCC
-         cnsXu81f/xBGlAN5ZKwSzzni8BZQVFIkay3NFGq/xLNh8s6q9W0nZeF7TWAX+4Y/IDTt
-         GxE21p2ThboagS47g9wsO7rddwWWu+nhgP6P5y2X8gJmxlXG8nJWhX8Gk91slLKzjLtA
-         mTFS/FNZ79TZ9gymh2jtk8N8YeFwv6FBkctfgVNcxnwbZAMhLgCkt+ctiw/i75nxtNUP
-         WPNNeljqv8zyK9NU4aQWr2B3FVPZ9/2krsB2aq9dcv8CNTC16LPbh5RiG777kegg67Lm
-         En7w==
-X-Gm-Message-State: APjAAAWZMJ1GgF2Hv1WylBzz+OEV+xJl6GPkY0s9ZuvnZ8vvUXP186Rw
-        EXDT7hniNY2ljjlXpxt+6205a2MR1h5Xs2htY7IuJg==
-X-Google-Smtp-Source: APXvYqzbUF6yNFe2ouyO8kGx5FzCuF51PjrvdvTJkwb9N22CfxtROz3Puvxf4LMB7y9X2LTr3+aHnzBVhArM11gviRA=
-X-Received: by 2002:ad4:55e8:: with SMTP id bu8mr9583043qvb.61.1578585801550;
- Thu, 09 Jan 2020 08:03:21 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+U+nGKdjMx0B4G/fm6acyvjMMXdjwiUkB11cChVUwvw=;
+        b=Lc6MsJE3EVTpxD25hAB1mhaNT6BjwYT9zRudQHx3tXVcS4eo/9Maj8L7T/pnAnBiaz
+         +DZJSPtai+5N2ehtWnmTcYj9UutCwZO7lOEG7eUgUiK3j7By1VtCuAhYcRINlLGJ9Gbo
+         3e3/5HD5wT5m4AZfKCftYnH5tfjxzn5bKvMzNvbNHzd1mfXHv6kGSmPZaI3NHu8fSzhv
+         8EQGPYWsLe/UxZLeQ21G1y6UqO/7WmC128/joahahaH1i/3ARGXaPa/zwVUj3ccxeBGG
+         e8lNocdM9CoQpCZta05B7d5bK3ko9+KJQZoURZqiZqBGeEH8047IuQd3EKqNtY7qsP3E
+         7BOA==
+X-Gm-Message-State: APjAAAX1Tb3qt8+jruKqTv4h8eHjG3eKlbV0ieLkUhxjWpar7MkRINz4
+        TinfwnK+uGKwr2r0qv2b55g298bicoXr7xZrlB8Shpc09Sg5L8hlHKsH9RAjUeyxwvL3MO73yu0
+        NH7aWRrrTdChH99ax8Tnq0vHi
+X-Received: by 2002:adf:ef0b:: with SMTP id e11mr11689567wro.128.1578585796273;
+        Thu, 09 Jan 2020 08:03:16 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxcaCDsW9bbAJtdhxvEAdTTp7rkMopW6pzF8N23b9naHbPtWUffbUGHw5DVwkRvjunTIXO26A==
+X-Received: by 2002:adf:ef0b:: with SMTP id e11mr11689532wro.128.1578585796043;
+        Thu, 09 Jan 2020 08:03:16 -0800 (PST)
+Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
+        by smtp.gmail.com with ESMTPSA id z21sm3258969wml.5.2020.01.09.08.03.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 08:03:15 -0800 (PST)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        Julien Thierry <jthierry@redhat.com>
+Subject: [RFC v5 04/57] objtool: check: Ignore empty alternative groups
+Date:   Thu,  9 Jan 2020 16:02:07 +0000
+Message-Id: <20200109160300.26150-5-jthierry@redhat.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
+References: <20200109160300.26150-1-jthierry@redhat.com>
 MIME-Version: 1.0
-References: <20200109125627.24654-1-brgl@bgdev.pl> <CAK7LNASBLXzgy2=fGfyrGbbWq2wL7Y9uaSh-MQQcd7tpvUBbMg@mail.gmail.com>
-In-Reply-To: <CAK7LNASBLXzgy2=fGfyrGbbWq2wL7Y9uaSh-MQQcd7tpvUBbMg@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 9 Jan 2020 17:03:09 +0100
-Message-ID: <CAMpxmJX50pBQTDdsy=w1+uNQym+vGnZJiCrWBDmn0ti3igCjvQ@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: fix an "implicit declaration of function" warning
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 9 sty 2020 o 16:59 Masahiro Yamada <masahiroy@kernel.org> napisa=C5=
-=82(a):
->
-> On Thu, Jan 9, 2020 at 9:56 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > strncasecmp() & strcasecmp() functions are declared in strings.h, not
-> > string.h. On most environments the former is implicitly included by
-> > the latter but on some setups, building menuconfig results in the
-> > following warning:
-> >
-> >   HOSTCC  scripts/kconfig/mconf.o
-> > scripts/kconfig/mconf.c: In function =E2=80=98search_conf=E2=80=99:
-> > scripts/kconfig/mconf.c:423:6: warning: implicit declaration of functio=
-n =E2=80=98strncasecmp=E2=80=99 [-Wimplicit-function-declaration]
-> >   if (strncasecmp(dialog_input_result, CONFIG_, strlen(CONFIG_)) =3D=3D=
- 0)
-> >       ^~~~~~~~~~~
-> > scripts/kconfig/mconf.c: In function =E2=80=98main=E2=80=99:
-> > scripts/kconfig/mconf.c:1021:8: warning: implicit declaration of functi=
-on =E2=80=98strcasecmp=E2=80=99 [-Wimplicit-function-declaration]
-> >    if (!strcasecmp(mode, "single_menu"))
-> >         ^~~~~~~~~~
-> >
-> > Fix it by explicitly including strings.h.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Thanks.
->
-> I see strncasecmp() in
-> scripts/kconfig/nconf.c too.
->
-> Could you fix both in a single patch?
->
-> You can try it with "make nconfig".
+Atlernative section can contain entries for alternatives with no
+instructions. Objtool will currently crash when handling such an entry.
 
-Sure. It seems gconf needs the same change too.
+Just skip that entry, but still give a warning to discourage useless
+entries.
 
-Bart
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+---
+ tools/objtool/check.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 5968e6f08891..27e5380e0e0b 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -866,6 +866,13 @@ static int add_special_section_alts(struct objtool_file *file)
+ 		}
+ 
+ 		if (special_alt->group) {
++			if (!special_alt->orig_len) {
++				WARN("empty alternative entry at %s+0x%lx",
++				     orig_insn->sec->name,
++				     orig_insn->offset);
++				continue;
++			}
++
+ 			ret = handle_group_alt(file, special_alt, orig_insn,
+ 					       &new_insn);
+ 			if (ret)
+-- 
+2.21.0
+
