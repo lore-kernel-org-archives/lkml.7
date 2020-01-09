@@ -2,106 +2,107 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5969C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE0CC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C619120673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E5D2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:21:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eNo2eDf4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgAIJVA (ORCPT
+        id S1729505AbgAIJVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:21:00 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7992 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729297AbgAIJVA (ORCPT
+        Thu, 9 Jan 2020 04:21:40 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:51546 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729464AbgAIJVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:21:00 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0099DuY4014472
-        for <linux-kernel@vger.kernel.org>; Thu, 9 Jan 2020 04:20:59 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xdv9t9ybn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 04:20:59 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
-        Thu, 9 Jan 2020 09:20:57 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 Jan 2020 09:20:55 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0099Ksag47906838
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jan 2020 09:20:54 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A69CA4059;
-        Thu,  9 Jan 2020 09:20:54 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC9BCA4051;
-        Thu,  9 Jan 2020 09:20:52 +0000 (GMT)
-Received: from bharata.in.ibm.com (unknown [9.124.35.110])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jan 2020 09:20:52 +0000 (GMT)
-From:   Bharata B Rao <bharata@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     paulus@au1.ibm.com, cclaudio@linux.ibm.com, linuxram@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, Bharata B Rao <bharata@linux.ibm.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH] powerpc: Ultravisor: Fix the dependencies for CONFIG_PPC_UV
-Date:   Thu,  9 Jan 2020 14:50:47 +0530
-X-Mailer: git-send-email 2.21.0
+        Thu, 9 Jan 2020 04:21:38 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578561698; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=HENFk0Bwme4xX25T8XYjrsnqX3dO66gOl56uwR9piXs=; b=eNo2eDf4dktpvNITu9qPGSt8V3rWzRNWJ88NcRNiJdQoEGaw6FTDtRGLJjYjIKGx10pn3HA3
+ BOog8TpTRIeI7ICUpHfrqBlvlamjZPGfJzBCQDJ0Q5PC9JWUvmU8KfGSYhEQJt6NfV8N92AL
+ XqrYGcgt7ezNQGgaLHsPbRy9tr0=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e16f09f.7f01651f0e30-smtp-out-n02;
+ Thu, 09 Jan 2020 09:21:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CC6B8C4479F; Thu,  9 Jan 2020 09:21:33 +0000 (UTC)
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A050C433A2;
+        Thu,  9 Jan 2020 09:21:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A050C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH V3 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, sivaprak@codeaurora.org
+References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org>
+ <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
+ <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <ca9baad3-8065-4647-c6c5-7449b96f4f71@codeaurora.org>
+Date:   Thu, 9 Jan 2020 14:51:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010909-0028-0000-0000-000003CF9448
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010909-0029-0000-0000-00002493A933
-Message-Id: <20200109092047.24043-1-bharata@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 suspectscore=0 malwarescore=0 impostorscore=0
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001090081
+In-Reply-To: <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let PPC_UV depend only on DEVICE_PRIVATE which in turn
-will satisfy all the other required dependencies
+Hi Linus,
 
-Fixes: 013a53f2d25a ("powerpc: Ultravisor: Add PPC_UV config option")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Bharata B Rao <bharata@linux.ibm.com>
----
- arch/powerpc/Kconfig | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+On 1/7/2020 5:25 PM, Linus Walleij wrote:
+> On Fri, Jan 3, 2020 at 12:49 PM Sricharan R <sricharan@codeaurora.org> wrote:
+> 
+>> Add device tree binding Documentation details for ipq6018
+>> pinctrl driver.
+>>
+>> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  [v3] Fixed the example dt node, inherited properties
+> 
+> Once you are done with patches 1 & 2, can I merge these
+> separately to the pinctrl tree?
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1ec34e16ed65..e2a412113359 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -455,11 +455,7 @@ config PPC_TRANSACTIONAL_MEM
- config PPC_UV
- 	bool "Ultravisor support"
- 	depends on KVM_BOOK3S_HV_POSSIBLE
--	select ZONE_DEVICE
--	select DEV_PAGEMAP_OPS
--	select DEVICE_PRIVATE
--	select MEMORY_HOTPLUG
--	select MEMORY_HOTREMOVE
-+	depends on DEVICE_PRIVATE
- 	default n
- 	help
- 	  This option paravirtualizes the kernel to run in POWER platforms that
+Yeah, that should be fine. Posted a V4 and waiting for approval
+from Rob on the pinctrl bindings for Patch 1.
+
+Regards,
+ Sricharan
+
 -- 
-2.21.0
-
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
