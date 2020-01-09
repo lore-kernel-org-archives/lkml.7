@@ -2,180 +2,75 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C45C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA2DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF892072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:21:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LsSiqN4T"
+	by mail.kernel.org (Postfix) with ESMTP id E6EF920673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbgAIPVQ (ORCPT
+        id S1732354AbgAIPXK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:21:16 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:32395 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbgAIPVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:21:16 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47tqZc4Px8z9tyTJ;
-        Thu,  9 Jan 2020 16:21:12 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=LsSiqN4T; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 4R6vrxeQFeFN; Thu,  9 Jan 2020 16:21:12 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47tqZc3MhMz9ttwm;
-        Thu,  9 Jan 2020 16:21:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1578583272; bh=rlFk2/nVn6L86YvAEvyKd40+sLRN0EVlSLwY9Encz7o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LsSiqN4T6C+PabHJPB72/f2z78T+X0zDsDYVByArCv0kne1cpvCd7CLjXiwhn7Zaq
-         JjLD8oOKEgmQlO7SNjrn3PcqPu0B5nafQulmD2CwNR73CGxgx85w4yPx3GR/FtnTFJ
-         YxM3dwNKUxJyMEQp0xwxOom7OOsDUK4O0pXQ++m0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F2F3E8B82B;
-        Thu,  9 Jan 2020 16:21:13 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id jRRx2cg7etrd; Thu,  9 Jan 2020 16:21:13 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2E6B88B828;
-        Thu,  9 Jan 2020 16:21:13 +0100 (CET)
-Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        vincenzo.frascino@arm.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr>
- <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de>
- <f4486e86-3c0c-0eec-1639-0e5956cdb8f1@c-s.fr>
- <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr>
- <alpine.DEB.2.21.1910261751140.10190@nanos.tec.linutronix.de>
- <439bce37-9c2c-2afe-9c9e-2f500472f9f8@c-s.fr>
- <alpine.DEB.2.21.1910262026340.10190@nanos.tec.linutronix.de>
- <207cef10-3da8-6a52-139c-0620b21b64af@c-s.fr>
- <87d0bslo7b.fsf@nanos.tec.linutronix.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <09d07ad3-47a2-db2f-2f14-e002b22d8d9e@c-s.fr>
-Date:   Thu, 9 Jan 2020 15:21:12 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 9 Jan 2020 10:23:10 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:59207 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732343AbgAIPXJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:23:09 -0500
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 2F1B1240004;
+        Thu,  9 Jan 2020 15:23:04 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 16:23:03 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Piotr Sroka <piotrs@cadence.com>, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org, davidgow@google.com,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v1 2/7] mtd: rawnand: add unspecified HAS_IOMEM
+ dependency
+Message-ID: <20200109162303.35f4f0a3@xps13>
+In-Reply-To: <20191211192742.95699-3-brendanhiggins@google.com>
+References: <20191211192742.95699-1-brendanhiggins@google.com>
+        <20191211192742.95699-3-brendanhiggins@google.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <87d0bslo7b.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Hi Brendan,
 
-On 01/09/2020 02:05 PM, Thomas Gleixner wrote:
-> Christophe!
+Brendan Higgins <brendanhiggins@google.com> wrote on Wed, 11 Dec 2019
+11:27:37 -0800:
+
+> Currently CONFIG_MTD_NAND_CADENCE implicitly depends on
+> CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+> the following build error:
 > 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> In do_hres(), I see:
->>
->> 		cycles = __arch_get_hw_counter(vd->clock_mode);
->> 		ns = vdso_ts->nsec;
->> 		last = vd->cycle_last;
->> 		if (unlikely((s64)cycles < 0))
->> 			return -1;
->>
->> __arch_get_hw_counter() returns a u64 values. On the PPC, this is read
->> from the timebase which is a 64 bits counter.
->>
->> Why returning -1 if (s64)cycles < 0 ? Does it means we have to mask out
->> the most significant bit when reading the HW counter ?
+> ld: drivers/mtd/nand/raw/cadence-nand-controller.o: in function `cadence_nand_dt_probe.cold.31':
+> drivers/mtd/nand/raw/cadence-nand-controller.c:2969: undefined reference to `devm_platform_ioremap_resource'
+> ld: drivers/mtd/nand/raw/cadence-nand-controller.c:2977: undefined reference to `devm_ioremap_resource'
 > 
-> Only if you expect the HW counter to reach a value which has bit 63
-> set. That'd require:
+> Fix the build error by adding the unspecified dependency.
 > 
-> uptime		counter frequency
-> 
-> ~292 years      1GHz
-> ~ 58 years      5GHz
-> 
-> assumed that the HW counter starts at 0 when the box is powered on.
-> 
-> The reason why this is implemented in this way is that
-> __arch_get_hw_counter() needs a way to express that the clocksource of
-> the moment is not suitable for VDSO so that the syscall fallback gets
-> invoked.
-> 
-> Sure we could have used a pointer for the value and a return value
-> indicating the validity, but given the required uptime the resulting
-> code overhead seemed to be not worth it. At least not for me as I'm not
-> planning to be around 58 years from now :)
-> 
+> Reported-by: Brendan Higgins <brendanhiggins@google.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
 
-I managed to get better code and better performance by splitting out the 
-validity check as follows. Would it be suitable for all arches ?
+Sorry for the delay.
 
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h 
-b/arch/powerpc/include/asm/vdso/gettimeofday.h
-index 689f51b0d8c9..11cdd6faa4ad 100644
---- a/arch/powerpc/include/asm/vdso/gettimeofday.h
-+++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
-@@ -114,15 +114,17 @@ int clock_getres32_fallback(clockid_t _clkid, 
-struct old_timespec32 *_ts)
-  	return ret;
-  }
-
--static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-+static __always_inline bool __arch_is_hw_counter_valid(s32 clock_mode)
-  {
-  	/*
-  	 * clock_mode == 0 implies that vDSO are enabled otherwise
-  	 * fallback on syscall.
-  	 */
--	if (clock_mode)
--		return ULLONG_MAX;
-+	return clock_mode ? false : true;
-+}
-
-+static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-+{
-  	return get_tb();
-  }
-
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index ee9da52a3e02..90bb5dfd0db0 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -46,11 +46,12 @@ static inline int do_hres(const struct vdso_data 
-*vd, clockid_t clk,
-
-  	do {
-  		seq = vdso_read_begin(vd);
-+		if (!__arch_is_hw_counter_valid(vd->clock_mode))
-+			return -1;
-+
-  		cycles = __arch_get_hw_counter(vd->clock_mode);
-  		ns = vdso_ts->nsec;
-  		last = vd->cycle_last;
--		if (unlikely((s64)cycles < 0))
--			return -1;
-
-  		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
-  		ns >>= vd->shift;
-
-
-Thanks
-Christophe
+Thanks,
+Miquèl
