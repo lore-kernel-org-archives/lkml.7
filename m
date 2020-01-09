@@ -2,105 +2,117 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF1BC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D58C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F1D2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbLb1Qsw"
+	by mail.kernel.org (Postfix) with ESMTP id 1D10F2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgAIJXF (ORCPT
+        id S1729472AbgAIJXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:23:05 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46213 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729269AbgAIJXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:23:05 -0500
-Received: by mail-qt1-f196.google.com with SMTP id g1so5255467qtr.13;
-        Thu, 09 Jan 2020 01:23:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZNEWexwbWV4/Y4n8YL366sXiCK+ppFaR6AvdseVOio4=;
-        b=LbLb1QswYWw5ps8cz68rMwsRqdWX2eZDJuRveaH0EXw0Y++v/3xqPnSzKnLCeF0Jv9
-         9jcUUz7I5HwrDnnY3vBiuayKkl2EiyYrvZFNsOMRzmcovEFsjRZnp7fAKB3qIidDpzqX
-         F9uDXc442EqaLD0jcLrZ4KMQw5yqkx9zeAq4BN1XIOrZJbHXKuL+78FzVy5f4JVNvQJn
-         aLcsfoKWpS5sm3aKyWPf1v513yUXttPstQhT3516+XjQxpjVUHQ4sUNWBfag1UYiXCdB
-         Q9EnftndOnEcP5fUN22cYubmnSInJ/C4tQKbAg9Mfr7I7QhmSteZ6/YKH9tQNPzVm+g4
-         52zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZNEWexwbWV4/Y4n8YL366sXiCK+ppFaR6AvdseVOio4=;
-        b=CRKYsAwwj9ZF9uwMZQcuxIrE3TzFjz95k11XvLn2Lkma69ZlK2OL176LNLZ71L2oKC
-         7VbRquM3+jASk33OCzFLuKfEUbRgtEHhBqwfQCC/iEV15kKJS/EuSkDEW19YRhQ00vBG
-         cytuEFuiD54quEC7HO+/n3XX9DZF98vWY07GMlMFZWxgWFNpOuEYYvizXPzGUfv1JvAu
-         soXmcsnObFMje53wXqMNWSsm/XMCmoDpgLamTGX03/PSwqLEJE9EBMhwdnfTVO7DcrUK
-         CT/5JnDXi6vaUq/G+VJZLbowY8NgerCQKPWy922/9HG6W4am8rDw8liOiM4ME/6tUVbs
-         z+sQ==
-X-Gm-Message-State: APjAAAVH5Zj3tHWfhU23l4TEMXW5Tm66J+d1c35+qam/NNCmhRCNz1Z+
-        baPgdQy9cRH7ZoKP2sEhqx5ODB1EdcH4g78LJ0c=
-X-Google-Smtp-Source: APXvYqyVUFN4B7S1O8D2KMogC343n3KBCaYguM8blYI5CZZ11sewM+Eiqy/YfhNHdZLFF5WB17DAeHOlDhoNn23rl9U=
-X-Received: by 2002:ac8:108:: with SMTP id e8mr7374989qtg.101.1578561783936;
- Thu, 09 Jan 2020 01:23:03 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1578235515.git.gupt21@gmail.com> <7d7c949890c4bdb12ecc9f8b15a5c0a69b7604a8.1578235515.git.gupt21@gmail.com>
- <20200106192912.GB754821@kroah.com>
-In-Reply-To: <20200106192912.GB754821@kroah.com>
-From:   rishi gupta <gupt21@gmail.com>
-Date:   Thu, 9 Jan 2020 14:52:52 +0530
-Message-ID: <CALUj-gt6FGJEMqfsbfZUCeY3Jmz5B-xwEY9+yPUPXP9YusuOaA@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] tty: documentation: abi: add ttyvs null modem
- driver sysfs nodes
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     robh+dt@kernel.org, jslaby@suse.com, linux-serial@vger.kernel.org,
+        Thu, 9 Jan 2020 04:23:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52402 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729269AbgAIJXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:23:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1938ABC8D;
+        Thu,  9 Jan 2020 09:22:51 +0000 (UTC)
+Subject: Re: [PATCH v1 2/4] x86/xen: add basic KASAN support for PV kernel
+To:     Sergey Dyasli <sergey.dyasli@citrix.com>, xen-devel@lists.xen.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        George Dunlap <george.dunlap@citrix.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200108152100.7630-1-sergey.dyasli@citrix.com>
+ <20200108152100.7630-3-sergey.dyasli@citrix.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <0c968669-2b21-b772-dba8-f674057bd6e7@suse.com>
+Date:   Thu, 9 Jan 2020 10:15:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <20200108152100.7630-3-sergey.dyasli@citrix.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oh sorry, I will update this.
+On 08.01.20 16:20, Sergey Dyasli wrote:
+> This enables to use Outline instrumentation for Xen PV kernels.
+> 
+> KASAN_INLINE and KASAN_VMALLOC options currently lead to boot crashes
+> and hence disabled.
+> 
+> Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
+> ---
+> RFC --> v1:
+> - New functions with declarations in xen/xen-ops.h
+> - Fixed the issue with free_kernel_image_pages() with the help of
+>    xen_pv_kasan_unpin_pgd()
+> ---
+>   arch/x86/mm/kasan_init_64.c | 12 ++++++++++++
+>   arch/x86/xen/Makefile       |  7 +++++++
+>   arch/x86/xen/enlighten_pv.c |  3 +++
+>   arch/x86/xen/mmu_pv.c       | 39 +++++++++++++++++++++++++++++++++++++
+>   drivers/xen/Makefile        |  2 ++
+>   include/xen/xen-ops.h       |  4 ++++
+>   kernel/Makefile             |  2 ++
+>   lib/Kconfig.kasan           |  3 ++-
+>   8 files changed, 71 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
+> index cf5bc37c90ac..902a6a152d33 100644
+> --- a/arch/x86/mm/kasan_init_64.c
+> +++ b/arch/x86/mm/kasan_init_64.c
+> @@ -13,6 +13,9 @@
+>   #include <linux/sched/task.h>
+>   #include <linux/vmalloc.h>
+>   
+> +#include <xen/xen.h>
+> +#include <xen/xen-ops.h>
+> +
+>   #include <asm/e820/types.h>
+>   #include <asm/pgalloc.h>
+>   #include <asm/tlbflush.h>
+> @@ -332,6 +335,11 @@ void __init kasan_early_init(void)
+>   	for (i = 0; pgtable_l5_enabled() && i < PTRS_PER_P4D; i++)
+>   		kasan_early_shadow_p4d[i] = __p4d(p4d_val);
+>   
+> +	if (xen_pv_domain()) {
+> +		pgd_t *pv_top_pgt = xen_pv_kasan_early_init();
 
-On Tue, Jan 7, 2020 at 12:59 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jan 06, 2020 at 12:51:55PM +0530, Rishi Gupta wrote:
-> > The ttyvs driver exposes sysfs files to emulate various serial
-> > port events. This commit document these files.
-> >
-> > Signed-off-by: Rishi Gupta <gupt21@gmail.com>
-> > ---
-> >  .../ABI/testing/sysfs-devices-virtual-tty_ttyvs        | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-devices-virtual-tty_ttyvs
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-devices-virtual-tty_ttyvs b/Documentation/ABI/testing/sysfs-devices-virtual-tty_ttyvs
-> > new file mode 100644
-> > index 0000000..69b04e0
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-devices-virtual-tty_ttyvs
-> > @@ -0,0 +1,18 @@
-> > +What:                /sys/devices/virtual/tty/ttyvsN/event
-> > +Date:                January 2020
-> > +Contact:     Rishi Gupta <gupt21@gmail.com>
-> > +KernelVersion:       5.5
-> > +Description:
-> > +             The ttyvs driver will emulate serial port event; parity error,
-> > +             framing error, overrun error, asserting or de-asserting break
-> > +             conditions and ring indication when user space application
-> > +             writes an event code on this sysfs file.
->
-> You did not actually document any of the values read/written to this
-> file, like you did in your 0/X patch description :(
->
-> greg k-h
+You are breaking the build with CONFIG_XEN_PV undefined here.
+
+> +		kasan_map_early_shadow(pv_top_pgt);
+> +	}
+> +
+>   	kasan_map_early_shadow(early_top_pgt);
+>   	kasan_map_early_shadow(init_top_pgt);
+>   }
+> @@ -369,6 +377,8 @@ void __init kasan_init(void)
+>   				__pgd(__pa(tmp_p4d_table) | _KERNPG_TABLE));
+>   	}
+>   
+> +	xen_pv_kasan_pin_pgd(early_top_pgt);
+
+Same here (and below). For the pin/unpin variants I'd rather have
+an inline wrapper containing the "if (xen_pv_domain())" in xen-ops.h
+which can easily contain the needed #ifdef CONFIG_XEN_PV.
+
+
+Juergen
