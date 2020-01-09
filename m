@@ -2,165 +2,169 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86467C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40E9C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B202067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB23C20705
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:26:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="TK7LNbfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbgAIAQO (ORCPT
+        id S1727545AbgAIA00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:16:14 -0500
-Received: from mga07.intel.com ([134.134.136.100]:43048 "EHLO mga07.intel.com"
+        Wed, 8 Jan 2020 19:26:26 -0500
+Received: from onstation.org ([52.200.56.107]:53880 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbgAIAQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:16:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 16:16:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,411,1571727600"; 
-   d="scan'208";a="217653155"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Jan 2020 16:16:12 -0800
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id BC1C25803E3;
-        Wed,  8 Jan 2020 16:16:12 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v11 1/8] PCI/ERR: Update error status after reset_link()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <20200104025414.GA85401@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <7f7fdfec-5060-bcaa-38c4-6b973149e5cc@linux.intel.com>
-Date:   Wed, 8 Jan 2020 16:14:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726438AbgAIA0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 19:26:25 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 0E27B3EE6F;
+        Thu,  9 Jan 2020 00:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1578529584;
+        bh=bSP4GLHNIkw9HeeIY0NybAJJvEgnnxZaLRa3yG6+E1Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TK7LNbfLzwC1F6wyfJLhAZh/bLnMAMGWyPQ+53Ef9F9qfGO8LdHQdNxZzdN/ApgLQ
+         spnXD0HCF2D5BgqAqnzHtGmbgkilGBxb8HwbfZjcP8Jtx2F3pGL+IMEfcms3ov2jp4
+         CwsIsk1ZiP73Lrd5/c1t4wIJrKy7VCeU3zbrKz+U=
+From:   Brian Masney <masneyb@onstation.org>
+To:     robdclark@gmail.com, bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, joro@8bytes.org, linux-arm-msm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH RFC] ARM: dts: qcom: msm8974: add mdp5 iommu support
+Date:   Wed,  8 Jan 2020 19:26:06 -0500
+Message-Id: <20200109002606.35653-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200104025414.GA85401@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+This adds preliminary IOMMU support for the MDP5 on msm8974. It appears
+that the qcom-iommu driver in upstream can be used on this SoC. I marked
+this patch as a RFC since the frame buffer becomes corrupted when I boot
+the Nexus 5 phone with this patch:
 
-Thanks for the comments.
+https://raw.githubusercontent.com/masneyb/nexus-5-upstream/master/images/broken-mdp5-iommu.jpg
 
-On 1/3/20 6:54 PM, Bjorn Helgaas wrote:
-> On Fri, Jan 03, 2020 at 05:03:03PM -0800, Kuppuswamy Sathyanarayanan wrote:
->> On 1/3/20 4:34 PM, Bjorn Helgaas wrote:
->>> On Thu, Dec 26, 2019 at 04:39:07PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>
->>>> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
->>>> reset_link() to recover from fatal errors. But, if the reset is
->>>> successful there is no need to continue the rest of the error recovery
->>>> checks. Also, during fatal error recovery, if the initial value of error
->>>> status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
->>>> even after successful recovery (using reset_link()) pcie_do_recovery()
->>>> will report the recovery result as failure. So update the status of
->>>> error after reset_link().
->>> I like the part about updating "status" with the result of
->>> reset_link(), and I split that into its own patch because it
->>> seems like a fix that *can* be separated.
->>>
->>> But I'm not convinced that we should skip the ->slot_reset()
->>> callbacks if the reset_link() was successful.
->> If reset_link() call is successful then the result value will be
->> "PCI_ERS_RESULT_RECOVERED". So even if you proceed with
->> rest of the code, slot_reset() will never get called right ?
-> The current code:
->
->          if (state == pci_channel_io_frozen &&
->              reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
->                  goto failed;
->          ...
->          if (status == PCI_ERS_RESULT_NEED_RESET) {
->                  status = PCI_ERS_RESULT_RECOVERED;
->                  pci_walk_bus(bus, report_slot_reset, &status);
->
-> doesn't save the result of reset_link(), so if status was
-> PCI_ERS_RESULT_NEED_RESET and the reset succeeds, we will call
-> ->slot_reset().
->
-> After your patch, if "state == pci_channel_io_frozen", we *never* call
-> ->slot_reset().
->
-> Do you think that matches pci-error-recovery.rst?  It doesn't seem
-> like it to me, but perhaps I haven't read it closely enough.
-Documentation does not have clear details on what to do with return
-value of reset_link() ( step 3). But IMO, if step 3 recovers the device and
-returns PCI_ERS_RESULT_RECOVERED then there is no need to proceed
-to slot reset (step 4). May be we should update the Documentation ?
+A quick note about the ranges of the context banks below: Based on the
+downstream sources, I believe that the memory addresses should be mapped
+out like this:
 
-Keith,
-You have any comments ?
->
->>> According to
->>> Documentation/PCI/pci-error-recovery.rst, we should call
->>> ->slot_reset() after completion of the reset.
->>>
->>> For example, rsxx_err_handler implements ->slot_reset(), but
->>> not ->resume().  If we reset the device, we'll claim success and
->>> return, but we won't call rsxx_slot_reset(), which does a bunch
->>> of important-looking recovery stuff.
->>>
->>> If pci-error-recovery.rst is wrong, we should fix that (after
->>> auditing all the drivers to make sure they match).
->>>
->>>> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
->>>> Cc: Ashok Raj <ashok.raj@intel.com>
->>>> Cc: Keith Busch <keith.busch@intel.com>
->>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>> Acked-by: Keith Busch <keith.busch@intel.com>
->>>> ---
->>>>    drivers/pci/pcie/err.c | 10 +++++++---
->>>>    1 file changed, 7 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>> index b0e6048a9208..53cd9200ec2c 100644
->>>> --- a/drivers/pci/pcie/err.c
->>>> +++ b/drivers/pci/pcie/err.c
->>>> @@ -204,9 +204,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->>>>    	else
->>>>    		pci_walk_bus(bus, report_normal_detected, &status);
->>>> -	if (state == pci_channel_io_frozen &&
->>>> -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
->>>> -		goto failed;
->>>> +	if (state == pci_channel_io_frozen) {
->>>> +		status = reset_link(dev, service);
->>>> +		if (status != PCI_ERS_RESULT_RECOVERED)
->>>> +			goto failed;
->>>> +		goto done;
->>>> +	}
->>>>    	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>>    		status = PCI_ERS_RESULT_RECOVERED;
->>>> @@ -228,6 +231,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->>>>    	if (status != PCI_ERS_RESULT_RECOVERED)
->>>>    		goto failed;
->>>> +done:
->>>>    	pci_dbg(dev, "broadcast resume message\n");
->>>>    	pci_walk_bus(bus, report_resume, &status);
->>>> -- 
->>>> 2.21.0
->>>>
->> -- 
->> Sathyanarayanan Kuppuswamy
->> Linux kernel developer
->>
+	mdp_iommu: iommu@fd928000 {
+		reg = <0xfd928000 0x8000>;
+		ranges = <0 0xfd930000 0x8000>;
+		...
+
+		iommu-ctx@0 {
+			reg = <0x0 0x1000>;
+			...
+		};
+
+		iommu-ctx@1000 {
+			reg = <0x1000 0x1000>;
+			...
+		};
+
+		iommu-ctx@2000 {
+			reg = <0x2000 0x1000>;
+			...
+		};
+	};
+
+However, the qcom-iommu driver in upstream expects the first context
+bank to exist at address 0x1000, and the address space identifier
+(asid) to be greater than 0. See get_asid() and qcom_iommu_of_xlate()
+in the upstream qcom-iommu.c driver. I put in the patch below what the
+driver expects. I modified the driver in my local tree to allow the
+mapping that I have above so that the extra 0x1000 of memory is mapped
+into the global address space and still experience the same screen
+corruption issue.
+
+Downstream MSM 3.4 IOMMU dts snippet for reference:
+https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/boot/dts/msm-iommu-v1.dtsi#L110
+
+I'm hoping that someone that's more familiar with this hardware has a
+suggestion for something to try.
+
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 44 +++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 4b161b809dd5..2515a3bd4aa7 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -1305,6 +1305,46 @@ etm3_out: endpoint {
+ 			};
+ 		};
+ 
++		mdp_iommu: iommu@fd928000 {
++			compatible = "qcom,msm8974-iommu",
++			             "qcom,msm-iommu-v1";
++			reg = <0xfd928000 0x7000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			#iommu-cells = <1>;
++			ranges = <0 0xfd92f000 0x9000>;
++
++			clocks = <&mmcc MDSS_AHB_CLK>,
++			         <&mmcc MDSS_AXI_CLK>;
++			clock-names = "iface",
++			              "bus";
++
++			qcom,iommu-secure-id = <1>;
++
++			// mdp_0
++			iommu-ctx@1000 {
++				compatible = "qcom,msm-iommu-v1-ns";
++				reg = <0x1000 0x1000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			// mdp_1
++			iommu-ctx@2000 {
++				compatible = "qcom,msm-iommu-v1-sec";
++				reg = <0x2000 0x1000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++				             <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			// mdp_2
++			iommu-ctx@3000 {
++				compatible = "qcom,msm-iommu-v1-sec";
++				reg = <0x3000 0x1000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
++				             <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++			};
++                };
++
+ 		ocmem@fdd00000 {
+ 			compatible = "qcom,msm8974-ocmem";
+ 			reg = <0xfdd00000 0x2000>,
+@@ -1427,6 +1467,10 @@ mdp: mdp@fd900000 {
+ 				interconnects = <&mmssnoc MNOC_MAS_MDP_PORT0 &bimc BIMC_SLV_EBI_CH0>;
+ 				interconnect-names = "mdp0-mem";
+ 
++				iommus = <&mdp_iommu 1
++				          &mdp_iommu 2
++				          &mdp_iommu 3>;
++
+ 				ports {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+2.24.1
 
