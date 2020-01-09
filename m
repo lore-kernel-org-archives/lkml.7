@@ -2,177 +2,337 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7E5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2323C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2EE220882
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881DE205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:23:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y89hp8wX"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="up29Eo8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgAIXVk (ORCPT
+        id S1729265AbgAIXX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:21:40 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:38732 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgAIXVk (ORCPT
+        Thu, 9 Jan 2020 18:23:28 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:22702 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbgAIXX2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:21:40 -0500
+        Thu, 9 Jan 2020 18:23:28 -0500
 Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200109232137epoutp02e91d067134bb08170d61ef9fd8d01938~oW1bGtBsl2509225092epoutp02T
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 23:21:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200109232137epoutp02e91d067134bb08170d61ef9fd8d01938~oW1bGtBsl2509225092epoutp02T
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200109232326epoutp0113db4840c946dcf0b02fe72aa49c38cd~oW3AEPRSl0284202842epoutp01J
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 23:23:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200109232326epoutp0113db4840c946dcf0b02fe72aa49c38cd~oW3AEPRSl0284202842epoutp01J
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578612097;
-        bh=T+CeYd6IFZglOI4g+diQBYqoYYrYS/DvRp1wf9ehhSs=;
+        s=mail20170921; t=1578612206;
+        bh=XS6WVKmPd78SLOqbRxJQGmEqQFFIzyRpnGXetgRINKM=;
         h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Y89hp8wXi3HKHGbnfbukvhKOGw0y6ZIwjNpfEuMTenrcuONm8E7Y9aALJfH9Gg2Gv
-         EXZXbYYfyR+4AXid68qxUrZ4dAoY2+gWiZzQagaD0HI6v3whYsVnYAPz4JRMkIhLoN
-         U468v4hMl1AZOlN05yWnwJWzblo4K9WoTKji7sZc=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200109232137epcas1p4e338856c504cd9f67eadc4b1600deba4~oW1asrb5-0706907069epcas1p4I;
-        Thu,  9 Jan 2020 23:21:37 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47v2Dw1YPYzMqYkg; Thu,  9 Jan
-        2020 23:21:36 +0000 (GMT)
+        b=up29Eo8uaV1TqK5NYstW26Gjlzedv1RQZsVAXKW4TSoArM/DzGDS8+qN+4qziSLni
+         nXooqOAKv9CYYbPHTBUZekycj5B1QoixCy+dfQ2Fya8wqzldY4Lqh+wEoC1ShSA3qT
+         DvRm6TOaWNfl2x7sElUAmvYjiwUSnKXmkmTPcknU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200109232325epcas1p1302e6b3038cdb5d9817cdb722765e6c7~oW2-e8XVX2942629426epcas1p1v;
+        Thu,  9 Jan 2020 23:23:25 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47v2H03knvzMqYkb; Thu,  9 Jan
+        2020 23:23:24 +0000 (GMT)
 Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7C.FA.48498.085B71E5; Fri, 10 Jan 2020 08:21:36 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200109232135epcas1p31123857fc9cec29067aafda53561683b~oW1ZbZY1t0707807078epcas1p3i;
-        Thu,  9 Jan 2020 23:21:35 +0000 (GMT)
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        65.AA.52419.CE5B71E5; Fri, 10 Jan 2020 08:23:24 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200109232324epcas1p1033a8f381a7eaee98076d2aa82f321ba~oW2_LqUAA2941829418epcas1p1C;
+        Thu,  9 Jan 2020 23:23:24 +0000 (GMT)
 Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200109232135epsmtrp10c9724d2abb16adff1ebe63cb7e3fd4d~oW1ZasjBv1664216642epsmtrp1k;
-        Thu,  9 Jan 2020 23:21:35 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-b3-5e17b580f5cb
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200109232324epsmtrp20c8458fbaee2f5a114d10aecfae0a592~oW2_K-Rzn0042400424epsmtrp2a;
+        Thu,  9 Jan 2020 23:23:24 +0000 (GMT)
+X-AuditID: b6c32a37-5b7ff7000001ccc3-99-5e17b5eca51a
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        59.46.10238.F75B71E5; Fri, 10 Jan 2020 08:21:35 +0900 (KST)
+        75.56.10238.BE5B71E5; Fri, 10 Jan 2020 08:23:23 +0900 (KST)
 Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
         (KnoxPortal) with ESMTPA id
-        20200109232135epsmtip139602e5d66cf9aabfc8b266346cb88c9~oW1ZRA59Z1335813358epsmtip1c;
-        Thu,  9 Jan 2020 23:21:35 +0000 (GMT)
+        20200109232323epsmtip113ee34fb91d7f913006d27f32d680367~oW2_Ay-BA1335813358epsmtip1k;
+        Thu,  9 Jan 2020 23:23:23 +0000 (GMT)
 From:   "Namjae Jeon" <namjae.jeon@samsung.com>
 To:     "'Christoph Hellwig'" <hch@lst.de>
 Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
         <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>,
         <pali.rohar@gmail.com>
-In-Reply-To: <20200108172135.GC13388@lst.de>
-Subject: RE: [PATCH v9 02/13] exfat: add super block operations
-Date:   Fri, 10 Jan 2020 08:21:35 +0900
-Message-ID: <001701d5c743$8945ffe0$9bd1ffa0$@samsung.com>
+In-Reply-To: <20200108175044.GA14009@lst.de>
+Subject: RE: [PATCH v9 03/13] exfat: add inode operations
+Date:   Fri, 10 Jan 2020 08:23:23 +0900
+Message-ID: <001801d5c743$c9c058e0$5d410aa0$@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwKPpVYaAeKSrnsCTHWGIqa0Uqbw
+Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwJF6SzsAfeZsmAAg5yyM6bESf1A
 Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLJsWRmVeSWpSXmKPExsWy7bCmgW7DVvE4g/f97BbNi9ezWaxcfZTJ
-        4vrdW8wWe/aeZLG4vGsOm8XE07+ZLLb8O8Jqcen9BxYHDo+ds+6ye+yfu4bdY/fNBjaPvi2r
-        GD0+b5LzOLT9DVsAW1SOTUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqt
-        kotPgK5bZg7QQUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XUgpScAkODAr3ixNzi0rx0
-        veT8XCtDAwMjU6DKhJyMZU0rWAuu8FRsXDqZuYHxIWcXIyeHhICJxL+/85m6GLk4hAR2MEq8
-        PXyKESQhJPCJUeLFLEEI+xujxN8pojANza9WM0I07GWUuLihkQ3Ceckose/QFFaQKjYBXYl/
-        f/azgdgiAmoSZ362sYMUMQucYpT4v3UiWIJTQEfi+LUZQAkODmEBe4mODZIgYRYBVYkDvd3s
-        IDavgKXEotdPoGxBiZMzn7CA2MwC8hLb385hhrhIQeLn02WsELvcJFa1TWCDqBGRmN3Zxgyy
-        V0KgnV1iwuzjTBANLhKHm0+wQdjCEq+Ob2GHsKUkXva3gd0jIVAt8XE/1PwOYEh8t4WwjSVu
-        rt/AClLCLKApsX6XPkRYUWLn77mMEGv5JN597WGFmMIr0dEmBFGiKtF36TDUAdISXe0f2Ccw
-        Ks1C8tgsJI/NQvLALIRlCxhZVjGKpRYU56anFhsWGCFH9SZGcFLVMtvBuOiczyFGAQ5GJR7e
-        DGHxOCHWxLLiytxDjBIczEoivEdviMUJ8aYkVlalFuXHF5XmpBYfYjQFhvtEZinR5Hxgws8r
-        iTc0NTI2NrYwMTM3MzVWEufl+HExVkggPbEkNTs1tSC1CKaPiYNTqoGxqdGDlfvuha75z0Ju
-        SbXkTK7/WF4/4+HcH1ZXyi7+CWO+Nu39msIzL3Zcmf8/uvFD0iHH5RaPxXR+/UwMXdlz5/T6
-        hVsfXF7hdNj13qOXmotCfHqvbUoV2xjv+ip/5vX2YA2jjq7Um37bc5ncBbfULNeu+xzJfuz2
-        FZVLH2V+uiS/SVfhkY06qMRSnJFoqMVcVJwIAM5KO+/AAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsWy7bCSnG79VvE4gwfd+hbNi9ezWaxcfZTJ
-        4vrdW8wWe/aeZLG4vGsOm8XE07+ZLLb8O8Jqcen9BxYHDo+ds+6ye+yfu4bdY/fNBjaPvi2r
-        GD0+b5LzOLT9DVsAWxSXTUpqTmZZapG+XQJXxrKmFawFV3gqNi6dzNzA+JCzi5GTQ0LARKL5
-        1WrGLkYuDiGB3YwSiy5PYoRISEscO3GGuYuRA8gWljh8uBgkLCTwnFHi4nlBEJtNQFfi35/9
-        bCC2iICaxJmfbewgc5gFLjFKTOhtYoYYep9RYv+BmSwgVZwCOhLHr81gBxkqLGAv0bFBEiTM
-        IqAqcaC3mx3E5hWwlFj0+gmULShxcuYTFpByZgE9ibaNYKcxC8hLbH87hxniTAWJn0+XsULc
-        4Caxqm0CG0SNiMTszjbmCYzCs5BMmoUwaRaSSbOQdCxgZFnFKJlaUJybnltsWGCYl1quV5yY
-        W1yal66XnJ+7iREcXVqaOxgvL4k/xCjAwajEw5shLB4nxJpYVlyZe4hRgoNZSYT36A2xOCHe
-        lMTKqtSi/Pii0pzU4kOM0hwsSuK8T/OORQoJpCeWpGanphakFsFkmTg4pRoY45N7Mw4/ez0r
-        3O/D4ZbP/f+mWD5z7Gi1l7934/2nn99P/fK8eoV7V+6T4PisGfvfOX56cPHHkeT5ooYfrNvd
-        JnvGl1o3rtpkcvSW1ZQJgZHPD+1acP5+1U0Zof0tpff3/z5Y0rgqkP3glZ2HTr2rz5ysHlLM
-        M2FpMKfDpeaSqZmxmnYlgXc6JyqxFGckGmoxFxUnAgA7vmGHqgIAAA==
-X-CMS-MailID: 20200109232135epcas1p31123857fc9cec29067aafda53561683b
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTYRDN1223i1hdCsIEr7oGFSPQUgurAeIVbBRNiYkoKrihmxbslW5r
+        RPkBGA7REPEfFfBAMYJaUrmPEFEgeIsmCIr6A8+gKHgRjLVlIfLvzZs382a+bwhM6sSDiXST
+        jbWaGAOFzxE23A6Vh43UB6XICycX0ccrnTh9taZLQPcPDWJ0W3uvkH7aUobTJfcmBXTd3zsi
+        um/0q3ADoW52DInVHeXXxOrWgWxcXVxXjdTjriXqzsYRXIMnG2L0LKNlrTLWlGbWppt0sdT2
+        XambU1VRckWYYh0dTclMjJGNpbYkaMLi0w2egSjZYcZg91AahuOoiLgYq9luY2V6M2eLpViL
+        1mBRyC3hHGPk7CZdeJrZuF4hl0eqPMqDBn1F7zNkKVccGe1+Jc5GeSuKkA8B5FpoPP0HFaE5
+        hJRsQjA2WIPzwRiC645aAR/8RJDX1C2eKTlf6hbyiXYEt6pGp+s/eupzXiKvCifD4O+fDtyL
+        A8gVcH8iX+wVYeRdBO76kqmED7kGil39U239yXXQnJvj8SMIIRkCJ0t3eGmJh35wdUTEYz/o
+        LR0WejFGLoXGz2UYP5EMJt5WiXiveHh/85yA1wTA2RP5mNcXSDcObZXPp1fYApfcwziP/eFT
+        T900HwzjX9px7wxAHoNvHdP9CxF8+BXLYyUMOGtFXglGhoKzJYKnl0HzZDnibefBlx+nRHwX
+        CRTmS3lJCBT33RbweCEUFXwVn0aUY9ZijlmLOWYt4Phvdh4Jq1Ega+GMOpZTWJSzP9uFpo51
+        dXQTqn2Y0IlIAlFzJXr/oBSpiDnMZRo7ERAYFSDpeh6YIpVomcyjrNWcarUbWK4TqTzPXoIF
+        L0gze07fZEtVqCKVSiW9Nio6SqWkgiTE7ycHpKSOsbGHWNbCWmfqBIRPcDbKfFe5f5sqqcFv
+        +cqMbY8ubhyOc0ZW+e6rdRjt3/Pe2DTz9+canwh8RQWji3dWdEWH+rYmXV7WG9dX8S7w3H2J
+        auy17kVN0qOEZNX7fWU10u49n1N2D626sDVwxw1jf3hGaYEg8cxjS9b4RPbuvWN6edadK4mu
+        ntZNzomeLFPGyZb4CErI6RnFaszKMf8Aoo3jN8IDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnO7rreJxBjdeWFo0L17PZrFy9VEm
+        i+t3bzFb7Nl7ksXi8q45bBYTT/9mstjy7wirxaX3H1gcODx2zrrL7rF/7hp2j903G9g8+ras
+        YvT4vEnO49D2N2wBbFFcNimpOZllqUX6dglcGfNOXmEsmGtY8f7YPfYGxla1LkZODgkBE4kF
+        M/+zdDFycQgJ7GaUuPqwlxkiIS1x7MQZIJsDyBaWOHy4GKLmOaPE8h3tLCA1bAK6Ev/+7GcD
+        sUUE1CTO/GxjByliFrjEKDGht4kZouM+o8SJ82fBqjgFdCT6Nl1nB7GFBSwldjY1MoFsYBFQ
+        leie6QsS5gUKn135hhXCFpQ4OfMJC0gJs4CeRNtGRpAws4C8xPa3c6DuVJD4+XQZK8QNbhLP
+        N89ngqgRkZjd2cY8gVF4FpJJsxAmzUIyaRaSjgWMLKsYJVMLinPTc4sNCwzzUsv1ihNzi0vz
+        0vWS83M3MYLjS0tzB+PlJfGHGAU4GJV4eDOExeOEWBPLiitzDzFKcDArifAevSEWJ8SbklhZ
+        lVqUH19UmpNafIhRmoNFSZz3ad6xSCGB9MSS1OzU1ILUIpgsEwenVAPjgpaUHcV6L903/K/6
+        P+fcnetsm5ivHqv5U7tJWMjgU9HCovjgbsNTz3bON9pR/lb0mFfO+wn7LKdpXW6dPZepK9Jr
+        15n7mxS3cSpMj+7V2OnlF3Ojsbv+wc37s15tsjk6Z8GW7bP3zlSabloa7CP9kautpcLHStHt
+        uYzgwv96fAd3z7oZXsLvosRSnJFoqMVcVJwIAHccHCWrAgAA
+X-CMS-MailID: 20200109232324epcas1p1033a8f381a7eaee98076d2aa82f321ba
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200102082401epcas1p2f33f3c11ecedabff2165ba216854d8fe
+X-CMS-RootMailID: 20200102082402epcas1p47cdc0873473f99c5d81f56865bb94abc
 References: <20200102082036.29643-1-namjae.jeon@samsung.com>
-        <CGME20200102082401epcas1p2f33f3c11ecedabff2165ba216854d8fe@epcas1p2.samsung.com>
-        <20200102082036.29643-3-namjae.jeon@samsung.com>
-        <20200108172135.GC13388@lst.de>
+        <CGME20200102082402epcas1p47cdc0873473f99c5d81f56865bb94abc@epcas1p4.samsung.com>
+        <20200102082036.29643-4-namjae.jeon@samsung.com>
+        <20200108175044.GA14009@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Looks good, modulo a few nitpicks below:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-Thanks!
-> 
-> On Thu, Jan 02, 2020 at 04:20:25PM +0800, Namjae Jeon wrote:
-> > +static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf) {
-> > +	struct super_block *sb = dentry->d_sb;
-> > +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> > +	unsigned long long id = huge_encode_dev(sb->s_bdev->bd_dev);
-> 
-> > +	if (sbi->used_clusters == ~0u) {
-> 
-> Various other places use UINT_MAX here instead.  Maybe it makes sense to
-> add a EXFAT_CLUSTERS_UNTRACKED or similar define and use that in all
-> places?
-Okay.
-> 
-> > +	if ((new_flag == VOL_DIRTY) && (!buffer_dirty(sbi->pbr_bh)))
-> 
-> No need for both sets of inner braces.
-Yep.
-> 
-> > +static bool is_exfat(struct pbr *pbr) {
-> > +	int i = MUST_BE_ZERO_LEN;
+> > +#include "exfat_fs.h"
 > > +
-> > +	do {
-> > +		if (pbr->bpb.f64.res_zero[i - 1])
-> > +			break;
-> > +	} while (--i);
-> > +	return i ? false : true;
-> > +}
+> > +/* 2-level option flag */
+> > +enum {
+> > +	BMAP_NOT_CREATE,
+> > +	BMAP_ADD_CLUSTER,
+> > +};
 > 
-> I find the MUST_BE_ZERO_LEN a little weird here.  Maybe that should be
-> something like PBP64_RESERVED_LEN?
-Okay.
+> I looked at how this flag is used and found the get_block code a little
+> confusing.  Let me know what you think of the following untested patch to
+> streamline that area:
+I will check and test this patch.
+
+Thanks!
 
 > 
-> Also I think this could be simplified by just using memchr_inv in the
-> caller
 > 
-> 	if (memchr_inv(pbr->bpb.f64.res_zero, 0,
-> 			sizeof(pbr->bpb.f64.res_zero)))
-> 		ret = -EINVAL;
-> 		goto free_bh;
-> 	}
-Okay.
+> diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c index
+> c2b04537cb24..ccf9700c6a55 100644
+> --- a/fs/exfat/inode.c
+> +++ b/fs/exfat/inode.c
+> @@ -17,12 +17,6 @@
+>  #include "exfat_raw.h"
+>  #include "exfat_fs.h"
 > 
-> > +	/* set maximum file size for exFAT */
-> > +	sb->s_maxbytes = 0x7fffffffffffffffLL;
+> -/* 2-level option flag */
+> -enum {
+> -	BMAP_NOT_CREATE,
+> -	BMAP_ADD_CLUSTER,
+> -};
+> -
+>  static int __exfat_write_inode(struct inode *inode, int sync)  {
+>  	int ret = -EIO;
+> @@ -298,109 +292,91 @@ static int exfat_map_cluster(struct inode *inode,
+> unsigned int clu_offset,
+>  	return 0;
+>  }
 > 
-> That this is setting the max size is pretty obvious.  Maybe the comment
-> should be updated to mention how this max file size is calculated?
-I will add the comment.
-
-Thanks for your review!
+> -static int exfat_bmap(struct inode *inode, sector_t sector, sector_t
+> *phys,
+> -		unsigned long *mapped_blocks, int *create)
+> +static int exfat_map_new_buffer(struct exfat_inode_info *ei,
+> +		struct buffer_head *bh, loff_t pos)
+>  {
+> -	struct super_block *sb = inode->i_sb;
+> -	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+> -	sector_t last_block;
+> -	unsigned int cluster, clu_offset, sec_offset;
+> -	int err = 0;
+> -
+> -	*phys = 0;
+> -	*mapped_blocks = 0;
+> -
+> -	last_block = EXFAT_B_TO_BLK_ROUND_UP(i_size_read(inode), sb);
+> -	if (sector >= last_block && *create == BMAP_NOT_CREATE)
+> -		return 0;
+> -
+> -	/* Is this block already allocated? */
+> -	clu_offset = sector >> sbi->sect_per_clus_bits;  /* cluster offset
+> */
+> -
+> -	err = exfat_map_cluster(inode, clu_offset, &cluster,
+> -		*create & BMAP_ADD_CLUSTER);
+> -	if (err) {
+> -		if (err != -ENOSPC)
+> -			return -EIO;
+> -		return err;
+> -	}
+> -
+> -	if (cluster != EXFAT_EOF_CLUSTER) {
+> -		/* sector offset in cluster */
+> -		sec_offset = sector & (sbi->sect_per_clus - 1);
+> -
+> -		*phys = exfat_cluster_to_sector(sbi, cluster) + sec_offset;
+> -		*mapped_blocks = sbi->sect_per_clus - sec_offset;
+> -	}
+> +	if (buffer_delay(bh) && pos > ei->i_size_aligned)
+> +		return -EIO;
+> +	set_buffer_new(bh);
+> 
+> -	if (sector < last_block)
+> -		*create = BMAP_NOT_CREATE;
+> +	/*
+> +	 * Adjust i_size_aligned if i_size_ondisk is bigger than it.
+> +	 * (i.e. non-DA)
+> +	 */
+> +	if (ei->i_size_ondisk > ei->i_size_aligned)
+> +		ei->i_size_aligned = ei->i_size_ondisk;
+>  	return 0;
+>  }
+> 
+>  static int exfat_get_block(struct inode *inode, sector_t iblock,
+>  		struct buffer_head *bh_result, int create)  {
+> +	struct exfat_inode_info *ei = EXFAT_I(inode);
+>  	struct super_block *sb = inode->i_sb;
+> +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+>  	unsigned long max_blocks = bh_result->b_size >> inode->i_blkbits;
+>  	int err = 0;
+> -	unsigned long mapped_blocks;
+> -	sector_t phys;
+> +	unsigned long mapped_blocks = 0;
+> +	unsigned int cluster, sec_offset;
+> +	sector_t last_block;
+> +	sector_t phys = 0;
+>  	loff_t pos;
+> -	int bmap_create = create ? BMAP_ADD_CLUSTER : BMAP_NOT_CREATE;
+> +
+> +	mutex_lock(&sbi->s_lock);
+> +	last_block = EXFAT_B_TO_BLK_ROUND_UP(i_size_read(inode), sb);
+> +	if (iblock >= last_block && !create)
+> +		goto done;
+> 
+> -	mutex_lock(&EXFAT_SB(sb)->s_lock);
+> -	err = exfat_bmap(inode, iblock, &phys, &mapped_blocks,
+> &bmap_create);
+> +	/* Is this block already allocated? */
+> +	err = exfat_map_cluster(inode, iblock >> sbi->sect_per_clus_bits,
+> +				&cluster, create);
+>  	if (err) {
+> -		if (err != -ENOSPC)
+> -			exfat_fs_error_ratelimit(sb,
+> -				"failed to bmap (inode : %p iblock : %llu,
+> err : %d)",
+> -				inode, (unsigned long long)iblock, err);
+> +		if (err == -ENOSPC)
+> +			goto unlock_ret;
+> +
+> +		exfat_fs_error_ratelimit(sb,
+> +			"failed to bmap (inode : %p iblock : %llu, err :
+%d)",
+> +			inode, (unsigned long long)iblock, err);
+>  		goto unlock_ret;
+>  	}
+> 
+> -	if (phys) {
+> -		max_blocks = min(mapped_blocks, max_blocks);
+> -
+> -		/* Treat newly added block / cluster */
+> -		if (bmap_create || buffer_delay(bh_result)) {
+> -			/* Update i_size_ondisk */
+> -			pos = EXFAT_BLK_TO_B((iblock + 1), sb);
+> -			if (EXFAT_I(inode)->i_size_ondisk < pos)
+> -				EXFAT_I(inode)->i_size_ondisk = pos;
+> -
+> -			if (bmap_create) {
+> -				if (buffer_delay(bh_result) &&
+> -				    pos > EXFAT_I(inode)->i_size_aligned) {
+> -					exfat_fs_error(sb,
+> -						"requested for bmap out of
+> range(pos : (%llu) > i_size_aligned(%llu)\n",
+> -						pos,
+> -
+EXFAT_I(inode)->i_size_aligned);
+> -					err = -EIO;
+> -					goto unlock_ret;
+> -				}
+> -				set_buffer_new(bh_result);
+> -
+> -				/*
+> -				 * adjust i_size_aligned if i_size_ondisk is
+> -				 * bigger than it. (i.e. non-DA)
+> -				 */
+> -				if (EXFAT_I(inode)->i_size_ondisk >
+> -				    EXFAT_I(inode)->i_size_aligned) {
+> -					EXFAT_I(inode)->i_size_aligned =
+> -
+EXFAT_I(inode)->i_size_ondisk;
+> -				}
+> -			}
+> +	if (cluster == EXFAT_EOF_CLUSTER)
+> +		goto done;
+> +
+> +	/* sector offset in cluster */
+> +	sec_offset = iblock & (sbi->sect_per_clus - 1);
+> +
+> +	phys = exfat_cluster_to_sector(sbi, cluster) + sec_offset;
+> +	mapped_blocks = sbi->sect_per_clus - sec_offset;
+> +	max_blocks = min(mapped_blocks, max_blocks);
+> 
+> -			if (buffer_delay(bh_result))
+> -				clear_buffer_delay(bh_result);
+> +	/* Treat newly added block / cluster */
+> +	if (iblock < last_block)
+> +		create = 0;
+> +
+> +	if (create || buffer_delay(bh_result)) {
+> +		pos = EXFAT_BLK_TO_B((iblock + 1), sb);
+> +		if (ei->i_size_ondisk < pos)
+> +			ei->i_size_ondisk = pos;
+> +	}
+> +
+> +	if (create) {
+> +		err = exfat_map_new_buffer(ei, bh_result, pos);
+> +		if (err) {
+> +			exfat_fs_error(sb,
+> +				"requested for bmap out of range(pos :
+(%llu) >
+> i_size_aligned(%llu)\n",
+> +				pos, ei->i_size_aligned);
+> +			goto unlock_ret;
+>  		}
+> -		map_bh(bh_result, sb, phys);
+>  	}
+> 
+> +	if (buffer_delay(bh_result))
+> +		clear_buffer_delay(bh_result);
+> +	map_bh(bh_result, sb, phys);
+> +done:
+>  	bh_result->b_size = EXFAT_BLK_TO_B(max_blocks, sb);
+>  unlock_ret:
+> -	mutex_unlock(&EXFAT_SB(sb)->s_lock);
+> +	mutex_unlock(&sbi->s_lock);
+>  	return err;
+>  }
+> 
 
