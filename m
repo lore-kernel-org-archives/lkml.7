@@ -2,124 +2,141 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E2AC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D0EC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDFD2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054C12072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:12:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQJ2jR6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgAIHLE (ORCPT
+        id S1728221AbgAIHMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:11:04 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:51887 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgAIHLE (ORCPT
+        Thu, 9 Jan 2020 02:12:40 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:32930 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgAIHMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:11:04 -0500
-Received: from localhost ([31.212.60.142]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MfZDK-1jMIjo396O-00fwpo; Thu, 09 Jan 2020 08:10:48 +0100
-Date:   Thu, 9 Jan 2020 08:10:47 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, rpi-receiver@htl-steyr.ac.at,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: devantech-srf04.yaml: add pm feature
-Message-ID: <20200109071047.GA3043@arbad>
-References: <20200102172749.v7ufupd32ytf7jda@arbad>
- <20200108165813.GA4472@bogus>
+        Thu, 9 Jan 2020 02:12:39 -0500
+Received: by mail-oi1-f193.google.com with SMTP id v140so5057762oie.0;
+        Wed, 08 Jan 2020 23:12:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PtYcl3mEZpFfv+hVyRqACv4DmdKEL3AkiUrvutZDkU4=;
+        b=nQJ2jR6M1/7L783AsKTMhfbGHaRibZk4nBEplMejjh6/KywRXGsTzZj8l8TcWD8GSN
+         cYJJlK07P7MQq6YyPp3+lstTpLa8irsdleOzWl8qhKyFQsEZsxJiPKT3qXDMuYv9SQQR
+         artx3bofnj7nJyv4ir7cz6XihS3/PGEZ4lmga3/haJgkIZ2sRI/1aWzao+7+3QsntTN4
+         lghYCj2yYiV9I+xZlaZiL7Q7j3B73gxiiuodchsuzQZ2yX0ygrlbRdtEc/K/VP7O/pEp
+         3M3kJZbuCY0bgNuhVkc3osLPwBllwQ5gcUvGMeMp0mhLk1TXUERMXbeq4CgsiOL30anm
+         BIEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PtYcl3mEZpFfv+hVyRqACv4DmdKEL3AkiUrvutZDkU4=;
+        b=VSP+e1IhgWiR10nAbNcFb9jc56Z3MUoP+UwDBaFBJZcKYY/eng8+xnQ4OoV7ydJuSu
+         ABv+tUjm9T41iIgG5c529OewnUw8BahdNh0aJEboBMvzYTjxu9iS5syf+v76sE3gbSDO
+         5UwjCx5tGGP3maEwn6gOvmn09E7peNTozFqVukNTDyUgStD+v/mq9OY7ZgjutRB4DCyB
+         Tuz26ikwse6owYMFwOybxpY+LBwwQKngP6f3H/aCW8Yu0XhOnPUkYcl7/bCGgyBoy7UU
+         tnasEXUZNCtGALJG72G7te2qMSkqAnOu6DjHKCSkx9nyEKe40twyYRcYkTuEXdVUifNm
+         SJCA==
+X-Gm-Message-State: APjAAAWZ7GO3bw8RMgJBcT4O70pOZxH1uUCkniDYH6b2/wrDlIli6Tay
+        +jGdE6cBeVqlkHvyYEyyqoi4ac+M5Zre7/Pdavul0Cjt1h0=
+X-Google-Smtp-Source: APXvYqw3YWkVF4G8KXcHhZNidvaugeK5/KWOtE8nts6to96ggdiuj6pdORYQUM5EjdxaISH4b0mqhXn1ipHoQvgqYC0=
+X-Received: by 2002:a54:401a:: with SMTP id x26mr1950875oie.101.1578553958766;
+ Wed, 08 Jan 2020 23:12:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108165813.GA4472@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:n4ntl9gVhdsv+OwVdqknKL8TANkqMYHfUGVQTP0bv2p2PAA85Nl
- 7iPPMgwkQ8uapwU5YKMJMWeuMFow089H1U2dy4bbZYVKrD6YVVQiPQ8NE8akssYB0Wc4G6m
- /0Zoa31ALt+49KlkgDgDQfwXa2+/WIYOe05+EXL+BA4BM2wS8WwVO0PJBu5TplSPHE3ANbi
- OLP57Mv1jWP1FysrPyq2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lCCLisCEUrs=:9ZKaN92OPR8/Y54hM9jcRH
- s6joxY0YtizkvP4rarCGq9I2q7vo2TBU1xkW7B9VT7FrjNiqcVTt9jFc+N08reBHNT1yTYKHT
- /k6QzzufTMrto4INolpHzGtBjexDN2WbDN9wL4HnR1tJ/3RNwDWcwDXSF2Rn6muEkbKL/B1wk
- oAYU4CgLMOfZro3YT5WL1EbRUnzTlihW2mInt7tuLuxua1eAUP92xR5oLRnaSUOSAAVJoNDpi
- WJOZUTg6WSwZsZQPCCMuUxb/19bIRt7JGV9a4ewAU4ZTKvVVf6n0n2DqgtFR7ZegSmwNuDqPv
- wvLI9hqCR7Qk+txMSIXRrOWYUHgiGnJ3wiMYC8hLD5HqOKHlGWT7FaACmlH92R5Ky6Z4jUwbG
- Z8+UKbSVQacz0XO9vxN7NmA49UfA+/E2u2ixrwYqtkVj8iZgrU/lkLNtTUn4iN5OADSK0qEWT
- BlVWwtvUkPM4m16HViwclJY6PYX/KwFvmXJ5g0XGsi1MANJAZ/GfYlByofgzS8SHFN/JUEIA4
- iOesEasQXMMXlzkr8Mnkl3obWZmo+hRD2FNtO8Zpae3OqcCK51TNWTqF5FA0tT7LNsvXu6Ofb
- 1EFQiXIbcZGn9vZPVyVqTIVtsksxFuErXxwvy8ENxnGiRtkNaSSDny6J8mxQq4c/s3g11F+Y5
- 9wqnoI21A0a0xDzYE2KJfX+37lJzrnlSQr0c4mE95VnUVZO5Bzk2U+U9c78vJkBjtvdhVuais
- U/eZRhZLcUz0qO2NhZ9RE4wxgHYz/hIIGi10ANNQaLQu2XjJP9+oM/ThtHRhRr/GQRo32AzuK
- EceoU0RQuz3jLy7pbbjUqkY/sVpl79f7KS6KSOWcAvKCp8GeC2QBqV/EJ0GGGJFSta9K57o3+
- Bs3moFz3Ibf0QuU8z9Tw==
+References: <20200106143251.11684-1-pakki001@umn.edu>
+In-Reply-To: <20200106143251.11684-1-pakki001@umn.edu>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 9 Jan 2020 07:12:12 +0000
+Message-ID: <CA+V-a8sJEdXm7Ocs-9N2_-F42N4nLrOq=CGvrUh0Hghoh=JhoA@mail.gmail.com>
+Subject: Re: [PATCH v3] media: davinci/vpfe_capture.c: Avoid BUG_ON for
+ register failure
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, Jan 6, 2020 at 2:32 PM Aditya Pakki <pakki001@umn.edu> wrote:
+>
+> In vpfe_register_ccdc_device(), failure to allocate dev->hw_ops
+> fields calls BUG_ON(). This patch returns the error to callers
+> instead of crashing. The issue was identified by a static
+> analysis tool, written by us.
+>
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-see below.
+Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
 
-Rob Herring <robh@kernel.org> schrieb am Mi, 08. Jan 10:58:
-> On Thu, Jan 02, 2020 at 06:27:51PM +0100, Andreas Klinger wrote:
-> > Add GPIO line and startup time for usage of power management
-> > 
-> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> > ---
-> >  .../bindings/iio/proximity/devantech-srf04.yaml          | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> > index 4e80ea7c1475..b3fcb3b79485 100644
-> > --- a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
-> > @@ -51,6 +51,22 @@ properties:
-> >        the time between two interrupts is measured in the driver.
-> >      maxItems: 1
-> >  
-> > +  power-gpios:
-> > +    description:
-> > +      Definition of the GPIO for power management of connected peripheral
-> > +      (output).
-> > +      This GPIO can be used by the external hardware for power management.
-> > +      When the device gets suspended it's switched off and when it resumes
-> > +      it's switched on again. After some period of inactivity the driver
-> > +      get suspended automatically (autosuspend feature).
-> > +    maxItems: 1
-> > +
-> > +  startup-time-ms:
-> 
-> Why isn't this implied by the compatible string? 
+Cheers,
+--Prabhakar Lad
 
-Under the same trade name "SRF-04" there are many different sensors on the
-market which are clones of the original one from Devantech. They are equipped
-with different hardware components and they have a slightly different behavior,
-such as the startup time. 
-
-> 
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> You can drop this for standard units. 
-> 
-> 0-2^32 is valid?
-
-I can add boundaries here.
-
-> 
-> > +    description:
-> > +      This is the startup time the device needs after a resume to be up and
-> > +      running.
-> > +
-> >  required:
-> >    - compatible
-> >    - trig-gpios
-> > -- 
-> > 2.11.0
-
-Andreas
+> ---
+> v2: Fix alignment of checks within the condition, as suggested by
+> Hans Verkuil
+>
+> v1: Fixed the type to a regular variable instead of a pointer,
+> also added fixes suggested by Ezequiel Garcia.
+> ---
+>  drivers/media/platform/davinci/vpfe_capture.c | 31 ++++++++++---------
+>  1 file changed, 16 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/media/platform/davinci/vpfe_capture.c b/drivers/media/platform/davinci/vpfe_capture.c
+> index 916ed743d716..9b1d9643589b 100644
+> --- a/drivers/media/platform/davinci/vpfe_capture.c
+> +++ b/drivers/media/platform/davinci/vpfe_capture.c
+> @@ -168,21 +168,22 @@ int vpfe_register_ccdc_device(const struct ccdc_hw_device *dev)
+>         int ret = 0;
+>         printk(KERN_NOTICE "vpfe_register_ccdc_device: %s\n", dev->name);
+>
+> -       BUG_ON(!dev->hw_ops.open);
+> -       BUG_ON(!dev->hw_ops.enable);
+> -       BUG_ON(!dev->hw_ops.set_hw_if_params);
+> -       BUG_ON(!dev->hw_ops.configure);
+> -       BUG_ON(!dev->hw_ops.set_buftype);
+> -       BUG_ON(!dev->hw_ops.get_buftype);
+> -       BUG_ON(!dev->hw_ops.enum_pix);
+> -       BUG_ON(!dev->hw_ops.set_frame_format);
+> -       BUG_ON(!dev->hw_ops.get_frame_format);
+> -       BUG_ON(!dev->hw_ops.get_pixel_format);
+> -       BUG_ON(!dev->hw_ops.set_pixel_format);
+> -       BUG_ON(!dev->hw_ops.set_image_window);
+> -       BUG_ON(!dev->hw_ops.get_image_window);
+> -       BUG_ON(!dev->hw_ops.get_line_length);
+> -       BUG_ON(!dev->hw_ops.getfid);
+> +       if (!dev->hw_ops.open ||
+> +           !dev->hw_ops.enable ||
+> +           !dev->hw_ops.set_hw_if_params ||
+> +           !dev->hw_ops.configure ||
+> +           !dev->hw_ops.set_buftype ||
+> +           !dev->hw_ops.get_buftype ||
+> +           !dev->hw_ops.enum_pix ||
+> +           !dev->hw_ops.set_frame_format ||
+> +           !dev->hw_ops.get_frame_format ||
+> +           !dev->hw_ops.get_pixel_format ||
+> +           !dev->hw_ops.set_pixel_format ||
+> +           !dev->hw_ops.set_image_window ||
+> +           !dev->hw_ops.get_image_window ||
+> +           !dev->hw_ops.get_line_length ||
+> +           !dev->hw_ops.getfid)
+> +               return -EINVAL;
+>
+>         mutex_lock(&ccdc_lock);
+>         if (!ccdc_cfg) {
+> --
+> 2.20.1
+>
