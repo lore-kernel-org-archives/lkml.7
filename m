@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B17C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90A2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFA520721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5B42072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I0nKfyeg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fejB4S7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731927AbgAIO5p (ORCPT
+        id S1731935AbgAIO5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:57:45 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20110 "EHLO
+        Thu, 9 Jan 2020 09:57:50 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52374 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731917AbgAIO5o (ORCPT
+        by vger.kernel.org with ESMTP id S1731918AbgAIO5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:57:44 -0500
+        Thu, 9 Jan 2020 09:57:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578581863;
+        s=mimecast20190719; t=1578581867;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TtlFeY7HzyndokCyv32BVKkuZLgrN4WwINmZ03zf3D4=;
-        b=I0nKfyegxLClTZD0J6TXbIiz35mLWY8iOcviNVsjKu7Nb62wluJpdHbIcyfMdb45cjCj79
-        UT9DtO4Mt1Qp0e7LSt+2xn0+c5GtWKZHRvgK1xqovlwLBFo4eheJDQPGl1yeZzhvFxyccz
-        dYntLxB4i10gcgQqv/NIyriqcmafGxU=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-252-QiLJ5__ZN164uAPHJE-XHw-1; Thu, 09 Jan 2020 09:57:42 -0500
-X-MC-Unique: QiLJ5__ZN164uAPHJE-XHw-1
-Received: by mail-qv1-f70.google.com with SMTP id e10so4234470qvq.18
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:42 -0800 (PST)
+        bh=Nm8O4Xii0OuE4zFVyte5k6dYfDYh4EMQdTOkPftgaqU=;
+        b=fejB4S7Zcfeq7czzSrZeICFBGTJNZDrYZHr/HyonuzeqtfBPaNsEXzEa4lJUAEnBssIULh
+        +bXgw6wUo6uh+ae4HGD2ObpTMNKhgwMiB4hUUECVbJ4qgD9er4d3semINJZ9mH7n7Zs8bI
+        wW9jcEQZJ7F73ekv+6rnugZhksO0BTI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-243-nGFyknB0N9OtlZNjCwJ4UQ-1; Thu, 09 Jan 2020 09:57:46 -0500
+X-MC-Unique: nGFyknB0N9OtlZNjCwJ4UQ-1
+Received: by mail-qv1-f69.google.com with SMTP id g6so4275792qvp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TtlFeY7HzyndokCyv32BVKkuZLgrN4WwINmZ03zf3D4=;
-        b=dpi7cW88bRxN1E2Kz2kaJb1My4vzVLkS1aqFzDSjLuLgEadcha0G8dWl8drbHx/8su
-         XL5BjaCNKh8G6hdWxwDHl3VMR/D+kW+dwIjVolmp+GHVIEvpiFVyWk5d4xu3Js+8Jak/
-         WtQ9w74TeCiP/P1+9SzQgIIwwLbG+z+IXnvWOuUjynn5qNH1jXM6Lhpl0FaeF58ihYQC
-         o/lKJlx7KnS+wuxzeX6MLnm7yF8iZ3mr0dDF60p1LnQ9Gklamr+ti7P32RhB0Eu9oLuY
-         wKAmA7tGw0CSRFvi4JIy3ZuPzNKNPREPsRP3RTyf6EQnpwGMySpSZC9rr0xvKKqSIuoJ
-         ceNw==
-X-Gm-Message-State: APjAAAVRL+h2XfAVKTJLlcb5x/s68m5ziU6aQU2kJdv6+gxbJFEb+Hyv
-        bcQjyLe+RcV+Hyq6IcUPBlsyaz90+HZGXd88byrgn0CNWRUu5fANp9aTXUmSRUafnw+Mwa6lqBe
-        nRFJos4hyHV7yyDbiZukNm72B
-X-Received: by 2002:a37:52d5:: with SMTP id g204mr10243294qkb.215.1578581862081;
-        Thu, 09 Jan 2020 06:57:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwGbU0IaY9Ud+rTAWvjCd+8O9eQGTqr/fi0Y9HIplgcF1WCujVwGE+E2M6bfObjr+FYycncdQ==
-X-Received: by 2002:a37:52d5:: with SMTP id g204mr10243271qkb.215.1578581861864;
-        Thu, 09 Jan 2020 06:57:41 -0800 (PST)
+        bh=Nm8O4Xii0OuE4zFVyte5k6dYfDYh4EMQdTOkPftgaqU=;
+        b=l2rNwxv1MDnfsbYUC4hVLErX0dc4TaAy6yWskGcbiu0dQ1+MgV2v4fPB3cj+rzUx7R
+         WPzdeItIbCBxmM05ZXWxNDFl51Sqf/bub9pern8g7aUsXk8KBJl3zlB06In6SH6bwPr7
+         f2+vNRxr5BNOawGkEaPdbxtEoG5tEvtRU2T+ny6Rr/13mvptbZX6KJQPOnyPVoUK7wj3
+         bMqJspUjRmDPhzJ3VtIK2C4B3Pg6yBWGL2XEVcstfiOK1NrbM9R5e/diN8u2959P6Oki
+         +fiSjctgrU9/V+Eh8JGBkM81vtVP9H0H2u2ggVwPrIUvfG6z/reMkZtEu2BhTlIM/x5R
+         Hgew==
+X-Gm-Message-State: APjAAAVOK3Vmil9IJpELc05ulpYhDdvcB/xs7HZ2V8/0vPuJRT4hhzAK
+        zZggeo4RmXGe5mYoP+2e3MLyl7y4BrUKq5mjZE5U3lxEPuI8ONITPdETbA8q8+T4Xs95jRRGvx0
+        NmkcNQ+A9g0ahRQTrhAAB0AkE
+X-Received: by 2002:ae9:ec01:: with SMTP id h1mr10129983qkg.33.1578581864674;
+        Thu, 09 Jan 2020 06:57:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzNTAs/SAnbPG+ivO60ziyJlazNT+NDxUAFeemJ1UyIi2OiGROdyCVheaB21amr6IgdyN2YNA==
+X-Received: by 2002:ae9:ec01:: with SMTP id h1mr10129964qkg.33.1578581864482;
+        Thu, 09 Jan 2020 06:57:44 -0800 (PST)
 Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.38
+        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 06:57:40 -0800 (PST)
+        Thu, 09 Jan 2020 06:57:43 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Christophe de Dinechin <dinechin@redhat.com>,
@@ -74,9 +74,9 @@ Cc:     Christophe de Dinechin <dinechin@redhat.com>,
         Kevin Kevin <kevin.tian@intel.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>, peterx@redhat.com,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v3 03/21] KVM: Remove kvm_read_guest_atomic()
-Date:   Thu,  9 Jan 2020 09:57:11 -0500
-Message-Id: <20200109145729.32898-4-peterx@redhat.com>
+Subject: [PATCH v3 04/21] KVM: Add build-time error check on kvm_run size
+Date:   Thu,  9 Jan 2020 09:57:12 -0500
+Message-Id: <20200109145729.32898-5-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200109145729.32898-1-peterx@redhat.com>
 References: <20200109145729.32898-1-peterx@redhat.com>
@@ -87,49 +87,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove kvm_read_guest_atomic() because it's not used anywhere.
+It's already going to reach 2400 Bytes (which is over half of page
+size on 4K page archs), so maybe it's good to have this build-time
+check in case it overflows when adding new fields.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- include/linux/kvm_host.h |  2 --
- virt/kvm/kvm_main.c      | 11 -----------
- 2 files changed, 13 deletions(-)
+ virt/kvm/kvm_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 528ab7a814ab..2337f9b6112c 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -725,8 +725,6 @@ void kvm_get_pfn(kvm_pfn_t pfn);
- 
- int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
- 			int len);
--int kvm_read_guest_atomic(struct kvm *kvm, gpa_t gpa, void *data,
--			  unsigned long len);
- int kvm_read_guest(struct kvm *kvm, gpa_t gpa, void *data, unsigned long len);
- int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
- 			   void *data, unsigned long len);
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 3aa21bec028d..24c9cf4c8a52 100644
+index 24c9cf4c8a52..70b78ccaf3b5 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -2048,17 +2048,6 @@ static int __kvm_read_guest_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
- 	return 0;
- }
+@@ -338,6 +338,7 @@ int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+ 	vcpu->pre_pcpu = -1;
+ 	INIT_LIST_HEAD(&vcpu->blocked_vcpu_list);
  
--int kvm_read_guest_atomic(struct kvm *kvm, gpa_t gpa, void *data,
--			  unsigned long len)
--{
--	gfn_t gfn = gpa >> PAGE_SHIFT;
--	struct kvm_memory_slot *slot = gfn_to_memslot(kvm, gfn);
--	int offset = offset_in_page(gpa);
--
--	return __kvm_read_guest_atomic(slot, gfn, data, offset, len);
--}
--EXPORT_SYMBOL_GPL(kvm_read_guest_atomic);
--
- int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
- 			       void *data, unsigned long len)
- {
++	BUILD_BUG_ON(sizeof(struct kvm_run) > PAGE_SIZE);
+ 	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
+ 	if (!page) {
+ 		r = -ENOMEM;
 -- 
 2.24.1
 
