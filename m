@@ -3,114 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EE6C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4FFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF4320721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EED620721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:49:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AC/NQy55"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJli3nwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgAIVqW (ORCPT
+        id S1728750AbgAIVtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:46:22 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23814 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725763AbgAIVqW (ORCPT
+        Thu, 9 Jan 2020 16:49:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52126 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725840AbgAIVtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:46:22 -0500
+        Thu, 9 Jan 2020 16:49:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578606381;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZbAF9d7fjB7aZO4keNV6FYG7yhXE6/ctJ0M/uR6RLjI=;
-        b=AC/NQy55Tph1GZL0hgGWTMCqWxVo1kdDpPPwf7nPaUrIUgjsCVdMSumnYDcPNY78m2tAc0
-        yp1eOdO7VuEouXqxALyS2mSyxBK/fkAMil/Ajag8p7I/FsxYf2ZFSzXDqwSgsaU2wUaY8t
-        W0k+OZbId2cUYtx3+4y+6Mk9QfJZKMI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276--ATCng3CP3KnlYqAzwkAQA-1; Thu, 09 Jan 2020 16:46:17 -0500
-X-MC-Unique: -ATCng3CP3KnlYqAzwkAQA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5709010054E3;
-        Thu,  9 Jan 2020 21:46:16 +0000 (UTC)
-Received: from krava (ovpn-204-81.brq.redhat.com [10.40.204.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2DD59620A6;
-        Thu,  9 Jan 2020 21:46:13 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 22:46:11 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andres Freund <andres@anarazel.de>
-Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] perf c2c: Fix sorting.
-Message-ID: <20200109214611.GC82989@krava>
-References: <20200109043030.233746-1-andres@anarazel.de>
- <20200109084822.GD52936@krava>
- <20200109170041.wgvxcci3mkjh4uee@alap3.anarazel.de>
+        s=mimecast20190719; t=1578606580;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=jP05U3J7xQbdMnr/CfhHt9vwscvvHAPq8Wq8LG9LWJo=;
+        b=cJli3nwIelwtP2ROy2tWCb6nkcaM3VxABEPLiSLB77KZ6WE+kOlIu/QKIERvZPQwzD45m1
+        2RlaPRyv2uYpiBQQl9/5YvFYZ0blUMjwMIUcNCiwbwXn5w+HJrTPCFfbW4B4ofXMVOCBNC
+        TM+XI2sknYSVP6RB5H7tPar2OEYwkro=
+Received: from mail-yw1-f69.google.com (mail-yw1-f69.google.com
+ [209.85.161.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-aDWv_3-LNVujmJDZlyFuUg-1; Thu, 09 Jan 2020 16:49:38 -0500
+X-MC-Unique: aDWv_3-LNVujmJDZlyFuUg-1
+Received: by mail-yw1-f69.google.com with SMTP id l12so5859385ywk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 13:49:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=jP05U3J7xQbdMnr/CfhHt9vwscvvHAPq8Wq8LG9LWJo=;
+        b=sDEf8r11fHeFuAhNxK5CD12VVCLZe7s1RAMrK5J6kQwH2rDX24H3agDtXtktL/99Ak
+         XIUpekSxuXaLT5HXDwUkknpn8UL7umjKFfc3ZyLHHvTi+db9fgZWldnm1W6BuKDHQrBV
+         E8iYVQVpTPTVgCjOx6KtnFKpsXW1qPF+MAcjLjRb7LdQCN3VA9xmCm3Mjc9wivgjxpc6
+         g7Jxy887akysBCgDbK58ZJfKuWpLJnm0xJXWZiuoSMPiOl3ZR4RIRqCIh+PH9syxw/zA
+         6JogTO8w+TKzeAipAhFbxcaK5dX9JQHVAmkryUVevQ6xqz7SCX73dHWrchb9+MXXWbmB
+         yomQ==
+X-Gm-Message-State: APjAAAXEYDYfNcuGRb/w33Pe0GVFVDFmBBLSMO/4F/ba2B1Q1RG91Wbn
+        YAOKd1Q+03TpNIxc66JLGg3wptdawo8JIDF2U1uGkDp3eg6NvekPfEmR3W6PcLa1WoDOTMVZBEL
+        9JakYTEaJb0kbiFBEvS6OaWNj
+X-Received: by 2002:a81:1b88:: with SMTP id b130mr161021ywb.514.1578606578366;
+        Thu, 09 Jan 2020 13:49:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy8ikvQAKqAc60KdU2r0EKeN5NCJJ0/miKwf9hOWHgJ5YdaDBB4+0SwW+TvMSACfP3kocICBg==
+X-Received: by 2002:a81:1b88:: with SMTP id b130mr161003ywb.514.1578606578052;
+        Thu, 09 Jan 2020 13:49:38 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id r66sm47795ywh.57.2020.01.09.13.49.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 13:49:37 -0800 (PST)
+Date:   Thu, 9 Jan 2020 14:49:35 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v4] tpm: Add tpm_version_major sysfs file
+Message-ID: <20200109214935.ud7p7uwjimilxvi7@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org
+References: <20191030225843.23366-1-jsnitsel@redhat.com>
+ <20191128010826.w4ixlix3s3ovta3m@cantor>
+ <20191129235131.GA21546@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200109170041.wgvxcci3mkjh4uee@alap3.anarazel.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20191129235131.GA21546@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:00:41AM -0800, Andres Freund wrote:
+On Sat Nov 30 19, Jarkko Sakkinen wrote:
+>On Wed, Nov 27, 2019 at 06:08:26PM -0700, Jerry Snitselaar wrote:
+>> On Wed Oct 30 19, Jerry Snitselaar wrote:
+>> > Easily determining what TCG version a tpm device implements
+>> > has been a pain point for userspace for a long time, so
+>> > add a sysfs file to report the TCG major version of a tpm device.
+>> >
+>> > Also add an entry to Documentation/ABI/stable/sysfs-class-tpm
+>> > describing the new file.
+>> >
+>> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>> > Cc: Mimi Zohar <zohar@linux.ibm.com>
+>> > Cc: Peter Huewe <peterhuewe@gmx.de>
+>> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>> > Cc: linux-integrity@vger.kernel.org
+>> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>> > ---
+>> > v4: - Change file name to tpm_version_major
+>> >    - Actually display just the major version.
+>> >    - change structs to tpm1_* & tpm2_*
+>> >      instead of tpm12_* tpm20_*.
+>> > v3: - Change file name to version_major.
+>> > v2: - Fix TCG usage in commit message.
+>> >    - Add entry to sysfs-class-tpm in Documentation/ABI/stable
+>> >
+>> > Documentation/ABI/stable/sysfs-class-tpm | 11 ++++++++
+>> > drivers/char/tpm/tpm-sysfs.c             | 34 +++++++++++++++++++-----
+>> > 2 files changed, 38 insertions(+), 7 deletions(-)
+>> >
+>>
+>> Anyone else have feedback?
+>
+>I can apply this after the issues on hand have been sorted out.
+>
+>/Jarkko
+>
 
-SNIP
+Hi Jarkko,
 
-> > >  tools/perf/builtin-c2c.c | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > > index e69f44941aad..f2e9d2b1b913 100644
-> > > --- a/tools/perf/builtin-c2c.c
-> > > +++ b/tools/perf/builtin-c2c.c
-> > > @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> > >  {
-> > >  	struct c2c_hist_entry *c2c_left;
-> > >  	struct c2c_hist_entry *c2c_right;
-> > > -	unsigned int tot_hitm_left;
-> > > -	unsigned int tot_hitm_right;
-> > > +	uint64_t tot_hitm_left;
-> > > +	uint64_t tot_hitm_right;
-> > 
-> > that change looks right, but I can't see how that could
-> > happened because of change in Fixes: tag
-> > 
-> > was the return statement of this function:
-> > 
-> >         return tot_hitm_left - tot_hitm_right;
-> > 
-> > considered to be 'unsigned int' and then converted to int64_t,
-> > which would treat negative 'unsigned int' as big positive 'int64_t'?
-> 
-> Correct. So e.g. when comparing 1 and 2 tot_hitm, we'd get (int64_t)
-> UINT_MAX as a result, which is obviously wrong. However, due to
-> hist_entry__sort() returning int at the time, this was masked, as the
-> int64_t was cast to int. Thereby again yielding a negative number for
-> the comparisons of hist_entry__sort()'s result.  After
-> hist_entry__sort() was fixed however, there never could be negative
-> return values (but 0's are possible) of hist_entry__sort() for c2c.
+Will this get queued up for 5.6?
 
-I see.. ok
+Regards,
+Jerry
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
 
