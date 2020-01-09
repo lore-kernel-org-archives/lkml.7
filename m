@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357A7C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB23C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC02820678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16CA92080D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v1afjnZO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kiKh1nJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbgAIKkk (ORCPT
+        id S1730393AbgAIKkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:40:40 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33031 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730363AbgAIKke (ORCPT
+        Thu, 9 Jan 2020 05:40:39 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35854 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729210AbgAIKke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jan 2020 05:40:34 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so6902355wrq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:40:32 -0800 (PST)
+Received: by mail-wm1-f67.google.com with SMTP id p17so2262276wma.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:40:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=b7p1achi3hv+MDEzAZ+6DTDGP2HgpFNN2VjeZ6HMxR0=;
-        b=v1afjnZOpS/DEoKekXnl8DPdIbSDxVYgF9wFwKqvI0WK08Y8p2rmYBLX5eFfjCRRwx
-         WbEgabZxPCS6KcA6tHoChqDOT8POsslLDg0GpCH7DPIw5QOMOV4YxFTsI9uDxcoqDCee
-         uKNrupbUxB9YL72V8lJi1Oh3eH2P5ZLEFkFAq7V4DwvCz3uUKwGlCZhdvISc4jxNP2Gz
-         w4tXIKA+gsd1Y5Vp9MfNvazkiUx6y2Z8wrIFRN4S3nZZ0edsMc8BbkLbwEZ9OwX4j3sh
-         i7Cfp6EThTGfSwJmqwbCDqH9z6Iz127nQHiS+gmWpIZwTdXurvv4a2gpGuUv/ejQ8J4F
-         TMiA==
+        bh=z3trtf9lM60fJYV2i54u9H1wxPq/DFu4YJvlJQYrNEI=;
+        b=kiKh1nJ+IkW7bQOS0CmMeCtW3tlF1qpgDIddUuXx2gT9Z9QZ9aRoTx7uu/3gNCog3n
+         M0bnNv2JFUxbrx9ovUSTkAVZfSoYIUvNlgJQm08GeTMPfed/I37hkgLYZQes9rXIsxog
+         m9GHdkMENwNQpGXjsDW/9yg/h0JIJLZpV7PGhvrlr+FLhsiOPJ2IL5v0CHUAogCp17/h
+         4J+gm0/lwHGM4GNC832CiJYTck8GbfOE0X8rBtwIVW/iWFK4tcXI+ambxeFfcar0RDMX
+         YtV7BmEfJ67pEMQHwvKuuj4dsPANl4C4yf6/TskpXPr/vllmKls3NgLASjdsnPn6RR6e
+         X9zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b7p1achi3hv+MDEzAZ+6DTDGP2HgpFNN2VjeZ6HMxR0=;
-        b=IYl7snGLv2O4UwHEfA0PcRqH/d1erlhkXHl3i+KLxyrFM3BdjVwoRnwZADRTz+nu/M
-         xUhqG/UKLAG9WVwG0QK/pUcS3gEumAAl4fsZOFWJ1u15DVCh/xJ1Zq+WQEEHNkpB2zfJ
-         ah0IAYQSjZHJURwFIKqH4V1ZGEea1DWNzGxiYtcKMLGMuCsShGhcPd3+KZo+8eXQHX4t
-         F5X2i4URc0mvha+YB/O3jYQegZdMsUSIguIi15mZBeRFkAZJAZsye4/ufdba3nXh+ZUN
-         n1SAdg+7PK3oixZsK4cyFuG3bjm7/vSiBK8JMOHTEmHJGEqqbo+ecUAF0yN1Jiftpbh/
-         80tw==
-X-Gm-Message-State: APjAAAW/bxDBZQGSTbME3HPVwhHyQpkjtlmVay/f2D70H43BzGDibcCX
-        Y70Ks861sCxgDcBZdhJT+fWwIw==
-X-Google-Smtp-Source: APXvYqwG10sYGPAHsUfH85HektNLcxThGnk5TrKTVPFGSlr7hhOAZv5Xc87xCT7r9S4rg6j+D7Rnww==
-X-Received: by 2002:a5d:4045:: with SMTP id w5mr9500114wrp.59.1578566431797;
-        Thu, 09 Jan 2020 02:40:31 -0800 (PST)
+        bh=z3trtf9lM60fJYV2i54u9H1wxPq/DFu4YJvlJQYrNEI=;
+        b=L0Tg33ZxtObYOoMB4zRTfoJ9lRUvVzHphHH8iO/oBpIIxwbQEtMDq3DXUfEZUzli55
+         GA7nhQCHBbBdFDVHg6p3TJ3fDYy2IvzyqcwQExmiiKs7QEhpoQI9xJywhWGbECV9C9RR
+         XXi3RWiI0C4/bPAQkGpif1r57KpTmXhq/nKs5QK3d1iuKKDhM439X07ynArO2D59Urns
+         evIOTmU8+bS6lbtwb8zy+VjR+4tpghDMBECmWnoUTsEV8feF0NJZGy0TKkS7osAtNYgw
+         GCrKptO+el0YmklMF4PROWxl2A/TgGfVMoLaBisgN8GfzR+1XeaEgATYdWGbAzoPa+M4
+         jH1A==
+X-Gm-Message-State: APjAAAWUoP6UwanjGhO94Y4KIyH3FwMroPfFda1En5S8gBuMArv2I2Ih
+        j4amx4pjd0hVL9JMsBMxTpVoaA==
+X-Google-Smtp-Source: APXvYqzbSCeTNHlj/3vljI1mwvOm40rN/nkLnI3xo2ME1tOg/icMsoJaCnEkG1WF6RJ63339K1jMVg==
+X-Received: by 2002:a1c:4c10:: with SMTP id z16mr4241100wmf.136.1578566432958;
+        Thu, 09 Jan 2020 02:40:32 -0800 (PST)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id b10sm7858576wrt.90.2020.01.09.02.40.30
+        by smtp.gmail.com with ESMTPSA id b10sm7858576wrt.90.2020.01.09.02.40.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 02:40:31 -0800 (PST)
+        Thu, 09 Jan 2020 02:40:32 -0800 (PST)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+Cc:     linux-kernel@vger.kernel.org, Bitan Biswas <bbiswas@nvidia.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 3/4] nvmem: imx: ocotp: introduce ocotp_ctrl_reg
-Date:   Thu,  9 Jan 2020 10:40:16 +0000
-Message-Id: <20200109104017.6249-4-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 4/4] nvmem: core: fix memory abort in cleanup path
+Date:   Thu,  9 Jan 2020 10:40:17 +0000
+Message-Id: <20200109104017.6249-5-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200109104017.6249-1-srinivas.kandagatla@linaro.org>
 References: <20200109104017.6249-1-srinivas.kandagatla@linaro.org>
@@ -73,272 +73,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Bitan Biswas <bbiswas@nvidia.com>
 
-Introduce ocotp_ctrl_reg to include the low 16bits mask of CTRL
-register.
+nvmem_cell_info_to_nvmem_cell implementation has static
+allocation of name. nvmem_add_cells_from_of() call may
+return error and kfree name results in memory abort. Use
+kstrdup_const() and kfree_const calls for name alloc and free.
 
-i.MX chips will have different layout of the low 16bits of CTRL
-register, so use ocotp_ctrl_reg will make it clean to add new
-chip support.
+Unable to handle kernel paging request at virtual address ffffffffffe44888
+Mem abort info:
+  ESR = 0x96000006
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000006
+  CM = 0, WnR = 0
+swapper pgtable: 64k pages, 48-bit VAs, pgdp=00000000815d0000
+[ffffffffffe44888] pgd=0000000081d30803, pud=0000000081d30803,
+pmd=0000000000000000
+Internal error: Oops: 96000006 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 43 Comm: kworker/2:1 Tainted
+Hardware name: quill (DT)
+Workqueue: events deferred_probe_work_func
+pstate: a0000005 (NzCv daif -PAN -UAO)
+pc : kfree+0x38/0x278
+lr : nvmem_cell_drop+0x68/0x80
+sp : ffff80001284f9d0
+x29: ffff80001284f9d0 x28: ffff0001f677e830
+x27: ffff800011b0b000 x26: ffff0001c36e1008
+x25: ffff8000112ad000 x24: ffff8000112c9000
+x23: ffffffffffffffea x22: ffff800010adc7f0
+x21: ffffffffffe44880 x20: ffff800011b0b068
+x19: ffff80001122d380 x18: ffffffffffffffff
+x17: 00000000d5cb4756 x16: 0000000070b193b8
+x15: ffff8000119538c8 x14: 0720072007200720
+x13: 07200720076e0772 x12: 07750762072d0765
+x11: 0773077507660765 x10: 072f073007300730
+x9 : 0730073207380733 x8 : 0000000000000151
+x7 : 07660765072f0720 x6 : ffff0001c00e0f00
+x5 : 0000000000000000 x4 : ffff0001c0b43800
+x3 : ffff800011b0b068 x2 : 0000000000000000
+x1 : 0000000000000000 x0 : ffffffdfffe00000
+Call trace:
+ kfree+0x38/0x278
+ nvmem_cell_drop+0x68/0x80
+ nvmem_device_remove_all_cells+0x2c/0x50
+ nvmem_register.part.9+0x520/0x628
+ devm_nvmem_register+0x48/0xa0
+ tegra_fuse_probe+0x140/0x1f0
+ platform_drv_probe+0x50/0xa0
+ really_probe+0x108/0x348
+ driver_probe_device+0x58/0x100
+ __device_attach_driver+0x90/0xb0
+ bus_for_each_drv+0x64/0xc8
+ __device_attach+0xd8/0x138
+ device_initial_probe+0x10/0x18
+ bus_probe_device+0x90/0x98
+ deferred_probe_work_func+0x74/0xb0
+ process_one_work+0x1e0/0x358
+ worker_thread+0x208/0x488
+ kthread+0x118/0x120
+ ret_from_fork+0x10/0x18
+Code: d350feb5 f2dffbe0 aa1e03f6 8b151815 (f94006a0)
+---[ end trace 49b1303c6b83198e ]---
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Fixes: badcdff107cbf ("nvmem: Convert to using %pOFn instead of device_node.name")
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/imx-ocotp.c | 79 ++++++++++++++++++++++++++++-----------
- 1 file changed, 57 insertions(+), 22 deletions(-)
+ drivers/nvmem/core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index fc40555ca4cd..4ba9cc8f76df 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -44,6 +44,14 @@
- #define IMX_OCOTP_BM_CTRL_ERROR		0x00000200
- #define IMX_OCOTP_BM_CTRL_REL_SHADOWS	0x00000400
- 
-+#define IMX_OCOTP_BM_CTRL_DEFAULT				\
-+	{							\
-+		.bm_addr = IMX_OCOTP_BM_CTRL_ADDR,		\
-+		.bm_busy = IMX_OCOTP_BM_CTRL_BUSY,		\
-+		.bm_error = IMX_OCOTP_BM_CTRL_ERROR,		\
-+		.bm_rel_shadows = IMX_OCOTP_BM_CTRL_REL_SHADOWS,\
-+	}
-+
- #define TIMING_STROBE_PROG_US		10	/* Min time to blow a fuse */
- #define TIMING_STROBE_READ_NS		37	/* Min time before read */
- #define TIMING_RELAX_NS			17
-@@ -62,18 +70,31 @@ struct ocotp_priv {
- 	struct nvmem_config *config;
- };
- 
-+struct ocotp_ctrl_reg {
-+	u32 bm_addr;
-+	u32 bm_busy;
-+	u32 bm_error;
-+	u32 bm_rel_shadows;
-+};
-+
- struct ocotp_params {
- 	unsigned int nregs;
- 	unsigned int bank_address_words;
- 	void (*set_timing)(struct ocotp_priv *priv);
-+	struct ocotp_ctrl_reg ctrl;
- };
- 
--static int imx_ocotp_wait_for_busy(void __iomem *base, u32 flags)
-+static int imx_ocotp_wait_for_busy(struct ocotp_priv *priv, u32 flags)
- {
- 	int count;
- 	u32 c, mask;
-+	u32 bm_ctrl_busy, bm_ctrl_error;
-+	void __iomem *base = priv->base;
- 
--	mask = IMX_OCOTP_BM_CTRL_BUSY | IMX_OCOTP_BM_CTRL_ERROR | flags;
-+	bm_ctrl_busy = priv->params->ctrl.bm_busy;
-+	bm_ctrl_error = priv->params->ctrl.bm_error;
-+
-+	mask = bm_ctrl_busy | bm_ctrl_error | flags;
- 
- 	for (count = 10000; count >= 0; count--) {
- 		c = readl(base + IMX_OCOTP_ADDR_CTRL);
-@@ -97,7 +118,7 @@ static int imx_ocotp_wait_for_busy(void __iomem *base, u32 flags)
- 		 * - A read is performed to from a fuse word which has been read
- 		 *   locked.
- 		 */
--		if (c & IMX_OCOTP_BM_CTRL_ERROR)
-+		if (c & bm_ctrl_error)
- 			return -EPERM;
- 		return -ETIMEDOUT;
- 	}
-@@ -105,15 +126,18 @@ static int imx_ocotp_wait_for_busy(void __iomem *base, u32 flags)
- 	return 0;
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 9f1ee9c766ec..1e4a798dce6e 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -83,7 +83,7 @@ static void nvmem_cell_drop(struct nvmem_cell *cell)
+ 	list_del(&cell->node);
+ 	mutex_unlock(&nvmem_mutex);
+ 	of_node_put(cell->np);
+-	kfree(cell->name);
++	kfree_const(cell->name);
+ 	kfree(cell);
  }
  
--static void imx_ocotp_clr_err_if_set(void __iomem *base)
-+static void imx_ocotp_clr_err_if_set(struct ocotp_priv *priv)
- {
--	u32 c;
-+	u32 c, bm_ctrl_error;
-+	void __iomem *base = priv->base;
-+
-+	bm_ctrl_error = priv->params->ctrl.bm_error;
+@@ -110,7 +110,9 @@ static int nvmem_cell_info_to_nvmem_cell(struct nvmem_device *nvmem,
+ 	cell->nvmem = nvmem;
+ 	cell->offset = info->offset;
+ 	cell->bytes = info->bytes;
+-	cell->name = info->name;
++	cell->name = kstrdup_const(info->name, GFP_KERNEL);
++	if (!cell->name)
++		return -ENOMEM;
  
- 	c = readl(base + IMX_OCOTP_ADDR_CTRL);
--	if (!(c & IMX_OCOTP_BM_CTRL_ERROR))
-+	if (!(c & bm_ctrl_error))
- 		return;
- 
--	writel(IMX_OCOTP_BM_CTRL_ERROR, base + IMX_OCOTP_ADDR_CTRL_CLR);
-+	writel(bm_ctrl_error, base + IMX_OCOTP_ADDR_CTRL_CLR);
- }
- 
- static int imx_ocotp_read(void *context, unsigned int offset,
-@@ -140,7 +164,7 @@ static int imx_ocotp_read(void *context, unsigned int offset,
- 		return ret;
- 	}
- 
--	ret = imx_ocotp_wait_for_busy(priv->base, 0);
-+	ret = imx_ocotp_wait_for_busy(priv, 0);
- 	if (ret < 0) {
- 		dev_err(priv->dev, "timeout during read setup\n");
- 		goto read_end;
-@@ -157,7 +181,7 @@ static int imx_ocotp_read(void *context, unsigned int offset,
- 		 * issued
- 		 */
- 		if (*(buf - 1) == IMX_OCOTP_READ_LOCKED_VAL)
--			imx_ocotp_clr_err_if_set(priv->base);
-+			imx_ocotp_clr_err_if_set(priv);
- 	}
- 	ret = 0;
- 
-@@ -274,7 +298,7 @@ static int imx_ocotp_write(void *context, unsigned int offset, void *val,
- 	 * write or reload must be completed before a write access can be
- 	 * requested.
- 	 */
--	ret = imx_ocotp_wait_for_busy(priv->base, 0);
-+	ret = imx_ocotp_wait_for_busy(priv, 0);
- 	if (ret < 0) {
- 		dev_err(priv->dev, "timeout during timing setup\n");
- 		goto write_end;
-@@ -306,8 +330,8 @@ static int imx_ocotp_write(void *context, unsigned int offset, void *val,
- 	}
- 
- 	ctrl = readl(priv->base + IMX_OCOTP_ADDR_CTRL);
--	ctrl &= ~IMX_OCOTP_BM_CTRL_ADDR;
--	ctrl |= waddr & IMX_OCOTP_BM_CTRL_ADDR;
-+	ctrl &= ~priv->params->ctrl.bm_addr;
-+	ctrl |= waddr & priv->params->ctrl.bm_addr;
- 	ctrl |= IMX_OCOTP_WR_UNLOCK;
- 
- 	writel(ctrl, priv->base + IMX_OCOTP_ADDR_CTRL);
-@@ -374,11 +398,11 @@ static int imx_ocotp_write(void *context, unsigned int offset, void *val,
- 	 * be set. It must be cleared by software before any new write access
- 	 * can be issued.
- 	 */
--	ret = imx_ocotp_wait_for_busy(priv->base, 0);
-+	ret = imx_ocotp_wait_for_busy(priv, 0);
- 	if (ret < 0) {
- 		if (ret == -EPERM) {
- 			dev_err(priv->dev, "failed write to locked region");
--			imx_ocotp_clr_err_if_set(priv->base);
-+			imx_ocotp_clr_err_if_set(priv);
- 		} else {
- 			dev_err(priv->dev, "timeout during data write\n");
+ 	cell->bit_offset = info->bit_offset;
+ 	cell->nbits = info->nbits;
+@@ -300,7 +302,7 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
+ 			dev_err(dev, "cell %s unaligned to nvmem stride %d\n",
+ 				cell->name, nvmem->stride);
+ 			/* Cells already added will be freed later. */
+-			kfree(cell->name);
++			kfree_const(cell->name);
+ 			kfree(cell);
+ 			return -EINVAL;
  		}
-@@ -394,10 +418,10 @@ static int imx_ocotp_write(void *context, unsigned int offset, void *val,
- 	udelay(2);
- 
- 	/* reload all shadow registers */
--	writel(IMX_OCOTP_BM_CTRL_REL_SHADOWS,
-+	writel(priv->params->ctrl.bm_rel_shadows,
- 	       priv->base + IMX_OCOTP_ADDR_CTRL_SET);
--	ret = imx_ocotp_wait_for_busy(priv->base,
--				      IMX_OCOTP_BM_CTRL_REL_SHADOWS);
-+	ret = imx_ocotp_wait_for_busy(priv,
-+				      priv->params->ctrl.bm_rel_shadows);
- 	if (ret < 0) {
- 		dev_err(priv->dev, "timeout during shadow register reload\n");
- 		goto write_end;
-@@ -424,65 +448,76 @@ static const struct ocotp_params imx6q_params = {
- 	.nregs = 128,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx6sl_params = {
- 	.nregs = 64,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx6sll_params = {
- 	.nregs = 128,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx6sx_params = {
- 	.nregs = 128,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx6ul_params = {
- 	.nregs = 128,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx6ull_params = {
- 	.nregs = 64,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx7d_params = {
- 	.nregs = 64,
- 	.bank_address_words = 4,
- 	.set_timing = imx_ocotp_set_imx7_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx7ulp_params = {
- 	.nregs = 256,
- 	.bank_address_words = 0,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx8mq_params = {
- 	.nregs = 256,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx8mm_params = {
- 	.nregs = 256,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct ocotp_params imx8mn_params = {
- 	.nregs = 256,
- 	.bank_address_words = 0,
- 	.set_timing = imx_ocotp_set_imx6_timing,
-+	.ctrl = IMX_OCOTP_BM_CTRL_DEFAULT,
- };
- 
- static const struct of_device_id imx_ocotp_dt_ids[] = {
-@@ -521,17 +556,17 @@ static int imx_ocotp_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->clk))
- 		return PTR_ERR(priv->clk);
- 
--	clk_prepare_enable(priv->clk);
--	imx_ocotp_clr_err_if_set(priv->base);
--	clk_disable_unprepare(priv->clk);
--
- 	priv->params = of_device_get_match_data(&pdev->dev);
- 	imx_ocotp_nvmem_config.size = 4 * priv->params->nregs;
- 	imx_ocotp_nvmem_config.dev = dev;
- 	imx_ocotp_nvmem_config.priv = priv;
- 	priv->config = &imx_ocotp_nvmem_config;
--	nvmem = devm_nvmem_register(dev, &imx_ocotp_nvmem_config);
- 
-+	clk_prepare_enable(priv->clk);
-+	imx_ocotp_clr_err_if_set(priv);
-+	clk_disable_unprepare(priv->clk);
-+
-+	nvmem = devm_nvmem_register(dev, &imx_ocotp_nvmem_config);
- 
- 	return PTR_ERR_OR_ZERO(nvmem);
- }
 -- 
 2.21.0
 
