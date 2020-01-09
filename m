@@ -2,107 +2,243 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4738EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F34EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E43F206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C6E206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="ZmSrs3gf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmIrmaBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbgAINwd (ORCPT
+        id S1730607AbgAIN4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:52:33 -0500
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:55761 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731329AbgAINwa (ORCPT
+        Thu, 9 Jan 2020 08:56:02 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43259 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgAIN4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:52:30 -0500
-Received: by mail-wm1-f54.google.com with SMTP id q9so2991651wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:52:29 -0800 (PST)
+        Thu, 9 Jan 2020 08:56:01 -0500
+Received: by mail-io1-f66.google.com with SMTP id n21so7125778ioo.10;
+        Thu, 09 Jan 2020 05:56:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5Dls9W9bj1Gd/Lpqv5BPHUUP2RvMef3FCTEyB1xcyHE=;
-        b=ZmSrs3gfZlGX9yRHbls/OTOQJMinpbZpam24OqN4vYR9asSrgRGCPLZpt0NhLiuQpb
-         wzZ5XSKUTJDyRkmIWZwv1k8GW++vcg36BoxACbhfOj7wKKVrvbWDcc/W8gmp+lKivacg
-         JIB4lQwlXP4prJWeTZ0YTg/Y68sYDKVuKZyw+9WjU7vdXRXB5KUTw42Muyk/Rjv/tZkr
-         cP/8jjSpE7H1Dsr6NtQ9j23PVU2yF0P//wNubjtDiL/s/Q7TKk90DdUGyWpGeBCQpv38
-         KJnHpdATT/CUuFXt3P/CUcv+VH/LtGVavzS3Z/qFQcWMMakOkTfbV49mIPfR+4KNDcKf
-         gF3w==
+        d=gmail.com; s=20161025;
+        h=content-transfer-encoding:mime-version:subject:from:in-reply-to:cc
+         :date:message-id:references:to;
+        bh=mmPlHP71ISpsjXgRBcY1D4awusYQBGYFaYLTtQP8wmc=;
+        b=EmIrmaBtIsP2JO2tpLCZJIdGRaBCIypw9i40eFjaneE+6A4rAtGbzVG60Dn0Nu5DX0
+         zHG6urCV+i+SfYD2eS14NfyXx9MwP73eIlvPrkzP++BZCv99QnfedJSOfI47LEK0ocVV
+         UAzF1bfu7OTv56byVp1mgPXyooxK2iDgBk40e2RCoj5Py9nU48hXtJ1hZ4mDUZKk9jtj
+         HWADdpZIo2UPkwsM5rhzKSrhG9+pMLMaTBxHF1yGnu/P6YdwrftoV7FJPfLtJ/o4ozxp
+         l6gcv3CfFqZuzai4hvP8JSTfhKdiCMdb81OxIK7r50VtzsRwu4mxm8tSuAT9YdLLNR1g
+         Tlgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=5Dls9W9bj1Gd/Lpqv5BPHUUP2RvMef3FCTEyB1xcyHE=;
-        b=hNRdm/tzTIg3WaIgH5o0lRZdHS/FzhM1xLwklkv8nopOMFTZLnPErmXLMgzSkk4R5O
-         0d9Ua4I0Wm+fNjt+SeX/5iZ0ubf2t1H/dBhu7ZW0AE9dTuzZwWr570JDpk3VIePmWcqt
-         I8yfdQn5W5GyFU8vBKl9unD7EgLacGv6OIwkYchtMkbDvT6FBJcV0l+OFucUDXnPeNp4
-         gmIe7yeAO/EmL/l2th2gOgQFbkC2Ry3p0yEwDmNeV8aOlib1keK0TPCWn75sQTvl3qw5
-         n4uc8UBJ9hMSPyq76Z03CgCiwY1AiLIQctCIEKSuP+yZuHPywTfuHvAnLZpskp6KTA6L
-         YS1g==
-X-Gm-Message-State: APjAAAXcWe9ZFwK1a8qQVzU+IUZRxs2xjFT3kge+yaLuUXIQRmBrHmKp
-        6RWMan3rVqCoMgyI0kMWbdcETQ==
-X-Google-Smtp-Source: APXvYqx0+sXU9Xa6uVSv3/rkJoMDUEUGho9XMFd9d3+XzkDYUqX5o+JlJlKdL+1KOfK8+bnYRZVCOQ==
-X-Received: by 2002:a7b:c183:: with SMTP id y3mr4957307wmi.45.1578577948805;
-        Thu, 09 Jan 2020 05:52:28 -0800 (PST)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id q68sm3178254wme.14.2020.01.09.05.52.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:52:28 -0800 (PST)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
-Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/8] arm64: zynqmp: Fix address for tca6416_u97 chip on zcu104
-Date:   Thu,  9 Jan 2020 14:52:17 +0100
-Message-Id: <100294ed4d902923527de042cc87eb59648ce91f.1578577931.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1578577931.git.michal.simek@xilinx.com>
-References: <cover.1578577931.git.michal.simek@xilinx.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:mime-version:subject
+         :from:in-reply-to:cc:date:message-id:references:to;
+        bh=mmPlHP71ISpsjXgRBcY1D4awusYQBGYFaYLTtQP8wmc=;
+        b=s/pFvMQo2W0us8cYEo15hhfVp7/4TGUtFcYEN/cZDROzK4SFXQeTubevFTY292KeAs
+         ssGTyIF1P9hr5rTvHtMV8whsEzIJal/4tLtiPKhvV6RdrVnWT3cMP4EfPGc4r5BTUFbd
+         R/uJ/+jjBEnk+Hho5BwVlHI2W9pLN+bIKWMMMx+9VVlIX/PS0xL8/5hKT1k+VH/zuUqg
+         ySBLaiw/RQJHHT2Vt1D3mUCnJ2QEfraz4AL2syclvmcs2GYXq52tK3Tv8y6X9yi0G6ii
+         dQGpjUqJuFBnUVaoZrJYkJvhU+5zEHk0pHlGfTLLhuMfM93lJrmz8CEVLodxCy8qRmUi
+         kMHQ==
+X-Gm-Message-State: APjAAAW3++jZR66EuA0UtTTXhEvbLh6nJSptH53HgQ55/fJsBcYGnkUS
+        CqjLnW1bfUw+vT9YdeSdIGs=
+X-Google-Smtp-Source: APXvYqzkrr+kjqupl1XB5lRiRX4IqflHY1M08ciXd6HbLYPrL8RQgMexHy/gBLyeRLeqoTZ9nptkdw==
+X-Received: by 2002:a5d:8cda:: with SMTP id k26mr7919141iot.26.1578578160705;
+        Thu, 09 Jan 2020 05:56:00 -0800 (PST)
+Received: from [100.64.72.6] ([173.245.215.240])
+        by smtp.gmail.com with ESMTPSA id v21sm1419524ios.69.2020.01.09.05.55.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 05:56:00 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (1.0)
+Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old udev related code
+From:   Rich Persaud <persaur@gmail.com>
+In-Reply-To: <79a0e144-6e98-9a12-2ad8-89459ae2c426@suse.com>
+Cc:     David Miller <davem@davemloft.net>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Jason Andryuk <jandryuk@gmail.com>,
+        =?utf-8?Q?Marek_Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+Date:   Thu, 9 Jan 2020 08:55:59 -0500
+Message-Id: <5C36C1D3-7FDD-4880-A63C-907441F8C9C0@gmail.com>
+References: <79a0e144-6e98-9a12-2ad8-89459ae2c426@suse.com>
+To:     =?utf-8?Q?J=C3=BCrgen_Gro=C3=9F?= <jgross@suse.com>,
+        "Durrant, Paul" <pdurrant@amazon.com>
+X-Mailer: iPad Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I2c address is not 0x21 but 0x20.
+> On Dec 16, 2019, at 03:31, J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrote:
+>=20
+> =EF=BB=BFOn 16.12.19 09:18, Durrant, Paul wrote:
+>>> -----Original Message-----
+>>> From: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
+>>> Sent: 16 December 2019 08:10
+>>> To: Durrant, Paul <pdurrant@amazon.com>; David Miller
+>>> <davem@davemloft.net>
+>>> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
+>>> kernel@vger.kernel.org; netdev@vger.kernel.org
+>>> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old ud=
+ev
+>>> related code
+>>>> On 13.12.19 11:12, Durrant, Paul wrote:
+>>>>>> -----Original Message-----
+>>>>>> From: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
+>>>>>> Sent: 13 December 2019 10:02
+>>>>>> To: Durrant, Paul <pdurrant@amazon.com>; David Miller
+>>>>>> <davem@davemloft.net>
+>>>>>> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
+>>>>>> kernel@vger.kernel.org; netdev@vger.kernel.org
+>>>>>> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old=
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+>>> udev
+>>>>> related code
+>>>>> On 13.12.19 10:24, Durrant, Paul wrote:
+>>>>>>> -----Original Message-----
+>>>>>>> From: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
+>>>>>>> Sent: 13 December 2019 05:41
+>>>>>>> To: David Miller <davem@davemloft.net>; Durrant, Paul
+>>>>>>> <pdurrant@amazon.com>
+>>>>>>> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
+>>>>>>> kernel@vger.kernel.org; netdev@vger.kernel.org
+>>>>>>> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of ol=
+d
+>>>>> udev
+>>>>>>> related code
+>>>>>>>> On 12.12.19 20:05, David Miller wrote:
+>>>>>>>>> From: Paul Durrant <pdurrant@amazon.com>
+>>>>>>>>> Date: Thu, 12 Dec 2019 13:54:06 +0000
+>>>>>>>>>> In the past it used to be the case that the Xen toolstack relied
+>>>> upon
+>>>>>>>>>> udev to execute backend hotplug scripts. However this has not bee=
+n
+>>>>>> the
+>>>>>>>>>> case for many releases now and removal of the associated code in
+>>>>>>>>>> xen-netback shortens the source by more than 100 lines, and remov=
+es
+>>>>>>>> much
+>>>>>>>>>> complexity in the interaction with the xenstore backend state.
+>>>>>>>>>> NOTE: xen-netback is the only xenbus driver to have a functional
+>>>>>>>> uevent()
+>>>>>>>>>>         method. The only other driver to have a method at all is
+>>>>>>>>>>         pvcalls-back, and currently pvcalls_back_uevent() simply
+>>>>>> returns
+>>>>>>>> 0.
+>>>>>>>>>>         Hence this patch also facilitates further cleanup.
+>>>>>>>>>> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+>>>>>>>>> If userspace ever used this stuff, I seriously doubt you can remov=
+e
+>>>>>> this
+>>>>>>>>> even if it hasn't been used in 5+ years.
+>>>>>>>> Hmm, depends.
+>>>>>>>> This has been used by Xen tools in dom0 only. If the last usage has=
 
-Changes in v2: None
+>>>>>> been
+>>>>>>>> in a Xen version which is no longer able to run with current Linux i=
+n
+>>>>>>>> dom0 it could be removed. But I guess this would have to be a rathe=
+r
+>>>>>> old
+>>>>>>>> version of Xen (like 3.x?).
+>>>>>>>> Paul, can you give a hint since which Xen version the toolstack no
+>>>>>>>> longer relies on udev to start the hotplug scripts?
+>>>>>>> The udev rules were in a file called tools/hotplug/Linux/xen-
+>>>>>> backend.rules (in xen.git), and a commit from Roger removed the NIC
+>>>> rules
+>>>>>> in 2012:
+>>>>>>> commit 57ad6afe2a08a03c40bcd336bfb27e008e1d3e53
+>>>>>> Xen 4.2
+>>>>>>> The last commit I could find to that file modified its name to xen-
+>>>>>> backend.rules.in, and this was finally removed by George in 2015:
+>>>>>>> commit 2ba368d13893402b2f1fb3c283ddcc714659dd9b
+>>>>>> Xen 4.6
+>>>>>>> So, I think this means anyone using a version of the Xen tools withi=
+n
+>>>>>> recent memory will be having their hotplug scripts called directly by=
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>> libxl (and having udev rules present would actually be counter-
+>>>> productive,
+>>>>>> as George's commit states and as I discovered the hard way when the
+>>>> change
+>>>>>> was originally made).
+>>>>>> The problem are systems with either old Xen versions (before Xen 4.2)=
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-index 2d71b4431cce..7a4614e3f5fa 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-@@ -118,9 +118,9 @@ i2c@4 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <4>;
--			tca6416_u97: gpio@21 {
-+			tca6416_u97: gpio@20 {
- 				compatible = "ti,tca6416";
--				reg = <0x21>;
-+				reg = <0x20>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				/*
--- 
-2.24.0
+>>>> or
+>>>>>> with other toolstacks (e.g. Xen 4.4 with xend) which want to use a ne=
+w
+>>>>>> dom0 kernel.
+>>>>>> And I'm not sure there aren't such systems (especially in case someon=
+e
+>>>>>> wants to stick with xend).
+>>>>> But would someone sticking with such an old toolstack expect to run on=
 
+>>>> an unmodified upstream dom0? There has to be some way in which we can
+>>>> retire old code.
+>>>> As long as there are no hypervisor interface related issues
+>>>> prohibiting running dom0 unmodified I think the expectation to be
+>>>> able to use the kernel in that environment is fine.
+>> I think we need a better policy in future then otherwise we will only col=
+lect baggage.
+>=20
+> The Linux kernel policy regarding user interfaces and existing use cases
+> is rather clear and we should not deviate without very strong reasons.
+>=20
+>>> Another question coming up would be: how is this handled in a driver
+>>> domain running netback? Which component is starting the hotplug script
+>>> there? I don't think we can assume a standard Xen toolset in this case.
+>>> So I'd rather leave this code as it is instead of breaking some rare
+>>> but valid use cases.
+>> I am not sure there is a standard. Do we 'support' driver domains with an=
+y sort of tools API or do they really just have to notice things via xenstor=
+e? I agree Linux running as a driver domain could indeed use udev.
+>=20
+> I intend in no way to break projects like Qubes. Disaggregation is
+> one of the very big advantages of Xen over KVM, Hyper-V and VMWare.
+> We should not give that up "just to get rid of some code". Period.
+
+=46rom a quick poll of Qubes and OpenXT netback usage: neither project would=
+ be impacted by the proposed change.  Qubes uses xl devd to call hotplug scr=
+ipts.  OpenXT uses uevent triggers, but does not rely on any script provided=
+ in the uevent.  Ongoing simplification of backend drivers would be welcome.=
+
+
+Rich
+
+>=20
+>>>> Aside from the udev kicks though, I still think the hotplug-status/ring=
+
+>>> state interaction is just bogus anyway. As I said in a previous thread,
+>>> the hotplug-status ought to be indicated as carrier status, if at all, s=
+o
+>>> I still think all that code ought to go.
+>>> I agree regarding the future interface, but with the carrier state just
+>>> being in the plans to be added now, it is clearly too early to remove
+>>> the code with that reasoning.
+>> I don't think so. Like I said, I think the hotplug status has nothing to d=
+o with the state of the shared ring. Even with the code as-is, nothing infor=
+ms the frontend if the netif is subsequently closed or re-plumbed, so why mu=
+st we continue to maintain this code? AFAICT it is just not fit for purpose.=
+
+>=20
+> If it is being used that way we need to continue supporting it.
+>=20
+>=20
+> Juergen
+>=20
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xenproject.org
+> https://lists.xenproject.org/mailman/listinfo/xen-devel
