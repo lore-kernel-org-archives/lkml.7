@@ -2,129 +2,95 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEBEC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D785C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EFA2077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578561589;
-	bh=jUPsCSxMZUMB6dPFB7mw+NFmNdP4wLbr0CsujIasChU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kerwn2iuQiAyDIPcOG8pryn3X6Xlu5960ngDb3FAuwtPQjT6C/YTtClj/ZydgaEcO
-	 +OwhyHVXzXvYZ2Mc2hxjcKkBM+JK3lab+SInLAKrsmxfXVsQWRTdfGLV3y/3nurGGw
-	 3VMH7pUhwA1xsAYWzrFRZuXbu8qPV0REliL57M+A=
+	by mail.kernel.org (Postfix) with ESMTP id 451162075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TNviQdkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbgAIJTk (ORCPT
+        id S1729496AbgAIJTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:19:40 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38109 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729401AbgAIJTi (ORCPT
+        Thu, 9 Jan 2020 04:19:50 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:33121 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729445AbgAIJTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:19:38 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so6568232wrh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:19:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4SCChYUlcp0vzHdJMd/wsYXHSo83PeCAsdJt/W4GS14=;
-        b=g5//1eItlh4I5NMYzYGwlZZhgqxrsjRPw/TQYmJpecgh1WBgD3xajosDDbXkD0Mv38
-         B5LLIsZMug5M9gmtE3k0rtmM3SnKMyHHHOsSCVlFUxFycgNMQNmMwxqw1gTN1IpNehDd
-         BsCrGqWV/NnfJyF8Y7J6BmF4NmavCD4iL/KbCKGc3xWbcTiNrcH3VdBAhxnYYQNqUYck
-         23mSP+NHji06W6mvt1bstGUxQrv8ykTEi8KPpDrd1jUe7hdr749PEN4U9DJiv/jZhUzs
-         bNPxRyluV6OyQNhS6lQBYks+cS2gC/kA9s00I3/aP2Z7lMkSp9qTMJSkuRLw0VhlD+Z7
-         Ohaw==
-X-Gm-Message-State: APjAAAVp0w+BfLgiXLv408TajxTGlUH0ZX2sEHn7HAhoQ467/GR5PqVy
-        6t4bOPQlf+2YfLjwmx1vYaU=
-X-Google-Smtp-Source: APXvYqzvIAD0dwTrG2rTY0SppyZrkxDt7BQWioq4xfUn3/IPLADgOTX+r0s+QdNrn5AXv0Z8PwjeJw==
-X-Received: by 2002:adf:d850:: with SMTP id k16mr9295162wrl.96.1578561576174;
-        Thu, 09 Jan 2020 01:19:36 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id r6sm7680536wrq.92.2020.01.09.01.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 01:19:35 -0800 (PST)
-Date:   Thu, 9 Jan 2020 10:19:34 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Scott Cheloha <cheloha@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>, nathanl@linux.ibm.com,
-        ricklind@linux.vnet.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3] drivers/base/memory.c: cache blocks in radix tree to
- accelerate lookup
-Message-ID: <20200109091934.GK4951@dhcp22.suse.cz>
-References: <20191121195952.3728-1-cheloha@linux.vnet.ibm.com>
- <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
- <20200107214801.GN32178@dhcp22.suse.cz>
- <20200109084955.GI4951@dhcp22.suse.cz>
- <20200109085623.GB2583500@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109085623.GB2583500@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Thu, 9 Jan 2020 04:19:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578561584; h=References: In-Reply-To: Message-Id: Date:
+ Subject: To: From: Sender;
+ bh=8q28cGrjhSMFMAwXbqIsPhh/PbRhjy2086swhnkM2fg=; b=TNviQdkxU3nsnTXVVxLOmtnZAqW2WYPrSvdA6am07eGTNeYC+jPJr1RVyiQv2ef6OCc5x04m
+ BGrQk2XtFG3omDAGkRS3HOhfaO2BUcRzJ9gjobisRGPA18BZeCDjdvhMJQahpMbDCEkGDZf7
+ 4Wc7LMuCwU/8d714CiLYF0BrAQs=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e16f02f.7ff573a914c8-smtp-out-n02;
+ Thu, 09 Jan 2020 09:19:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CAE8FC447A3; Thu,  9 Jan 2020 09:19:41 +0000 (UTC)
+Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8945FC447A4;
+        Thu,  9 Jan 2020 09:19:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8945FC447A4
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
+        robh+dt@kernel.org, sivaprak@codeaurora.org,
+        sricharan@codeaurora.org
+Subject: [PATCH V4 5/5] arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
+Date:   Thu,  9 Jan 2020 14:49:03 +0530
+Message-Id: <1578561543-23132-6-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
+References: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 09-01-20 09:56:23, Greg KH wrote:
-> On Thu, Jan 09, 2020 at 09:49:55AM +0100, Michal Hocko wrote:
-> > On Tue 07-01-20 22:48:04, Michal Hocko wrote:
-> > > [Cc Andrew]
-> > > 
-> > > On Tue 17-12-19 13:32:38, Scott Cheloha wrote:
-> > > > Searching for a particular memory block by id is slow because each block
-> > > > device is kept in an unsorted linked list on the subsystem bus.
-> > > 
-> > > Noting that this is O(N^2) would be useful.
-> > > 
-> > > > Lookup is much faster if we cache the blocks in a radix tree.
-> > > 
-> > > While this is really easy and straightforward, is there any reason why
-> > > subsys_find_device_by_id has to use such a slow lookup? I suspect nobody
-> > > simply needed a more optimized data structure for that purpose yet.
-> > > Would it be too hard to use radix tree for all lookups rather than
-> > > adding a shadow copy for memblocks?
-> > 
-> > Greg, Rafael, this seems to be your domain. Do you have any opinion on
-> > this?
-> 
-> No one has cared about the speed of that call as it has never been on
-> any "fast path" that I know of.  And it should just be O(N), isn't it
-> just walking the list of devices in order?
+These configs are required for booting kernel in qcom
+ipq6018 boards.
 
-Which means that if you have to call it N times then it is O(N^2) and
-that is the case here because you are adding N memblocks. See
-memory_dev_init
-  for each memblock
-    add_memory_block
-      init_memory_block
-        find_memory_block_by_id # checks all existing devices
-        register_memory
-	  device_register # add new device
-  
-In this particular case find_memory_block_by_id is called mostly to make
-sure we are no re-registering something multiple times which shouldn't
-happen so it sucks to spend a lot of time on that. We might think of
-removing that for boot time but who knows what kind of surprises we
-might see from crazy HW setups.
- 
-> If the "memory subsystem" wants a faster lookup for their objects,
-> there's nothing stopping you from using your own data structure for the
-> pointers to the objects if you want.  Just be careful about the lifetime
-> rules.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The main question is whether replacing the linked list with a radix tree
-in the generic code is something more meaningful.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 28fed08..5e0b696 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -405,6 +405,7 @@ CONFIG_PINCTRL_IMX8MN=y
+ CONFIG_PINCTRL_IMX8MQ=y
+ CONFIG_PINCTRL_IMX8QXP=y
+ CONFIG_PINCTRL_IPQ8074=y
++CONFIG_PINCTRL_IPQ6018=y
+ CONFIG_PINCTRL_MSM8916=y
+ CONFIG_PINCTRL_MSM8994=y
+ CONFIG_PINCTRL_MSM8996=y
+@@ -714,6 +715,7 @@ CONFIG_QCOM_CLK_APCS_MSM8916=y
+ CONFIG_QCOM_CLK_SMD_RPM=y
+ CONFIG_QCOM_CLK_RPMH=y
+ CONFIG_IPQ_GCC_8074=y
++CONFIG_IPQ_GCC_6018=y
+ CONFIG_MSM_GCC_8916=y
+ CONFIG_MSM_GCC_8994=y
+ CONFIG_MSM_MMCC_8996=y
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
