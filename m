@@ -2,149 +2,205 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929C7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D113C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6674220678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431D220678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VzfZCWij"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqb+UPXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388382AbgAIR6P (ORCPT
+        id S2388394AbgAIR7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:58:15 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26372 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728653AbgAIR6O (ORCPT
+        Thu, 9 Jan 2020 12:59:49 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36254 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728653AbgAIR7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:58:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578592693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JBGSTMtmWapJS7aBgL4O9DuYqc+2+k4w5AKnZpuk488=;
-        b=VzfZCWijviXbgejBIXy4PNOlt/GxElb3tRBCwPU47Maa0xd1XNCu0JCisOq0LdVeb+s0K1
-        JGp8jC5PBwIK0nFN5+NwvADUWTU9OyEgcog1z2msiy79ieMg5xJxerbgO2LGe9kUzd6j7h
-        rH6ZHC86SQJzBJA5mzvmnAc2E9FOLPI=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-3UJ-Lq4yMau93p41SrjGcQ-1; Thu, 09 Jan 2020 12:58:12 -0500
-X-MC-Unique: 3UJ-Lq4yMau93p41SrjGcQ-1
-Received: by mail-qv1-f72.google.com with SMTP id z9so4590366qvo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 09:58:12 -0800 (PST)
+        Thu, 9 Jan 2020 12:59:49 -0500
+Received: by mail-qk1-f196.google.com with SMTP id a203so6843009qkc.3;
+        Thu, 09 Jan 2020 09:59:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8PkSoGPOiy4o4DnP2NNYtjoXFAX8iabjQVoKoqIqz5c=;
+        b=rqb+UPXBmbt9LxqHLWb2wQkjHE/m7Zrgy3kUrI+o7jFU+3/M3dfv69Wzsn4wrpWbYy
+         zUHOy33yGGfU4PoO72twqpbkFq0KLL4V7csznzM287joigW0bMkLi/aqxGH9yaCKvf/w
+         upqYKRrZSPc6e3khXFG+KxdZHeQ5gfJEmKxQJ4WaF/1hWuZgICoVSZb8aazY6XvLPsPj
+         Ddf0NIvw/o5BsSfIq+PRt0D/R+bTzwWR+3qbIcpRZfnrnj4Nb7tnoZ2LILoyKq0eTYBb
+         ryN78osR5tE0T0Veu21LPfmqW4WPVaHWB1sWGdfwrgBdeQ5izrHS31ZUitUE2RijpKrC
+         J/uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JBGSTMtmWapJS7aBgL4O9DuYqc+2+k4w5AKnZpuk488=;
-        b=VTsJvaI8yFPsqpQlbTLgwQHBrnlD+an739WX4++0OK9aC5cAxywZGrMQeuYtvGyoQG
-         dHQRfZsZKXpPuPaCzaGcMX6nd3YENBFjnpOQGbPWGfJkRQi1x6BxoDsnLwUG/KghH3cl
-         DO+kzpQPxhB23g/pKEv6NGLGEKZ9L9NnxKymBr9Il1PRFwMU7oWsU5zCzObygz1ZtZWs
-         eu4g3aoF1GWuuaMa5lX/j8w0NCJZF78jJS1gZNBHRK02f8mJkYhwDRYQjcm3yQc7RT1g
-         Hi5kS7Mnu8a42lyWsRwpjQOJftCeuCJa4MRLaVNoxY8GC11bx7+RJ7HsHBZJgg5RN+3X
-         sx/Q==
-X-Gm-Message-State: APjAAAXSTXYaIwVPrWD6UKuR59kASEJ5tk3I6A9BvLa2YxgmXV9ljg7M
-        dMPJT7UoWaV4A+ciO6OvRSREP6QjHBP+mSb51F5l5SluhiBkwG33EGR2R9IT+xidLcIcFcWP4cF
-        ziuubMaFPRvBw3gCu2zqqa/Y/
-X-Received: by 2002:a37:741:: with SMTP id 62mr10826923qkh.310.1578592691599;
-        Thu, 09 Jan 2020 09:58:11 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzt1tMKJXpEnh6bxif8A5j8quYCW2A3DAAhInV3udIOmMoe0L+3TtDOeF++5RCfLS3gNbma3w==
-X-Received: by 2002:a37:741:: with SMTP id 62mr10826899qkh.310.1578592691311;
-        Thu, 09 Jan 2020 09:58:11 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id q20sm224975qtl.82.2020.01.09.09.58.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 09:58:10 -0800 (PST)
-Date:   Thu, 9 Jan 2020 12:58:08 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>
-Subject: Re: [PATCH v3 00/21] KVM: Dirty ring interface
-Message-ID: <20200109175808.GC36997@xz-x1>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109094711.00eb96b1@w520.home>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8PkSoGPOiy4o4DnP2NNYtjoXFAX8iabjQVoKoqIqz5c=;
+        b=Rbrj0jn1pXT/xqwoyqKaPaYK9sQ8caaC7aijtdYpCC9UiU502+6embF5889syEWc2s
+         cnZT/gBFfmPxidQwwfyf0FiPA8MKhqgyUDcMp/OORw2YEWp3BwWT9WcdSXHZOVuTOBTt
+         St1LTGv1Y8jh59B3cEtnezTMeZA6Vz5GpVWMWVxdsypM6wcIY86jatXyVYStpVffmImd
+         w+KA+PdpazdHLxprRcnVmEhvopdvw64hQ6uLlOfWRSdm3tQeLsqnGXUc/8ZQn8oo49V9
+         4eAS830B9ZZXjT9TnF5MGtYZVciIJDNxbLtP6cuOQ6GK8lAPHWg2yZynvsDh1K2sHnR6
+         T2jg==
+X-Gm-Message-State: APjAAAVTZ2MctjBDGQ59VSGwZoNrvCR3MiEUwHt7kcd9R/R7u/SDbASp
+        gnvXdeqHFk33opqaQLWUTebYMmQaujhL/qUycDE=
+X-Google-Smtp-Source: APXvYqwRSsDCOH2S2S4sv60fEnTRBs947fHi9e247NVahrgq8MxV2kgGpalTMfJ5tYF7+Kk+WnPM2QEv6CIOPhJJzh8=
+X-Received: by 2002:ae9:e809:: with SMTP id a9mr10590771qkg.92.1578592787759;
+ Thu, 09 Jan 2020 09:59:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200109094711.00eb96b1@w520.home>
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-13-kpsingh@chromium.org>
+ <CAEf4BzY4K-vgSFPjV=pn3quc5DT1+eGkJnZfSw4+b0fERzPVfw@mail.gmail.com> <20200104000955.GB23487@chromium.org>
+In-Reply-To: <20200104000955.GB23487@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 9 Jan 2020 09:59:35 -0800
+Message-ID: <CAEf4Bzam_k99z-bh_kH=M9HUS3+nh_eSGJLffPO4y=_9psH9GA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 12/13] bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:47:11AM -0700, Alex Williamson wrote:
-> On Thu,  9 Jan 2020 09:57:08 -0500
-> Peter Xu <peterx@redhat.com> wrote:
-> 
-> > Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
-> > (based on kvm/queue)
-> > 
-> > Please refer to either the previous cover letters, or documentation
-> > update in patch 12 for the big picture.  Previous posts:
-> > 
-> > V1: https://lore.kernel.org/kvm/20191129213505.18472-1-peterx@redhat.com
-> > V2: https://lore.kernel.org/kvm/20191221014938.58831-1-peterx@redhat.com
-> > 
-> > The major change in V3 is that we dropped the whole waitqueue and the
-> > global lock. With that, we have clean per-vcpu ring and no default
-> > ring any more.  The two kvmgt refactoring patches were also included
-> > to show the dependency of the works.
-> 
-> Hi Peter,
+On Fri, Jan 3, 2020 at 4:09 PM KP Singh <kpsingh@chromium.org> wrote:
+>
+> On 23-Dez 22:49, Andrii Nakryiko wrote:
+> > On Fri, Dec 20, 2019 at 7:42 AM KP Singh <kpsingh@chromium.org> wrote:
+> > >
+> > > From: KP Singh <kpsingh@google.com>
+> > >
+> > > * Load a BPF program that audits mprotect calls
+> > > * Attach the program to the "file_mprotect" LSM hook
+> > > * Verify if the program is actually loading by reading
+> > >   securityfs
+> > > * Initialize the perf events buffer and poll for audit events
+> > > * Do an mprotect on some memory allocated on the heap
+> > > * Verify if the audit event was received
+> > >
+> > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > ---
+> > >  MAINTAINERS                                   |   2 +
+> > >  .../bpf/prog_tests/lsm_mprotect_audit.c       | 129 ++++++++++++++++++
+> > >  .../selftests/bpf/progs/lsm_mprotect_audit.c  |  58 ++++++++
+> > >  3 files changed, 189 insertions(+)
+> > >  create mode 100644 tools/testing/selftests/bpf/prog_tests/lsm_mprotect_audit.c
+> > >  create mode 100644 tools/testing/selftests/bpf/progs/lsm_mprotect_audit.c
+> > >
+> >
+> > [...]
+> >
+> > > +/*
+> > > + * Define some of the structs used in the BPF program.
+> > > + * Only the field names and their sizes need to be the
+> > > + * same as the kernel type, the order is irrelevant.
+> > > + */
+> > > +struct mm_struct {
+> > > +       unsigned long start_brk, brk, start_stack;
+> > > +};
+> > > +
+> > > +struct vm_area_struct {
+> > > +       unsigned long start_brk, brk, start_stack;
+> > > +       unsigned long vm_start, vm_end;
+> > > +       struct mm_struct *vm_mm;
+> > > +       unsigned long vm_flags;
+> > > +};
+> > > +
+> > > +BPF_TRACE_3("lsm/file_mprotect", mprotect_audit,
+> > > +           struct vm_area_struct *, vma,
+> > > +           unsigned long, reqprot, unsigned long, prot)
+> > > +{
+> > > +       struct mprotect_audit_log audit_log = {};
+> > > +       int is_heap = 0;
+> > > +
+> > > +       __builtin_preserve_access_index(({
+> >
+> > you don't need __builtin_preserve_access_index, if you mark
+> > vm_area_struct and mm_struct with
+> > __attribute__((preserve_access_index)
+>
+> Cool, updated!
+>
+> >
+> > > +               is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
+> > > +                                    vma->vm_end <= vma->vm_mm->brk);
+> > > +       }));
+> > > +
+> > > +       audit_log.magic = MPROTECT_AUDIT_MAGIC;
+> > > +       audit_log.is_heap = is_heap;
+> > > +       bpf_lsm_event_output(&perf_buf_map, BPF_F_CURRENT_CPU, &audit_log,
+> > > +                            sizeof(audit_log));
+> >
+> > You test would be much simpler if you use global variables to pass
+> > data back to userspace, instead of using perf buffer.
+> >
+> > Also please see fentry_fexit.c test for example of using BPF skeleton
+> > to shorten and simpify userspace part of test.
+>
+> Thanks for the skeleton work!
+>
+> This makes using global variables easier and the tests are indeed much
+> simpler, I have updated it for the next revision.
+>
+> One follow up question regarding global variables, let's say I have
+> the following global variable defined in the BPF program:
+>
+> struct result_info {
+>         __u32 count;
+> };
+>
+> struct result_info result = {
+>         .count = 0,
+> };
+>
+> The defintion of result_info needs to be included before the .skel.h
+> as it's not automatically generated or maybe I am missing a
+> trick here?
+>
+> For now, I have defined this in a header which gets included both in
+> the program and the test.
 
-Hi, Alex,
+Yes, ideally all common types should be shared in a common header. My
+initial implementation actually supported dumping out all the types in
+a generated skeleton, but that was inconvenient in a lot of cases, so
+I dropped that.
 
-> 
-> Would you recommend this style of interface for vfio dirty page
-> tracking as well?  This mechanism seems very tuned to sparse page
-> dirtying, how well does it handle fully dirty, or even significantly
-> dirty regions?
-
-That's truely the point why I think the dirty bitmap can still be used
-and should be kept.  IIUC the dirty ring starts from COLO where (1)
-dirty rate is very low, and (2) sync happens frequently.  That's a
-perfect ground for dirty ring.  However it for sure does not mean that
-dirty ring can solve all the issues.  As you said, I believe the full
-dirty is another extreme in that dirty bitmap could perform better.
-
-> We also don't really have "active" dirty page tracking
-> in vfio, we simply assume that if a page is pinned or otherwise mapped
-> that it's dirty, so I think we'd constantly be trying to re-populate
-> the dirty ring with pages that we've seen the user consume, which
-> doesn't seem like a good fit versus a bitmap solution.  Thanks,
-
-Right, so I confess I don't know whether dirty ring is the ideal
-solutioon for vfio either.  Actually if we're tracking by page maps or
-pinnings, then IMHO it also means that it could be more suitable to
-use an modified version of dirty ring buffer (as you suggested in the
-other thread), in that we can track dirty using (addr, len) range
-rather than a single page address.  That could be hard for KVM because
-in KVM the page will be mostly trapped in 4K granularity in page
-faults, and it'll also be hard to merge continuous entries with
-previous ones because the userspace could be reading the entries (so
-after we publish the previous 4K dirty page, we should not modify the
-entry any more).  VFIO should not have this restriction because the
-marking of dirty page range can be atomic when the range of pages are
-mapped or pinned.
-
-Thanks,
-
--- 
-Peter Xu
-
+>
+> - KP
+>
+> >
+> > > +       return 0;
+> > > +}
+> > > --
+> > > 2.20.1
+> > >
