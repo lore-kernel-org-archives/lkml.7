@@ -2,101 +2,133 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943B9C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 05:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1AAC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 05:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C7920678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 05:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B04620678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 05:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VBLEGYkd"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PxfPt4NN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbgAIFLv (ORCPT
+        id S1725848AbgAIFMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 00:11:51 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40034 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgAIFLu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 00:11:50 -0500
-Received: by mail-il1-f196.google.com with SMTP id c4so4671274ilo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 21:11:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UfHlaQy6US7aBw4wjE4YMzRfD8j4wvVn9C/uKXknGvE=;
-        b=VBLEGYkdTZtdqR94sj6Tjf0h7XJq62AIYsTyd021wihafB/YFnQabl26zlE6suDM3b
-         YDoyoxxzX/u6qN8yuTxaZE7sLz5INyP7B2NVAKQbaOU7p3+SRqtKHOLSel8BnW4EvEmL
-         HJVwLSrnwsWoy2OT6r+FzNg3Hb7kHcxo6X5QyujDVSPzL+TMS6UJ0D+23U6qH8FJ+O6X
-         D2Mqip21qT/RzMp6BncnERjzOwUsWoS9AjuWBmAr5AhrAiQONi/7eUzgjF8PkTH1JsCg
-         P+6CaXE7Ir4pSrKnQRBuCewXmK+CuwIUj8SkT9sHuobdiK8s38RXGkToOdIhZeygll+8
-         ZIcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UfHlaQy6US7aBw4wjE4YMzRfD8j4wvVn9C/uKXknGvE=;
-        b=FLyJfwVxSkF68+kYFoKAb15ldBWc+yo7Zk4Cv9UTU4rXuO0SRNzXQWwgtsJ+wByIlb
-         hJXuPIsabCH+hcTfwHtBkzAtpZ6Nw+822l/OnRxR7oGHUA6C51BMYBb8F+JBX+s90sXo
-         RhI+VAgWnz7GYjzp6l58rS9N7CPy5wQXYEfXbl5OZlyHExGeMNEJli1DQeLIDyRwk1m9
-         NfEwmYtVZz8gxRcqD6QDm7fWheY7hwc5jll864vpRLCryJMuauSuiQTyVLeFA7gaPA3K
-         atebvEmSiJNZsejsEvo3x1dR6xmSiERlymk3Wy/lG+KZG8EvBhmLgKgc7qNk5f/zsWP0
-         PY7Q==
-X-Gm-Message-State: APjAAAWAVueSDpRNk87fufNE54v5iirotFWc858xBZQ7kE+brV2wxePR
-        9T24u902nZ11tRZvVujwTrWkEW2gjjO/3VoFivhFOw==
-X-Google-Smtp-Source: APXvYqy6jhW/BWgmeQryfExSbB5ZZCHIWOH5y455b2gRqd8d/+uz2PUeTmV3LSSnzW9mzk+cRkzMj2Q25Jj/hNuJe7U=
-X-Received: by 2002:a92:2907:: with SMTP id l7mr7102602ilg.140.1578546709305;
- Wed, 08 Jan 2020 21:11:49 -0800 (PST)
-MIME-Version: 1.0
-References: <CGME20200108115027eucas1p2abcd40e359e993e5b471229b02b69fc3@eucas1p2.samsung.com>
- <20200108115007.31095-1-m.szyprowski@samsung.com>
-In-Reply-To: <20200108115007.31095-1-m.szyprowski@samsung.com>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Thu, 9 Jan 2020 13:11:38 +0800
-Message-ID: <CA+Px+wUo7i331kEuc2mjE9uqSna7Lxnua=hvgPc+0T2YdeCgMg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ASoC: max98090: fix incorrect helper in max98090_dapm_put_enum_double()
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     ALSA development <alsa-devel@alsa-project.org>,
+        Thu, 9 Jan 2020 00:12:08 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52511 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbgAIFMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 00:12:07 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tZ3l0TdTz9sRW;
+        Thu,  9 Jan 2020 16:12:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578546724;
+        bh=QA8ykIBgXdJHHmcJeSCaM8Lb3DNtWxLG5NWiWOAvPS8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PxfPt4NNqT7kL1m1ZlWYu4BohonoFu1yfU91AKgv3g6Mfp7mwIpO5YnTmv5MTUWhY
+         GgjMAwdLhbrd+oCIAOhXLdukknYNNzWPelMeDqckHJHHHd4wzKWDFWqv4aMw9nfQpi
+         ug86AW9KhexBczMYZ2vTSeEJe4b0K5vJ2vbxEcUr5jW5eMFOSacI/RltC8Z8JbUqeu
+         N9J6AFoMG3N/Ub8AGUtM8K+GDzhM+lhs2nm7+N99sSDS1/8PnqlWhRyoKSpfhKiWdz
+         INsVUP2Jj8KJwuYA84XPLl8VbwEE89/568xVDYfs8mbaXEX7zJBBsiXKeb5rk8VwKQ
+         lmc2kdOvfnIsA==
+Date:   Thu, 9 Jan 2020 16:12:02 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>, David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Dylan Reid <dgreid@google.com>,
-        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alexandru-Mihai Maftei <amaftei@solarflare.com>
+Subject: linux-next: manual merge of the generic-ioremap tree with the
+ net-next tree
+Message-ID: <20200109161202.1b0909d9@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/RIa0AbXsBTQ9W2mKrfN=yIJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 7:50 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
-> Fixes: 62d5ae4cafb7 ("ASoC: max98090: save and restore SHDN when changing sensitive registers")
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
+--Sig_/RIa0AbXsBTQ9W2mKrfN=yIJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for finding and fixing the bug.
+Hi all,
 
-The fix also reminded me: there are two possible "context" to call
-max98090_dapm_put_enum_double( ): DAPM and userspace mixer control.
-- max98090_shdn_save( ) is designed for mixer control because it
-acquires dapm_mutex.
-- max98090_shdn_save_locked( ) is designed for DAPM without acquiring lock.
+Today's linux-next merge of the generic-ioremap tree got a conflict in:
 
-Current code:
-> +static int max98090_dapm_put_enum_double(struct snd_kcontrol *kcontrol,
-[snip]
-> + max98090_shdn_save(max98090);
-> + ret = snd_soc_dapm_put_enum_double(kcontrol, ucontrol);
-> + max98090_shdn_restore(max98090);
+  drivers/net/ethernet/sfc/efx.c
 
-Should it cause a deadlock if DAPM calls the
-max98090_dapm_put_enum_double( )?  I didn't see a deadlock last time I
-tested the series.  Will do further analysis on this.
+between commit:
+
+  f1826756b499 ("sfc: move struct init and fini code")
+
+from the net-next tree and commit:
+
+  4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
+
+from the generic-ioremap tree.
+
+I fixed it up (the latter moved the code, so I applied the following
+merge fix patch) and can carry the fix as necessary. This is now fixed
+as far as linux-next is concerned, but any non trivial conflicts should
+be mentioned to your upstream maintainer when your tree is submitted
+for merging.  You may also want to consider cooperating with the
+maintainer of the conflicting tree to minimise any particularly complex
+conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 9 Jan 2020 16:08:52 +1100
+Subject: [PATCH] fix up for "sfc: move struct init and fini code"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/net/ethernet/sfc/efx_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/sfc/efx_common.c b/drivers/net/ethernet/s=
+fc/efx_common.c
+index fe74c66c8ec6..bf0126633c25 100644
+--- a/drivers/net/ethernet/sfc/efx_common.c
++++ b/drivers/net/ethernet/sfc/efx_common.c
+@@ -954,7 +954,7 @@ int efx_init_io(struct efx_nic *efx, int bar, dma_addr_=
+t dma_mask,
+ 		goto fail3;
+ 	}
+=20
+-	efx->membase =3D ioremap_nocache(efx->membase_phys, mem_map_size);
++	efx->membase =3D ioremap(efx->membase_phys, mem_map_size);
+ 	if (!efx->membase) {
+ 		netif_err(efx, probe, efx->net_dev,
+ 			  "could not map memory BAR at %llx+%x\n",
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/RIa0AbXsBTQ9W2mKrfN=yIJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4WtiIACgkQAVBC80lX
+0GxrdQf/Qe09sntulvZvyRuitkoeFqoKe86oZn23jbPWcB7UOJDRXW127OHq5hYp
+2BI/v65vM5qwK6i8UsQfLdgzIUbSWHwFJE5wlSnpFmZURPJEI3Jz0FlmLMEiRt3A
+/rRERlcuPD7juwlJT8V80QwkYcpa/4gkn8ojEoIK+A/1n5EApKsTfzoF1CQoKazB
+oiDTZzN1Q14D7IunTQyBZo2hmmC8t9t9zhBQJ2QdRQnqCt6/IkR/v4FeHXGA8g3Y
+sbmjJ7MJLdMzLH04N/paFtqGj8oNNmKadUs1SSRLW35bgOMT9x7Ix+JrBr7BRdmv
+4DYrImolmmQhGYwnyhxiGc1TMdEKPQ==
+=GP+f
+-----END PGP SIGNATURE-----
+
+--Sig_/RIa0AbXsBTQ9W2mKrfN=yIJ--
