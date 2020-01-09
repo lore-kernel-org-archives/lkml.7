@@ -2,90 +2,166 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699E1C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AE8C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408E82075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578571753;
-	bh=sGzGC6Q4Ug/nqvIAsgJRv6Hhir62ZVZTwW6WvkOtzPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2DozU03RzM+O3pRftoPTeXOfOr4TrfxjvX0slkZ9XHo5ZqifmwsmnCPEzzEHBb/2s
-	 dRIRQ0lnc1hN40EnMmZMSMtpmGK+vFI+8lVzkMTvnmkHf0FjJkEWEPkLEx7KYAd7q4
-	 Eis1Wn7X8jIhHMzPju0j31ZanAWzlz1GiqbunD/c=
+	by mail.kernel.org (Postfix) with ESMTP id 55BAF2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbgAIMJM (ORCPT
+        id S1730833AbgAIMMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:09:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 07:12:23 -0500
+Received: from mx.socionext.com ([202.248.49.38]:22779 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728653AbgAIMJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:09:12 -0500
-Received: from localhost (unknown [171.76.123.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C25382067D;
-        Thu,  9 Jan 2020 12:09:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578571751;
-        bh=sGzGC6Q4Ug/nqvIAsgJRv6Hhir62ZVZTwW6WvkOtzPw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bU4yl5C81fcuSd0rXFhCOebc+DS4Hfkx5YnGicFukPBQiDU+bVtoIG7NPl+GrejpV
-         1omSgAVs5YeBmEkE6L2KOfZUQMEtt7ELUTYAPXGc5e+XkIa8eOCBeeaH6TDSPXMutK
-         efW87KsGW2NRPpMtTLeN1F53RkinzHFC71QYmLFY=
-Date:   Thu, 9 Jan 2020 17:39:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>
-Subject: Re: [PATCH v5 0/4] usb: xhci: Add support for Renesas USB controllers
-Message-ID: <20200109120905.GV2818@vkoul-mobl>
-References: <20191106083843.1718437-1-vkoul@kernel.org>
- <CANcMJZDqX6-+naGEbBiyM+1cZS6jfMoP9bm5Uk4ZuP_mw5aNWw@mail.gmail.com>
- <20200108040707.GU2818@vkoul-mobl>
- <20200108062436.GA2276347@kroah.com>
- <b0dc038b-cc25-1d37-9339-689bb5b61ff7@linux.intel.com>
- <20200108182907.GB2549996@kroah.com>
+        id S1730167AbgAIMMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 07:12:22 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 09 Jan 2020 21:12:20 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id A5D3B603AB;
+        Thu,  9 Jan 2020 21:12:20 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 9 Jan 2020 21:13:11 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 322C540343;
+        Thu,  9 Jan 2020 21:12:20 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id F0BFA120136;
+        Thu,  9 Jan 2020 21:12:19 +0900 (JST)
+Date:   Thu, 09 Jan 2020 21:12:20 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] dmaengine: uniphier-xdmac: Add UniPhier external DMA controller driver
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20191227063411.GG3006@vkoul-mobl>
+References: <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com> <20191227063411.GG3006@vkoul-mobl>
+Message-Id: <20200109211219.57FC.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108182907.GB2549996@kroah.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-01-20, 19:29, Greg Kroah-Hartman wrote:
-> On Wed, Jan 08, 2020 at 06:00:48PM +0200, Mathias Nyman wrote:
- 
+Hi Vinod,
+
+Thank you for your comment.
+
+On Fri, 27 Dec 2019 12:04:11 +0530 <vkoul@kernel.org> wrote:
+
+> On 18-12-19, 09:57, Kunihiko Hayashi wrote:
+> > This adds external DMA controller driver implemented in Socionext
+> > UniPhier SoCs. This driver supports DMA_MEMCPY and DMA_SLAVE modes.
 > > 
-> > Reviewing this always got bumped down on my todo list as other urgent issues
-> > came up.
-> > 
-> > I think the concern about adding this amount of renesas specific code to
-> > xhci-pci.c is valid. This series adds over 900 lines of Renesas FW loading
-> > code to a 600 line xhci-pci.c
+> > Since this driver does not support the the way to transfer size
+> > unaligned to burst width, 'src_maxburst' or 'dst_maxburst' of
 > 
-> Yeah, that's not good, should be simple to split it into a separate file
-> that's only build if that hardware is selected.
+> You mean driver does not support any unaligned bursts?
 
-Okay let me redo the patches splitting it up. If you have any thoughts
-about how that should be done, do let me know.
+Yes. If transfer size is unaligned to burst size, the final transfer
+will be overrun.
 
-Thanks
--- 
-~Vinod
+> 
+> > +static int uniphier_xdmac_probe(struct platform_device *pdev)
+> > +{
+> > +	struct uniphier_xdmac_device *xdev;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct dma_device *ddev;
+> > +	int irq;
+> > +	int nr_chans;
+> > +	int i, ret;
+> > +
+> > +	if (of_property_read_u32(dev->of_node, "dma-channels", &nr_chans))
+> > +		return -EINVAL;
+> > +	if (nr_chans > XDMAC_MAX_CHANS)
+> > +		nr_chans = XDMAC_MAX_CHANS;
+> > +
+> > +	xdev = devm_kzalloc(dev, struct_size(xdev, channels, nr_chans),
+> > +			    GFP_KERNEL);
+> > +	if (!xdev)
+> > +		return -ENOMEM;
+> > +
+> > +	xdev->nr_chans = nr_chans;
+> > +	xdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(xdev->reg_base))
+> > +		return PTR_ERR(xdev->reg_base);
+> > +
+> > +	ddev = &xdev->ddev;
+> > +	ddev->dev = dev;
+> > +	dma_cap_zero(ddev->cap_mask);
+> > +	dma_cap_set(DMA_MEMCPY, ddev->cap_mask);
+> > +	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
+> > +	ddev->src_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
+> > +	ddev->dst_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
+> > +	ddev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
+> > +			   BIT(DMA_MEM_TO_MEM);
+> > +	ddev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+> > +	ddev->max_burst = XDMAC_MAX_WORDS;
+> > +	ddev->device_free_chan_resources = uniphier_xdmac_free_chan_resources;
+> > +	ddev->device_prep_dma_memcpy = uniphier_xdmac_prep_dma_memcpy;
+> > +	ddev->device_prep_slave_sg = uniphier_xdmac_prep_slave_sg;
+> > +	ddev->device_config = uniphier_xdmac_slave_config;
+> > +	ddev->device_terminate_all = uniphier_xdmac_terminate_all;
+> > +	ddev->device_synchronize = uniphier_xdmac_synchronize;
+> > +	ddev->device_tx_status = dma_cookie_status;
+> > +	ddev->device_issue_pending = uniphier_xdmac_issue_pending;
+> > +	INIT_LIST_HEAD(&ddev->channels);
+> > +
+> > +	for (i = 0; i < nr_chans; i++) {
+> > +		ret = uniphier_xdmac_chan_init(xdev, i);
+> > +		if (ret) {
+> > +			dev_err(dev,
+> > +				"Failed to initialize XDMAC channel %d\n", i);
+> > +			return ret;
+> 
+> so on error for channel N we leave N-1 channels initialized?
+
+The uniphier_xdmac_chan_init() always returns 0, so this error decision
+can be removed.
+
+> > +static int uniphier_xdmac_remove(struct platform_device *pdev)
+> > +{
+> > +	struct uniphier_xdmac_device *xdev = platform_get_drvdata(pdev);
+> > +	struct dma_device *ddev = &xdev->ddev;
+> > +	struct dma_chan *chan;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Before reaching here, almost all descriptors have been freed by the
+> > +	 * ->device_free_chan_resources() hook. However, each channel might
+> > +	 * be still holding one descriptor that was on-flight at that moment.
+> > +	 * Terminate it to make sure this hardware is no longer running. Then,
+> > +	 * free the channel resources once again to avoid memory leak.
+> > +	 */
+> > +	list_for_each_entry(chan, &ddev->channels, device_node) {
+> > +		ret = dmaengine_terminate_sync(chan);
+> > +		if (ret)
+> > +			return ret;
+> > +		uniphier_xdmac_free_chan_resources(chan);
+> 
+> terminating sounds okayish but not freeing here. .ree_chan_resources()
+> should have been called already and that should ensure that termination
+> is already done...
+
+If all transfers are complete, .device_free_chan_resources() should be called.
+Since _remove() might be called asynchronously, this is post-processing just
+before transfer completion.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
+
