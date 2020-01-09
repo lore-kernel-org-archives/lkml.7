@@ -6,158 +6,161 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805BCC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62ABC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BCF2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578612996;
-	bh=DnL8Ly/LygZ6d0AbvckQYojNF/EYaPqPBuw/KO5HXrU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C+XQVJNXPihVM1E344mAjLcklT/wv2M7EGl9LpQx+XzTRfcW+oDC7MQjeINwyic4g
-	 U74j7lfQ82e15xHf/7nS1vqYMw9GCvC44x2NgRaLsJP97zLan4iZQwNAtK2pvIHzTR
-	 iOIcuH2rzHBJXQEoOjYg+C7W/ZiQ92w1zwyIqmxI=
+	by mail.kernel.org (Postfix) with ESMTP id 7E6082073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:36:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fla/iTcE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgAIXgf (ORCPT
+        id S1729479AbgAIXgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:36:35 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34706 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgAIXgf (ORCPT
+        Thu, 9 Jan 2020 18:36:47 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:27496 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgAIXgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:36:35 -0500
-Received: by mail-lj1-f193.google.com with SMTP id z22so182853ljg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 15:36:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7cxh9JzYgfLEYpSRugGbgPEiMf2GtUPcs7IzFV2N1Vs=;
-        b=C37Juki7Lamw1te5hiIssO4V+b4sUkmGmgc8ZoZ+oIv356CJDBJW6RrqpbhIjSLj2B
-         926UXuFD8HK4wO3/kam3YHqxYdPl4dXd38h8UJY/UU6X3LVjIQJEiUmq1FB1t6LtIXHS
-         PEgjFnPwrA+8KZsQa2xyfmrYzvTotqkwqCb0Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7cxh9JzYgfLEYpSRugGbgPEiMf2GtUPcs7IzFV2N1Vs=;
-        b=CcJ0T2I/EZ0Z9wbAp7HkIT2vwyIkmLvJ16OSL+r9qdLNkfgt8hqnob61DdsG9nHG7M
-         Qh/qaEvrKcH68xOB2uHciQLCBdBOtGqVbRqi3YzD3rIMc+2eVTMA8xwhD2MGvSj9kxRU
-         Z52vT8L40FiK9YdFqIeLpLsMG76yA3juEz9T48hV2cRubkXp/mRIfhT5rO0Tbeupo5kJ
-         81VwMVmGsZvFdiM/ZMztlfvxmgglVkOzLkhAPg9oL/PYxiJrGt6Ow4Ux6C6nr+OL3kor
-         2VqPvnwU1GzetOxJgGjyJZG+PEaeVgxeDtCWl95zfqV1JiomownaMWIbbK26Ar2Tfwkr
-         dweA==
-X-Gm-Message-State: APjAAAXZ+AfLk8/DlHwqeXEtYJREQ8SWwaRG32QVzHh2m+h0ZTYapIt2
-        vPU4CdKlu7gVbwXasL3tvqoEfiTroN4=
-X-Google-Smtp-Source: APXvYqy3+FZovVXEMGW9czgYseKJJ1pI362pm4W3XxMSbrfjalZ0/wJdnLGLvn8vOvxm8ucQgv6l0w==
-X-Received: by 2002:a2e:a408:: with SMTP id p8mr331630ljn.145.1578612992283;
-        Thu, 09 Jan 2020 15:36:32 -0800 (PST)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id y10sm53335ljm.93.2020.01.09.15.36.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 15:36:30 -0800 (PST)
-Received: by mail-lf1-f48.google.com with SMTP id n25so88230lfl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 15:36:30 -0800 (PST)
-X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr196452lfp.106.1578612989927;
- Thu, 09 Jan 2020 15:36:29 -0800 (PST)
+        Thu, 9 Jan 2020 18:36:47 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200109233644epoutp01f47b48a33fa4fe8d43efcb934ac22ae6~oXCnejIrV1215112151epoutp01a
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 23:36:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200109233644epoutp01f47b48a33fa4fe8d43efcb934ac22ae6~oXCnejIrV1215112151epoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578613004;
+        bh=WiKz/Fx6wAw2jEhCCjWyRhWqfPx9MgmbZWS9fsOk5dc=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=Fla/iTcEEQvnl4PzH055NEk8F5qacNDsHOwP2Qj9YFtFz5qxLyWLk9mfK7YS0OUJi
+         evf5HLLOAWMWjZ340+fgo8+74i69QXo16jenpJAd6JCICOf7iw4y/5NybnS3LxeRyY
+         oq+3n7d1NpY7KdpddQXvStc0UJniVIaD5WbFdLJg=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200109233643epcas1p30d2b0803d2d56b112432a4ba9cccb409~oXCm7bWxw0751607516epcas1p3k;
+        Thu,  9 Jan 2020 23:36:43 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.160]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47v2ZL4j3XzMqYm0; Thu,  9 Jan
+        2020 23:36:42 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DA.1D.52419.A09B71E5; Fri, 10 Jan 2020 08:36:42 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200109233642epcas1p4561e344300482cc472a3d4d0171b548a~oXCllQuVR2080120801epcas1p4N;
+        Thu,  9 Jan 2020 23:36:42 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200109233642epsmtrp1047e920b3fde36def05112c30169adc7~oXClkeygN2101021010epsmtrp1d;
+        Thu,  9 Jan 2020 23:36:42 +0000 (GMT)
+X-AuditID: b6c32a37-5b7ff7000001ccc3-55-5e17b90adba2
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AF.D6.10238.A09B71E5; Fri, 10 Jan 2020 08:36:42 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200109233641epsmtip27e654c8c40a9b395ad6cb6e032cdeab7~oXClVahlk1016610166epsmtip2f;
+        Thu,  9 Jan 2020 23:36:41 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Arnd Bergmann'" <arnd@arndb.de>
+Cc:     <linux-kernel@vger.kernel.org>,
+        "'Linux FS-devel Mailing List'" <linux-fsdevel@vger.kernel.org>,
+        "'gregkh'" <gregkh@linuxfoundation.org>,
+        "'Valdis Kletnieks'" <valdis.kletnieks@vt.edu>,
+        "'Christoph Hellwig'" <hch@lst.de>, <sj1557.seo@samsung.com>,
+        <linkinjeon@gmail.com>
+In-Reply-To: <CAK8P3a1wcrKzhhODwoQTu=WHorkd+dQThk+G9w77QSgJ=LnR4A@mail.gmail.com>
+Subject: RE: [PATCH v8 02/13] exfat: add super block operations
+Date:   Fri, 10 Jan 2020 08:36:41 +0900
+Message-ID: <002001d5c745$a57b4dd0$f071e970$@samsung.com>
 MIME-Version: 1.0
-References: <nycvar.YFH.7.76.2001091519080.31058@cbobk.fhfr.pm>
- <CAHk-=wj+zyWsZGhiCiopkrnu1_bkNE1Ax+82sP4Donsv9pUZuw@mail.gmail.com>
- <nycvar.YFH.7.76.2001092032430.31058@cbobk.fhfr.pm> <nycvar.YFH.7.76.2001092137460.31058@cbobk.fhfr.pm>
-In-Reply-To: <nycvar.YFH.7.76.2001092137460.31058@cbobk.fhfr.pm>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Jan 2020 15:36:13 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh_-q=MPtYmcb4gUHtQ2M96BVrzoDo3pauU-Ps9Q5uPtg@mail.gmail.com>
-Message-ID: <CAHk-=wh_-q=MPtYmcb4gUHtQ2M96BVrzoDo3pauU-Ps9Q5uPtg@mail.gmail.com>
-Subject: Re: [GIT PULL] HID fixes
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQEpoQLVeCzgpkP5O8EfgqcyF1wLQwHsN8nXAH0AW2oCoNSnnqkS+JFw
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TWUwTYRDO393uLkjJUhAmKFpX0aBWW2phMdaLaqrwgNEnE8ENbCixl92W
+        iLwQTCrihb5QqxCkRgVMiooIHkFaj5goCjwoJBov4gFq8bYoWroYeftm5vvmm/kPCpNfIpKp
+        EouDt1s4E0NE4+2BNKUyujMpX+Vrmsf+PnqbZPd4fQTb1HJLwj56Moix167fxdn+KycItm38
+        ppTt+xjEV1OGsdBRZOj0PCENXXXnSMPVgQrCcKitGRk+X5hl8F8eIfLIraYVRp4r4u0K3lJo
+        LSqxFOuYnM0F2QXaDJVaqc5iMxmFhTPzOkafm6dcX2IKT8UoSjmTM5zK4wSBWbpyhd3qdPAK
+        o1Vw6BjeVmSyqVW2JQJnFpyW4iWFVvNytUqVrg0zt5uMtcEqwlYZs+vL+XGyAh2kqlEUBfQy
+        GAndwKpRNCWnOxCcdPdLxeATgobX7RIx+Iagzu0m/knaa/aSYuE6gqrmU0gM3iIYcgXwCRZB
+        K2H8V1dEkUCnwrtXVyMKjHZLoG6kMVKIojfBse4OcgLH06ug9eFFyQTGw4IXTf2RvIzOgh+h
+        50jEcXD32KuIAUYvgtMnhzFxJAX8HDotFc3WQ+8ZLyZyEuD4PldkO6D/EDAUGJSIAj00jjaS
+        Io6Hd3faJnEyvD3sCmMqjMthtGuyfxWCN991ItbAgK9VOkHB6DTwXVkqpudA51gdEm1j4cPX
+        A1KxiwyqXHKRkgqH+gKTA8yA6r1BsgYxnimLeaYs5pmygOe/WQPCm1EibxPMxbygtmmm3vYF
+        FHmyCzM7UGtPrh/RFGJiZMb4pHy5lCsVysx+BBTGJMhuPU7Ml8uKuLLdvN1aYHeaeMGPtOFz
+        P4IlTy+0hj+AxVGg1qZrNBp2WUZmhlbDJMmoH73b5HQx5+B38LyNt//TSaio5AqUcur7/viz
+        H7xpoffndjXqhL4tZfO5dYm9NzMWeFY/SJc/+Joq5LzMhIHD2Sk7E5wBv7He9dFlGH4a2uBu
+        W1Ne02OZ+2mxwzujB/c9q10czKG7p92nK5+RM9/fG+69w/pb9Ce64wZrY7yV23NLg5dnF9YL
+        m16O8rGz8ZKNsWv36xlcMHLqhZhd4P4CSsQUMMgDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsWy7bCSvC7XTvE4g+lH2C3+TjrGbtG8eD2b
+        xcrVR5ksrt+9xWyxZ+9JFovLu+awWWz5d4TV4tL7DywOHB6/f01i9Ng56y67x/65a9g9dt9s
+        YPPo27KK0ePzJjmPQ9vfsAWwR3HZpKTmZJalFunbJXBl3Ho+ibHgPnfFhdvzmBoYn7B3MXJy
+        SAiYSGyb0A5kc3EICexmlNj2Yh0zREJa4tiJM0A2B5AtLHH4cDFEzXNGiSvNL8Bq2AR0Jf79
+        2c8GYosIqEq8erIbbBCzwDwmiakrF7NAdLQwSay4uJoRpIpTIFBi5sEdYKuFBewlNlzYzARi
+        swB1P1p5GSzOK2Ap8ePXQ0YIW1Di5MwnLCA2s4C2xNObT+HsZQtfQ12qIPHz6TJWiCvcJC4u
+        X8wMUSMiMbuzjXkCo/AsJKNmIRk1C8moWUhaFjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L
+        10vOz93ECI43Lc0djJeXxB9iFOBgVOLhzRAWjxNiTSwrrsw9xCjBwawkwnv0hlicEG9KYmVV
+        alF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NTC1KLYLJMHJxSDYyJVz4WTE/P+21UMumS
+        Yh4L+9kLHCvvL+udf6tIyib6x+LisMy3DPen68dyr1HZICJVZl/8or5znvMdRQn+g67/9xhy
+        /d71x/OTAMeTrfOvibYXuVW8MlKf2Pg84rWr0qm+mdYmix6JqdSs/16Xdfv+m7Mm+t3rXmtd
+        uPMkIKMuJFGzNNV7v6QSS3FGoqEWc1FxIgA0uLVmswIAAA==
+X-CMS-MailID: 20200109233642epcas1p4561e344300482cc472a3d4d0171b548a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73
+References: <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
+        <20191220062419.23516-1-namjae.jeon@samsung.com>
+        <20191220062419.23516-3-namjae.jeon@samsung.com>
+        <CAK8P3a1wcrKzhhODwoQTu=WHorkd+dQThk+G9w77QSgJ=LnR4A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 12:38 PM Jiri Kosina <jikos@kernel.org> wrote:
->
-> From: Jiri Kosina <jkosina@suse.cz>
-> Subject: [PATCH] HID: hidraw, uhid: Always report EPOLLOUT
+> > +static int exfat_fill_super(struct super_block *sb, struct fs_context
+> > +*fc) =7B
+> > +       struct exfat_sb_info *sbi =3D sb->s_fs_info;
+> > +       struct exfat_mount_options *opts =3D &sbi->options;
+> > +       struct inode *root_inode;
+> > +       int err;
+> > +
+> > +       if (opts->allow_utime =3D=3D (unsigned short)-1)
+> > +               opts->allow_utime =3D =7Eopts->fs_dmask & 0022;
+> > +
+> > +       if (opts->utf8 && strcmp(opts->iocharset,
+> exfat_iocharset_with_utf8)) =7B
+> > +               exfat_msg(sb, KERN_WARNING,
+> > +                       =22utf8 enabled, =5C=22iocharset=3D%s=5C=22 is =
+recommended=22,
+> > +                       exfat_iocharset_with_utf8);
+> > +       =7D
+> > +
+> > +       if (opts->discard) =7B
+> > +               struct request_queue *q =3D bdev_get_queue(sb->s_bdev);
+> > +
+> > +               if (=21blk_queue_discard(q))
+> > +                       exfat_msg(sb, KERN_WARNING,
+> > +                               =22mounting with =5C=22discard=5C=22 op=
+tion, but the
+> device does not support discard=22);
+> > +               opts->discard =3D 0;
+> > +       =7D
+> > +
+> > +       sb->s_flags =7C=3D SB_NODIRATIME;
+> > +       sb->s_magic =3D EXFAT_SUPER_MAGIC;
+> > +       sb->s_op =3D &exfat_sops;
+>=20
+> I don't see you set up s_time_gran, s_time_min and s_time_max anywhere.
+> Please fill those to get the correct behavior. That also lets you drop th=
+e
+> manual truncation of the values.
+Okay=21
 
-This looks fine, and certainly fixes the immediate problem.
+Thanks=21
+>=20
+>        Arnd
 
-However, this part could still be maybe be improved on:
-
->  static __poll_t hidraw_poll(struct file *file, poll_table *wait)
->  {
->         struct hidraw_list *list = file->private_data;
-> +       __poll_t mask = EPOLLOUT | EPOLLWRNORM; /* hidraw is always writable */
->
->         poll_wait(file, &list->hidraw->wait, wait);
->         if (list->head != list->tail)
-> -               return EPOLLIN | EPOLLRDNORM;
-> +               mask |= EPOLLIN | EPOLLRDNORM;
->         if (!list->hidraw->exist)
->                 return EPOLLERR | EPOLLHUP;
-> -       return EPOLLOUT | EPOLLWRNORM;
-> +       return mask;
->  }
-
-Notice the error condition.
-
-I didn't actually _check_ what happens for errors, but *usually* error
-conditions mean that
-
- (a) if there is data to be read, that is done before the error anyway
-
- (b) that even if there isn't data, the thing is "readable" and
-"writable" in the sense that the op will return immediately (with an
-error)
-
- (c) and most importantly - people may not be actually waiting for
-EPOLLERR / EPOLLHUP at all.
-
-Now, for "select()" we actually always turn EPOLLERR into "it's
-readable _and_ writable". So if a user program uses "select()" to poll
-for something, it will see it as being ready for IO in the error
-condition.
-
-But if somebody actually uses poll(), and asks for "let me know when
-it is either readable or writable", look at what  happens above if
-there is a pending error.
-
-You'll basically tell the user that it's neither readable nor
-writable, even if you otherwise would have set "EPOLLIN" in the mask.
-
-So at a minimum, please do
-
-          if (!list->hidraw->exist)
-                  mask |= EPOLLERR | EPOLLHUP;
-
-but quite possibly it may be a good idea to consider error conditions
-to also mean EPOLLIN | EPOLLOUT, since _presumably_ that error will
-also cause read/write to return immediately.
-
-But again, I didn't actually verify that last part.
-
-The exact semantics of EPOLLERR and EPOLLHUP really aren't 100% clear.
-Should they set EPOLLIN and EPOLLOUT too - there may not be any data,
-but at least a read or write won't block? Maybe? So that last
-suggestion is questionable, but doing the "mask |=" part really is
-unquestionably a better idea, since at least you don't want an error
-to _hide_ existing data that is readable.
-
-Now, good source code presumably notices EPOLLERR and handles it. So
-it _shouldn't_ matter what the kernel does if an error occurs. I
-haven't checked what people _actually_ do, tnough. I worry sometimes
-that user space just looks at EPOLLIN sees it not being set, and gets
-stuck in a busy loop polling in case of errors.
-
-And since errors presumably don't actually happen much in real life,
-it might not get a lot of coverage.
-
-                 Linus
