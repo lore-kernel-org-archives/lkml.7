@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC859C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9DCC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A208020661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF01620661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Ujg8DvRy"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="2HAoL1j7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbgAIQQq (ORCPT
+        id S2387574AbgAIQR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:16:46 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36172 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387561AbgAIQQl (ORCPT
+        Thu, 9 Jan 2020 11:17:29 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42204 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730483AbgAIQR2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:16:41 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so8036299wru.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:16:40 -0800 (PST)
+        Thu, 9 Jan 2020 11:17:28 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so7976534wro.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:17:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=w5QGDEHKxAn+Hv62tvlVvyCz66mJI7DRO74dgEr16y0=;
-        b=Ujg8DvRybkohbaqX+o3hIGbj8woxpSvKKK9B2Rr0B3VfdQPeCpYXnqLsJAWrVkJCpb
-         akFPRx0ELEa1ezOxVajKD1RQknIwpEqG+QmDDoPdLnbSv8CvTuAeSo/pqiA3D82P9pH0
-         4Ar42/NrT0ok4xcR9Ef4cM0a4aHq8QSgh155dsT3cHYl+ciXsod+1Wkx8JfeVJn4eHgn
-         n2hPcIbVQOyqc0A8SdEypJgKkhjgUjIg1j7AeSuCX8Rh0wKB2NvUSp0d8+F8SKmI+9e9
-         FRHWNwaqKHb0RvcqM0DyYqYxjWSZUMxzmOo64RqqSLzeNC/WwS8DLiBiNAMMWAaFmsg3
-         CPEw==
+        bh=Y2Twc/4NGWAktor1LtRx/8ZfV8fNdobSeF8VACd7NtQ=;
+        b=2HAoL1j70ejT1gsCA47ItX4L13c+Lekgn7PQbHRsc3wvFSvbceA78tijG7wyydNu/v
+         7E1eeoe+xN52OGGz3u8G2lJOHwdB6m35cn5erVnDgAd6DbUsSAoXZ0yG3S5aOYNxx2aR
+         knPuvKahtwohE/TdnBKi1Imvjt+SLfTd+z5MvA3cUEw+dTrHyM0oQxMJ84FwNLuDkLAA
+         qMOWe+/y3qLPXRd3VwoD2oKr9V5lLWCe3/WjnfTXDFSNEY+fXXAqKIHHSevM6wXVi15q
+         U1ApapyPufoAOKqkoPqmQLKd7s4/Lw6+77uvwHEnNcuOzuEo+zXEv9oc8VU2b2/MKkT6
+         SvVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=w5QGDEHKxAn+Hv62tvlVvyCz66mJI7DRO74dgEr16y0=;
-        b=RE1yz5ETWc1xp8calsC0ILYPxMPl4133oo8wnDZt6oTjdPd//K2LGov7+w62xpdI4L
-         gujQRZOWvQolulKWQ9Zjnw7tbdXjMOsaIOw6SJ4bYPVIizB5lGYo07c/EuC4X3X4CVRL
-         xSlAiQRUYfOJc4JpXhuU5tpr2KRa1a9Q61xRbiKvp/eDfhNhctmTXYTZwckGm70xOcUU
-         TCPCO74IDgMoTkvC3essT3BnnO98d2UmTmgsGXXalrMkfHLz8nA/gaymn761hno8n3ER
-         W/jbhRMmsGKy4GbGhAz35N0WHyTgN3qWc917a2gW5R/4vy6OEyVlHBrJgLnfXY0aCtiF
-         PoGg==
-X-Gm-Message-State: APjAAAXfvw3cABTCBW1d1AyGa9IO5i0BqvBmWHDHqjd3xReDEeQBbUBi
-        k8Cee/Ifd7+0Xpo7wQ1nhbc4jQ==
-X-Google-Smtp-Source: APXvYqxhdKuYfCwow4RaHNZFhjGFfg692/ra50nSJkUS2euQhPPvWGr6ffNLIg5t8L3beLkZ6RHkcw==
-X-Received: by 2002:a5d:6b47:: with SMTP id x7mr6063591wrw.277.1578586599981;
-        Thu, 09 Jan 2020 08:16:39 -0800 (PST)
+        bh=Y2Twc/4NGWAktor1LtRx/8ZfV8fNdobSeF8VACd7NtQ=;
+        b=k+UBmGi6MiZ4U1zXW7SJ6oKfwupe4hrg6amT22tL16e5wxaaMuqwysVINtw5zMpuaS
+         +zXb+rf+2v3/Lt5wM4lyFl2bfTTe1XNlWfQqr9P6tlC7REBauGvck2HNlva6+mfmbN/B
+         yZpf+T/wy6vqwQeGhuhbXW1gp1tx7hpOvCkx53mAC1sTIkKMxQLYHHkbQnSmFAUwKoNv
+         BaNEzcXoZPFwRZnq3sf35Q3v2UdCOeE24P+7/tY8uOEHWQ8bUB6lKQDZIDEy86SMeZPp
+         cDR7ypI1y05N9jHbzPQ94ZP8iPekaRJEUQTX6FxpwTrjkQA182K2SEnnpI0rcPsIoWV9
+         u28w==
+X-Gm-Message-State: APjAAAWRokfKIcICb64IEAcSjtP+8s3lV6oJ+hEm+XEPrmZR/B1mnNcG
+        xYdpNRRHLpwF7VeWKYh1oPc8TA==
+X-Google-Smtp-Source: APXvYqyPbGB4LHfHSMgYlyKMfT1GnPO5HFRg6dAa1V/RyHOBmdlI4zTb5yC8nxMYCgtgWfzpA/AziQ==
+X-Received: by 2002:adf:ed83:: with SMTP id c3mr11402659wro.51.1578586646632;
+        Thu, 09 Jan 2020 08:17:26 -0800 (PST)
 Received: from debian-brgl.home (amontpellier-652-1-53-230.w109-210.abo.wanadoo.fr. [109.210.44.230])
-        by smtp.gmail.com with ESMTPSA id l19sm3283141wmj.12.2020.01.09.08.16.39
+        by smtp.gmail.com with ESMTPSA id f207sm3805207wme.9.2020.01.09.08.17.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:16:39 -0800 (PST)
+        Thu, 09 Jan 2020 08:17:26 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Masahiro Yamada <masahiroy@kernel.org>
 Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2] kconfig: fix an "implicit declaration of function" warning
-Date:   Thu,  9 Jan 2020 17:16:36 +0100
-Message-Id: <20200109161636.9362-1-brgl@bgdev.pl>
+Subject: [PATCH] kconfig: ignore temporary generated files
+Date:   Thu,  9 Jan 2020 17:17:24 +0100
+Message-Id: <20200109161724.9546-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -74,66 +73,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-strncasecmp() & strcasecmp() functions are declared in strings.h, not
-string.h. On most environments the former is implicitly included by
-the latter but on some setups, building menuconfig results in the
-following warning:
-
-  HOSTCC  scripts/kconfig/mconf.o
-scripts/kconfig/mconf.c: In function ‘search_conf’:
-scripts/kconfig/mconf.c:423:6: warning: implicit declaration of function ‘strncasecmp’ [-Wimplicit-function-declaration]
-  if (strncasecmp(dialog_input_result, CONFIG_, strlen(CONFIG_)) == 0)
-      ^~~~~~~~~~~
-scripts/kconfig/mconf.c: In function ‘main’:
-scripts/kconfig/mconf.c:1021:8: warning: implicit declaration of function ‘strcasecmp’ [-Wimplicit-function-declaration]
-   if (!strcasecmp(mode, "single_menu"))
-        ^~~~~~~~~~
-
-Fix it by explicitly including strings.h.
+If building gconfig fails, a temporary gtk config file is left in the
+kconfig directory and is not ignored by git. Add an appropriate pattern
+to .gitignore.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- scripts/kconfig/gconf.c | 1 +
- scripts/kconfig/mconf.c | 1 +
- scripts/kconfig/nconf.c | 1 +
- 3 files changed, 3 insertions(+)
+ scripts/kconfig/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-index e36b342f1065..5527482c3077 100644
---- a/scripts/kconfig/gconf.c
-+++ b/scripts/kconfig/gconf.c
-@@ -18,6 +18,7 @@
+diff --git a/scripts/kconfig/.gitignore b/scripts/kconfig/.gitignore
+index b5bf92f66d11..d22e6753397d 100644
+--- a/scripts/kconfig/.gitignore
++++ b/scripts/kconfig/.gitignore
+@@ -3,6 +3,7 @@
+ #
+ *.moc
+ *conf-cfg
++*conf-cfg.tmp
  
- #include <stdio.h>
- #include <string.h>
-+#include <strings.h>
- #include <unistd.h>
- #include <time.h>
- 
-diff --git a/scripts/kconfig/mconf.c b/scripts/kconfig/mconf.c
-index 49c26ea9dd98..4063dbc1b927 100644
---- a/scripts/kconfig/mconf.c
-+++ b/scripts/kconfig/mconf.c
-@@ -15,6 +15,7 @@
- #include <stdarg.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <strings.h>
- #include <signal.h>
- #include <unistd.h>
- 
-diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
-index b7c1ef757178..daf1c1506ec4 100644
---- a/scripts/kconfig/nconf.c
-+++ b/scripts/kconfig/nconf.c
-@@ -8,6 +8,7 @@
- #define _GNU_SOURCE
- #endif
- #include <string.h>
-+#include <strings.h>
- #include <stdlib.h>
- 
- #include "lkc.h"
+ #
+ # configuration programs
 -- 
 2.23.0
 
