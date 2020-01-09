@@ -2,254 +2,82 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD50C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5053CC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A391206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17ADB206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:38:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DFTve4Dq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387726AbgAIQhD (ORCPT
+        id S2387740AbgAIQiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:37:03 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54951 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbgAIQhD (ORCPT
+        Thu, 9 Jan 2020 11:38:16 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:39062 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbgAIQiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:37:03 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipanq-0007bb-QK; Thu, 09 Jan 2020 17:36:58 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7596F1C2CE8;
-        Thu,  9 Jan 2020 17:36:58 +0100 (CET)
-Date:   Thu, 09 Jan 2020 16:36:58 -0000
-From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: smp/urgent] cpu/SMT: Fix x86 link error without CONFIG_SYSFS
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Kosina <jkosina@suse.cz>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191210195614.786555-1-arnd@arndb.de>
-References: <20191210195614.786555-1-arnd@arndb.de>
+        Thu, 9 Jan 2020 11:38:15 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id F2CAF2007684;
+        Thu,  9 Jan 2020 08:38:14 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F2CAF2007684
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1578587895;
+        bh=tLUd4VK7GfUjhPceZ2DEioxJk5pIIIxabfHz0xCY7KA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DFTve4DqG+WRFl5jxDn11pDsh+qB2yu/lMwI7WyqHieA5FllIu/xbZkU0MaAkifBc
+         NyYW0i2hCHFPcRkMmbopmX8hrd/1BGS0PH44ZSZoF/hTwFh7ybOr3SNGZPDZiJq9u/
+         IIwnrGFXQ0vyBXacypwUIPAb26ZY2iUdu+ccNldc=
+Subject: Re: [PATCH v1] IMA: fix measuring asymmetric keys Kconfig
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        James.Bottomley@HansenPartnership.com, arnd@arndb.de,
+        linux-integrity@vger.kernel.org
+Cc:     dhowells@redhat.com, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+References: <20200108160508.5938-1-nramas@linux.microsoft.com>
+ <1578545543.5147.32.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <5411bc3d-74eb-6868-5768-bba3726a661a@linux.microsoft.com>
+Date:   Thu, 9 Jan 2020 08:38:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Message-ID: <157858781831.30329.9402583283109438334.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <1578545543.5147.32.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the smp/urgent branch of tip:
+On 1/8/20 8:52 PM, Mimi Zohar wrote:
 
-Commit-ID:     dc8d37ed304eeeea47e65fb9edc1c6c8b0093386
-Gitweb:        https://git.kernel.org/tip/dc8d37ed304eeeea47e65fb9edc1c6c8b0093386
-Author:        Arnd Bergmann <arnd@arndb.de>
-AuthorDate:    Tue, 10 Dec 2019 20:56:04 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 09 Jan 2020 17:31:45 +01:00
+> 
+> For the time being, I've pushed out this patch with the existing patch
+> description to next-integrity-testing, but the patch description
+> should be rewritten clearer.  For example,
+> 
+> As a result of the asymmetric public keys subtype being defined as a
+> tristate, with the existing IMA Makefile, ima_asymmetric_keys.c could
+> be built as a kernel module.  To prevent this from happening, this
+> patch defines and uses an intermediate Kconfig boolean option named
+> IMA_MEASURE_ASYMMETRIC_KEYS.
+> 
+> Please let me know if you're ok with this wording.
+> 
+> thanks,
+> 
+> Mimi
+> 
 
-cpu/SMT: Fix x86 link error without CONFIG_SYSFS
+That sounds perfect. Thanks for your help Mimi.
 
-When CONFIG_SYSFS is disabled, but CONFIG_HOTPLUG_SMT is enabled,
-the kernel fails to link:
-
-arch/x86/power/cpu.o: In function `hibernate_resume_nonboot_cpu_disable':
-(.text+0x38d): undefined reference to `cpuhp_smt_enable'
-arch/x86/power/hibernate.o: In function `arch_resume_nosmt':
-hibernate.c:(.text+0x291): undefined reference to `cpuhp_smt_enable'
-hibernate.c:(.text+0x29c): undefined reference to `cpuhp_smt_disable'
-
-Move the exported functions out of the #ifdef section into its
-own with the correct conditions.
-
-The patch that caused this is marked for stable backports, so
-this one may need to be backported as well.
-
-Fixes: ec527c318036 ("x86/power: Fix 'nosmt' vs hibernation triple fault during resume")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Jiri Kosina <jkosina@suse.cz>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191210195614.786555-1-arnd@arndb.de
-
----
- kernel/cpu.c | 143 +++++++++++++++++++++++++-------------------------
- 1 file changed, 72 insertions(+), 71 deletions(-)
-
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index a59cc98..4dc279e 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1909,6 +1909,78 @@ void __cpuhp_remove_state(enum cpuhp_state state, bool invoke)
- }
- EXPORT_SYMBOL(__cpuhp_remove_state);
- 
-+#ifdef CONFIG_HOTPLUG_SMT
-+static void cpuhp_offline_cpu_device(unsigned int cpu)
-+{
-+	struct device *dev = get_cpu_device(cpu);
-+
-+	dev->offline = true;
-+	/* Tell user space about the state change */
-+	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
-+}
-+
-+static void cpuhp_online_cpu_device(unsigned int cpu)
-+{
-+	struct device *dev = get_cpu_device(cpu);
-+
-+	dev->offline = false;
-+	/* Tell user space about the state change */
-+	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
-+}
-+
-+int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
-+{
-+	int cpu, ret = 0;
-+
-+	cpu_maps_update_begin();
-+	for_each_online_cpu(cpu) {
-+		if (topology_is_primary_thread(cpu))
-+			continue;
-+		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
-+		if (ret)
-+			break;
-+		/*
-+		 * As this needs to hold the cpu maps lock it's impossible
-+		 * to call device_offline() because that ends up calling
-+		 * cpu_down() which takes cpu maps lock. cpu maps lock
-+		 * needs to be held as this might race against in kernel
-+		 * abusers of the hotplug machinery (thermal management).
-+		 *
-+		 * So nothing would update device:offline state. That would
-+		 * leave the sysfs entry stale and prevent onlining after
-+		 * smt control has been changed to 'off' again. This is
-+		 * called under the sysfs hotplug lock, so it is properly
-+		 * serialized against the regular offline usage.
-+		 */
-+		cpuhp_offline_cpu_device(cpu);
-+	}
-+	if (!ret)
-+		cpu_smt_control = ctrlval;
-+	cpu_maps_update_done();
-+	return ret;
-+}
-+
-+int cpuhp_smt_enable(void)
-+{
-+	int cpu, ret = 0;
-+
-+	cpu_maps_update_begin();
-+	cpu_smt_control = CPU_SMT_ENABLED;
-+	for_each_present_cpu(cpu) {
-+		/* Skip online CPUs and CPUs on offline nodes */
-+		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
-+			continue;
-+		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
-+		if (ret)
-+			break;
-+		/* See comment in cpuhp_smt_disable() */
-+		cpuhp_online_cpu_device(cpu);
-+	}
-+	cpu_maps_update_done();
-+	return ret;
-+}
-+#endif
-+
- #if defined(CONFIG_SYSFS) && defined(CONFIG_HOTPLUG_CPU)
- static ssize_t show_cpuhp_state(struct device *dev,
- 				struct device_attribute *attr, char *buf)
-@@ -2063,77 +2135,6 @@ static const struct attribute_group cpuhp_cpu_root_attr_group = {
- 
- #ifdef CONFIG_HOTPLUG_SMT
- 
--static void cpuhp_offline_cpu_device(unsigned int cpu)
--{
--	struct device *dev = get_cpu_device(cpu);
--
--	dev->offline = true;
--	/* Tell user space about the state change */
--	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
--}
--
--static void cpuhp_online_cpu_device(unsigned int cpu)
--{
--	struct device *dev = get_cpu_device(cpu);
--
--	dev->offline = false;
--	/* Tell user space about the state change */
--	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
--}
--
--int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
--{
--	int cpu, ret = 0;
--
--	cpu_maps_update_begin();
--	for_each_online_cpu(cpu) {
--		if (topology_is_primary_thread(cpu))
--			continue;
--		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
--		if (ret)
--			break;
--		/*
--		 * As this needs to hold the cpu maps lock it's impossible
--		 * to call device_offline() because that ends up calling
--		 * cpu_down() which takes cpu maps lock. cpu maps lock
--		 * needs to be held as this might race against in kernel
--		 * abusers of the hotplug machinery (thermal management).
--		 *
--		 * So nothing would update device:offline state. That would
--		 * leave the sysfs entry stale and prevent onlining after
--		 * smt control has been changed to 'off' again. This is
--		 * called under the sysfs hotplug lock, so it is properly
--		 * serialized against the regular offline usage.
--		 */
--		cpuhp_offline_cpu_device(cpu);
--	}
--	if (!ret)
--		cpu_smt_control = ctrlval;
--	cpu_maps_update_done();
--	return ret;
--}
--
--int cpuhp_smt_enable(void)
--{
--	int cpu, ret = 0;
--
--	cpu_maps_update_begin();
--	cpu_smt_control = CPU_SMT_ENABLED;
--	for_each_present_cpu(cpu) {
--		/* Skip online CPUs and CPUs on offline nodes */
--		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
--			continue;
--		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
--		if (ret)
--			break;
--		/* See comment in cpuhp_smt_disable() */
--		cpuhp_online_cpu_device(cpu);
--	}
--	cpu_maps_update_done();
--	return ret;
--}
--
--
- static ssize_t
- __store_smt_control(struct device *dev, struct device_attribute *attr,
- 		    const char *buf, size_t count)
+  -lakshmi
