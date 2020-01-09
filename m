@@ -2,356 +2,264 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D77C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8A3C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC7E2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9FD2077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajnibXV2"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="c6ABK6YO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgAIXif (ORCPT
+        id S1729476AbgAIXla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:38:35 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43455 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgAIXif (ORCPT
+        Thu, 9 Jan 2020 18:41:30 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:42406 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgAIXl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:38:35 -0500
-Received: by mail-qk1-f194.google.com with SMTP id t129so264670qke.10;
-        Thu, 09 Jan 2020 15:38:34 -0800 (PST)
+        Thu, 9 Jan 2020 18:41:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z+fP9LDxEwzW2I4/onD1G2Z+ZF+S8K1st8xslhotzbI=;
-        b=ajnibXV2i9c2UHbBDNi0EhliNEOYv2E1YxhJJjxflYx8hdHOzKHb0dxwmlwLiHn4q5
-         dT4/eRzsTGcUsJSO8R7E2V6ukj2gdfgRUXVG9rfYRDKZghI1omGFPsVTty4eY4adYD61
-         wFhSBFfp81S5YDMoBeLxoOu575gSUoEOblHJ3UkRZEAaDiZ4M27EbEb2QqJWH7f6gz6r
-         /PwiS60ehB++1sdxPi2yNj3IrIkjosny7naRdUml/DneJde+6g0H/PwHmtQS3gXsghzh
-         aWBEHkU9DOwFuSE0QE+aW8O5M7yjFcqXpLOZYschatc3hHGmT6gUqg4/Tfh+ayhjqt1b
-         T2Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z+fP9LDxEwzW2I4/onD1G2Z+ZF+S8K1st8xslhotzbI=;
-        b=f5iv8ixazwcht/2yvLih16HP52UkfqorKp4TxINQqKmGq//FabBIxjEr395auolnqC
-         hSyxw4vkthjrUZEriZTwRC1Jq7bUj7Dr6f1eRw1NTwqBeuLqGCI4leRghNcW1PnjbMzb
-         F7UkUWch/WYexOayosvegMlZz1I6RAOV1YctoaRZVezg6rO2agQDnN6I+AA3fzH00H1p
-         Eak+6iMH3HNDfzJSCSD8ailT4MjYwtwFfHlLQcJkuXMB+jguMM6IuaxvAoe8/9K2AsqH
-         56/uIyIaVxUehP+5AhZauHJH+M2TESDJfx7HKYCIbKMq87+kOv1FIrMNDH9ZFBVAq8w5
-         ZZog==
-X-Gm-Message-State: APjAAAXStrok0+VizOmjFR265Sb+FrkBsqssj/Vfchjk9SaYV+PjMJ+y
-        Ym3QvMaW+GjD+Zn7h6eiug8=
-X-Google-Smtp-Source: APXvYqxoXGQIYxib/+yzkgOj4je4pw+qEm9qQGymXToeMJfwFmoqPJntdhANaN2ZNW1LY8LT3+lgKA==
-X-Received: by 2002:a05:620a:14a4:: with SMTP id x4mr392171qkj.493.1578613113870;
-        Thu, 09 Jan 2020 15:38:33 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
-        by smtp.gmail.com with ESMTPSA id w20sm111483qtj.4.2020.01.09.15.38.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 15:38:33 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     mchehab@kernel.org, sean@mess.org, tglx@linutronix.de,
-        gregkh@linuxfoundation.org
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v2] media: dvb_dummy_tuner: implement driver skeleton
-Date:   Thu,  9 Jan 2020 20:37:57 -0300
-Message-Id: <20200109233757.734008-1-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.1
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1578613289; x=1610149289;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LiHQ8qEhETcU1o1tFdPT/fMQUvDHkHslEbbbNaaN0PY=;
+  b=c6ABK6YOpTF7Dy10+d9dwICsX2f8AHcDH9A/isOYjkVWBcgCMAfD/4S8
+   47wIbtr2fTo8DZRMsrmPLQWH+1rM61wHW8HzvesUo2VDxtMduw/E1kCSz
+   uNfaA2i6nkMPLFXHvhgTTHG6k1xEE8IeO5ChyiXq77tBH/zBBXdtj2/+d
+   w=;
+IronPort-SDR: jHEDBPr9SL5BiUmabpwOch0UFlE9qQMViRBXLXTpTO7Wso2aBS5JvdybsjtJ66EqP5r/G+aUFy
+ nldKxNLQgv5A==
+X-IronPort-AV: E=Sophos;i="5.69,414,1571702400"; 
+   d="scan'208";a="19232911"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 09 Jan 2020 23:41:17 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id 2109CA2B10;
+        Thu,  9 Jan 2020 23:41:09 +0000 (UTC)
+Received: from EX13D08UEB002.ant.amazon.com (10.43.60.107) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 9 Jan 2020 23:40:51 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
+ EX13D08UEB002.ant.amazon.com (10.43.60.107) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 9 Jan 2020 23:40:51 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Thu, 9 Jan 2020 23:40:51 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id AF38540E7A; Thu,  9 Jan 2020 23:40:50 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 23:40:50 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+        <x86@kernel.org>, <boris.ostrovsky@oracle.com>, <jgross@suse.com>,
+        <linux-pm@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kamatam@amazon.com>, <sstabellini@kernel.org>,
+        <konrad.wilk@oracle.co>, <roger.pau@citrix.com>, <axboe@kernel.dk>,
+        <davem@davemloft.net>, <rjw@rjwysocki.net>, <len.brown@intel.com>,
+        <pavel@ucw.cz>, <peterz@infradead.org>, <eduval@amazon.com>,
+        <sblbir@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <fllinden@amazon.com>, <anchalag@amazon.com>
+Subject: Re: [RFC PATCH V2 09/11] xen: Clear IRQD_IRQ_STARTED flag during
+ shutdown PIRQs
+Message-ID: <20200109234050.GA26381@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <20200107234420.GA18738@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <877e22ezv6.fsf@nanos.tec.linutronix.de>
+ <20200108212417.GA22381@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <874kx4omtc.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <874kx4omtc.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+On Thu, Jan 09, 2020 at 01:07:27PM +0100, Thomas Gleixner wrote:
+> Anchal Agarwal <anchalag@amazon.com> writes:
+> > On Wed, Jan 08, 2020 at 04:23:25PM +0100, Thomas Gleixner wrote:
+> >> Anchal Agarwal <anchalag@amazon.com> writes:
+> >> > +void irq_state_clr_started(struct irq_desc *desc)
+> >> >  {
+> >> >  	irqd_clear(&desc->irq_data, IRQD_IRQ_STARTED);
+> >> >  }
+> >> > +EXPORT_SYMBOL_GPL(irq_state_clr_started);
+> >> 
+> >> This is core internal state and not supposed to be fiddled with by
+> >> drivers.
+> >> 
+> >> irq_chip has irq_suspend/resume/pm_shutdown callbacks for a reason.
+> >>
+> > I agree, as its mentioned in the previous patch {[RFC PATCH V2 08/11]} this is 
+> > one way of explicitly shutting down legacy devices without introducing too much 
+> > code for each of the legacy devices. . for eg. in case of floppy there 
+> > is no suspend/freeze handler which should have done the needful.
+> > .
+> > Either we implement them for all the legacy devices that have them missing or
+> > explicitly shutdown pirqs. I have choosen later for simplicity. I understand
+> > that ideally we should enable/disable devices interrupts in suspend/resume 
+> > devices but that requires adding code for doing that to few drivers[and I may
+> > not know all of them either]
+> >
+> > Now I discovered during the flow in hibernation_platform_enter under resume 
+> > devices that for such devices irq_startup is called which checks for 
+> > IRQD_IRQ_STARTED flag and based on that it calls irq_enable or irq_startup.
+> > They are only restarted if the flag is not set which is cleared during shutdown. 
+> > shutdown_pirq does not do that. Only masking/unmasking of evtchn does not work 
+> > as pirq needs to be restarted.
+> > xen-pirq.enable_irq is called rather than stratup_pirq. On resume if these pirqs
+> > are not restarted in this case ACPI SCI interrupts, I do not see receiving 
+> > any interrupts under cat /proc/interrupts even though host keeps generating 
+> > S4 ACPI events. 
+> > Does that makes sense?
+> 
+> No. You still violate all abstraction boundaries. On one hand you use a
+> XEN specific suspend function to shut down interrupts, but then you want
+> the core code to reestablish them on resume. That's just bad hackery which
+> abuses partial knowledge of core internals. The state flag is only one
+> part of the core internal state and just clearing it does not make the
+> rest consistent. It just works by chance and not by design and any
+> change of the core code will break it in colourful ways.
+> 
+> So either you can handle it purely on the XEN side without touching any
+> core state or you need to come up with some way of letting the core code
+> know that it should invoke shutdown instead of disable.
+> 
+> Something like the completely untested patch below.
+> 
+> Thanks,
+> 
+>        tglx
+Understandable. Really appreciate the patch suggestion below and i will test it
+for sure and see if things can be fixed properly in irq core if thats the only
+option. In the meanwhile, I tried to fix it on xen side unless it gives you the 
+same feeling as above? MSI-x are just fine, just ioapic ones don't get any event
+channel asssigned hence enable_dynirq does nothing. Those needs to be restarted.
 
-Implement a dummy DVB tuner as part of ongoing work
-on a virtual DVB test driver under the 2020 Spring Linux
-Kernel Mentorship Program.
+Thanks,
+Anchal
 
-The virtual DVB test driver serves as a reference DVB driver and helps
-validate the existing APIs in the media subsystem. It can also aid developers
- working on userspace applications.
+<-----------------------
 
-This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
-ISDB-T and ATSC when completed.
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index 1bb0b522d004..2ed152f35816 100644
+--- a/drivers/xen/events/events_base.c
+    +++ b/drivers/xen/events/events_base.c
+@@ -575,6 +575,11 @@ static void shutdown_pirq(struct irq_data *data)
 
-For now, only a basic skeleton is available, most functions do nothing
-whatsoever.
+static void enable_pirq(struct irq_data *data)
+{
+    +/*ioapic interrupts don't get event channel assigned
+       + * after being explicitly shutdown during guest
+       + * hibernation. They need to be restarted*/
+        +       if(!evtchn_from_irq(data->irq))
+        +               startup_pirq(data);
+    enable_dynirq(data);
+ }
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
------------------------------------------------------------
-
-Changes in v2:
-	Commit message was rewritten
-	Added better description in KConfig
-	Added better description in .h and .c
-	Added copyright notice in .h and .c
-	Kconfig dummy tuner option now defaults to 'n'
-	Removed calls to pr_err, pr_debug
-Not addressed in v2:
-	attach()/release() calls:
-		I would appreciate some clarification on this, since some
-		tuners implement only probe()/remove(), some implement
-		only attach()/release() and some implement both (e.g. mt2060.c).
-		Furthermore, in mt2060.c, both attach() and probe()  copy 
-		struct dvb_tuner_ops into fe->ops->tuner_ops.
-
--------------------------------------------------------------
-
- drivers/media/tuners/Kconfig           |   9 ++
- drivers/media/tuners/Makefile          |   1 +
- drivers/media/tuners/dvb_dummy_tuner.c | 160 +++++++++++++++++++++++++
- drivers/media/tuners/dvb_dummy_tuner.h |  31 +++++
- 4 files changed, 201 insertions(+)
- create mode 100644 drivers/media/tuners/dvb_dummy_tuner.c
- create mode 100644 drivers/media/tuners/dvb_dummy_tuner.h
-
-diff --git a/drivers/media/tuners/Kconfig b/drivers/media/tuners/Kconfig
-index e104bb7766e1..d433dc7e68b1 100644
---- a/drivers/media/tuners/Kconfig
-+++ b/drivers/media/tuners/Kconfig
-@@ -296,4 +296,13 @@ config MEDIA_TUNER_QM1D1B0004
- 	default m if !MEDIA_SUBDRV_AUTOSELECT
- 	help
- 	  Sharp QM1D1B0004 ISDB-S tuner driver.
-+
-+config MEDIA_TUNER_DVB_DUMMY_TUNER
-+	tristate "Dummy tuner"
-+	depends on MEDIA_SUPPORT && I2C
-+	default n
-+	help
-+	  The virtual DVB test driver serves as a reference DVB driver and helps
-+	  validate the existing APIs in the media subsystem. It can also aid
-+	  developers working on userspace applications.
- endmenu
-diff --git a/drivers/media/tuners/Makefile b/drivers/media/tuners/Makefile
-index 7b4f8423501e..f98de1cf2e19 100644
---- a/drivers/media/tuners/Makefile
-+++ b/drivers/media/tuners/Makefile
-@@ -44,5 +44,6 @@ obj-$(CONFIG_MEDIA_TUNER_QM1D1C0042) += qm1d1c0042.o
- obj-$(CONFIG_MEDIA_TUNER_QM1D1B0004) += qm1d1b0004.o
- obj-$(CONFIG_MEDIA_TUNER_M88RS6000T) += m88rs6000t.o
- obj-$(CONFIG_MEDIA_TUNER_TDA18250) += tda18250.o
-+obj-$(CONFIG_MEDIA_TUNER_DVB_DUMMY_TUNER) += dvb_dummy_tuner.o
- 
- ccflags-y += -I$(srctree)/drivers/media/dvb-frontends
-diff --git a/drivers/media/tuners/dvb_dummy_tuner.c b/drivers/media/tuners/dvb_dummy_tuner.c
-new file mode 100644
-index 000000000000..8aed5d583eeb
---- /dev/null
-+++ b/drivers/media/tuners/dvb_dummy_tuner.c
-@@ -0,0 +1,160 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * A dummy DVB tuner as part of ongoing work
-+ * on a virtual DVB test driver under the 2020 Spring Linux
-+ * Kernel Mentorship Program.
-+ *
-+ * The virtual DVB test driver serves as a reference DVB driver and helps
-+ * validate the existing APIs in the media subsystem. It can also aid developers
-+ * working on userspace applications.
-+ *
-+ * This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
-+ * ISDB-T and ATSC when completed.
-+ *
-+ * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <media/dvb_frontend.h>
-+#include "dvb_dummy_tuner.h"
-+
-+struct dvb_dummy_tuner_dev {
-+	struct dvb_frontend *fe;
-+};
-+
-+static void dvb_dummy_tuner_release(struct dvb_frontend *fe)
-+{
-+}
-+
-+static int dvb_dummy_tuner_init(struct dvb_frontend *fe)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_sleep(struct dvb_frontend *fe)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_suspend(struct dvb_frontend *fe)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_resume(struct dvb_frontend *fe)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_set_params(struct dvb_frontend *fe)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_set_config(struct dvb_frontend *fe, void *priv_cfg)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_get_frequency(struct dvb_frontend *fe,
-+					 u32 *frequency)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_get_bandwidth(struct dvb_frontend *fe,
-+					 u32 *bandwidth)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_get_if_frequency(struct dvb_frontend *fe,
-+					    u32 *frequency)
-+{
-+	return 0;
-+}
-+
-+static int dvb_dummy_tuner_get_status(struct dvb_frontend *fe, u32 *status)
-+{
-+	return 0;
-+}
-+
-+static const struct dvb_tuner_ops dvb_dummy_tuner_ops = {
-+	.release = dvb_dummy_tuner_release,
-+	.init = dvb_dummy_tuner_init,
-+	.sleep = dvb_dummy_tuner_sleep,
-+	.suspend = dvb_dummy_tuner_suspend,
-+	.resume = dvb_dummy_tuner_resume,
-+	.set_params = dvb_dummy_tuner_set_params,
-+	.set_config = dvb_dummy_tuner_set_config,
-+	.get_bandwidth = dvb_dummy_tuner_get_bandwidth,
-+	.get_frequency = dvb_dummy_tuner_get_frequency,
-+	.get_if_frequency = dvb_dummy_tuner_get_if_frequency,
-+	.get_status = dvb_dummy_tuner_get_status,
-+};
-+
-+static const struct i2c_device_id dvb_dummy_tuner_i2c_id_table[] = {
-+	{"dvb_dummy_tuner", 0},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, dvb_dummy_tuner_i2c_id_table);
-+
-+static int dvb_dummy_tuner_i2c_probe(struct i2c_client *client,
-+				     const struct i2c_device_id *id)
-+{
-+	int ret = 0;
-+	struct dvb_dummy_tuner_config *config = client->dev.platform_data;
-+	struct dvb_frontend *fe = config->fe;
-+	struct dvb_dummy_tuner_dev *tuner_dev = NULL;
-+
-+	tuner_dev = kzalloc(sizeof(*tuner_dev), GFP_KERNEL);
-+	if (!tuner_dev) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	i2c_set_clientdata(client, tuner_dev);
-+	tuner_dev->fe = config->fe;
-+
-+	memcpy(&fe->ops.tuner_ops,
-+	       &dvb_dummy_tuner_ops,
-+	       sizeof(struct dvb_tuner_ops));
-+
-+	fe->tuner_priv = client;
-+
-+	return ret;
-+
-+err:
-+	return ret;
-+}
-+
-+static int dvb_dummy_tuner_i2c_remove(struct i2c_client *client)
-+{
-+	struct dvb_dummy_tuner_dev *tuner_dev = i2c_get_clientdata(client);
-+	struct dvb_frontend *fe = tuner_dev->fe;
-+
-+	memset(&fe->ops.tuner_ops, 0, sizeof(struct dvb_tuner_ops));
-+	fe->tuner_priv = NULL;
-+	kfree(tuner_dev);
-+
-+	return 0;
-+}
-+
-+static struct i2c_driver dvb_dummy_tuner_i2c_driver = {
-+	.driver = {
-+		.name = "dvb_dummy_tuner",
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe		= dvb_dummy_tuner_i2c_probe,
-+	.remove		= dvb_dummy_tuner_i2c_remove,
-+	.id_table	= dvb_dummy_tuner_i2c_id_table,
-+};
-+module_i2c_driver(dvb_dummy_tuner_i2c_driver);
-+
-+MODULE_DESCRIPTION("DVB Dummy Tuner");
-+MODULE_AUTHOR("Daniel W. S. Almeida");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/media/tuners/dvb_dummy_tuner.h b/drivers/media/tuners/dvb_dummy_tuner.h
-new file mode 100644
-index 000000000000..3569bbc3716e
---- /dev/null
-+++ b/drivers/media/tuners/dvb_dummy_tuner.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * A dummy DVB tuner as part of ongoing work
-+ * on a virtual DVB test driver under the 2020 Spring Linux
-+ * Kernel Mentorship Program.
-+ *
-+ * The virtual DVB test driver serves as a reference DVB driver and helps
-+ * validate the existing APIs in the media subsystem. It can also aid developers
-+ * working on userspace applications.
-+ *
-+ * This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
-+ * ISDB-T and ATSC when completed.
-+ *
-+ * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-+ */
-+
-+#ifndef __TUNER_DVB_DUMMY_TUNER_H__
-+#define __TUNER_DVB_DUMMY_TUNER_H__
-+
-+#include <media/dvb_frontend.h>
-+/**
-+ * struct dvb_dummy_tuner_config - configuration parameters for the dummy tuner
-+ *
-+ * @fe:
-+ *	frontend returned by driver
-+ */
-+struct dvb_dummy_tuner_config {
-+	struct dvb_frontend *fe;
-+};
-+
-+#endif /*__TUNER_DVB_DUMMY_TUNER_H__ */
--- 
-2.24.1
-
+> 
+> 8<----------------
+> 
+> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> index 7853eb9301f2..50f2057bc339 100644
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -511,6 +511,7 @@ struct irq_chip {
+>   * IRQCHIP_EOI_THREADED:	Chip requires eoi() on unmask in threaded mode
+>   * IRQCHIP_SUPPORTS_LEVEL_MSI	Chip can provide two doorbells for Level MSIs
+>   * IRQCHIP_SUPPORTS_NMI:	Chip can deliver NMIs, only for root irqchips
+> + * IRQCHIP_SHUTDOWN_ON_SUSPEND:	Shutdown non wake irqs in the suspend path
+>   */
+>  enum {
+>  	IRQCHIP_SET_TYPE_MASKED		= (1 <<  0),
+> @@ -522,6 +523,7 @@ enum {
+>  	IRQCHIP_EOI_THREADED		= (1 <<  6),
+>  	IRQCHIP_SUPPORTS_LEVEL_MSI	= (1 <<  7),
+>  	IRQCHIP_SUPPORTS_NMI		= (1 <<  8),
+> +	IRQCHIP_SHUTDOWN_ON_SUSPEND	= (1 <<  9),
+>  };
+>  
+>  #include <linux/irqdesc.h>
+> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+> index b3fa2d87d2f3..0fe355f72a15 100644
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -233,7 +233,7 @@ __irq_startup_managed(struct irq_desc *desc, struct cpumask *aff, bool force)
+>  }
+>  #endif
+>  
+> -static int __irq_startup(struct irq_desc *desc)
+> +int __irq_startup(struct irq_desc *desc)
+>  {
+>  	struct irq_data *d = irq_desc_get_irq_data(desc);
+>  	int ret = 0;
+> diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+> index 3924fbe829d4..11c7c55bda63 100644
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -80,6 +80,7 @@ extern void __enable_irq(struct irq_desc *desc);
+>  extern int irq_activate(struct irq_desc *desc);
+>  extern int irq_activate_and_startup(struct irq_desc *desc, bool resend);
+>  extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
+> +extern int __irq_startup(struct irq_desc *desc);
+>  
+>  extern void irq_shutdown(struct irq_desc *desc);
+>  extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
+> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+> index 8f557fa1f4fe..597f0602510a 100644
+> --- a/kernel/irq/pm.c
+> +++ b/kernel/irq/pm.c
+> @@ -85,16 +85,22 @@ static bool suspend_device_irq(struct irq_desc *desc)
+>  	}
+>  
+>  	desc->istate |= IRQS_SUSPENDED;
+> -	__disable_irq(desc);
+> -
+> -	/*
+> -	 * Hardware which has no wakeup source configuration facility
+> -	 * requires that the non wakeup interrupts are masked at the
+> -	 * chip level. The chip implementation indicates that with
+> -	 * IRQCHIP_MASK_ON_SUSPEND.
+> -	 */
+> -	if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
+> -		mask_irq(desc);
+> +
+> +	/* Some irq chips (e.g. XEN PIRQ) require a full shutdown on suspend */
+> +	if (irq_desc_get_chip(desc)->flags & IRQCHIP_SHUTDOWN_ON_SUSPEND) {
+> +		irq_shutdown(desc);
+> +	} else {
+> +		__disable_irq(desc);
+> +
+> +		/*
+> +		 * Hardware which has no wakeup source configuration facility
+> +		 * requires that the non wakeup interrupts are masked at the
+> +		 * chip level. The chip implementation indicates that with
+> +		 * IRQCHIP_MASK_ON_SUSPEND.
+> +		 */
+> +		if (irq_desc_get_chip(desc)->flags & IRQCHIP_MASK_ON_SUSPEND)
+> +			mask_irq(desc);
+> +	}
+>  	return true;
+>  }
+>  
+> @@ -152,7 +158,10 @@ static void resume_irq(struct irq_desc *desc)
+>  	irq_state_set_masked(desc);
+>  resume:
+>  	desc->istate &= ~IRQS_SUSPENDED;
+> -	__enable_irq(desc);
+> +	if (irq_desc_get_chip(desc)->flags & IRQCHIP_SHUTDOWN_ON_SUSPEND)
+> +		__irq_startup(desc);
+> +	else
+> +		__enable_irq(desc);
+>  }
+>  
+>  static void resume_irqs(bool want_early)
