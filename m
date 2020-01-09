@@ -2,155 +2,143 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77507C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA20EC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4791520673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B142B206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oWnYAgf2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADzd4sIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgAIJNX (ORCPT
+        id S1729192AbgAIJN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:13:23 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41161 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728862AbgAIJNW (ORCPT
+        Thu, 9 Jan 2020 04:13:27 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34663 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728793AbgAIJNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:13:22 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00997oCh021592;
-        Thu, 9 Jan 2020 10:13:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=WeMi3HpOU5AF0rGrPKqX2WxavTF7Z+TyGKSaY1oSknc=;
- b=oWnYAgf2miTJ94ASkmeXawkZn7a43R5ZQu/HUcQXoRuUmxx/jNDbbufLprF050RfmSoc
- FKcPzdnfhEYDHzhXBmrkPyh+9keWY1lWsMY4JdQLyhPnpfXPFlgTeELJnmhVTNG3D+pJ
- Pcpc8ncq2IiK5n3FCOYZgVuewJ2IoIgVUP5Fbk0qa5sy/EY4fxNxesWIfLfUJGjYXAM9
- xYiJe4UQDMYCSc0Rn5paW6LJWC6C1pyUOB/Wl9E2HsjzIbdQ/SB0H8v2I8WrCmAXFonN
- LAzniOJggG4aIcFKZN8JWhwJN6KCquIkxooO2vPVuEI44LkUXYTcptFXxRqBv7F5/jSb xA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakur0jsc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 10:13:08 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 13E74100038;
-        Thu,  9 Jan 2020 10:13:04 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 033752A6184;
-        Thu,  9 Jan 2020 10:13:04 +0100 (CET)
-Received: from [10.48.0.71] (10.75.127.45) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jan
- 2020 10:13:03 +0100
-Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <jic23@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Olivier MOYSAN <olivier.moysan@st.com>
-References: <20200107114532.6697-1-peter.ujfalusi@ti.com>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <eade6657-8470-0d70-b3c1-fcdddf891c6c@st.com>
-Date:   Thu, 9 Jan 2020 10:13:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 9 Jan 2020 04:13:25 -0500
+Received: by mail-pf1-f196.google.com with SMTP id i6so3087703pfc.1;
+        Thu, 09 Jan 2020 01:13:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VPrFCrM6KwJYTjriuFL5VoYsunJfk+aWDMKtdLsKHkg=;
+        b=ADzd4sIziesJUzuW0zPL+tj6sFWHWdzNFWYaXMAfaAAmk2fy8URqPsDg3FSPySGryj
+         KuQDPTE+LWWx71s48stbNMXZgVzhQTWRhl47EZ4EgIJ7FHPKpikCcxosgWoYDVza4/bz
+         rTSW7QsxCfKygveR3QmoJjAKi6PKYLz4mgaVXUIb4XHbULfaFX1pYzma3qR0y3Rh1z6y
+         svTDVpRihIjj5KsV9M3DUjubgDT260OocPYvbKV1F6Dra/8gT1kxWnXQ4IbcnxyOu+oa
+         6be8EzbW/hJGbDMju3YtPe+8FSUi8KHvFfyuSXQ17sMkGz0vmO6ZpstLs+d13X4ATwL4
+         R3ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VPrFCrM6KwJYTjriuFL5VoYsunJfk+aWDMKtdLsKHkg=;
+        b=MX9mBduprtAiaWRXFYQ8OMWQ0/TNQZFtfNknwa4XgykNqJMkzHvTKLLrHdvPvkhb0A
+         Urbm/IbJNpvNVdPvzwgWuvAL5HRae+U6QSF/hMud7aSZJUi4QX7sr/krvv88DtYmKug/
+         SqfinwP0R6pOT4Jo53Tlz/Q94bF/TKvVr64mJmLQD1i0f/i34wQ1LRO9KI2hhyH/GzxK
+         LxSnJbP36LK1otCQ6Hz8482JR09d/opZMM3x5JIc/63sLGaYSSH3S1bRWHk4d/NbqJ2S
+         /m7R87ZkjfuG580yUYroi8keL8yzcx3i4L/omCQLwinANsR0NyFkrtfgWmxIfJorhtM8
+         6FZQ==
+X-Gm-Message-State: APjAAAWNep4k80pNmf2sPG7lE1gD+QuQdtmLX4Go6h0N9M8vZMqNerxt
+        BGq9guMiSWBq8Uf79TRcxWU=
+X-Google-Smtp-Source: APXvYqySz2w9/3ai890d7I4StxP6IqCN+p2I1wmGSQZP39LMR4sqY07Z8cJtvB/v7uOhLbY8qHJtFQ==
+X-Received: by 2002:aa7:9816:: with SMTP id e22mr10311252pfl.229.1578561204341;
+        Thu, 09 Jan 2020 01:13:24 -0800 (PST)
+Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
+        by smtp.gmail.com with ESMTPSA id t23sm6951429pfq.106.2020.01.09.01.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 01:13:23 -0800 (PST)
+From:   Ben Chuang <benchuanggli@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        greg.tu@genesyslogic.com.tw, ben.chuang@genesyslogic.com.tw,
+        Ben Chuang <benchuanggli@gmail.com>
+Subject: [RFC PATCH v2 0/6] Add support UHS-II for GL9755
+Date:   Thu,  9 Jan 2020 17:13:17 +0800
+Message-Id: <cover.1578560282.git.benchuanggli@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200107114532.6697-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 12:45 PM, Peter Ujfalusi wrote:
-> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-> eating up the error code.
-> 
-> By using dma_request_chan() directly the driver can support deferred
-> probing against DMA.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
-> Hi,
-> 
-> Changes since v1:
-> - Fall back to IRQ mode for ADC only in case of ENODEV
+Hi Uffe and Adrian,
 
-Hi Peter,
+These patches support UHS-II and fix GL9755 UHS-II compatibility.
 
-Thanks for the patch,
+The parts of UHS-II are based on [1][2] and porting to Linux 5.5-rc5.
+I have seen that Uffe comment that splitting the UHS-II parts into smaller
+patches. Other than splitting into small patches, could you give me some 
+suggestions for refactoring/splitting files?
 
-Please find a minor comment here after. Apart from that, you can add my:
+Best regards,
+Ben
 
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+References:
+1. [RFC,1/2] mmc: core: support UHS-II in core stack.
+   (https://patchwork.kernel.org/patch/5544441/)
+2. [RFC,2/2] mmc: sdhci: support UHS-II in SDHCI host. 
+   (https://patchwork.kernel.org/patch/5544451/)
+
+v2:
+  - base on Linux v5.5-rc5
+
+Ben Chuang (6):
+  mmc: Add UHS-II support in public headers
+  mmc: core: Add UHS-II support in core layer
+  mmc: host: Add UHS-II support in host layer
+  mmc: uhs2: Introduce a uhs2_post_attach_sd function
+  mmc: sdhci-uhs2: Introduce a uhs2_pre_detect_init function
+  mmc: sdhci-pci-gli: Fix power/reset/ZC/timeout for GL9755 UHS-II mode
+
+ drivers/mmc/core/Makefile                  |   3 +-
+ drivers/mmc/core/block.c                   |   7 +-
+ drivers/mmc/core/bus.c                     |   5 +-
+ drivers/mmc/core/core.c                    |  65 +-
+ drivers/mmc/core/core.h                    |   3 +-
+ drivers/mmc/core/regulator.c               |  14 +
+ drivers/mmc/core/sd.c                      |  27 +-
+ drivers/mmc/core/sd_ops.c                  |  12 +
+ drivers/mmc/core/uhs2.c                    | 995 +++++++++++++++++++++
+ drivers/mmc/core/uhs2.h                    |  23 +
+ drivers/mmc/host/Makefile                  |   1 +
+ drivers/mmc/host/{sdhci.c => sdhci-core.c} | 285 +++++-
+ drivers/mmc/host/sdhci-milbeaut.c          |   4 +-
+ drivers/mmc/host/sdhci-of-arasan.c         |   4 +-
+ drivers/mmc/host/sdhci-of-at91.c           |   4 +-
+ drivers/mmc/host/sdhci-omap.c              |   2 +-
+ drivers/mmc/host/sdhci-pci-core.c          |   4 +-
+ drivers/mmc/host/sdhci-pci-gli.c           | 361 +++++++-
+ drivers/mmc/host/sdhci-pxav3.c             |   4 +-
+ drivers/mmc/host/sdhci-uhs2.c              | 754 ++++++++++++++++
+ drivers/mmc/host/sdhci-uhs2.h              |  34 +
+ drivers/mmc/host/sdhci-xenon.c             |   4 +-
+ drivers/mmc/host/sdhci.h                   | 286 +++++-
+ drivers/mmc/host/sdhci_am654.c             |   4 +-
+ include/linux/mmc/card.h                   |   1 +
+ include/linux/mmc/core.h                   |   6 +
+ include/linux/mmc/host.h                   |  31 +
+ include/linux/mmc/uhs2.h                   | 270 ++++++
+ 28 files changed, 3137 insertions(+), 76 deletions(-)
+ create mode 100644 drivers/mmc/core/uhs2.c
+ create mode 100644 drivers/mmc/core/uhs2.h
+ rename drivers/mmc/host/{sdhci.c => sdhci-core.c} (94%)
+ create mode 100644 drivers/mmc/host/sdhci-uhs2.c
+ create mode 100644 drivers/mmc/host/sdhci-uhs2.h
+ create mode 100644 include/linux/mmc/uhs2.h
 
 
-> 
-> Regards,
-> Peter
-> 
->  drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index e493242c266e..74a2211bdff4 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -1383,9 +1383,13 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
->  {
->  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
->  
-> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
-> -	if (!adc->dma_chan)
-> -		return -EINVAL;
-> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-> +	if (IS_ERR(adc->dma_chan)) {
-> +		int ret = PTR_ERR(adc->dma_chan);
-> +
-> +		adc->dma_chan = NULL;
-> +		return ret;
+base-commit: c79f46a282390e0f5b306007bf7b11a46d529538
+-- 
+2.24.1
 
-You may "return PTR_ERR(adc->dma_chan);" directly here.
-
-Best Regards,
-Fabrice
-
-> +	}
->  
->  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
->  					 DFSDM_DMA_BUFFER_SIZE,
-> @@ -1509,7 +1513,16 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
->  	init_completion(&adc->completion);
->  
->  	/* Optionally request DMA */
-> -	if (stm32_dfsdm_dma_request(indio_dev)) {
-> +	ret = stm32_dfsdm_dma_request(indio_dev);
-> +	if (ret) {
-> +		if (ret != -ENODEV) {
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(&indio_dev->dev,
-> +					"DMA channel request failed with %d\n",
-> +					ret);
-> +			return ret;
-> +		}
-> +
->  		dev_dbg(&indio_dev->dev, "No DMA support\n");
->  		return 0;
->  	}
-> 
