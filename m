@@ -2,86 +2,97 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6B2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582D0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 609BF20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D40920661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbgAINSi (ORCPT
+        id S1730990AbgAINSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:18:38 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53375 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729409AbgAINSi (ORCPT
+        Thu, 9 Jan 2020 08:18:46 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33123 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729409AbgAINSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:18:38 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ipXhi-0005IE-Nk; Thu, 09 Jan 2020 14:18:26 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ipXhh-0000jy-9i; Thu, 09 Jan 2020 14:18:25 +0100
-Date:   Thu, 9 Jan 2020 14:18:25 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] pwm: sun4i: Fix inconsistent IS_ERR and PTR_ERR
-Message-ID: <20200109131825.beaspmfaxh4gpcx5@pengutronix.de>
-References: <20200109072735.GA22886@embeddedor>
- <20200109074445.73n3vapjl4vfjtsu@pengutronix.de>
- <CAJiuCcdFiXVtECtVGz3N9oUM38ca=MDmdK4+T+peUKKzNr_5KQ@mail.gmail.com>
+        Thu, 9 Jan 2020 08:18:46 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 192431C0004;
+        Thu,  9 Jan 2020 13:18:42 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 14:18:42 +0100
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     antoine.tenart@bootlin.com, sd@queasysnail.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
+        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
+Subject: Re: [PATCH net-next v4 08/15] net: phy: mscc: macsec initialization
+Message-ID: <20200109131842.GC5472@kwain>
+References: <20191219105515.78400-1-antoine.tenart@bootlin.com>
+ <20191219105515.78400-9-antoine.tenart@bootlin.com>
+ <20191219.121117.1826219046339114907.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcdFiXVtECtVGz3N9oUM38ca=MDmdK4+T+peUKKzNr_5KQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191219.121117.1826219046339114907.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hello David,
 
-On Thu, Jan 09, 2020 at 10:14:00AM +0100, Clément Péron wrote:
-> On Thu, 9 Jan 2020 at 08:44, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > Hello Gustavo,
-> >
-> > On Thu, Jan 09, 2020 at 01:27:35AM -0600, Gustavo A. R. Silva wrote:
-> > > Fix inconsistent IS_ERR and PTR_ERR in sun4i_pwm_probe().
-> > >
-> > > The proper pointers to be passed as arguments are pwm->clk and pwm->bus_clk.
+On Thu, Dec 19, 2019 at 12:11:17PM -0800, David Miller wrote:
+> From: Antoine Tenart <antoine.tenart@bootlin.com>
+> Date: Thu, 19 Dec 2019 11:55:08 +0100
 > 
-> Thanks for the catch.
+> > +static u32 __vsc8584_macsec_phy_read(struct phy_device *phydev,
+> > +				     enum macsec_bank bank, u32 reg, bool init)
+> > +{
+> > +	u32 val, val_l = 0, val_h = 0;
+> > +	unsigned long deadline;
+> > +	int rc;
+> > +
+> > +	if (!init) {
+> > +		rc = phy_select_page(phydev, MSCC_PHY_PAGE_MACSEC);
+> > +		if (rc < 0)
+> > +			goto failed;
+> > +	} else {
+> > +		__phy_write_page(phydev, MSCC_PHY_PAGE_MACSEC);
+> > +	}
 > 
-> As these patches are still in next should we update them or apply a fix ?
+> Having to export __phy_write_page() in the previous patch looked like
+> a huge red flag to me, and indeed on top of it you're using it to do
+> conditional locking here.
+> 
+> I'm going to unfortunately have to push back on this, please sanitize
+> the locking here so that you can use the existing exports properly.
 
-That's for Thierry to answer.
+I do agree this conditional locking is not very good. We had discussions
+with Andrew about how bad this is, but there are no easy fix for this.
+At least the condition is consistent depending on if we're in the init
+step or not, which is better than having different values in the same
+context. The idea was not to duplicate hundreds of lines.
 
-Best regards
-Uwe
+Having said that, the reason we had to do this is we have multiple PHYs
+inside the same package and some steps are to be done for all PHYs at a
+time. I had another look at this and, for MACsec only, we might be able
+not to have a single common part. I'll test the changes and if that's
+successful I'll be able to fix this in a clean way.
+
+Thanks!
+Antoine
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
