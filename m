@@ -2,93 +2,149 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D409BC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80338C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79132072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432CC2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="enc/0q9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgAILh1 (ORCPT
+        id S1728004AbgAILhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:37:27 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53970 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbgAILh1 (ORCPT
+        Thu, 9 Jan 2020 06:37:43 -0500
+Received: from mail-oi1-f180.google.com ([209.85.167.180]:33531 "EHLO
+        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgAILhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:37:27 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipW7s-00087p-M5; Thu, 09 Jan 2020 12:37:20 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EA3FD1C2C9C;
-        Thu,  9 Jan 2020 12:37:19 +0100 (CET)
-Date:   Thu, 09 Jan 2020 11:37:19 -0000
-From:   "tip-bot2 for Jan Beulich" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/entry/64: Add instruction suffix to SYSRET
-Cc:     Jan Beulich <jbeulich@suse.com>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <038a7c35-062b-a285-c6d2-653b56585844@suse.com>
-References: <038a7c35-062b-a285-c6d2-653b56585844@suse.com>
+        Thu, 9 Jan 2020 06:37:42 -0500
+Received: by mail-oi1-f180.google.com with SMTP id v140so5602457oie.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 03:37:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=WX2CWxZsF25FdPcrd0lrQ8iO70D1PYU6ADU7KID3ipU=;
+        b=enc/0q9Wylb8LffZ/mi1G3sUmrmIXiW2wnEti2u1Vps7CzEMCSdx/vWhY12/7qsLMM
+         xebfuHEiUfjyylj52sqfk4oEUSRWDlxZEtcZUwmbIPGphAAY6P0bSOIMbPKH2hUwkeD0
+         0xlTmEePZ/hkNyPy0f91g8bM6z7vJHgHVl7mU4FD5QbZx1Xd2b/7h+TrW0MaUn63BZKs
+         0UFbwwe+1l+Tgv+z8BKv6SA2JlEIzFHZ4Wp93pfvh9rGg22OQSjL8CPnqUcBtug2dAUL
+         EHoqTtTEJDFp4k7eUGYutGGJv0F7qYaU7buDoXkvmAyDJBWa5T6vACLOcm7LCvXsdc3G
+         H18g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=WX2CWxZsF25FdPcrd0lrQ8iO70D1PYU6ADU7KID3ipU=;
+        b=ClpdwOOl09AqA7D/tvXa5yw/llAZ/Ai9sj3VRFjYTWUUGMdgoZl47GnRxTVXgd0zbW
+         /8xZtRVOo8UyQnskzKITPbPheGs1PyknfIm6/PLmfgegCbUy5sSC/Zvtg8aTMXXZLBXq
+         UNH1uD7uhhDCdsCr7CEGakfSmudKl6cwaqoLfya9/VQE8HjaEFQLyQQt0TzyizaVk7Jw
+         c8h3SenTQ03+bZ7ItCzZCMeX/mN+s0DCT/0N4obfiGjZgUqbodA2Z7WpNzXhL/7a98G3
+         L6E1fjXpoXd9RqhMP7pRnJEGQTvVunyl7Ymj1KWJF65NeTpErP/HnxcTdpDgmBGYqPlW
+         Zbgg==
+X-Gm-Message-State: APjAAAXCbEU/8ihEfipEto0s/hWfpe6M47pJpzE/+1mCMVT6ingPqctg
+        Zl4TGEEE1apUa2/m4p0utAJutl7eT3Hq/zny8IwUtQ==
+X-Google-Smtp-Source: APXvYqxrBeH8gi5Yd34oqH/qu93cBCF4XUr88zjjdy6PtgEhR4lM0slbgyaFHGHBYbQUKR65qUXrO/IaNzeqW7K1bdg=
+X-Received: by 2002:aca:b187:: with SMTP id a129mr2765924oif.175.1578569860196;
+ Thu, 09 Jan 2020 03:37:40 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157856983975.30329.1296701997365239549.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 9 Jan 2020 12:37:14 +0100
+Message-ID: <CAG48ez0eULP6pH26H9ac-YYa88_RSGt6v_hDhsrZ92iZoRdsoQ@mail.gmail.com>
+Subject: "perf ftrace" segfault because ->cpus!=NULL but ->all_cpus==NULL
+To:     Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
+I was clumsily trying to use "perf ftrace" from git master (I might
+very well be using it wrong), and it's falling over with a NULL deref.
+I don't really understand the perf code, but it looks to me like it
+might be related to Andi Kleen's refactoring that introduced
+evlist->all_cpus?
 
-Commit-ID:     b2b1d94cdfd4e906d3936dab2850096a4a0c2017
-Gitweb:        https://git.kernel.org/tip/b2b1d94cdfd4e906d3936dab2850096a4a0c2017
-Author:        Jan Beulich <jbeulich@suse.com>
-AuthorDate:    Mon, 16 Dec 2019 11:40:03 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 09 Jan 2020 12:33:43 +01:00
+I think the problem is that evlist_close() assumes that ->cpus!=NULL
+implies ->all_cpus!=NULL, but perf_evlist__propagate_maps() doesn't
+set ->all_cpus if the evlist is empty.
 
-x86/entry/64: Add instruction suffix to SYSRET
+Here's the crash I encountered:
 
-ignore_sysret() contains an unsuffixed SYSRET instruction. gas correctly
-interprets this as SYSRETL, but leaving it up to gas to guess when there
-is no register operand that implies a size is bad practice, and upstream
-gas is likely to warn about this in the future. Use SYSRETL explicitly.
-This does not change the assembled output.
-
-Signed-off-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/038a7c35-062b-a285-c6d2-653b56585844@suse.com
----
- arch/x86/entry/entry_64.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 76942cb..f2bb91e 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1728,7 +1728,7 @@ SYM_CODE_END(nmi)
- SYM_CODE_START(ignore_sysret)
- 	UNWIND_HINT_EMPTY
- 	mov	$-ENOSYS, %eax
--	sysret
-+	sysretl
- SYM_CODE_END(ignore_sysret)
- #endif
- 
+root@vm:~# /linux-llvm/tools/perf/perf ftrace -a -T kmem_cache_alloc
+failed to reset ftrace
+Segmentation fault (core dumped)
+root@vm:~# gdb /linux-llvm/tools/perf/perf core
+[...]
+Core was generated by `/linux-llvm/tools/perf/perf ftrace -a -T
+kmem_cache_alloc'.
+Program terminated with signal SIGSEGV, Segmentation fault.
+#0  perf_cpu_map__cpu (cpus=0x0, idx=idx@entry=0) at cpumap.c:250
+[...]
+(gdb) list
+245 return cpus;
+246 }
+247
+248 int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
+249 {
+250 if (idx < cpus->nr)
+251 return cpus->map[idx];
+252
+253 return -1;
+254 }
+(gdb) print cpus
+$1 = (const struct perf_cpu_map *) 0x0
+(gdb) bt
+#0  perf_cpu_map__cpu (cpus=0x0, idx=idx@entry=0) at cpumap.c:250
+#1  0x00005579cbf38731 in evlist__close
+(evlist=evlist@entry=0x5579cd1c22c0) at util/evlist.c:1222
+#2  0x00005579cbf388f6 in evlist__delete (evlist=0x5579cd1c22c0) at
+util/evlist.c:152
+#3  0x00005579cbf389c1 in evlist__delete (evlist=<optimized out>) at
+util/evlist.c:148
+#4  0x00005579cbe9e3b5 in cmd_ftrace (argc=0, argv=0x7ffe818a16e0) at
+builtin-ftrace.c:520
+#5  0x00005579cbf2287d in run_builtin (p=0x5579cc2a9740
+<commands+672>, argc=4, argv=0x7ffe818a16e0) at perf.c:312
+#6  0x00005579cbe96baa in handle_internal_command
+(argv=0x7ffe818a16e0, argc=4) at perf.c:364
+#7  run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:408
+#8  main (argc=4, argv=0x7ffe818a16e0) at perf.c:538
+(gdb) frame 1
+#1  0x00005579cbf38731 in evlist__close
+(evlist=evlist@entry=0x5579cd1c22c0) at util/evlist.c:1222
+1222 evlist__for_each_cpu(evlist, i, cpu) {
+(gdb) print evlist
+$2 = (struct evlist *) 0x5579cd1c22c0
+(gdb) print *evlist
+$3 = {core = {entries = {next = 0x5579cd1c22c0, prev =
+0x5579cd1c22c0}, nr_entries = 0, has_user_cpus = false, cpus =
+0x5579cd1b8fe0, all_cpus = 0x0, threads = 0x5579cd1c2d60,
+    nr_mmaps = 0, mmap_len = 0, pollfd = {nr = 0, nr_alloc = 0,
+nr_autogrow = 64, entries = 0x0, priv = 0x0}, heads = {{first = 0x0}
+<repeats 256 times>}, mmap = 0x0, mmap_ovw = 0x0,
+    mmap_first = 0x0, mmap_ovw_first = 0x0}, nr_groups = 0, enabled =
+false, id_pos = 0, is_pos = 0, combined_sample_type = 0,
+bkw_mmap_state = BKW_MMAP_NOTREADY, workload = {cork_fd = 0,
+    pid = -1}, mmap = 0x0, overwrite_mmap = 0x0, selected = 0x0, stats
+= {total_period = 0, total_non_filtered_period = 0, total_lost = 0,
+total_lost_samples = 0, total_aux_lost = 0,
+    total_aux_partial = 0, total_invalid_chains = 0, nr_events = {0
+<repeats 82 times>}, nr_non_filtered_samples = 0, nr_lost_warned = 0,
+nr_unknown_events = 0, nr_invalid_chains = 0,
+    nr_unknown_id = 0, nr_unprocessable_samples = 0,
+nr_auxtrace_errors = {0, 0}, nr_proc_map_timeout = 0}, env = 0x0,
+trace_event_sample_raw = 0x0, first_sample_time = 0,
+  last_sample_time = 0, thread = {th = 0, done = 0}}
+(gdb)
