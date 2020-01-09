@@ -2,120 +2,168 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0238C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CEAC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AFE20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EAA620678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EBBzEWZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388529AbgAISkv (ORCPT
+        id S2388540AbgAISkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:40:51 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40737 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388514AbgAISku (ORCPT
+        Thu, 9 Jan 2020 13:40:55 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35446 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388514AbgAISkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:40:50 -0500
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 5B4152000B;
-        Thu,  9 Jan 2020 18:40:48 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, dri-devel@lists.freedesktop.org,
-        <linux-kernel@vger.kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 2/2] drm/panel: simple: Add Satoz SAT050AT40H12R2 panel support
-Date:   Thu,  9 Jan 2020 19:40:37 +0100
-Message-Id: <20200109184037.9091-2-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200109184037.9091-1-miquel.raynal@bootlin.com>
-References: <20200109184037.9091-1-miquel.raynal@bootlin.com>
+        Thu, 9 Jan 2020 13:40:53 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so8514728wro.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 10:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VQPGwoEJ1c2a0xANduYurHo1xYnvv5Neqk1yCoC8qKs=;
+        b=EBBzEWZ0lbLStHImUT/YQvkBGZyxmNudCu9rPOLTEfkagMV9SH+czeYVS++aS8yCh3
+         7fOFDh/HAJa00+DEhVCS0oSkzaB02q7zfKcKeAX4qxOGbYM5ChMco5JRIDRNEzvbZxm2
+         qg+vFP2rtmYUGC4JOFMHqnYZGj78Si1mTCckzhnazLQJRA2/3z2oFPxk2wz8DjUYsQXV
+         uG3Svw0JcH2IqY9YCIes/63zt7REDfHcxvg+g41eeRuHyAIxZjjANpTLGgr0WqGHMKgg
+         /26RuTkt2rm8uLs7VZ2KBjPXcMKCLZg2Zv61tGluUBrlSJO0AyHLQvH7YYukK6N7yAM4
+         5l7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VQPGwoEJ1c2a0xANduYurHo1xYnvv5Neqk1yCoC8qKs=;
+        b=BmK23OYaTR1LmFLvbnUWoC0fMlVS1RYaU0y6N6PsZJ1g/23gO+5BVIyYx9rh85AyLE
+         Y3oa5NClNEMjx4TlB5/yIYgB6xmRVNaimB2fH4/sZqwx8xJJZu5HRC7SKzBAaxAUbBi+
+         67vfm0z6bKtAVJmmSV3lhDYJXqS1/dtQJBG2uOlc1AfzfSZwyowLSjzh3/Ply97AFCP/
+         N9eJ+Qe4QMmFgPNVjmKbHSq7v2Wg7oHPuGThyUDAjWtFiGvL5uDIdjSw+O2hFSHnx9N+
+         jApU6l3Mufd09aGzu3upepH65L0sJXtV/WmNoCZNYYK/VUsogkywVZmIA2uKELo+pm0N
+         tbYA==
+X-Gm-Message-State: APjAAAWcr38Y+FHG7BVX1AMgisn0FvIIkB37xjhPj3lEGc37OchP1r7N
+        Gt8IIX5is1YOqnyeXerzy13vrg==
+X-Google-Smtp-Source: APXvYqzKoJejbAElq9QXBBOrawGFnw7qb1qkGo9rZCSbmPjo0rDuVSgT2F/zumMSbB2eYW7qrolVgQ==
+X-Received: by 2002:adf:f606:: with SMTP id t6mr11982257wrp.85.1578595251777;
+        Thu, 09 Jan 2020 10:40:51 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
+        by smtp.googlemail.com with ESMTPSA id a5sm3644374wmb.37.2020.01.09.10.40.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 10:40:51 -0800 (PST)
+Subject: Re: [PATCH v2 0/2] clocksource/hyperv: Miscellaneous changes
+To:     Andrea Parri <parri.andrea@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20200109160650.16150-1-parri.andrea@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <278fd4e3-f8ab-8ed8-0d44-ea8d5bc4a375@linaro.org>
+Date:   Thu, 9 Jan 2020 19:40:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20200109160650.16150-1-parri.andrea@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Satoz SAT050AT40H12R2 panel.
+On 09/01/2020 17:06, Andrea Parri wrote:
+> Provide some refactoring and adjustments to the Hyper-V clocksources
+> code.
+> 
+> Changes since v1 [1]:
+>   - Rebased on Daniel's repo/branch
+>   - Added Reviewed-by: tags
+> 
+> [1] https://lkml.kernel.org/r/20191210093054.32230-1-parri.andrea@gmail.com
+> 
+> Andrea Parri (2):
+>   clocksource/hyperv: Untangle stimers and timesync from clocksources
+>   clocksource/hyperv: Set TSC clocksource as default w/ InvariantTSC
+> 
+>  drivers/clocksource/hyperv_timer.c | 48 ++++++++++++++++++++----------
+>  drivers/hv/hv_util.c               |  8 ++---
+>  include/clocksource/hyperv_timer.h |  2 +-
+>  3 files changed, 38 insertions(+), 20 deletions(-)
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
+Applied, thanks.
 
-Changes since v4:
-* None.
 
-Changes since v3:
-* Added connector type.
-
-Changes since v2:
-* Dropped two uneeded lines which would fail the build.
-
-Changes since v1:
-* Switched to display_timing's instead of display_mode.
-
- drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index aaa08beac13c..1aa6622abc49 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2577,6 +2577,30 @@ static const struct panel_desc samsung_ltn140at29_301 = {
- 	},
- };
- 
-+static const struct display_timing satoz_sat050at40h12r2_timing = {
-+	.pixelclock = {33300000, 33300000, 50000000},
-+	.hactive = {800, 800, 800},
-+	.hfront_porch = {16, 210, 354},
-+	.hback_porch = {46, 46, 46},
-+	.hsync_len = {1, 1, 40},
-+	.vactive = {480, 480, 480},
-+	.vfront_porch = {7, 22, 147},
-+	.vback_porch = {23, 23, 23},
-+	.vsync_len = {1, 1, 20},
-+};
-+
-+static const struct panel_desc satoz_sat050at40h12r2 = {
-+	.timings = &satoz_sat050at40h12r2_timing,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 108,
-+		.height = 65,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
- 	.clock = 168480,
- 	.hdisplay = 1920,
-@@ -3377,6 +3401,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "samsung,ltn140at29-301",
- 		.data = &samsung_ltn140at29_301,
-+	}, {
-+		.compatible = "satoz,sat050at40h12r2",
-+		.data = &satoz_sat050at40h12r2,
- 	}, {
- 		.compatible = "sharp,ld-d5116z01b",
- 		.data = &sharp_ld_d5116z01b,
 -- 
-2.20.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
