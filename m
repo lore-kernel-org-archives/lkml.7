@@ -2,243 +2,105 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F34EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33ACC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C6E206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3542087F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmIrmaBt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rG0mAqjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbgAIN4C (ORCPT
+        id S1730690AbgAIN5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:56:02 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43259 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgAIN4B (ORCPT
+        Thu, 9 Jan 2020 08:57:08 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56172 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgAIN5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:56:01 -0500
-Received: by mail-io1-f66.google.com with SMTP id n21so7125778ioo.10;
-        Thu, 09 Jan 2020 05:56:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=content-transfer-encoding:mime-version:subject:from:in-reply-to:cc
-         :date:message-id:references:to;
-        bh=mmPlHP71ISpsjXgRBcY1D4awusYQBGYFaYLTtQP8wmc=;
-        b=EmIrmaBtIsP2JO2tpLCZJIdGRaBCIypw9i40eFjaneE+6A4rAtGbzVG60Dn0Nu5DX0
-         zHG6urCV+i+SfYD2eS14NfyXx9MwP73eIlvPrkzP++BZCv99QnfedJSOfI47LEK0ocVV
-         UAzF1bfu7OTv56byVp1mgPXyooxK2iDgBk40e2RCoj5Py9nU48hXtJ1hZ4mDUZKk9jtj
-         HWADdpZIo2UPkwsM5rhzKSrhG9+pMLMaTBxHF1yGnu/P6YdwrftoV7FJPfLtJ/o4ozxp
-         l6gcv3CfFqZuzai4hvP8JSTfhKdiCMdb81OxIK7r50VtzsRwu4mxm8tSuAT9YdLLNR1g
-         Tlgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:mime-version:subject
-         :from:in-reply-to:cc:date:message-id:references:to;
-        bh=mmPlHP71ISpsjXgRBcY1D4awusYQBGYFaYLTtQP8wmc=;
-        b=s/pFvMQo2W0us8cYEo15hhfVp7/4TGUtFcYEN/cZDROzK4SFXQeTubevFTY292KeAs
-         ssGTyIF1P9hr5rTvHtMV8whsEzIJal/4tLtiPKhvV6RdrVnWT3cMP4EfPGc4r5BTUFbd
-         R/uJ/+jjBEnk+Hho5BwVlHI2W9pLN+bIKWMMMx+9VVlIX/PS0xL8/5hKT1k+VH/zuUqg
-         ySBLaiw/RQJHHT2Vt1D3mUCnJ2QEfraz4AL2syclvmcs2GYXq52tK3Tv8y6X9yi0G6ii
-         dQGpjUqJuFBnUVaoZrJYkJvhU+5zEHk0pHlGfTLLhuMfM93lJrmz8CEVLodxCy8qRmUi
-         kMHQ==
-X-Gm-Message-State: APjAAAW3++jZR66EuA0UtTTXhEvbLh6nJSptH53HgQ55/fJsBcYGnkUS
-        CqjLnW1bfUw+vT9YdeSdIGs=
-X-Google-Smtp-Source: APXvYqzkrr+kjqupl1XB5lRiRX4IqflHY1M08ciXd6HbLYPrL8RQgMexHy/gBLyeRLeqoTZ9nptkdw==
-X-Received: by 2002:a5d:8cda:: with SMTP id k26mr7919141iot.26.1578578160705;
-        Thu, 09 Jan 2020 05:56:00 -0800 (PST)
-Received: from [100.64.72.6] ([173.245.215.240])
-        by smtp.gmail.com with ESMTPSA id v21sm1419524ios.69.2020.01.09.05.55.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 05:56:00 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (1.0)
-Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old udev related code
-From:   Rich Persaud <persaur@gmail.com>
-In-Reply-To: <79a0e144-6e98-9a12-2ad8-89459ae2c426@suse.com>
-Cc:     David Miller <davem@davemloft.net>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Jason Andryuk <jandryuk@gmail.com>,
-        =?utf-8?Q?Marek_Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-Date:   Thu, 9 Jan 2020 08:55:59 -0500
-Message-Id: <5C36C1D3-7FDD-4880-A63C-907441F8C9C0@gmail.com>
-References: <79a0e144-6e98-9a12-2ad8-89459ae2c426@suse.com>
-To:     =?utf-8?Q?J=C3=BCrgen_Gro=C3=9F?= <jgross@suse.com>,
-        "Durrant, Paul" <pdurrant@amazon.com>
-X-Mailer: iPad Mail (17C54)
+        Thu, 9 Jan 2020 08:57:08 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 009Dv07b034023;
+        Thu, 9 Jan 2020 07:57:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578578220;
+        bh=1TMtTjCmCOQvk0/KYtiyqoakyNuPU5JopEa33VjdmNo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rG0mAqjUXNic9c38dJv5JnTvoFWWjMt1L99eOncZbTmHK9DiG6xDWuY5P3iMv69V7
+         C8WRRAzNzyNhnQJzTln3YK/fjpTrhx69x/ILebB8XkOxqmXnLEQwuyTtEOK8O3PStZ
+         Exc/geNURmUbkdE4ay/zq/dChFvtJ9f8oy1Ifapo=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 009Dv07F123940
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Jan 2020 07:57:00 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
+ 2020 07:56:59 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Jan 2020 07:56:59 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 009DuuFt014859;
+        Thu, 9 Jan 2020 07:56:57 -0600
+Subject: Re: [PATCH] arm: dts: Move am33xx and am43xx mmc nodes to sdhci-omap
+ driver
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        "tony@atomide.com >> Tony Lindgren" <tony@atomide.com>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <bcousson@baylibre.com>, <kishon@ti.com>
+References: <20200106111517.15158-1-faiz_abbas@ti.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <ab908007-fd7d-9dd5-c822-f4058c793d7d@ti.com>
+Date:   Thu, 9 Jan 2020 19:28:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200106111517.15158-1-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Dec 16, 2019, at 03:31, J=C3=BCrgen Gro=C3=9F <jgross@suse.com> wrote:
->=20
-> =EF=BB=BFOn 16.12.19 09:18, Durrant, Paul wrote:
->>> -----Original Message-----
->>> From: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
->>> Sent: 16 December 2019 08:10
->>> To: Durrant, Paul <pdurrant@amazon.com>; David Miller
->>> <davem@davemloft.net>
->>> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
->>> kernel@vger.kernel.org; netdev@vger.kernel.org
->>> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old ud=
-ev
->>> related code
->>>> On 13.12.19 11:12, Durrant, Paul wrote:
->>>>>> -----Original Message-----
->>>>>> From: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
->>>>>> Sent: 13 December 2019 10:02
->>>>>> To: Durrant, Paul <pdurrant@amazon.com>; David Miller
->>>>>> <davem@davemloft.net>
->>>>>> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
->>>>>> kernel@vger.kernel.org; netdev@vger.kernel.org
->>>>>> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of old=
+Hi,
 
->>> udev
->>>>> related code
->>>>> On 13.12.19 10:24, Durrant, Paul wrote:
->>>>>>> -----Original Message-----
->>>>>>> From: J=C3=BCrgen Gro=C3=9F <jgross@suse.com>
->>>>>>> Sent: 13 December 2019 05:41
->>>>>>> To: David Miller <davem@davemloft.net>; Durrant, Paul
->>>>>>> <pdurrant@amazon.com>
->>>>>>> Cc: xen-devel@lists.xenproject.org; wei.liu@kernel.org; linux-
->>>>>>> kernel@vger.kernel.org; netdev@vger.kernel.org
->>>>>>> Subject: Re: [Xen-devel] [PATCH net-next] xen-netback: get rid of ol=
-d
->>>>> udev
->>>>>>> related code
->>>>>>>> On 12.12.19 20:05, David Miller wrote:
->>>>>>>>> From: Paul Durrant <pdurrant@amazon.com>
->>>>>>>>> Date: Thu, 12 Dec 2019 13:54:06 +0000
->>>>>>>>>> In the past it used to be the case that the Xen toolstack relied
->>>> upon
->>>>>>>>>> udev to execute backend hotplug scripts. However this has not bee=
-n
->>>>>> the
->>>>>>>>>> case for many releases now and removal of the associated code in
->>>>>>>>>> xen-netback shortens the source by more than 100 lines, and remov=
-es
->>>>>>>> much
->>>>>>>>>> complexity in the interaction with the xenstore backend state.
->>>>>>>>>> NOTE: xen-netback is the only xenbus driver to have a functional
->>>>>>>> uevent()
->>>>>>>>>>         method. The only other driver to have a method at all is
->>>>>>>>>>         pvcalls-back, and currently pvcalls_back_uevent() simply
->>>>>> returns
->>>>>>>> 0.
->>>>>>>>>>         Hence this patch also facilitates further cleanup.
->>>>>>>>>> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
->>>>>>>>> If userspace ever used this stuff, I seriously doubt you can remov=
-e
->>>>>> this
->>>>>>>>> even if it hasn't been used in 5+ years.
->>>>>>>> Hmm, depends.
->>>>>>>> This has been used by Xen tools in dom0 only. If the last usage has=
+On 06/01/20 4:45 pm, Faiz Abbas wrote:
+> Move mmc nodes to be compatible with the sdhci-omap driver. The following
+> modifications are required for omap_hsmmc specific properties:
+> 
+> ti,non-removable: convert to the generic mmc non-removable
+> ti,needs-special-reset:  co-opted into the sdhci-omap driver
+> ti,dual-volt: removed. Legacy property not used in am335x or am43xx
+> ti,needs-special-hs-handling: removed. Legacy property not used in am335x or am43xx
+> 
+> Also since the sdhci-omap driver does not support runtime PM, explicitly
+> disable the mmc3 instance in the dtsi.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+> 
+> Driver modifications have been posted separately:
+> https://patchwork.kernel.org/project/linux-mmc/list/?series=224053
+> 
+> Tested on: am335x-evm, am335x-boneblack, am335x-sk, am335x-bone, am437x-idk,
+> am43xx-gp-evm, am43xx-epos-evm.
+> 
+> I need some help with testing all other am335x variants and SDIO cards.
+> 
+> Here's a branch for testing: https://github.com/faizinator/linux/tree/sdhci-omap_v4_2
+> 
 
->>>>>> been
->>>>>>>> in a Xen version which is no longer able to run with current Linux i=
-n
->>>>>>>> dom0 it could be removed. But I guess this would have to be a rathe=
-r
->>>>>> old
->>>>>>>> version of Xen (like 3.x?).
->>>>>>>> Paul, can you give a hint since which Xen version the toolstack no
->>>>>>>> longer relies on udev to start the hotplug scripts?
->>>>>>> The udev rules were in a file called tools/hotplug/Linux/xen-
->>>>>> backend.rules (in xen.git), and a commit from Roger removed the NIC
->>>> rules
->>>>>> in 2012:
->>>>>>> commit 57ad6afe2a08a03c40bcd336bfb27e008e1d3e53
->>>>>> Xen 4.2
->>>>>>> The last commit I could find to that file modified its name to xen-
->>>>>> backend.rules.in, and this was finally removed by George in 2015:
->>>>>>> commit 2ba368d13893402b2f1fb3c283ddcc714659dd9b
->>>>>> Xen 4.6
->>>>>>> So, I think this means anyone using a version of the Xen tools withi=
-n
->>>>>> recent memory will be having their hotplug scripts called directly by=
+Tony, can you help test some of these boards?
 
->>>>>> libxl (and having udev rules present would actually be counter-
->>>> productive,
->>>>>> as George's commit states and as I discovered the hard way when the
->>>> change
->>>>>> was originally made).
->>>>>> The problem are systems with either old Xen versions (before Xen 4.2)=
-
->>>> or
->>>>>> with other toolstacks (e.g. Xen 4.4 with xend) which want to use a ne=
-w
->>>>>> dom0 kernel.
->>>>>> And I'm not sure there aren't such systems (especially in case someon=
-e
->>>>>> wants to stick with xend).
->>>>> But would someone sticking with such an old toolstack expect to run on=
-
->>>> an unmodified upstream dom0? There has to be some way in which we can
->>>> retire old code.
->>>> As long as there are no hypervisor interface related issues
->>>> prohibiting running dom0 unmodified I think the expectation to be
->>>> able to use the kernel in that environment is fine.
->> I think we need a better policy in future then otherwise we will only col=
-lect baggage.
->=20
-> The Linux kernel policy regarding user interfaces and existing use cases
-> is rather clear and we should not deviate without very strong reasons.
->=20
->>> Another question coming up would be: how is this handled in a driver
->>> domain running netback? Which component is starting the hotplug script
->>> there? I don't think we can assume a standard Xen toolset in this case.
->>> So I'd rather leave this code as it is instead of breaking some rare
->>> but valid use cases.
->> I am not sure there is a standard. Do we 'support' driver domains with an=
-y sort of tools API or do they really just have to notice things via xenstor=
-e? I agree Linux running as a driver domain could indeed use udev.
->=20
-> I intend in no way to break projects like Qubes. Disaggregation is
-> one of the very big advantages of Xen over KVM, Hyper-V and VMWare.
-> We should not give that up "just to get rid of some code". Period.
-
-=46rom a quick poll of Qubes and OpenXT netback usage: neither project would=
- be impacted by the proposed change.  Qubes uses xl devd to call hotplug scr=
-ipts.  OpenXT uses uevent triggers, but does not rely on any script provided=
- in the uevent.  Ongoing simplification of backend drivers would be welcome.=
-
-
-Rich
-
->=20
->>>> Aside from the udev kicks though, I still think the hotplug-status/ring=
-
->>> state interaction is just bogus anyway. As I said in a previous thread,
->>> the hotplug-status ought to be indicated as carrier status, if at all, s=
-o
->>> I still think all that code ought to go.
->>> I agree regarding the future interface, but with the carrier state just
->>> being in the plans to be added now, it is clearly too early to remove
->>> the code with that reasoning.
->> I don't think so. Like I said, I think the hotplug status has nothing to d=
-o with the state of the shared ring. Even with the code as-is, nothing infor=
-ms the frontend if the netif is subsequently closed or re-plumbed, so why mu=
-st we continue to maintain this code? AFAICT it is just not fit for purpose.=
-
->=20
-> If it is being used that way we need to continue supporting it.
->=20
->=20
-> Juergen
->=20
-> _______________________________________________
-> Xen-devel mailing list
-> Xen-devel@lists.xenproject.org
-> https://lists.xenproject.org/mailman/listinfo/xen-devel
+Thanks,
+Faiz
