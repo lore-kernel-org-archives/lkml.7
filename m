@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF91AC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B67C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A6A206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94ED206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="XOd9sP1T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="S4sXMfk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbgAIOCk (ORCPT
+        id S1731477AbgAIOCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:02:40 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52779 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731415AbgAIOCj (ORCPT
+        Thu, 9 Jan 2020 09:02:44 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55724 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731434AbgAIOCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jan 2020 09:02:39 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so3055164wmc.2
+Received: by mail-wm1-f68.google.com with SMTP id q9so3028507wmj.5
         for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:02:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=i4WlGl2APfpv2lRrFN39WYIWl+QrT3wDSJtharCyfCg=;
-        b=XOd9sP1TVktE8HKqQnu820uW9CLDKpXDc2oLvP44cMRM1nVI9dp/EfqStuDVL0IaOK
-         2GUgfxZa7fXsM7IVB86GRA6c41WAZMuz110w9wE5mJyVcPgPp+LJjM5ljrczxbmqSqGF
-         wLmAQsZvC1Cfihj7Sl8c8yBFck1sfS1QNIZgw3x5VWZtRGy1dLctuWBu0RcXMFmyHSE3
-         8WrSmubYKBptazOrGeObwN71AAJURhXhKaf+13ZyoIfKI8/EdQENUhpU2gTej7A1gGDv
-         wCEr5rPovhdtEomoiruOvOlacyPmscFE39UEnRJMsVv+HOb/AKi8jrk+fuKxaB7ITv/5
-         i6PQ==
+        bh=TG2woCcPtSsZFZqS+iMQDZj2SmEEY13YTogN1lSrI+I=;
+        b=S4sXMfk+F+gdcwAtycqdg3QU1/70IIiYt/X5zC1hzn6ySGVkEbef9QKwbjbdkAcOqf
+         i0FTXSC2JAS3fdR/cSRZeUVInuMQuEMQHBdZhJWKXFPVWPXHDB9jVhZEzX9t2ZQ0Ssb4
+         y0kbJO54RhauW2HtjV2zMQbrJ4jRJQd7LTorh9AV1aSMc9sRLAcCgk4JA+40yiDpdTEX
+         29REhzdrWXcAWEXD9+g5kiRFMvaN4UVHkotOFc7PUjckz8FstQbqms83nGNh1MQ9kgES
+         vpcKm3FujgL9b+QVwWByTmTcPZ6OFXbJe//WX+3WxsLtg/yWcIXn5J7pvjUxrUXM0V1q
+         XECQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=i4WlGl2APfpv2lRrFN39WYIWl+QrT3wDSJtharCyfCg=;
-        b=hP3ew8Txkn7lwD6JdPDLj5wt37vYWjZUY4bQIfaT5rJKUOiVH42B9Af2uDnrY8bzhL
-         4zhmotJTFfad9TXE7jO9mg/zl2PD0Znas3Gvykc515R4Fu+IxHSHQafjiCLr9yJev1Vk
-         MXLAEFu8faJVUbSZkYTOTHbpfRKUlDyiklgGVm9BrjaleGWCMjJkq4+NxZQMyTMJhFht
-         7uvT9azsTvUs3AGkik4+OJ7jrsLVELQU+pgimHivq8mMPoRIC6wrzEk68P8bMx9vUonV
-         MeuDP+JbCgSjPinZiG+YthM8qCHRxVaRlCVFA4rdFLr6GJDvxDzvd3rV3hZz2Mp2f8b+
-         0gMw==
-X-Gm-Message-State: APjAAAVbUOhXk3MqcwmeKNj+XYc/nQclNOG6JUJlS8HLiCuxCN+xa6w1
-        2CS/3T5stzEyb4Izt77THTShJg==
-X-Google-Smtp-Source: APXvYqz3DqsI5MGZY3ATZ/jamxaASkH6cwXd4RR901fnZTW0429qYhylN5IHhyTmlow651Pues0jVQ==
-X-Received: by 2002:a1c:1bc3:: with SMTP id b186mr5092722wmb.79.1578578545543;
-        Thu, 09 Jan 2020 06:02:25 -0800 (PST)
+        bh=TG2woCcPtSsZFZqS+iMQDZj2SmEEY13YTogN1lSrI+I=;
+        b=CISMLEEJ9S5q/7feCWxAYjq4DbeAWwIL9RG3oEsZelba9aOoQu25nnjX/lFiueYIwY
+         FaU/KArDbPOPdc0w5f/cWFkEbA+/22lduBHBxYli+diEhAxSiua1s+98UEOTJpLuTdyh
+         bM5I48H65O4fg60pLug77Nf68Grfrjt3+GAL5XzP+rKMBDhhfzS4vqmfUXw12cfF7ilC
+         dBbTUtsNY0Sk45Oj8KaqQK3qa81Iwq+XYiOsZ4JQA4aq5608UbRF09z2WV3BUDnYoe0g
+         KSM+xHUkIHQm72XJEEzSNaiY8nZYerLKDOZ//1SK3yYY4Uwi/9w4Tlyogf2INrr1kSwh
+         EKyw==
+X-Gm-Message-State: APjAAAUbdldKJHKML/WsL+kOTcWSQAsXASdM5UrCKE6QCy/goHNO7dt8
+        Q2IXC7YuqNXdGl0W4Vh0W4nBM0xGcLrlbw==
+X-Google-Smtp-Source: APXvYqz4brO2seX3lqYhvSlG7cla7AZ6Z+wvs6Y13BLgKEhXbo4aCBJ3FUWhcd6wYqPVrae1SrOlQA==
+X-Received: by 2002:a05:600c:2150:: with SMTP id v16mr4768848wml.156.1578578557466;
+        Thu, 09 Jan 2020 06:02:37 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id x17sm7971846wrt.74.2020.01.09.06.02.24
+        by smtp.gmail.com with ESMTPSA id c2sm8264253wrp.46.2020.01.09.06.02.36
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 06:02:24 -0800 (PST)
+        Thu, 09 Jan 2020 06:02:36 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] arm64: zynqmp: Enable iio-hwmon for ina226 on zcu100
-Date:   Thu,  9 Jan 2020 15:02:15 +0100
-Message-Id: <3697b726f12df89d6fc222b64672f8fc3779ec3c.1578578535.git.michal.simek@xilinx.com>
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 5/7] arm64: zynqmp: Add label property to all ina226 on zcu102
+Date:   Thu,  9 Jan 2020 15:02:19 +0100
+Message-Id: <a7febcff2f7674a4b5afbd5c5c360171e6658ff4.1578578535.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1578578535.git.michal.simek@xilinx.com>
 References: <cover.1578578535.git.michal.simek@xilinx.com>
@@ -78,44 +77,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ina226 hwmon driver is deprecated and it is recommended to use new iio
-based driver. The patch is enabling iio-hwmon driver to export
-functionality from IIO to hwmon interface to be able to use lm-sensors
-package.
+Label property is adding capability to distiguish chips from each other
+when iio framework is used.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts     | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-index a109e82982ae..d60110ad8367 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-@@ -103,6 +103,11 @@ sdio_pwrseq: sdio-pwrseq {
- 		reset-gpios = <&gpio 7 GPIO_ACTIVE_LOW>; /* WIFI_EN */
- 		post-power-on-delay-ms = <10>;
- 	};
-+
-+	ina226 {
-+		compatible = "iio-hwmon";
-+		io-channels = <&u35 0>, <&u35 1>, <&u35 2>, <&u35 3>;
-+	};
- };
- 
- &dcc {
-@@ -191,8 +196,9 @@ i2csw_5: i2c@5 {
- 			#size-cells = <0>;
- 			reg = <5>;
- 			/* PS_PMBUS */
--			ina226@40 { /* u35 */
-+			u35: ina226@40 { /* u35 */
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+index afdd0ff37900..4f801721564f 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+@@ -253,60 +253,70 @@ i2c@0 {
+ 			u76: ina226@40 { /* u76 */
  				compatible = "ti,ina226";
-+				#io-channel-cells = <1>;
+ 				#io-channel-cells = <1>;
++				label = "ina226-u76";
  				reg = <0x40>;
- 				shunt-resistor = <10000>;
- 				/* MIO31 is alert which should be routed to PMUFW */
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u77: ina226@41 { /* u77 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u77";
+ 				reg = <0x41>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u78: ina226@42 { /* u78 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u78";
+ 				reg = <0x42>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u87: ina226@43 { /* u87 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u87";
+ 				reg = <0x43>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u85: ina226@44 { /* u85 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u85";
+ 				reg = <0x44>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u86: ina226@45 { /* u86 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u86";
+ 				reg = <0x45>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u93: ina226@46 { /* u93 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u93";
+ 				reg = <0x46>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u88: ina226@47 { /* u88 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u88";
+ 				reg = <0x47>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u15: ina226@4a { /* u15 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u15";
+ 				reg = <0x4a>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u92: ina226@4b { /* u92 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u92";
+ 				reg = <0x4b>;
+ 				shunt-resistor = <5000>;
+ 			};
+@@ -319,48 +329,56 @@ i2c@1 {
+ 			u79: ina226@40 { /* u79 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u79";
+ 				reg = <0x40>;
+ 				shunt-resistor = <2000>;
+ 			};
+ 			u81: ina226@41 { /* u81 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u81";
+ 				reg = <0x41>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u80: ina226@42 { /* u80 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u80";
+ 				reg = <0x42>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u84: ina226@43 { /* u84 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u84";
+ 				reg = <0x43>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u16: ina226@44 { /* u16 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u16";
+ 				reg = <0x44>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u65: ina226@45 { /* u65 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u65";
+ 				reg = <0x45>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u74: ina226@46 { /* u74 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u74";
+ 				reg = <0x46>;
+ 				shunt-resistor = <5000>;
+ 			};
+ 			u75: ina226@47 { /* u75 */
+ 				compatible = "ti,ina226";
+ 				#io-channel-cells = <1>;
++				label = "ina226-u75";
+ 				reg = <0x47>;
+ 				shunt-resistor = <5000>;
+ 			};
 -- 
 2.24.0
 
