@@ -2,191 +2,114 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B16AC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A00C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478BF205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:50:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZ7Hn4jC"
+	by mail.kernel.org (Postfix) with ESMTP id 54AB0206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgAIEuq (ORCPT
+        id S1727943AbgAIEwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 23:50:46 -0500
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:34538 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgAIEup (ORCPT
+        Wed, 8 Jan 2020 23:52:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27328 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726913AbgAIEwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 23:50:45 -0500
-Received: by mail-ot1-f54.google.com with SMTP id a15so6020850otf.1;
-        Wed, 08 Jan 2020 20:50:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=W3O5nIcFKxaFgkWc12HCywMQWOvEI9x36sCRsT6hEps=;
-        b=WZ7Hn4jCSv4LSKuxn2A2iFb4MOyxGmne6T1uqasQOIZVxyfKwN4Fs5qMOoE++eUH6h
-         R5e8XAJNLObNlPeng7tp93kXMeZ3R8W9iyn9viszqTZKPQTDXcZ+M+7F3rm4/QlCpYh4
-         YXeilGKcqFyZzzE32Q6mVVqMcA3hPcTg0UscliaT8gkltPBQazbvsD0xY9zluh3dd8uo
-         sVqePtBnasfwkVBTUtJJzUc4f1TS7hleoIHumGQsqrUoNb+wIMSBCl++YuvqTV2CYV/1
-         hod+oPDr+winwMnBtzzLhYPDe3d7nULUivX9yKkP6rM2iglX7tJp8H+jyjlShbRaxZ49
-         rAbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=W3O5nIcFKxaFgkWc12HCywMQWOvEI9x36sCRsT6hEps=;
-        b=O4KypuyJZ/iMltvqyvz24WH8RbZcyuVB7+s4L2WmZIiWpbI09r8uncFTz4My7yfYaD
-         UEkoOsoP+ZxW1Bqy36XhI7fDcm0GXXbwIxnq8KSk5PgBZGDbCtACKZQGIElq8wruouQb
-         vhydj7T21oAD0gwC30T+nSOkoYiQ2u2K6aglNE3lnY4J9gs0XE9V3b2H1vyV8LgpPwWz
-         2OsDz+VdGqw4Z4P4kzsC9B9/1zCRiYv2erNXVu3vRDYgJQzt2K6PM8bHZD3KjXSFY5vy
-         iCPor+qvUpIhtvazshqVXCuVAaqdGKT8xOCrH2h33nQCtcy05aKxqRAyoZPmjNVVHYdW
-         7j0Q==
-X-Gm-Message-State: APjAAAXPbZXayBQHMpNy84Rahr8AoqxCcaIvM7seFBn5iI0ZoKDyevPw
-        WOL4gOC/rwfe5YbOK6bllQk2SFFpO0rpCEwXIZsX4EOd
-X-Google-Smtp-Source: APXvYqzTftxnnmGHL9Y3nqnlGfdsAAbMXG7jnFOss/mF59XGZtYjw9VRPTfE6HjAPG7OXfPFJu2ZlsZp6CH4sLs1WBg=
-X-Received: by 2002:a9d:754a:: with SMTP id b10mr7114902otl.273.1578545444736;
- Wed, 08 Jan 2020 20:50:44 -0800 (PST)
-MIME-Version: 1.0
-References: <CAHhAz+iy9b8Cyc6O=tjzjjixUQqKpTchrQWc+Y4JicAxB_HY5A@mail.gmail.com>
- <20200109043505.GA223446@google.com>
-In-Reply-To: <20200109043505.GA223446@google.com>
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Thu, 9 Jan 2020 10:20:32 +0530
-Message-ID: <CAHhAz+h4_nenXjUb9Up2Djx3e_d1J3zPmiCENjSbyJmxPJTb8g@mail.gmail.com>
-Subject: Re: pcie: xilinx: kernel hang - ISR readl()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+        Wed, 8 Jan 2020 23:52:33 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0094qQpB019663
+        for <linux-kernel@vger.kernel.org>; Wed, 8 Jan 2020 23:52:32 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xdvqy97et-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 23:52:32 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 9 Jan 2020 04:52:30 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 Jan 2020 04:52:26 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0094pcG138011312
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jan 2020 04:51:38 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B2F414C046;
+        Thu,  9 Jan 2020 04:52:25 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8F3C34C044;
+        Thu,  9 Jan 2020 04:52:24 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.236.182])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jan 2020 04:52:24 +0000 (GMT)
+Subject: Re: [PATCH v1] IMA: fix measuring asymmetric keys Kconfig
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        James.Bottomley@HansenPartnership.com, arnd@arndb.de,
+        linux-integrity@vger.kernel.org
+Cc:     dhowells@redhat.com, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Date:   Wed, 08 Jan 2020 23:52:23 -0500
+In-Reply-To: <20200108160508.5938-1-nramas@linux.microsoft.com>
+References: <20200108160508.5938-1-nramas@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010904-4275-0000-0000-00000395FAC4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010904-4276-0000-0000-000038A9E990
+Message-Id: <1578545543.5147.32.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-08_07:2020-01-08,2020-01-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ suspectscore=0 clxscore=1015 mlxscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001090044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
-> > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote=
-:
-> > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
-> > > > Hi,
-> > > >
-> > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
-> > > > parallel I/O and interfaces them to the Host CPU via PCI Express bu=
-s.
-> > > > I see that my system freezes without capturing the crash dump for
-> > > > certain tests. I debugged this issue and it was tracked down to the
-> > > > below mentioned interrupt handler code.
-> > > >
-> > > >
-> > > > In ISR, first reads the Interrupt Status register using =E2=80=98re=
-adl()=E2=80=99 as
-> > > > given below.
-> > > >     status =3D readl(ctrl->reg + INT_STATUS);
-> > > >
-> > > >
-> > > > And then clears the pending interrupts using =E2=80=98writel()=E2=
-=80=99 as given blow.
-> > > >         writel(status, ctrl->reg + INT_STATUS);
-> > > >
-> > > >
-> > > > I've noticed a kernel hang if INT_STATUS register read again after
-> > > > clearing the pending interrupts.
-> > > >
-> > > > Can someone clarify me why the kernel hangs without crash dump inca=
-se
-> > > > if I read the INT_STATUS register using readl() after clearing the
-> > > > pending bits?
-> > > >
-> > > > Can readl() block?
-> > >
-> > > readl() should not block in software.  Obviously at the hardware CPU
-> > > instruction level, the read instruction has to wait for the result of
-> > > the read.  Since that data is provided by the device, i.e., your FPGA=
-,
-> > > it's possible there's a problem there.
-> >
-> > Thank you very much for your reply.
-> > Where can I find the details about what is protocol for reading the
-> > =E2=80=98memory mapped IO=E2=80=99? Can you point me to any useful link=
-s..
-> > I tried locate the exact point of the kernel code where CPU waits for
-> > read instruction as given below.
-> > readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
-> > Do I need to check for the assembly instructions, here?
->
-> The C pointer dereference, e.g., "*address", will be some sort of a
-> "load" instruction in assembly.  The CPU wait isn't explicit; it's
-> just that when you load a value, the CPU waits for the value.
->
-> > > Can you tell whether the FPGA has received the Memory Read for
-> > > INT_STATUS and sent the completion?
-> >
-> > Is there a way to know this with the help of software debugging(either
-> > enabling dynamic debugging or adding new debug prints)? Can you please
-> > point some tools\hw needed to find this?
->
-> You could learn this either via a PCIe analyzer (expensive piece of
-> hardware) or possibly some logic in the FPGA that would log PCIe
-> transactions in a buffer and make them accessible via some other
-> interface (you mentioned it had parallel and other interfaces).
->
-> > > On the architectures I'm familiar with, if a device doesn't respond,
-> > > something would eventually time out so the CPU doesn't wait forever.
-> >
-> > What is timeout here? I mean how long CPU waits for completion? Since
-> > this code runs from interrupt context, does it causes the system to
-> > freeze if timeout is more?
->
-> The Root Port should have a Completion Timeout.  This is required by
-> the PCIe spec.  The *reporting* of the timeout is somewhat
-> implementation-specific since the reporting is outside the PCIe
-> domain.  I don't know the duration of the timeout, but it certainly
-> shouldn't be long enough to look like a "system freeze".
->
-> > lspci output:
-> > $ lspci
-> > 00:00.0 Host bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
-> > Series SoC Transaction Register (rev 11)
-> > 00:02.0 VGA compatible controller: Intel Corporation Atom Processor
-> > Z36xxx/Z37xxx Series Graphics & Display (rev 11)
-> > 00:13.0 SATA controller: Intel Corporation Atom Processor E3800 Series
-> > SATA AHCI Controller (rev 11)
-> > 00:14.0 USB controller: Intel Corporation Atom Processor
-> > Z36xxx/Z37xxx, Celeron N2000 Series USB xHCI (rev 11)
-> > 00:1a.0 Encryption controller: Intel Corporation Atom Processor
-> > Z36xxx/Z37xxx Series Trusted Execution Engine (rev 11)
-> > 00:1b.0 Audio device: Intel Corporation Atom Processor Z36xxx/Z37xxx
-> > Series High Definition Audio Controller (rev 11)
-> > 00:1c.0 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-> > Express Root Port 1 (rev 11)
-> > 00:1c.2 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-> > Express Root Port 3 (rev 11)
-> > 00:1c.3 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-> > Express Root Port 4 (rev 11)
-> > 00:1d.0 USB controller: Intel Corporation Atom Processor Z36xxx/Z37xxx
-> > Series USB EHCI (rev 11)
-> > 00:1f.0 ISA bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
-> > Series Power Control Unit (rev 11)
-> > 00:1f.3 SMBus: Intel Corporation Atom Processor E3800 Series SMBus
-> > Controller (rev 11)
-> > 01:00.0 RAM memory: PLDA Device 5555
->
-> Is this 01:00.0 device the FPGA?
-Yes you are correct. 01:00.0 RAM memory: PLDA Device 5555
+On Wed, 2020-01-08 at 08:05 -0800, Lakshmi Ramasubramanian wrote:
+> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is a tristate. If this config
+> is set to "=m", ima_asymmetric_keys.c is built as a kernel module.
+> 
+> Defined an intermediate boolean config namely
+> CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS that is
+> defined when CONFIG_IMA and CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+> are defined.
+> 
+> Asymmetric key structure is defined only when
+> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is defined. Since the IMA hook
+> measures asymmetric keys, the IMA hook is defined in
+> ima_asymmetric_keys.c which is built only if
+> CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is defined.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
->
-> > 03:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network
-> > Connection (rev 03)
+For the time being, I've pushed out this patch with the existing patch
+description to next-integrity-testing, but the patch description
+should be rewritten clearer.  For example,
 
+As a result of the asymmetric public keys subtype being defined as a
+tristate, with the existing IMA Makefile, ima_asymmetric_keys.c could
+be built as a kernel module.  To prevent this from happening, this
+patch defines and uses an intermediate Kconfig boolean option named
+IMA_MEASURE_ASYMMETRIC_KEYS.
 
+Please let me know if you're ok with this wording.
 
---=20
-Thanks,
-Sekhar
+thanks,
+
+Mimi
+
