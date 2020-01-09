@@ -2,132 +2,113 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC68C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB49C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996F5206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:32:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n930WMFz"
+	by mail.kernel.org (Postfix) with ESMTP id 9E82A206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578562375;
+	bh=9YrX6xPp2e7/KKWxeVFG44sFTaNaqxbhpzi7KEta2Tw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=J0Gtn1IvdN/1/T29Cy4mEPjMjGZD6REnTCjQOCVpBeusV8wKvQ20pN2IWv67Gw8Vy
+	 u9RfJSPB/uoPWaQfw5bZHdx0qVEslrW/4EU3QXB2Z8Ur+W/mfdfHfNeqVtZEX7jfnT
+	 tRKEkELJeTKX93VCi2ZAZXvCEkFu0Noo9sJtDmZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbgAIJcj (ORCPT
+        id S1729654AbgAIJcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:32:39 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36031 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729269AbgAIJcj (ORCPT
+        Thu, 9 Jan 2020 04:32:54 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37523 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729269AbgAIJcy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:32:39 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k3so2961186pgc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:32:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=IUptMHJL+9Tl4nhOhJMfCKeT/r8B8a7YJnYcaAk5T+4=;
-        b=n930WMFzeCmP5ttP1TldocO/9JwvUJXTCdFgxCpyoVU14UEuckw3pi5GhVnTrxel8y
-         qXH2mO5pl0DD05POWU6NQBkhrrKF+96Jomuv48OJdpEG3VbrIbSrBqxOV4Q7UUGN36iI
-         pS2t/PuBonQ12GJk2MRiL4QjBN8Z+bwun2A3bl1NmvodbF1Q/Xbd5vc/g6bOtzOjW630
-         S71ZUbs7tevnBWY/4PJO3TK87CeVVPOw1rJINrfPPgELpO4mRKnsbeq6wIeHN2n1b5Fh
-         rYy3lSe7o2TENXT94FZrTiPCEinaAiVmgYZLEg44liGVMH60IgJTHZ9PgGkbOKTRZu7X
-         LQCA==
+        Thu, 9 Jan 2020 04:32:54 -0500
+Received: by mail-oi1-f196.google.com with SMTP id z64so5311381oia.4;
+        Thu, 09 Jan 2020 01:32:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IUptMHJL+9Tl4nhOhJMfCKeT/r8B8a7YJnYcaAk5T+4=;
-        b=h9K3MHrcDrIb6Y2bv2RSG0ss7F6COklcilEAosl/AbI1HTZR/0E8r4JCHzBV6Ib8fz
-         9EOqSvBd0GC5AC2GSomSm2gXWLZXhh56H08QRsNld1OOEIJo0jVlcFpLjiYR+lScLOwe
-         t4cuHfurXvxpAxVcOyVRF+GhKMSaFv6O0pjyjSlmj0p7842VI0pmzuzwLadJ1I9q/Nvj
-         9b/FgpdMhYQyo3F+cnxXJ9PN/kvPOzvLRbh/qcYY78ya1USb6EnMO+7Fy08mGEx3f7QV
-         qvpNLzyqsYiKa1e4w5IJcu7fQUZEoxqH5J2uA7nF8PD60gRQ7Rssmk1UYaecpKqnmZ8N
-         Hemw==
-X-Gm-Message-State: APjAAAWR545EPauwpqdPUuoqjH2rUUTHsB4JiaZECssI28+zj80CUHAS
-        D1yryIC7rCgvbhCiv+9yojA=
-X-Google-Smtp-Source: APXvYqyPNuEcV6edJfxPLDzBxOyLVXgzbP+dnUJvCZ/+azkjXlXkF1dASRQjsluZjmvJDYVIzuH93g==
-X-Received: by 2002:a63:904c:: with SMTP id a73mr10267285pge.335.1578562358385;
-        Thu, 09 Jan 2020 01:32:38 -0800 (PST)
-Received: from xp-OptiPlex-7050.mioffice.cn ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id m128sm6963746pfm.183.2020.01.09.01.32.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 09 Jan 2020 01:32:38 -0800 (PST)
-From:   ping xiong <xp1982.06.06@gmail.com>
-To:     yuchao0@huawei.com
-Cc:     jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, xiongping1 <xiongping1@xiaomi.com>
-Subject: [f2fs-dev][PATCH] resize.f2fs: add option for large_nat_bitmap feature
-Date:   Thu,  9 Jan 2020 17:32:29 +0800
-Message-Id: <1578562349-842-1-git-send-email-xp1982.06.06@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9YrX6xPp2e7/KKWxeVFG44sFTaNaqxbhpzi7KEta2Tw=;
+        b=if/A+oWjDr+7tTl6hD8hXKk3IcC3Npc2MgPBt+HEVW2CGaALWHDUKoGkFFvD/T9nQp
+         mDvbB2kB2N6/GHlPtOOuCpqPskJUzR7THgb3ZR9GwZ8+yTMKWmvhhseQ74+cj58U33LO
+         qRnJ2lcTFx6cbte4AEdazLWm50cnQJFffE529eibXVr36KsHQPc8OGQ+3sVhRKh7d2wW
+         qZxc569ukqZ5UFHA5em/mSvk/+3z/cD2vJRIe/bYkbmjb8N6v98s/4th5B08DN3Vi+oR
+         eHbOQ/dK8TVnVgcv+1RcUqYLIEjXjHf61/EmBPexq24dfEVnPV8EViUq6M64IJoKSbDU
+         NoSg==
+X-Gm-Message-State: APjAAAXG/kgfO+uS3WljiSOyGfjwc87eRRIw7WNGpuShG8/zbtPkbKHU
+        lvrFAZWsbxUfWOn2P7vs1NgOPqdWwDSMXuTXh9FnSA==
+X-Google-Smtp-Source: APXvYqxQzRrWQ7PVARLaLZINaBvDHwYstJVKtItaPqE7bHlbZVGrRimgP4uuWuXWd9f80etPtpWo+TxGCkY5BY2rrp0=
+X-Received: by 2002:aca:cd92:: with SMTP id d140mr2365881oig.68.1578562373147;
+ Thu, 09 Jan 2020 01:32:53 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213174623.GA20267@dtor-ws> <CGME20191215164117eucas1p159471bd0b90b76b6ff64f26f17a6580e@eucas1p1.samsung.com>
+ <2a8a5e6b-9372-978e-03d0-350ab65a2d0a@redhat.com> <f2f41b28-2ca5-7fad-5b19-2ad51c689e5a@samsung.com>
+ <87tv55ro9b.fsf@kernel.org>
+In-Reply-To: <87tv55ro9b.fsf@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 9 Jan 2020 10:32:40 +0100
+Message-ID: <CAJZ5v0jb6WNQvx0Kiarwh=9h-inC3VBYzBtBBCJOqVvDHSDUrw@mail.gmail.com>
+Subject: Re: [PATCH] usb: dwc3: use proper initializers for property entries
+To:     Felipe Balbi <balbi@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: xiongping1 <xiongping1@xiaomi.com>
+On Thu, Jan 9, 2020 at 10:07 AM Felipe Balbi <balbi@kernel.org> wrote:
+>
+>
+> Hi,
+>
+> Marek Szyprowski <m.szyprowski@samsung.com> writes:
+>
+> > Hi All,
+> >
+> > On 15.12.2019 17:41, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 13-12-2019 18:46, Dmitry Torokhov wrote:
+> >>> We should not be reaching into property entries and initialize them by
+> >>> hand, but rather use proper initializer macros. This way we can alter
+> >>> internal representation of property entries with no visible changes to
+> >>> their users.
+> >>>
+> >>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> >>> ---
+> >>>
+> >>> It would be good if this could go through Rafael's tree as it is needed
+> >>> for the rest of my software_node/property_entry rework patch series
+> >>> which I would love not to delay till 5.6.
+> >>
+> >> Patch looks good to me:
+> >>
+> >> Acked-by: Hans de Goede <hdegoede@redhat.com>
+> >
+> > This patch is instantly needed as the issue it fixes is again triggered
+> > in current (20200107) linux-next by commit e6bff4665c59 "software node:
+> > replace is_array with is_inline".
+> >
+> > Felipe: could You ack it, so it could be merged via Rafael's tree
+> > together with related device property changes?
+>
+> Here you go:
+>
+> Acked-by: Felipe Balbi <balbi@kernel.org>
 
-resize.f2fs has already supported large_nat_bitmap feature, but has no
-option to turn on it.
-
-This change add a new '-i' option to control turning on/off it.
-
-Signed-off-by: xiongping1 <xiongping1@xiaomi.com>
----
- fsck/main.c   | 6 +++++-
- fsck/resize.c | 5 +++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/fsck/main.c b/fsck/main.c
-index 9a7d499..e7e3dfc 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -104,6 +104,7 @@ void resize_usage()
- 	MSG(0, "\nUsage: resize.f2fs [options] device\n");
- 	MSG(0, "[options]:\n");
- 	MSG(0, "  -d debug level [default:0]\n");
-+	MSG(0, "  -i extended node bitmap, node ratio is 20%% by default\n");
- 	MSG(0, "  -s safe resize (Does not resize metadata)");
- 	MSG(0, "  -t target sectors [default: device size]\n");
- 	MSG(0, "  -V print the version number and exit\n");
-@@ -449,7 +450,7 @@ void f2fs_parse_options(int argc, char *argv[])
- 				break;
- 		}
- 	} else if (!strcmp("resize.f2fs", prog)) {
--		const char *option_string = "d:st:V";
-+		const char *option_string = "d:st:iV";
- 
- 		c.func = RESIZE;
- 		while ((option = getopt(argc, argv, option_string)) != EOF) {
-@@ -476,6 +477,9 @@ void f2fs_parse_options(int argc, char *argv[])
- 					ret = sscanf(optarg, "%"PRIx64"",
- 							&c.target_sectors);
- 				break;
-+			case 'i':
-+				c.large_nat_bitmap = 1;
-+				break;
- 			case 'V':
- 				show_version(prog);
- 				exit(0);
-diff --git a/fsck/resize.c b/fsck/resize.c
-index fc563f2..88e063e 100644
---- a/fsck/resize.c
-+++ b/fsck/resize.c
-@@ -519,6 +519,11 @@ static void rebuild_checkpoint(struct f2fs_sb_info *sbi,
- 	else
- 		set_cp(checksum_offset, CP_CHKSUM_OFFSET);
- 
-+	if (c.large_nat_bitmap) {
-+		set_cp(checksum_offset, CP_MIN_CHKSUM_OFFSET);
-+		flags |= CP_LARGE_NAT_BITMAP_FLAG;
-+	}
-+
- 	set_cp(ckpt_flags, flags);
- 
- 	memcpy(new_cp, cp, (unsigned char *)cp->sit_nat_version_bitmap -
--- 
-2.7.4
-
+Thanks, applied.
