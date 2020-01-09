@@ -2,97 +2,330 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AC7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E89C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6014E2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F28D2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWzpCcgA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oC6Q4lA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388495AbgAISeL (ORCPT
+        id S2388505AbgAISfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:34:11 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33235 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgAISeK (ORCPT
+        Thu, 9 Jan 2020 13:35:40 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39363 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728632AbgAISfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:34:10 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b6so8550435wrq.0;
-        Thu, 09 Jan 2020 10:34:09 -0800 (PST)
+        Thu, 9 Jan 2020 13:35:39 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a67so6761367oib.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 10:35:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=VFJ3xIIkT+cbdzjfutrDdpZrJagndmFNonhtgg/BtSw=;
-        b=kWzpCcgAYo8/OuCHxa1VIYf7367unZ2vOvPriiOgVi7nNHR0TkkCls/j6I+GHT0u76
-         JQEP9meZhsw6Om2B7V733N+h06H6Emv2GZdLL6Yde62GoVUienAmFnxqxRuMIVipqvob
-         XkY1fs8ee3dhNACbPHklqCCTRPtSTYoGOtutiX9fbp31ufm3jDMInN3woX6s5EMUAn/2
-         xO9oGwWhLpfqJDgU4tZcAjmXrwS41BLJ6kchsn43lYnn5gTTGl7xCXWaaejfu/HFC0Wa
-         /NJcCZAu4h2fgAwpuggaSP/V0UQ9d2IcS3zByvX6NAOVSBMZIalzS63VC1xgd9NXzdSL
-         BA8A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wmvSr2mzmrRq+l3ZQk2B1GL9COS1rF8Vn1oWheNtkZE=;
+        b=oC6Q4lA6oU3JAgCnxLfNSA+TF08QnqsuxqJZbgwHEudI2pEIZsQ1nrGaP4A7mI0EJY
+         M0S5bEhrCBW0uTR2PHP7zKG9Ngm9vY3hPp3uhle+w7AQwtvbKuyrx1BfvXBJ+LkDRHeL
+         0tjHmjwYpC9W1AmPxoWMY3OQzMA2IJVcmngkURv7vtXk0WFhQFKkKS7+Jh7y3yeIqP1M
+         mZKJe7ltjGyiHXY20XPpAZRFkr6QXJLy63PwWmYlBWb5nirmCCVzXYnmPfT6z/OFv11S
+         6r7n6bKj4NbCpotN5hJ/cQZO5TSoZVh5ZPcsvJdmkr1kg1I2DhAvh4nI4On9Y5zSxsiG
+         /NfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=VFJ3xIIkT+cbdzjfutrDdpZrJagndmFNonhtgg/BtSw=;
-        b=B8ZSVrv84Wuclj1eGQXXIT8T+w9eazkTnlfhEyplDzk7t/MuvuM7qs8yT62ZYydfQ6
-         VUPesQg3nlEsuT1v1czbfWNPw4OQT7LDU53v6nZZ8zs97YajFuDA0nVekqFWNddSAtcp
-         k70JF03D0C6wwC8FKdB9ZgTiFRNqn5BF69ThqVkL3GT4HTnaOseefl+ZobxlOiuoV2jh
-         ABI+YEnlQq/rTrTPAruXd0pkEBea9CNR29C7OvS3RVPfXw9iQtrmivc76qRVZb1jmyrA
-         41erHt5lCGt7E3t962JN5ilvtzpGuqlwAzziL6FEaIShdkorKdN78QyDLynG7lHDe7KA
-         7u+Q==
-X-Gm-Message-State: APjAAAXhzuiqlCiglGYN30YziOuGDDAKHd2mcZCR/kdlnRk7PeJjVLru
-        DwAsiYrBohvKZ4ETeziW3ep+ZhlyEeS9yg==
-X-Google-Smtp-Source: APXvYqyV2/5QuIoHe8526NZbLMVS26GP/nzlygEIgvgVJ9vpwNkjMdmQir4WQq8vYpJnSxE4X7Bp/w==
-X-Received: by 2002:a5d:6211:: with SMTP id y17mr12239983wru.344.1578594848706;
-        Thu, 09 Jan 2020 10:34:08 -0800 (PST)
-Received: from [192.168.0.104] (p5B3F655B.dip0.t-ipconnect.de. [91.63.101.91])
-        by smtp.gmail.com with ESMTPSA id x10sm9784016wrp.58.2020.01.09.10.34.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 10:34:07 -0800 (PST)
-Subject: Re: [PATCH v6 3/4] regulator: mpq7920: add mpq7920 regulator driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        sam@ravnborg.org, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200109112548.23914-1-sravanhome@gmail.com>
- <20200109112548.23914-4-sravanhome@gmail.com>
- <20200109132835.GA7768@sirena.org.uk>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <aefe7c78-6bd9-bafd-9215-5784f8168400@gmail.com>
-Date:   Thu, 9 Jan 2020 19:34:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wmvSr2mzmrRq+l3ZQk2B1GL9COS1rF8Vn1oWheNtkZE=;
+        b=o0N+7LVB4D/5YLEyvk0yuU07cJpmU0UWqLK6h2YzJb8MX6CVzxXlXgI4WSIv6v01jA
+         S2ZwD5oD1NnMCjEicWUDx9pzQzhutPh5iJ4W81FPAFz/YX+xXR019tAT6W3DAuMU+z2K
+         U+uqyKFr37hgYYjAsT9km1Fj5F+PUWSFO+9P1PwYlw81MnF6hp8Qo/V6Wwr8b7jW+4TB
+         bKDx73CA2oNY8DNA+j5WJRXw1Tx69Uw10zh20Ir9NUXd0RgZpmjlTyR9fT8fTj+dQMSl
+         k87AQIbwaKHDPIFuxiFE/6RdnXILHit/Jn5OdAcvC5UBp1aWGX2p3PbDhJofs/Lnjn19
+         mkPg==
+X-Gm-Message-State: APjAAAWBD/llO4SfSZqm/72D4JY+hX/OHX90MRtlDo3+Mrbw0QQvazjj
+        iHT9OLkxLgWq3PNUSlm+3+3g4+HjbXVBwUyiw3DUW67I
+X-Google-Smtp-Source: APXvYqxeg43koNnpBHaMggqdEav07DfYLsSu2xOzoP2Y/zzJzAcGHBEJCOpPO7lKIokUUug4FsP0h1PlowvFAuyIvYk=
+X-Received: by 2002:aca:d4c1:: with SMTP id l184mr4437841oig.172.1578594937570;
+ Thu, 09 Jan 2020 10:35:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200109132835.GA7768@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-3-saravanak@google.com>
+ <20200108105348.p4y3s2mbuchiu4mf@vireshk-i7> <CAGETcx8QEV+_+d2yt_+bE09mi4qyHZDHPJqPiDXv_HgJPgQJoQ@mail.gmail.com>
+ <20200109043108.fzvk3hp7vodtw6zy@vireshk-i7>
+In-Reply-To: <20200109043108.fzvk3hp7vodtw6zy@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 9 Jan 2020 10:35:01 -0800
+Message-ID: <CAGETcx_1B8AfxBuJ9Mbq8BNx-fYyP8pOnF6caN=ooyPARaaJ3A@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 8, 2020 at 8:31 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 08-01-20, 16:58, Saravana Kannan wrote:
+> > On Wed, Jan 8, 2020 at 2:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 06-12-19, 16:24, Saravana Kannan wrote:
+> > > > Not all devices quantify their performance points in terms of frequency.
+> > > > Devices like interconnects quantify their performance points in terms of
+> > > > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> > > > add support for parsing bandwidth OPPs from DT.
+> > > >
+> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > ---
+> > > >  drivers/opp/core.c | 15 +++++++++--
+> > > >  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
+> > > >  drivers/opp/opp.h  |  5 ++++
+> > > >  3 files changed, 62 insertions(+), 21 deletions(-)
+> > > >
+> > > > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > > > index be7a7d332332..c79bbfac7289 100644
+> > > > --- a/drivers/opp/core.c
+> > > > +++ b/drivers/opp/core.c
+> > > > @@ -1282,11 +1282,21 @@ static bool _opp_supported_by_regulators(struct dev_pm_opp *opp,
+> > > >       return true;
+> > > >  }
+> > > >
+> > > > +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
+> > > > +{
+> > > > +     if (opp1->rate != opp2->rate)
+> > > > +             return opp1->rate < opp2->rate ? -1 : 1;
+> > > > +     if (opp1->peak_bw != opp2->peak_bw)
+> > > > +             return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
+> > >
+> > > Please also add level here.
+> >
+> > I can, but I vaguely remember finding opp-levels could have
+> > duplicates? Am I wrong? If so I can add the opp-level comparison too.
+>
+> No they can't have duplicates.
+>
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > >  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
+> > > >                            struct opp_table *opp_table,
+> > > >                            struct list_head **head)
+> > > >  {
+> > > >       struct dev_pm_opp *opp;
+> > > > +     int opp_cmp;
+> > > >
+> > > >       /*
+> > > >        * Insert new OPP in order of increasing frequency and discard if
+> > > > @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
+> > > >        * loop.
+> > > >        */
+> > > >       list_for_each_entry(opp, &opp_table->opp_list, node) {
+> > > > -             if (new_opp->rate > opp->rate) {
+> > > > +             opp_cmp = opp_compare_key(new_opp, opp);
+> > > > +             if (opp_cmp > 0) {
+> > > >                       *head = &opp->node;
+> > > >                       continue;
+> > > >               }
+> > > >
+> > > > -             if (new_opp->rate < opp->rate)
+> > > > +             if (opp_cmp < 0)
+> > > >                       return 0;
+> > > >
+> > > >               /* Duplicate OPPs */
+> > > > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > > > index 1cbb58240b80..b565da5a2b1f 100644
+> > > > --- a/drivers/opp/of.c
+> > > > +++ b/drivers/opp/of.c
+> > > > @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> > > >
+> > > > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+> > > > +                      bool *rate_not_available)
+> > > > +{
+> > > > +     int ret;
+> > > > +     u64 rate;
+> > > > +     u32 bw;
+> > > > +
+> > > > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > > > +     if (!ret) {
+> > > > +             /*
+> > > > +              * Rate is defined as an unsigned long in clk API, and so
+> > > > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > > > +              * bit guaranteed in clk API.
+> > > > +              */
+> > > > +             new_opp->rate = (unsigned long)rate;
+> > > > +             goto out;
+> > > > +     }
+> > > > +
+> > > > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> > > > +     if (!ret) {
+> > > > +             new_opp->peak_bw = bw;
+> > > > +
+> > > > +             if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
+> > > > +                     new_opp->avg_bw = bw;
+> > >
+> > > Maybe
+> > >                 of_property_read_u32(np, "opp-avg-kBps", &new_opp->avg_bw);
+> > >
+> > > and same for opp-peak-kbps as well.
+> >
+> > But those are not u32. Is it always safe to directly read into it
+> > across all endian-ness and unsigned int sizes? I get tripped up by
+> > that occasionally.
+>
+> It may not be safe.
 
-On 09/01/20 2:28 pm, Mark Brown wrote:
-> On Thu, Jan 09, 2020 at 12:25:47PM +0100, Saravanan Sekar wrote:
->> Adding regulator driver for the device mpq7920.
->> The MPQ7920 PMIC device contains four DC-DC buck converters and
->> five regulators, is designed for automotive and accessed over I2C.
-> This doesn't apply against current code, please check and resend.
+Ok, so I'll leave it as is then.
 
-Means should I rebase this v6 patch to linux-next and send, or
-of_parse_cb callback changes as separate patch on top of v5?
+>
+> > > > +     }
+> > > > +
+> > > > +out:
+> > > > +     *rate_not_available = !!ret;
+> > > > +     /*
+> > > > +      * If ret is 0 at this point, we have already found a key. If we
+> > > > +      * haven't found a key yet, then ret already has an error value. In
+> > > > +      * either case, we don't need to update ret.
+> > > > +      */
+> > > > +     of_property_read_u32(np, "opp-level", &new_opp->level);
+> > >
+> > > Yes, it wasn't done earlier but we should do it now. Check level as
+> > > well and treat it as any other key.
+> > >
+> > > I think add a preparatory patch first which does all the cleanup
+> > > before bandwidth thing is added.
+> >
+> > Ah come on man! You are making this too painful. It's okay to add a
+> > few more error checks as part of implementing a new feature. Please
+> > don't make me add more patches before this.
+>
+> It will only make your life easier and not painful in my opinion as
+> the reviews are getting mixed/confused between the new things and the
+> old fields right now. With a separate patch introducing just the
+> bandwidth part, it will get reviewed in maximum 1-2 versions, else you
+> will keep updating the unrelated patch and I will keep reviewing it as
+> it is all a single patch.
+>
+> It is always suggested to break patches into the smallest possible
+> meaningful separate things you want to achieve. You are introducing
+> something here and adding cleanup to that.
 
+Ok I completely misunderstood (in a stupid way) what you were asking
+me to do. I don't mind breaking it up into smaller patches at all.
+Will do so.
 
+> > > > +
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+> > > >   * @opp_table:       OPP table
+> > > > @@ -558,26 +596,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> > > >       if (!new_opp)
+> > > >               return ERR_PTR(-ENOMEM);
+> > > >
+> > > > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > > > -     if (ret < 0) {
+> > > > -             /* "opp-hz" is optional for devices like power domains. */
+> > > > -             if (!opp_table->is_genpd) {
+> > > > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > > > -                     goto free_opp;
+> > > > -             }
+> > > > -
+> > > > -             rate_not_available = true;
+> > > > -     } else {
+> > > > -             /*
+> > > > -              * Rate is defined as an unsigned long in clk API, and so
+> > > > -              * casting explicitly to its type. Must be fixed once rate is 64
+> > > > -              * bit guaranteed in clk API.
+> > > > -              */
+> > > > -             new_opp->rate = (unsigned long)rate;
+> > > > +     ret = _read_opp_key(new_opp, np, &rate_not_available);
+> > > > +     if (ret) {
+> > > > +             dev_err(dev, "%s: opp key field not found\n", __func__);
+> > > > +             goto free_opp;
+> > > >       }
+> > > >
+> > > > -     of_property_read_u32(np, "opp-level", &new_opp->level);
+> > > > -
+> > > >       /* Check if the OPP supports hardware's hierarchy of versions or not */
+> > > >       if (!_opp_is_supported(dev, opp_table, np)) {
+> > > >               dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
+> > > > @@ -616,7 +640,8 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> > > >       if (of_property_read_bool(np, "opp-suspend")) {
+> > > >               if (opp_table->suspend_opp) {
+> > > >                       /* Pick the OPP with higher rate as suspend OPP */
+> > > > -                     if (new_opp->rate > opp_table->suspend_opp->rate) {
+> > > > +                     if (opp_compare_key(new_opp,
+> > > > +                                         opp_table->suspend_opp) > 1) {
+> > >
+> > > Maybe leave this place as is as we never want to compare anything else
+> > > but rate.
+> >
+> > We do want to support suspend bandwidth.
+>
+> Yeah, I understood that from a later patch.
+>
+> > So I think I should have this
+> > fix here so it works in general. Also, why not suspend opp-level?
+>
+> Because we don't want/need to set a specific value to the
+> voltage-corners during suspend directly from the PM domain driver.
+> This should happen automatically via a call from the underlying
+> cpufreq or device driver.
+
+Agreed for the example you are giving where PM domains/voltages are
+dropped automatically when dropping the device freq to suspend freq.
+I'm just wondering about a different scenario where if some power
+domain needed to be at say 0.5v when it's suspended (no consumer using
+it) to not lose state, or to come back up without brownouts, etc then
+suspend OPP for PM domains might be useful. But I don't know enough
+about that to speak with authority, so I'll leave it at this.
+
+> And that's what I expected out of the interconnect thing. For example,
+> say during suspend you put the interconnect or PM domains to a low
+> bandwidth/level value, while the underlying device driver (which uses
+> the interconnect or domain) never requested for it. Who will be
+> responsible to restore the value during resume as we would be out of
+> sync here.
+
+I see this suspend-opp as a way to mark to what level the bandwidth
+needs to be dropped to/brought back up from during suspend/resume by
+the driver making interconnect bandwidth requests. For example, what
+if the CPU -> DDR needed to be at some level to avoid suspend/resume
+issues (say CPU bug with respect to timing/latencies)? In this
+example, the CPU driver would be the one making bandwidth requests for
+CPU -> DDR bandwidth during normal operation and during
+suspend/resume. So it's basically exactly the same way it would treat
+CPU freq OPP.
+
+Btw, I don't have a strong opinion on this. But, even if we do only a
+rate comparison, what does it even mean to compare rates for genpd or
+BW opp tables? It's just weird. So I think it's nicer to just allow
+marking any OPP as suspend OPP in any OPP table type. If there's a
+need people can use it, if not, nothing is lost.
+
+-Saravana
