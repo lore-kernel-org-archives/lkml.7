@@ -2,149 +2,250 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E69AC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC42AC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2413E2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578559007;
-	bh=/NneDYu8it9/sfTmSAUIDAlhzYJAe+oZ5LPoawLrk5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ThDRuA0vu/LR4TsB1AOqvp8iBTXffmLLSqtlwElL5q5OXUaZ895beUCbzzBM58sJR
-	 Zl9b+sgWEDZ3VG+Qo8wbDnj3b2bk5Rk1EXEtjrdoPmt3ncFkrJ88TAl5d/BE+cxQ58
-	 +EtHlHMovBE1TGXCzK/xRglSO5H/XIq5NLtsWj34=
+	by mail.kernel.org (Postfix) with ESMTP id AB7EF206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:37:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="DPX/Ij56";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="BSrXksVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgAIIgq (ORCPT
+        id S1728562AbgAIIhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:36:46 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53254 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728435AbgAIIgp (ORCPT
+        Thu, 9 Jan 2020 03:37:20 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:30420 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728465AbgAIIhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:36:45 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m24so1874959wmc.3;
-        Thu, 09 Jan 2020 00:36:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=irB8OwBwqnqvkz6oPuoYuPz/4sdsl2cn2yoMzkHZKsE=;
-        b=E+mK9SMT4VK3gJ+srIhmUFRmH/+Qi70v3KbEIInUGaPlke27x7LTFQ1VwYjDK1NLes
-         8i8OCQSmWdisJQymqpsUotupbrBDpSTJLwBlkIyUTxxoXP3X47L6RTJRosQfkqDH7Wja
-         mw6IGDzY2w1uSXdHiInYMNfTFlNI73A/CQn+j3nv7yxs+Bs50AO4tIKWNeSZuQdUJy+u
-         rkBKELQ73W0QvKdPimQ6DfybgFr1MESHDX5XKBqwkNDKUp4KVlTnyCYAXLgPAft2QQvo
-         Js6dQmiKw4LJPn/onYvuT2mF8Pj5fSlOYDuZeRzxEu0Lrp2403/hHPAXUQu1R7Gf+zLR
-         OZfQ==
-X-Gm-Message-State: APjAAAUplvat70r4tQ3DSbArM7SCsW7sq7hqzudsLqwI8RE0BXghXxGx
-        Riczl73VEeEI0m9QRXn2rSM=
-X-Google-Smtp-Source: APXvYqxVrlpShOHKCN8yEhJUcjRM9COE6D3pIqi7f+50M6t/OB6+GYR4eImi9/P/9Jo42r8+8SbClQ==
-X-Received: by 2002:a1c:80d4:: with SMTP id b203mr3322499wmd.102.1578559003876;
-        Thu, 09 Jan 2020 00:36:43 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id t81sm2055898wmg.6.2020.01.09.00.36.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 00:36:43 -0800 (PST)
-Date:   Thu, 9 Jan 2020 09:36:41 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com
-Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200109083641.GH4951@dhcp22.suse.cz>
-References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
- <20200106102345.GE12699@dhcp22.suse.cz>
- <20200107012241.GA15341@richard>
- <20200107083808.GC32178@dhcp22.suse.cz>
- <20200108003543.GA13943@richard>
- <20200108094041.GQ32178@dhcp22.suse.cz>
- <20200109031821.GA5206@richard>
+        Thu, 9 Jan 2020 03:37:20 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0098ZDoM023182;
+        Thu, 9 Jan 2020 00:36:59 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=8YbVc4k7jLla2B5DvAh4z4LCeDhfCbmBhB6qQ55BaxE=;
+ b=DPX/Ij56T22gL91B1QogEUK+zouKovmzvdgUzFRpwwGb6dMt0Gjlq/yxxjZP/AY118oK
+ z4dOoaJhubzdIXyrHtilIbtx8l+kQTXp5v0xDsAR3XD8q07rUT3/PStfapMZvSUMeY4u
+ hU9yefO9+qeVwfqQTkeKFucyWJs2hk9XnWOHNS06fcXxCUp8F0CKTZPeiei/NwnvPRZY
+ 46CcyuAMK1ZSNU+m5aWGtuYTA2iu+Rs+WplOuyRHkIi7db8rKGe4piNjQjfBoKS6hm8T
+ uqRzIn1Ex0/CVDFjmM/Lgqzqkm7Hfl+ytVC1bwNuQc7jrCvdGZbgug04U+rnO0s27PRc RQ== 
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2xaq62142m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 00:36:59 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G9DZllYJiuyOg1sS90NefwnZdVo8gyrusi3F4taq0FvpYKwgtdIro1ufsPndYpN9tx7M5Df5wtfgoiv9zMM7OaklY0YsooGTNNXHeDr/cz1YMjie84WNTSC2AGy0QPBnlA1wOQ7PHSe48twzAAWYWeVSRMkxUNSEq5NZPxQWujE1IZXWQp0zhSwrzbbrhPfKcfp2pk6FI7oK0DE1iwvJBnRLUvR7dRAm+e4OmWr5G6p+lH0X6TyXVRCNQjWQDBtBiVNucazfco++KMpx2Y8gOMWDfGJDERYDiEWnf7oaA4lsOzA6qE43+REh5C1onv8Qe0dkWGeGsA3tM+hxzUjvNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8YbVc4k7jLla2B5DvAh4z4LCeDhfCbmBhB6qQ55BaxE=;
+ b=a7DneohNXcdWCS0OTmW47db7o9z2x0PGMZplN6V7R3FXTehvcaWDAsfJ3qYEXDWstUrZnfMGEEeEWL8B3pNlihxcAMW0Ge84EicT2IWYjDrkRPMARZYbyxLH4dPX3UWkiy60L8abEbEnBlZTx7tyzzGWgsVn8WbHohi6tNPVT+GDQnsRy73Iji2sEgjCdh3rz/MGbyrxiM2AKNmM7s4srDksQMh271vZEhFzLknSNGikFyTFVubYbYDtqrZNb3UhhqcWnsGM7vAFrYbL485XfqTKpKnRWmABLjgwe8hRTPu67HDHZnqYYwPzfIJo9wtsCDxMLy3j0sCnhLfREa0HEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.28) smtp.rcpttodomain=gmail.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8YbVc4k7jLla2B5DvAh4z4LCeDhfCbmBhB6qQ55BaxE=;
+ b=BSrXksVYcyKrJh++b64MZaIsZEjWghFBZhXr/zzKDvfizYEemn53hKh11B+h033ZXYh13+EHoRLiF1e1diXcskMXivxqFxPa3SdfFQBRBuostI6WKHZFkAu8FwFPx2+pv8sWYACYvHlgIEbXsMZD6OMcH6NjZfkPpBvZ3MAc5Ss=
+Received: from CH2PR07CA0016.namprd07.prod.outlook.com (2603:10b6:610:20::29)
+ by MWHPR0701MB3787.namprd07.prod.outlook.com (2603:10b6:301:79::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.15; Thu, 9 Jan
+ 2020 08:36:56 +0000
+Received: from BN8NAM12FT051.eop-nam12.prod.protection.outlook.com
+ (2a01:111:f400:fe5b::206) by CH2PR07CA0016.outlook.office365.com
+ (2603:10b6:610:20::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend
+ Transport; Thu, 9 Jan 2020 08:36:56 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.28 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.28; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ BN8NAM12FT051.mail.protection.outlook.com (10.13.182.230) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.4 via Frontend Transport; Thu, 9 Jan 2020 08:36:55 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 0098amgF000537
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Thu, 9 Jan 2020 03:36:50 -0500
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 9 Jan 2020 09:36:48 +0100
+Received: from lvlabc.cadence.com (10.165.128.101) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 9 Jan 2020 09:36:48 +0100
+Received: from lvlabc.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlabc.cadence.com (8.14.4/8.14.4) with ESMTP id 0098alD2016386;
+        Thu, 9 Jan 2020 08:36:47 GMT
+From:   Milind Parab <mparab@cadence.com>
+To:     <andrew@lunn.ch>, <jakub.kicinski@netronome.com>,
+        <rmk+kernel@armlinux.org.uk>, <nicolas.ferre@microchip.com>
+CC:     <davem@davemloft.net>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dkangude@cadence.com>,
+        <pthombar@cadence.com>, Milind Parab <mparab@cadence.com>
+Subject: [PATCH net-next] net: macb: add support for C45 MDIO read/write
+Date:   Thu, 9 Jan 2020 08:36:46 +0000
+Message-ID: <1578559006-16343-1-git-send-email-mparab@cadence.com>
+X-Mailer: git-send-email 2.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109031821.GA5206@richard>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39850400004)(346002)(136003)(199004)(189003)(36092001)(26005)(4326008)(478600001)(70586007)(36756003)(70206006)(356004)(5660300002)(26826003)(7696005)(54906003)(8936002)(426003)(110136005)(2616005)(7126003)(186003)(2906002)(107886003)(336012)(316002)(81156014)(8676002)(81166006)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR0701MB3787;H:rmmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 42765479-362d-4828-525a-08d794df15a1
+X-MS-TrafficTypeDiagnostic: MWHPR0701MB3787:
+X-Microsoft-Antispam-PRVS: <MWHPR0701MB37877CE7A9A68FFA0805259BD3390@MWHPR0701MB3787.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
+X-Forefront-PRVS: 02778BF158
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: m4khgsBDKTPTiux9iBGW6peR4A2J79O2O1y7ktQM1yMIpVbZwornTHJJOxU52qC3bTA+Mo2q51WDnJmwGKElxUGIe4klOdR6GD7HT3XeREitDB28Uknd+9mZFpDj46wbWxooF6dfHoBHxXOdvxy1yagsjS1gfBij7K5IObgd8akNDr5zEu+kyfzODJvwrXRIk4qGGB314RU8wmrQM9wkvY/CDYii5mIeerJ8LmrBnXT/EBAS1RYAQrg4R4WTYp5eYnuyAmLNG+akkYwq+gHH0bRB3iXlrRpxPVnp5sGMPIYLzsQW09KZwCvePtmKdsnNbfwjvBvVKARLtcYmsXequrDsLzkMozQ8TxpV9ssQd5ys8g70YabJ5xfUC1jHH1rlZBGAdIixp7j7eWiW46P7aOOaWawv9mqnMQ+2eH/5RbRGfYNQta+gyBonunN+xfW2/hfq1w8Xj7+E3aEp8cjN93PBU0jVYcr448LV3RYLD1d1sErtjR+TFw7rfcVlrQU1
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2020 08:36:55.6745
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42765479-362d-4828-525a-08d794df15a1
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0701MB3787
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxlogscore=857
+ impostorscore=0 suspectscore=0 clxscore=1011 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 adultscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001090074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 09-01-20 11:18:21, Wei Yang wrote:
-> On Wed, Jan 08, 2020 at 10:40:41AM +0100, Michal Hocko wrote:
-> >On Wed 08-01-20 08:35:43, Wei Yang wrote:
-> >> On Tue, Jan 07, 2020 at 09:38:08AM +0100, Michal Hocko wrote:
-> >> >On Tue 07-01-20 09:22:41, Wei Yang wrote:
-> >> >> On Mon, Jan 06, 2020 at 11:23:45AM +0100, Michal Hocko wrote:
-> >> >> >On Fri 03-01-20 22:34:07, Wei Yang wrote:
-> >> >> >> As all the other places, we grab the lock before manipulate the defer list.
-> >> >> >> Current implementation may face a race condition.
-> >> >> >
-> >> >> >Please always make sure to describe the effect of the change. Why a racy
-> >> >> >list_empty check matters?
-> >> >> >
-> >> >> 
-> >> >> Hmm... access the list without proper lock leads to many bad behaviors.
-> >> >
-> >> >My point is that the changelog should describe that bad behavior.
-> >> >
-> >> >> For example, if we grab the lock after checking list_empty, the page may
-> >> >> already be removed from list in split_huge_page_list. And then list_del_init
-> >> >> would trigger bug.
-> >> >
-> >> >And how does list_empty check under the lock guarantee that the page is
-> >> >on the deferred list?
-> >> 
-> >> Just one confusion, is this kind of description basic concept of concurrent
-> >> programming? How detail level we need to describe the effect?
-> >
-> >When I write changelogs for patches like this I usually describe, what
-> >is the potential race - e.g.
-> >	CPU1			CPU2
-> >	path1			path2
-> >	  check			  lock
-> >	  			    operation2
-> >				  unlock
-> >	    lock
-> >	    # check might not hold anymore
-> >	    operation1
-> >	    unlock
-> >
-> >and what is the effect of the race - e.g. a crash, data corruption,
-> >pointless attempt for operation1 which fails with user visible effect
-> >etc.
-> 
-> Hi, Michal, here is my attempt for an example. Hope this one looks good to
-> you.
-> 
-> 
->     For example, the potential race would be:
->     
->         CPU1                      CPU2
->         mem_cgroup_move_account   split_huge_page_to_list
->           !list_empty
->                                     lock
->                                     !list_empty
->                                     list_del
->                                     unlock
->           lock
->           # !list_empty might not hold anymore
->           list_del_init
->           unlock
->     
->     When this sequence happens, the list_del_init() in
->     mem_cgroup_move_account() would crash since the page is already been
->     removed by list_del in split_huge_page_to_list().
+This patch modify MDIO read/write functions to support
+communication with C45 PHY.
 
-Yes this looks much more informative. I would just add that this will
-crash if CONFIG_DEBUG_LIST.
+Signed-off-by: Milind Parab <mparab@cadence.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/ethernet/cadence/macb.h      | 15 ++++--
+ drivers/net/ethernet/cadence/macb_main.c | 61 +++++++++++++++++++-----
+ 2 files changed, 61 insertions(+), 15 deletions(-)
 
-Thanks!
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 19fe4f4867c7..dbf7070fcdba 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -630,10 +630,17 @@
+ #define GEM_CLK_DIV96				5
+ 
+ /* Constants for MAN register */
+-#define MACB_MAN_SOF				1
+-#define MACB_MAN_WRITE				1
+-#define MACB_MAN_READ				2
+-#define MACB_MAN_CODE				2
++#define MACB_MAN_C22_SOF			1
++#define MACB_MAN_C22_WRITE			1
++#define MACB_MAN_C22_READ			2
++#define MACB_MAN_C22_CODE			2
++
++#define MACB_MAN_C45_SOF			0
++#define MACB_MAN_C45_ADDR			0
++#define MACB_MAN_C45_WRITE			1
++#define MACB_MAN_C45_POST_READ_INCR		2
++#define MACB_MAN_C45_READ			3
++#define MACB_MAN_C45_CODE			2
+ 
+ /* Capability mask bits */
+ #define MACB_CAPS_ISR_CLEAR_ON_WRITE		0x00000001
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 41c485485619..7e7361761f8f 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -337,11 +337,30 @@ static int macb_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
+ 	if (status < 0)
+ 		goto mdio_read_exit;
+ 
+-	macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_SOF)
+-			      | MACB_BF(RW, MACB_MAN_READ)
+-			      | MACB_BF(PHYA, mii_id)
+-			      | MACB_BF(REGA, regnum)
+-			      | MACB_BF(CODE, MACB_MAN_CODE)));
++	if (regnum & MII_ADDR_C45) {
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
++			    | MACB_BF(RW, MACB_MAN_C45_ADDR)
++			    | MACB_BF(PHYA, mii_id)
++			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
++			    | MACB_BF(DATA, regnum & 0xFFFF)
++			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
++
++		status = macb_mdio_wait_for_idle(bp);
++		if (status < 0)
++			goto mdio_read_exit;
++
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
++			    | MACB_BF(RW, MACB_MAN_C45_READ)
++			    | MACB_BF(PHYA, mii_id)
++			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
++			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
++	} else {
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C22_SOF)
++				| MACB_BF(RW, MACB_MAN_C22_READ)
++				| MACB_BF(PHYA, mii_id)
++				| MACB_BF(REGA, regnum)
++				| MACB_BF(CODE, MACB_MAN_C22_CODE)));
++	}
+ 
+ 	status = macb_mdio_wait_for_idle(bp);
+ 	if (status < 0)
+@@ -370,12 +389,32 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+ 	if (status < 0)
+ 		goto mdio_write_exit;
+ 
+-	macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_SOF)
+-			      | MACB_BF(RW, MACB_MAN_WRITE)
+-			      | MACB_BF(PHYA, mii_id)
+-			      | MACB_BF(REGA, regnum)
+-			      | MACB_BF(CODE, MACB_MAN_CODE)
+-			      | MACB_BF(DATA, value)));
++	if (regnum & MII_ADDR_C45) {
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
++			    | MACB_BF(RW, MACB_MAN_C45_ADDR)
++			    | MACB_BF(PHYA, mii_id)
++			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
++			    | MACB_BF(DATA, regnum & 0xFFFF)
++			    | MACB_BF(CODE, MACB_MAN_C45_CODE)));
++
++		status = macb_mdio_wait_for_idle(bp);
++		if (status < 0)
++			goto mdio_write_exit;
++
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C45_SOF)
++			    | MACB_BF(RW, MACB_MAN_C45_WRITE)
++			    | MACB_BF(PHYA, mii_id)
++			    | MACB_BF(REGA, (regnum >> 16) & 0x1F)
++			    | MACB_BF(CODE, MACB_MAN_C45_CODE)
++			    | MACB_BF(DATA, value)));
++	} else {
++		macb_writel(bp, MAN, (MACB_BF(SOF, MACB_MAN_C22_SOF)
++				| MACB_BF(RW, MACB_MAN_C22_WRITE)
++				| MACB_BF(PHYA, mii_id)
++				| MACB_BF(REGA, regnum)
++				| MACB_BF(CODE, MACB_MAN_C22_CODE)
++				| MACB_BF(DATA, value)));
++	}
+ 
+ 	status = macb_mdio_wait_for_idle(bp);
+ 	if (status < 0)
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
