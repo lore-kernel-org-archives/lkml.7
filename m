@@ -2,102 +2,106 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287FCC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8E7C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 089952072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CB220661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZDpa4XPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387469AbgAIQKH (ORCPT
+        id S2387475AbgAIQKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:10:07 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:56728 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731832AbgAIQKG (ORCPT
+        Thu, 9 Jan 2020 11:10:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56414 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731792AbgAIQKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:10:06 -0500
-X-Greylist: delayed 1668 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 11:10:05 EST
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1ipZws-0004wt-5f; Thu, 09 Jan 2020 16:42:14 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from roc-pc (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 009FgCHr032463
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 9 Jan 2020 16:42:13 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-To:     linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Markus Reichl <m.reichl@fivetechno.de>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH 3/3] arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine
-Date:   Thu,  9 Jan 2020 16:42:10 +0100
-Message-Id: <20200109154211.1530-1-m.reichl@fivetechno.de>
-X-Mailer: git-send-email 2.20.1
+        Thu, 9 Jan 2020 11:10:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578586212;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DAmIKVrG0XTaKJJzMfiZimG349dykVofBy5TCpIMs8E=;
+        b=ZDpa4XPNBLw32JIErfs1+ui6XRiG9h4veHx8r8OuKrvS44PxOFFPb7oz+mEQAdLeLOs77R
+        0mNJXYEjfHcf8BJchPFQ/kZrid9RFB+LFagQLl8ySWfwpGpHk4uKefKgvgawmP0nCX5T3Q
+        y/oecZNaM7enHEgWhuE5poQOOUYJcjU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-vD22pYa-OVqk_lPoETbOCw-1; Thu, 09 Jan 2020 11:10:11 -0500
+X-MC-Unique: vD22pYa-OVqk_lPoETbOCw-1
+Received: by mail-wm1-f71.google.com with SMTP id t16so1104352wmt.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:10:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DAmIKVrG0XTaKJJzMfiZimG349dykVofBy5TCpIMs8E=;
+        b=kfTDzNDLisUF32pfLxPnwZIHVogLZajAhWLDAdracUKI6b/PIJVXAOkPTdEgMWkAd0
+         GMpChI/KqpZ84t7Dftm7YGWpEumEQ1dVJOyD8vuUB83XStkUex3Q42Zwqb1v5LCK5jKB
+         de0yAXTQo2ESxadmGRtJxBsACf5avvaXE5tY4eEq/NP5APbyiIndyzK+iEwoA0gT7uz7
+         7Jhd7bXN9Yg66pT02EVv40AGrvXhezI40k8bMTAMRsgo6v30s3d0hAKZfbo6AJGR1f4w
+         VhlgitBNEVpfi/jDyqxLSek9MrXVNZK88oQDRI8OoDOnLtCvZiWLhnRehtyjaNSiPh9J
+         FKjg==
+X-Gm-Message-State: APjAAAU9orPcgTgoucmu/mMDsf1hjN73PwcY+xdl672TWCFj0fzf1bQA
+        fJctEWdQMT4QNNBNw+Cg+mQkT/HnB/GM9POdEhJpsGtBjZkTH1rSwIM6Hhl2tt52wCwOxXYhUqh
+        f33IThYlzlBE+Nr5RuBIFXPxh
+X-Received: by 2002:a7b:cb91:: with SMTP id m17mr5844662wmi.146.1578586210077;
+        Thu, 09 Jan 2020 08:10:10 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyFva8eO8YAHVsY7yqkadvzeSK9FfRmzCmEmBFRtKNIs9P8qgXGmLAvH+I97ylIV2hDbJg/RA==
+X-Received: by 2002:a7b:cb91:: with SMTP id m17mr5844651wmi.146.1578586209923;
+        Thu, 09 Jan 2020 08:10:09 -0800 (PST)
+Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
+        by smtp.gmail.com with ESMTPSA id y17sm2820948wma.36.2020.01.09.08.10.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 08:10:09 -0800 (PST)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        Julien Thierry <jthierry@redhat.com>
+Subject: [RFC v5 55/57] arm64: Mark sigreturn32.o as containing non standard code
+Date:   Thu,  9 Jan 2020 16:02:58 +0000
+Message-Id: <20200109160300.26150-56-jthierry@redhat.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
+References: <20200109160300.26150-1-jthierry@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichll@fivetechno.de;1578586205;388935da;
-X-HE-SMSGID: 1ipZws-0004wt-5f
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mezzanine board carries an E key type M.2 slot. This is
-connected to USB, SDIO and UART0. Enable sdio and uart0 for use
-with wlan and/or bt M.2 cards.
+sigreturn32.o contains aarch32 getting copied to the VDSO for
+compat user tasks.
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
-Wifi via SDIO has been tested with Laird ST60-2230C (Marvell 88W8997)
-Bluetoth via USB has been tested with Intel 9260
-Bluetooth via UART has not been tested.
----
-Patch 1/3 of this series has been merged already [1]
-Patch 2/3 of this series needs further discussion [2]
-[1] https://lkml.org/lkml/2019/12/10/516
-[2] https://lkml.org/lkml/2019/12/10/517
----
- .../dts/rockchip/rk3399-roc-pc-mezzanine.dts  | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+This code shouldn't get validated by arm64 objtool.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-index 2db9d32ad54a..2acb3d500fb9 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-@@ -70,3 +70,24 @@ pcie_perst: pcie-perst {
- 		};
- 	};
- };
-+
-+&sdio0 {
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	keep-power-in-suspend;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	non-removable;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc3v3_ngff>;
-+	vqmmc-supply = <&vcc_1v8>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+	status = "okay";
-+};
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+---
+ arch/arm64/kernel/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index f5994679db5f..b978026ea368 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -31,6 +31,7 @@ obj-$(CONFIG_COMPAT)			+= sys32.o signal32.o			\
+ 					   sys_compat.o
+ ifneq ($(CONFIG_COMPAT_VDSO), y)
+ obj-$(CONFIG_COMPAT)			+= sigreturn32.o
++OBJECT_FILES_NON_STANDARD_sigreturn32.o := y
+ endif
+ obj-$(CONFIG_KUSER_HELPERS)		+= kuser32.o
+ 
 -- 
-2.24.0
+2.21.0
 
