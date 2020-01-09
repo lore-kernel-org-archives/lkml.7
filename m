@@ -2,65 +2,56 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A804DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5AEC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8042720721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D053206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgAIVFo (ORCPT
+        id S1727961AbgAIVJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:05:44 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55732 "EHLO
+        Thu, 9 Jan 2020 16:09:51 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55760 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbgAIVFo (ORCPT
+        with ESMTP id S1725775AbgAIVJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:05:44 -0500
+        Thu, 9 Jan 2020 16:09:50 -0500
 Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1ipez7-0008OC-Ij; Thu, 09 Jan 2020 22:04:53 +0100
+        id 1ipf3b-0008TG-8P; Thu, 09 Jan 2020 22:09:31 +0100
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0AA1A105BCE; Thu,  9 Jan 2020 22:04:53 +0100 (CET)
+        id B0803105BCE; Thu,  9 Jan 2020 22:09:30 +0100 (CET)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+To:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvm-ppc@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        syzbot+c9d1fb51ac9d0d10c39d@syzkaller.appspotmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Barret Rhoden <brho@google.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Zeng <jason.zeng@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Subject: Re: [PATCH 05/14] x86/mm: Introduce lookup_address_in_mm()
-In-Reply-To: <20200108202448.9669-6-sean.j.christopherson@intel.com>
-References: <20200108202448.9669-1-sean.j.christopherson@intel.com> <20200108202448.9669-6-sean.j.christopherson@intel.com>
-Date:   Thu, 09 Jan 2020 22:04:53 +0100
-Message-ID: <871rs8batm.fsf@nanos.tec.linutronix.de>
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Dmitry Safonov <dima@arista.com>, Andrei Vagin <avagin@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jann Horn <jannh@google.com>,
+        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        crml <criu@openvz.org>, Linux API <linux-api@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+Subject: Re: [PATCHv8 00/34] kernel: Introduce Time Namespace
+In-Reply-To: <CAJwJo6ahGVHHgwFsPyjbY1PgmHs+D+A2Cma03ogvQGr+mPqYAw@mail.gmail.com>
+References: <20191112012724.250792-1-dima@arista.com> <20191121180555.GA440967@gmail.com> <CAJwJo6ahGVHHgwFsPyjbY1PgmHs+D+A2Cma03ogvQGr+mPqYAw@mail.gmail.com>
+Date:   Thu, 09 Jan 2020 22:09:30 +0100
+Message-ID: <87y2ug9w1h.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -71,23 +62,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Dmitry Safonov <0x7f454c46@gmail.com> writes:
 
-> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-> index b5e49e6bac63..400ac8da75e8 100644
-> --- a/arch/x86/include/asm/pgtable_types.h
-> +++ b/arch/x86/include/asm/pgtable_types.h
-> @@ -561,6 +561,10 @@ static inline void update_page_count(int level, unsigned long pages) { }
->  extern pte_t *lookup_address(unsigned long address, unsigned int *level);
->  extern pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
->  				    unsigned int *level);
-> +
-> +struct mm_struct;
-> +pte_t *lookup_address_in_mm(struct mm_struct *mm, unsigned long address,
-> +			    unsigned int *level);
+> Gentle ping, in case you have time to look at this.
 
-Please keep the file consistent and use extern even if not required.
+I'm looking at it and so far I'm quite happy.
 
-Other than that:
+Andy, Vincenco any opinions?
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Thanks,
+
+        tglx
