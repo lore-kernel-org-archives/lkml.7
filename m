@@ -2,87 +2,97 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683ACC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD96C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431302067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D83D2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578553553;
+	bh=t+rKgF6PzkbFUquUYMCLjN5oQIil5th3kUXeREqFyJQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wgMt2hMo6RNFjN5nXNaKFMLi+MdIauGBw0lPFWFaU0e2rgneO8PzikaQPXNE/Pcw7
+	 MgmqzQI+vScgYKftuRm1DSKKGMYgtbIbdVKOuoCUQy9fgaOp2n4hCQxatxq171iHyH
+	 o8k46ZH3F2bsgEUMe/WjKBIW2n8J0DxmYEfM3R+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgAIHA3 (ORCPT
+        id S1728179AbgAIHFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:00:29 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:38266 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgAIHA2 (ORCPT
+        Thu, 9 Jan 2020 02:05:51 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55086 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgAIHFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:00:28 -0500
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 80FC22009CA;
-        Thu,  9 Jan 2020 07:00:26 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id D79A220358; Thu,  9 Jan 2020 07:54:24 +0100 (CET)
-Date:   Thu, 9 Jan 2020 07:54:24 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
-Cc:     mark.rutland@arm.com, hch@infradead.org, cj.chengjian@huawei.com,
-        huawei.libin@huawei.com, xiexiuqi@huawei.com,
-        yangyingliang@huawei.com, guohanjun@huawei.com, wcohen@redhat.com,
-        linux-kernel@vger.kernel.org, mtk.manpages@gmail.com,
-        wezhang@redhat.com
-Subject: Re: [PATCH] sys_personality: Add a optional arch hook
- arch_check_personality() for common sys_personality()
-Message-ID: <20200109065424.GA84503@light.dominikbrodowski.net>
-References: <20200109013846.174796-1-bobo.shaobowang@huawei.com>
+        Thu, 9 Jan 2020 02:05:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=12jHBaLhAfjZRz44R6l9/jjBv1I6dNYA+P4FdPKyUO8=; b=nIQoWBb8EveZpoj3YxxhgfJxL
+        ly7HOSwV52HC8W28BqHFQMDZRA2RF2wwFL4gD0D15zDu+JP5KZbeX5IFLxK8Z6KNMPzLximM6f6Za
+        JgeOIWrzfS9dkC2sR0+8dOhuo/bGRWKWWXf0pG6fgo/jal/cg6reE5gEl0KHlvT0lZL4Z/YxDMfXC
+        7RBwG6h4YVllF1YPWDVlxlkv4uqhr1Bg4+f9VGCGnJEqwvt5w6khWYiJyrl66zbJ4eZ34wRO2/zke
+        xfn/5vurX/MrmtiX0o8bijGz5XWIObMfPeV6Irbk+VPWY/vD7lso+VD1BwTDu64wd2CkGpmdeyph/
+        gfrpnrJEw==;
+Received: from 177.206.132.169.dynamic.adsl.gvt.net.br ([177.206.132.169] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipRt4-0003UG-3f; Thu, 09 Jan 2020 07:05:48 +0000
+Date:   Thu, 9 Jan 2020 08:05:31 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: linux-next: manual merge of the v4l-dvb tree with the
+ v4l-dvb-fixes tree
+Message-ID: <20200109080421.69a703c5@kernel.org>
+In-Reply-To: <20200109111050.3a547549@canb.auug.org.au>
+References: <20200109111050.3a547549@canb.auug.org.au>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109013846.174796-1-bobo.shaobowang@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:38:46AM +0800, Wang ShaoBo wrote:
-> currently arm64 use __arm64_sys_arm64_personality() as its default
-> syscall. But using a normal hook arch_check_personality() can reject
-> personality settings for special case of different archs.
+Em Thu, 9 Jan 2020 11:10:50 +1100
+Stephen Rothwell <sfr@canb.auug.org.au> escreveu:
 
-Thanks for your patch!
+> Hi all,
+> 
+> Today's linux-next merge of the v4l-dvb tree got a conflict in:
+> 
+>   drivers/media/usb/pulse8-cec/pulse8-cec.c
+> 
+> between commit:
+> 
+>   21d116949e95 ("Revert "media: pulse8-cec: fix lost cec_transmit_attempt_done() call"")
+> 
+> from the v4l-dvb-fixes tree and commit:
+> 
+>   c4e8f760581b ("media: pulse8-cec: fix lost cec_transmit_attempt_done() call")
+> 
+> and some other commits from the v4l-dvb tree.  The conflicts arise
+> mostly because the above commit was cherry-picked into Linus' tree
+> (before being reverted above).
+> 
+> I fixed it up (I just used the vl4-dvb tree version on the assumption that
+> you will fix it up properly) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
->  SYSCALL_DEFINE1(personality, unsigned int, personality)
->  {
-> -	unsigned int old = current->personality;
-> +	int check;
->  
-> -	if (personality != 0xffffffff)
-> -		set_personality(personality);
-> +	check = arch_check_personality(personality);
-> +	if (check)
-> +		return check;
->  
-> -	return old;
-> +	return ksys_personality(personality);
->  }
+Thanks for the warning. Just fixed the conflict. The version at the
+v4l-dvb is indeed the correct one.
 
-Please leave the default check and call to set_personality()
-in here and remove the now-unneeded ksys_personality() from
-include/linux/syscalls.h
-
-Thanks,
-	Dominik
+Cheers,
+Mauro
