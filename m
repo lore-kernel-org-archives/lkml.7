@@ -2,164 +2,82 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782C2C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C73C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBBA20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:18:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GSDfuUo4"
+	by mail.kernel.org (Postfix) with ESMTP id B62DA2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbgAINSs (ORCPT
+        id S1731033AbgAINUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:18:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54064 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730916AbgAINSr (ORCPT
+        Thu, 9 Jan 2020 08:20:01 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:40478 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729180AbgAINUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:18:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578575924;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Oi6sxXgGF2oGh7wW3x+9RBwUATb9piupredDv1qF/4U=;
-        b=GSDfuUo4Leos2mFpr8Az+wMEzweAgWrBHxdIhHmPOYFCO23ghjmpdkN6LAq2zFBVDMf+0W
-        d+iJqA4dWb4fmYjaCH55+KdLky3W6l58PCyYxBlsQZCnYyXvuRoXPt1Y3B7EX05zRyltWq
-        Yxz4acFDXvwNsP7WbeFXfFugf9djkZw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-6dDQdXgXMJ6FTr0dfRjlyw-1; Thu, 09 Jan 2020 08:18:41 -0500
-X-MC-Unique: 6dDQdXgXMJ6FTr0dfRjlyw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31E8210054E3;
-        Thu,  9 Jan 2020 13:18:40 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-40.phx2.redhat.com [10.3.112.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E08C5C54A;
-        Thu,  9 Jan 2020 13:18:39 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 9311B127E; Thu,  9 Jan 2020 10:18:34 -0300 (BRT)
-Date:   Thu, 9 Jan 2020 10:18:34 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Michael Petlan <mpetlan@redhat.com>
-Cc:     Andres Freund <andres@anarazel.de>, Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] perf c2c: Fix sorting.
-Message-ID: <20200109131834.GA4404@redhat.com>
-References: <20200109043030.233746-1-andres@anarazel.de>
- <alpine.LRH.2.20.2001091055430.4075@Diego>
+        Thu, 9 Jan 2020 08:20:01 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ipXj7-0000gk-Fu; Thu, 09 Jan 2020 13:19:53 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>, dmaengine@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next][V2] dmaengine: ti: omap-dma: don't allow a null od->plat pointer to be dereferenced
+Date:   Thu,  9 Jan 2020 13:19:53 +0000
+Message-Id: <20200109131953.157154-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.20.2001091055430.4075@Diego>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jan 09, 2020 at 10:58:43AM +0100, Michael Petlan escreveu:
-> On Wed, 8 Jan 2020, Andres Freund wrote:
-> > Commit 722ddfde366f ("perf tools: Fix time sorting") changed -
-> > correctly so - hist_entry__sort to return int64. Unfortunately several
-> > of the builtin-c2c.c comparison routines only happened to work due the
-> > cast caused by the wrong return type.
-> > 
-> > This causes meaningless ordering of both the cacheline list, and the
-> > cacheline details page. E.g a simple
-> >   perf c2c record -a sleep 3
-> >   perf c2c report
-> > will result in cacheline table like
-> >   =================================================
-> >              Shared Data Cache Line Table
-> >   =================================================
-> >   #
-> >   #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----  ---- Store Reference ----  --- Load Dram ----      LLC    Total  ----- Core Load Hit -----  -- LLC Load Hit --
-> >   # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt    Total    L1Hit   L1Miss       Lcl       Rmt  Ld Miss    Loads       FB       L1       L2       Llc       Rmt
-> >   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  ........  ........  .......  .......  .......  .......  .......  ........  ........
-> >   #
-> >         0      0x7f0d27ffba00   N/A       0       52    0.12%       13        6        7       12       12        0         0         7       14       40        4       16        0         0         0
-> >         1      0x7f0d27ff61c0   N/A       0     6353   14.04%     1475      801      674      779      779        0         0       718     1392     5574     1299     1967        0       115         0
-> >         2      0x7f0d26d3ec80   N/A       0       71    0.15%       16        4       12       13       13        0         0        12       24       58        1       20        0         9         0
-> >         3      0x7f0d26d3ec00   N/A       0       98    0.22%       23       17        6       19       19        0         0         6       12       79        0       40        0        10         0
-> > i.e. with the list not being ordered by Total Hitm.
-> > 
-> > Fixes: 722ddfde366f ("perf tools: Fix time sorting")
-> > Signed-off-by: Andres Freund <andres@anarazel.de>
-> 
-> Tested on top of Arnaldo's perf/core branch. After the patch, the rows
-> are ordered by Tot Hitm.
-> 
-> Tested-by: Michael Petlan <mpetlan@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Jiri, so you think we should use a different Fixes: cset? Or plain
-remove it? I haven't checked it, just trying to figure out if you guys
-came up with a conclusion so that I can review/apply.
+Currently when the call to dev_get_platdata returns null the driver issues
+a warning and then later dereferences the null pointer.  Avoid this issue
+by returning -ENODEV errror rather when the platform data is null and
+change the warning to an appropriate error message.
 
-- Arnaldo
+Addresses-Coverity: ("Dereference after null check")
+Fixes: 211010aeb097 ("dmaengine: ti: omap-dma: Pass sdma auxdata to driver and use it")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+
+V2: return -ENODEV and change warning to an error message as suggested by
+    Peter Ujfalusi.
+---
+ drivers/dma/ti/omap-dma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index fc8f7b2fc7b3..a93515015dce 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1658,8 +1658,10 @@ static int omap_dma_probe(struct platform_device *pdev)
+ 	if (conf) {
+ 		od->cfg = conf;
+ 		od->plat = dev_get_platdata(&pdev->dev);
+-		if (!od->plat)
+-			dev_warn(&pdev->dev, "no sdma auxdata needed?\n");
++		if (!od->plat) {
++			dev_err(&pdev->dev, "omap_system_dma_plat_info is missing");
++			return -ENODEV;
++		}
+ 	} else {
+ 		od->cfg = &default_cfg;
  
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Michael Petlan <mpetlan@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: stable@vger.kernel.org # v3.16+
-> > ---
-> >  tools/perf/builtin-c2c.c | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > index e69f44941aad..f2e9d2b1b913 100644
-> > --- a/tools/perf/builtin-c2c.c
-> > +++ b/tools/perf/builtin-c2c.c
-> > @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> >  {
-> >  	struct c2c_hist_entry *c2c_left;
-> >  	struct c2c_hist_entry *c2c_right;
-> > -	unsigned int tot_hitm_left;
-> > -	unsigned int tot_hitm_right;
-> > +	uint64_t tot_hitm_left;
-> > +	uint64_t tot_hitm_right;
-> >  
-> >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
-> >  	c2c_right = container_of(right, struct c2c_hist_entry, he);
-> > @@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __maybe_unused,			\
-> >  									\
-> >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
-> >  	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
-> > -	return c2c_left->stats.__f - c2c_right->stats.__f;		\
-> > +	return (uint64_t) c2c_left->stats.__f -				\
-> > +	       (uint64_t) c2c_right->stats.__f;				\
-> >  }
-> >  
-> >  #define STAT_FN(__f)		\
-> > @@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
-> >  	c2c_right = container_of(right, struct c2c_hist_entry, he);
-> >  
-> > -	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
-> > +	return (uint64_t) llc_miss(&c2c_left->stats) -
-> > +	       (uint64_t) llc_miss(&c2c_right->stats);
-> >  }
-> >  
-> >  static uint64_t total_records(struct c2c_stats *stats)
-> > -- 
-> > 2.25.0.rc1
-> > 
-> > 
+-- 
+2.24.0
 
