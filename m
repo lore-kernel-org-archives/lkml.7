@@ -2,151 +2,194 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD010C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78601C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9770820673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189852072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TbMwvfM4"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Nwi5l+BB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgAIWfd (ORCPT
+        id S1728584AbgAIWfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 17:35:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34144 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725807AbgAIWfd (ORCPT
+        Thu, 9 Jan 2020 17:35:54 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:26885 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgAIWfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 17:35:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578609331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L6Tk6NXbKeintPhmiO4q8CGSHf8p5iQXCoANZ85vxp8=;
-        b=TbMwvfM4oOwKIPUdqNomcwNPHJF5cFzGlSI0X78+qMQWlaW549jtYyblhkMbgEpTwj2c7Y
-        JYR1VuvEFi2EoShkCWoybWRkKcIK8+UtcMwBSrpNxXhrNECZvrB2E2wx+Wyh/iHhnEKXSZ
-        ndnb7DVrmUmvHFLMNv2neP9+H6u/0JY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-432-3r4EzD79P_mWB-fLxCMtWA-1; Thu, 09 Jan 2020 17:35:30 -0500
-X-MC-Unique: 3r4EzD79P_mWB-fLxCMtWA-1
-Received: by mail-wr1-f70.google.com with SMTP id c6so6120wrm.18
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 14:35:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=L6Tk6NXbKeintPhmiO4q8CGSHf8p5iQXCoANZ85vxp8=;
-        b=HBsSESbOMtiEC5Nk3GK8PnJk2vfyVMlXf/cECkEwjd9b30a15D44JFMV1sg47kdKDm
-         pZYq3AN5BppXUHCC/5Vph9Cpxgk1nCEPJ6IsowTsY0YFbzdIdjDtHs4bzZARZIJg6KfM
-         4vLKA2JvhWCfDzJMFNa38JZmo4XEf3YHRS5WTs/IoR3UNHIWyYDl2hF20nBYnKG8k+uN
-         YlObJtI+fI4cbsk673Dn9r3wPvZzTN/QLcWhNbnBl3H5F1NKqbAJuqU6lFuwZBlTqBFI
-         jRzOSzFP9PyJGZWuEfu+Z8ZsG0jcGfWczgI+MDdrAk1nZYJJPcDIeH1lmlMnNNhXqKay
-         SgGA==
-X-Gm-Message-State: APjAAAWcrBpqz4qn7shKUGUNM0iEmfs+gm3ltKTPbpVNVDbxXxAEC1lH
-        yRBbTPZwMm/owRGMDHhuxvkM7Hpq0VuJ2meSsB07p2x5tq5pAySsighvPfsR5/Xyd8h2mXxd+az
-        +cYqz6M+f//faTa990WTY2SE3
-X-Received: by 2002:adf:f311:: with SMTP id i17mr60432wro.81.1578609329576;
-        Thu, 09 Jan 2020 14:35:29 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxZZQgsjQgoTa3XQg9OT9RA1d3vUlDtC6jFGQi3+0UHka7xLUT13x2pMcJ6IVUXwqGFKExVPQ==
-X-Received: by 2002:adf:f311:: with SMTP id i17mr60417wro.81.1578609329396;
-        Thu, 09 Jan 2020 14:35:29 -0800 (PST)
-Received: from [192.168.3.122] (p5B0C6BE2.dip0.t-ipconnect.de. [91.12.107.226])
-        by smtp.gmail.com with ESMTPSA id d12sm10031475wrp.62.2020.01.09.14.35.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 14:35:28 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v4] drivers/base/memory.c: cache blocks in radix tree to accelerate lookup
-Date:   Thu, 9 Jan 2020 23:35:28 +0100
-Message-Id: <F8AD9915-061E-4829-8670-B35D5F2DFC03@redhat.com>
-References: <20200109142758.659c1545cb8df2d05f299a4a@linux-foundation.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Scott Cheloha <cheloha@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
-        mhocko@suse.com, Scott Cheloha <cheloha@linux.ibm.com>
-In-Reply-To: <20200109142758.659c1545cb8df2d05f299a4a@linux-foundation.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-X-Mailer: iPhone Mail (17C54)
+        Thu, 9 Jan 2020 17:35:53 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200109223550epoutp0201742a5a71322890ba6f59c027d3fbf4~oWNcvYaT32559325593epoutp02T
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 22:35:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200109223550epoutp0201742a5a71322890ba6f59c027d3fbf4~oWNcvYaT32559325593epoutp02T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578609350;
+        bh=z82DJGq6KvctY04fST+YnPNcQ2/ex4x3CjUldnlQABE=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=Nwi5l+BBCcdv1a6FKhxuutkvRi0QKmN6wpzBJ6HTxA7hwRHh3HyR77iovNUVO2GOS
+         TuXGIbzgx3o4DACmaQXWUNknK02Oar1HlueNs3wzuvRf8n3EdIC5P7Slis5y4XC2L/
+         lxDwjUjQIptnuq4jrjudL86VrJj0qYLu3PosB9VE=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200109223549epcas1p1092093b42b4bc98c1d779931703a64ba~oWNb9E1AK2805228052epcas1p18;
+        Thu,  9 Jan 2020 22:35:49 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.166]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47v1D41NyXzMqYkZ; Thu,  9 Jan
+        2020 22:35:48 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F4.04.52419.4CAA71E5; Fri, 10 Jan 2020 07:35:48 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200109223547epcas1p294286223ef261fde9660bd3f84176e8b~oWNaHIY8X1342013420epcas1p2u;
+        Thu,  9 Jan 2020 22:35:47 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200109223547epsmtrp1e266119c803d9c89633e7d23d3b211cb~oWNaGWDM_2014820148epsmtrp1k;
+        Thu,  9 Jan 2020 22:35:47 +0000 (GMT)
+X-AuditID: b6c32a37-5b7ff7000001ccc3-94-5e17aac4c19b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CD.94.10238.3CAA71E5; Fri, 10 Jan 2020 07:35:47 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200109223547epsmtip223b125c0a82fbbbf562e5c8ef8093e5b~oWNZ6bYZv1121411214epsmtip2I;
+        Thu,  9 Jan 2020 22:35:47 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     =?utf-8?Q?'Pali_Roh=C3=A1r'?= <pali.rohar@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
+        <hch@lst.de>, <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>
+In-Reply-To: <20200103123114.vm23vqag5dbry2mu@pali>
+Subject: RE: [PATCH v9 10/13] exfat: add nls operations
+Date:   Fri, 10 Jan 2020 07:35:47 +0900
+Message-ID: <001401d5c73d$2349f6c0$69dde440$@samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwHz+Lr1AtmMBwQBuxR+cAG/bs6dpqgEPiA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTYRD163a3W7S4FpAJBq2r/IAEaC2l64Ex8aoKijFqMJG6oRtK7JVu
+        a0T/oBjAavAKUSsQlYixKiA2yiFiUGJU8MB4oOIRNWCDoKioQattFyP/3sy8mTcXiclriBgy
+        z+Lg7BbWRBNh4kvX45MSb3iis5XffDhTWFVLMGfOtouYJz3PMOZKyy0x87CpnGAO3BkRMV7/
+        DZzpGvwkXkDqGt09El1rxTmJrrm7gNCVej1I96V+qq7tcj+RSWwwzTNyrIGzKzhLjtWQZ8lN
+        o1es0S/Ua1KVqkTVbEZLKyysmUujF6VnJi7JMwUaohVbWJMz4MpkeZ5Onj/PbnU6OIXRyjvS
+        aM5mMNlUSlsSz5p5pyU3KcdqnqNSKmdpAsxNJmNheTFmc0VsPVQ4gBeg3+EuRJJApUB3Z5YL
+        hZFyqgGBr++kRDCGEFxr7Bg1hhF0PfKIXUgayvB6r0qCWE61INjzdplA+oDg3vNKFAwQVCL4
+        f7USQRxJMdDQ/p0IkjDqGoI3NRfwYEBKqWHXm+EQKYLSQv+pnlBVMRUHZf0uURDLqNng+lpP
+        CHgS3Dr6LtQFRk2Dyx/LMaEjBfx8X40LYiuhdt9NXOBEwrHdRVhQGKg/BByu/i0REhaB/3wx
+        LuAI8N30jvpj4MO+IomwmO3wuXW0fgmCvu9pAlZDd20dHqRgVDzUNiUL7unQOFKBBNlwGPi2
+        FxeqyKCkSC5Q4qC067pIwFPAVfxJsh/R7jGDuccM5h4zgPu/2HEk9qDJnI0353K8yqYee+t6
+        FPrVBG0Dqrub3oYoEtETZMaI6Gw5zm7h881tCEiMjpS1P52cLZcZ2PxtnN2qtztNHN+GNIG9
+        H8BionKsgc+3OPQqzSy1Ws2kpGpTNWo6Wkb+eLBRTuWyDm4zx9k4+788ESmNKUCx40r7Xzj+
+        nN5Z6Lt9ZKWzqvf+Ktn8zvFMhS+9rO615WhsTfeR5vCJ9rcnZ5xBfRmVkzIL4pKVzX2Prwy3
+        XHo9N9YzFBb/LqHKMbPx7FrwT/Srdki/Lh+0aktbynqVQ6dta6Wv7i9e/5KLGrmYP6hYasjo
+        Wd2x/cTB3nzIKunSN62jxbyRVSVgdp79C/RohRrBAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSvO7hVeJxBjs+aVo0L17PZrFy9VEm
+        i+t3bzFb7Nl7ksXi8q45bBYTT/9mstjy7wirxaX3H1gcODx2zrrL7rF/7hp2j903G9g8+ras
+        YvT4vEnO49D2N2wBbFFcNimpOZllqUX6dglcGc1z2pkLuoQrJje/Y21g/MvXxcjJISFgIrFl
+        yz72LkYuDiGB3YwS0/+sYoNISEscO3GGuYuRA8gWljh8uBii5jmjRM+qyUwgNWwCuhL//uwH
+        qxcRsJDYcfQ7G0gRs8AJRokz/bdYITr6mCR+N85nBKniFDCWaHn4DaxDWMBc4s3Su+wgNouA
+        qsTUN11gU3kFLCW6vmxig7AFJU7OfMICYjMLaEs8vfkUypaX2P52DjPEpQoSP58uY4W4wk9i
+        ff9xVogaEYnZnW3MExiFZyEZNQvJqFlIRs1C0rKAkWUVo2RqQXFuem6xYYFhXmq5XnFibnFp
+        Xrpecn7uJkZwlGlp7mC8vCT+EKMAB6MSD2+GsHicEGtiWXFl7iFGCQ5mJRHeozfE4oR4UxIr
+        q1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5YkpqdmlqQWgSTZeLglGpgNNzl3Hb1w/wzV35c
+        ne9SmXX8x5506TfXHj7PTJC7f3Sd3wvWfV/XenmvnuRz77Mqn8OkwnO3VU0YmyWaHP9eF9v6
+        tM7Zd82HlvDFLZ6vwoNKH9m1/Zx5RPzUqg2ejqz3K07zzzI9JdyTukKoovDyk6K/amzXLn2/
+        /d36wQZjlSzmHDP1GR09/UosxRmJhlrMRcWJALT+2RuuAgAA
+X-CMS-MailID: 20200109223547epcas1p294286223ef261fde9660bd3f84176e8b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+        <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
+        <20200102082036.29643-11-namjae.jeon@samsung.com>
+        <20200103094030.zg4p5bqos32gc4hy@pali>
+        <20200103123114.vm23vqag5dbry2mu@pali>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Am 09.01.2020 um 23:28 schrieb Andrew Morton <akpm@linux-foundation.org>:
->=20
-> =EF=BB=BFOn Thu, 9 Jan 2020 23:17:09 +0100 David Hildenbrand <david@redhat=
-.com> wrote:
->=20
->>=20
->>=20
->>>> Am 09.01.2020 um 23:00 schrieb Andrew Morton <akpm@linux-foundation.org=
->:
->>>=20
->>> =EF=BB=BFOn Thu,  9 Jan 2020 15:25:16 -0600 Scott Cheloha <cheloha@linux=
-.vnet.ibm.com> wrote:
->>>=20
->>>> Searching for a particular memory block by id is an O(n) operation
->>>> because each memory block's underlying device is kept in an unsorted
->>>> linked list on the subsystem bus.
->>>>=20
->>>> We can cut the lookup cost to O(log n) if we cache the memory blocks in=
+> What about just filtering two u16 (one surrogate pair)? Existing NLS
+> modules do not support code points above U+FFFF so two u16 (one
+> surrogate pair) just needs to be converted to one replacement character.
+Hi Pali,
 
->>>> a radix tree.  With a radix tree cache in place both memory subsystem
->>>> initialization and memory hotplug run palpably faster on systems with a=
-
->>>> large number of memory blocks.
->>>>=20
->>>> ...
->>>>=20
->>>> @@ -56,6 +57,13 @@ static struct bus_type memory_subsys =3D {
->>>>   .offline =3D memory_subsys_offline,
->>>> };
->>>>=20
->>>> +/*
->>>> + * Memory blocks are cached in a local radix tree to avoid
->>>> + * a costly linear search for the corresponding device on
->>>> + * the subsystem bus.
->>>> + */
->>>> +static RADIX_TREE(memory_blocks, GFP_KERNEL);
->>>=20
->>> What protects this tree from racy accesses?
->>=20
->> I think the device hotplug lock currently (except during boot where no ra=
-ces can happen).
->>=20
->=20
-> So this?
->=20
-> --- a/drivers/base/memory.c~drivers-base-memoryc-cache-blocks-in-radix-tre=
-e-to-accelerate-lookup-fix
-> +++ a/drivers/base/memory.c
-> @@ -61,6 +61,9 @@ static struct bus_type memory_subsys =3D {
->  * Memory blocks are cached in a local radix tree to avoid
->  * a costly linear search for the corresponding device on
->  * the subsystem bus.
-> + *
-> + * Protected by mem_hotplug_lock in mem_hotplug_begin(), and by the guara=
-nteed
-> + * single-threadness at boot time.
->  */
-> static RADIX_TREE(memory_blocks, GFP_KERNEL);
->=20
->=20
-> But are we sure this is all true?
-
-I think the device hotplug lock, not the memory hotplug lock. Will double ch=
-eck later.
->=20
+You're right.
+> 
+> diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
+> index 81d75aed9..f626a0a89 100644
+> --- a/fs/exfat/nls.c
+> +++ b/fs/exfat/nls.c
+> @@ -545,7 +545,10 @@ static int __exfat_nls_vfsname_to_utf16s(struct
+> super_block *sb,
+>  	return unilen;
+>  }
+> 
+> -static int __exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+> +#define SURROGATE_PAIR		0x0000d800
+> +#define SURROGATE_LOW		0x00000400
+> +
+> +static int __exfat_nls_utf16s_to_vfsname(struct super_block *sb,
+>  		struct exfat_uni_name *p_uniname, unsigned char *p_cstring,
+>  		int buflen)
+>  {
+> @@ -559,7 +562,23 @@ static int __exfat_nls_uni16s_to_vfsname(struct
+> super_block *sb,
+>  		if (*uniname == '\0')
+>  			break;
+> 
+> -		len = exfat_convert_uni_to_ch(nls, *uniname, buf, NULL);
+> +		if ((*uniname & SURROGATE_MASK) != SURROGATE_PAIR) {
+> +			len = exfat_convert_uni_to_ch(nls, *uniname, buf,
+> NULL);
+> +		} else {
+> +			/* Process UTF-16 surrogate pair as one character */
+> +			if (!(*uniname & SURROGATE_LOW) && i+1 <
+> MAX_NAME_LENGTH &&
+> +			    (*(uniname+1) & SURROGATE_MASK) == SURROGATE_PAIR
+> &&
+> +			    (*(uniname+1) & SURROGATE_LOW)) {
+> +				uniname++;
+> +				i++;
+> +			}
+> +			/* UTF-16 surrogate pair encodes code points above
+> Ux+FFFF.
+> +			 * Code points above U+FFFF are not supported by
+> kernel NLS
+> +			 * framework therefore use replacement character */
+> +			len = 1;
+> +			buf[0] = '_';
+> +		}
+> +
+>  		if (out_len + len >= buflen)
+>  			len = buflen - 1 - out_len;
+>  		out_len += len;
+> @@ -623,7 +642,7 @@ int exfat_nls_uni16s_to_vfsname(struct super_block *sb,
+>  	if (EXFAT_SB(sb)->options.utf8)
+>  		return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
+>  				buflen);
+> -	return __exfat_nls_uni16s_to_vfsname(sb, uniname, p_cstring,
+> buflen);
+> +	return __exfat_nls_utf16s_to_vfsname(sb, uniname, p_cstring,
+> buflen);
+>  }
+> 
+>  int exfat_nls_vfsname_to_uni16s(struct super_block *sb,
+> 
+> I have not tested this code, it is just an idea how to quick & dirty
+> solve this problem that NLS framework works with UCS-2 encoding and
+> UCS-4/UTF-32 or UTF-16.
+I will check and test this code.
+Thanks for your suggestion.
 
