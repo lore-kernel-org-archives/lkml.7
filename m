@@ -2,108 +2,101 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795F7C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526B9C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B8B2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E79120673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbgAIO0Z (ORCPT
+        id S1731669AbgAIO2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:26:25 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41544 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgAIO0Z (ORCPT
+        Thu, 9 Jan 2020 09:28:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54491 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgAIO2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:26:25 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5E0F22934FF
-Subject: Re: [PATCH 1/2] dt-bindings: arm64: dts: mediatek: Add mt8173 elm and
- hana
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Daniel Kurtz <djkurtz@chromium.org>
-References: <20200109101042.201500-1-hsinyi@chromium.org>
- <20200109101042.201500-2-hsinyi@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <46ccc713-5951-62ee-1909-f572772217c2@collabora.com>
-Date:   Thu, 9 Jan 2020 15:26:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 9 Jan 2020 09:28:05 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ipYn2-000430-W9; Thu, 09 Jan 2020 15:28:01 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A89381060CF; Thu,  9 Jan 2020 15:28:00 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v2 2/2] clocksource: Add driver for the Ingenic JZ47xx OST
+In-Reply-To: <20200107010630.954648-2-paul@crapouillou.net>
+References: <20200107010630.954648-1-paul@crapouillou.net> <20200107010630.954648-2-paul@crapouillou.net>
+Date:   Thu, 09 Jan 2020 15:28:00 +0100
+Message-ID: <87a76wln67.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200109101042.201500-2-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hsin-Yi,
+Paul Cercueil <paul@crapouillou.net> writes:
+> +static u64 notrace ingenic_ost_clocksource_read64(struct clocksource *cs)
+> +{
+> +	u32 val1, val2;
+> +	u64 count, recount;
+> +	s64 diff;
+> +
+> +	/*
+> +	 * The buffering of the upper 32 bits of the timer prevents wrong
+> +	 * results from the bottom 32 bits overflowing due to the timer ticking
+> +	 * along. However, it does not prevent wrong results from simultaneous
+> +	 * reads of the timer, which could reset the buffer mid-read.
+> +	 * Since this kind of wrong read can happen only when the bottom bits
+> +	 * overflow, there will be minutes between wrong reads, so if we read
+> +	 * twice in succession, at least one of the reads will be correct.
+> +	 */
+> +
+> +	/* Bypass the regmap here as we must return as soon as possible */
 
-Thanks for sending this patch upstream, one comment below ...
+I have a hard time to understand this comment. "Bypass the regmap ..."
+and then use a regmap function?
 
-On 9/1/20 11:10, Hsin-Yi Wang wrote:
-> Elm is Acer Chromebook R13. Hana is Lenovo Chromebook. Both uses mt8173
-> SoC.
-> 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  .../devicetree/bindings/arm/mediatek.yaml      | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-> index 4043c5046441..a27b22f264a2 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-> @@ -86,6 +86,24 @@ properties:
->            - const: mediatek,mt8135
->        - items:
->            - enum:
-> +              - google,elm
-> +              - google,elm-rev1
-> +              - google,elm-rev2
-> +              - google,elm-rev3
-> +              - google,elm-rev4
-> +              - google,elm-rev5
-> +              - google,elm-rev6
-> +              - google,elm-rev7
-> +              - google,elm-rev8
+> +	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTL, &val1);
+> +	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTHBUF, &val2);
+> +	count = (u64)val1 | (u64)val2 << 32;
+> +
+> +	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTL, &val1);
+> +	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTHBUF, &val2);
+> +	recount = (u64)val1 | (u64)val2 << 32;
+> +
+> +	/*
+> +	 * A wrong read will produce a result that is 1<<32 too high: the bottom
+> +	 * part from before overflow and the upper part from after overflow.
+> +	 * Therefore, the lower value of the two reads is the correct value.
+> +	 */
+> +
+> +	diff = (s64)(recount - count);
+> +	if (unlikely(diff < 0))
+> +		count = recount;
 
-Did you run dtbs_check [1] after having patch 2 applied? I think that will
-trigger some errors. I am not sure if this should be a const instead of an enum
-like we have in rockchip.yaml?
+Is this really the right approach here? What is the 64bit readout buying
+you?
 
-[1] make ARCH=arm64
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/mediatek.yaml dtbs_check
+The timekeeping code can handle a 32bit counter perfectly fine and the
+only advantage you get is that your maximum possible idle time will be
+longer with a 64bit counter.
+
+But is that really worth the overhead of four MMIO reads versus one in a
+hotpath?
 
 Thanks,
- Enric
 
-> +              - google,hana
-> +              - google,hana-rev0
-> +              - google,hana-rev1
-> +              - google,hana-rev2
-> +              - google,hana-rev3
-> +              - google,hana-rev4
-> +              - google,hana-rev5
-> +              - google,hana-rev6
-> +              - google,hana-rev7
->                - mediatek,mt8173-evb
->            - const: mediatek,mt8173
->        - items:
-> 
+        tglx
