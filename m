@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D042C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C994C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3582067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518BD206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578556238;
-	bh=8tLTGFgqi2zp8o8rppN3hWEs4301u5uyUfWJU5kJhK0=;
+	s=default; t=1578556297;
+	bh=KVx6Xx/MG+W2QHhVP6/S43cttB9ypV02WGV657oo/s4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FGnUNh9WSRHw1SVuX5wiBlldDaxB5ePCRDW/UMNPqsW4b9fHqAu5+AkfMxh9zsZmB
-	 FyIZHTulDNHIkoZVH1CZoXuAcXSYlbBw2K3TbmNhIDS1snV2gFaHE3FDgXwfNlgeLx
-	 VAo7HC0qf2C4u6gG0ru7XPe4H+sD1JmthUAYPDi0=
+	b=CXUQUr+3qua0SCA+rQCUutx7Q6emWKvdqpT9Vd5Fib4b0j7/PLSG++L9m2dlb42E9
+	 gjM0qmpjBwL+qa9arLpk0bPSL6nSRkl7wCAWrPrkgzZD0j2DtaEVIQeuYTmYpsGLdk
+	 jae9W0XfjpM2tEySsiQ5fFir03nUfEU/nX0KJksM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgAIHuh (ORCPT
+        id S1728332AbgAIHvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:50:37 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41056 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728184AbgAIHuh (ORCPT
+        Thu, 9 Jan 2020 02:51:36 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38693 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728184AbgAIHvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:50:37 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so6233620wrw.8;
-        Wed, 08 Jan 2020 23:50:36 -0800 (PST)
+        Thu, 9 Jan 2020 02:51:36 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so6274721wrh.5;
+        Wed, 08 Jan 2020 23:51:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y/CgzWzQ37tz6tltWi+W06Hb1Am2E42UaSOhmv5oQbc=;
-        b=rYRBnzoYA0Jz3uVmSmrR/8nf8n/2SjvICl6vmZn5K7qxwt3y/8QtPOP1Q+6/0PbJOE
-         jrLZP1pLTQ8WCdNF2jnVVqkDCh3UrfhQB6zepFvkGgcCJNXKHLHBm/YdvngRtrwyw8gx
-         OOctq/bu4O8JN6uaDLfSbt7d6OMsQGzAQ0acWTc6TMZR74N7pbhFQfqI5F/cc9qUkfrK
-         5eqOq/82r07d6LYf5tT193ipRJH7n5Q7PXRmtYQhJPUWMYNbJzxapf/VOjLf8SUKjtm5
-         CG8yUwvkKnixQJ9RuL2oNxeQYbl70jneDgVjbygwh/BEgVp1plZvSAQ7wqtD7IpWOMx1
-         PeYA==
-X-Gm-Message-State: APjAAAVODKZm8ooJmM2s2Y9VSiMnmi+vjyf8CpRy4EW5nHPUMD/jD5KA
-        THFrX/K01h0F57kZnWDAjayO/CO7tzjzxFP+3M8=
-X-Google-Smtp-Source: APXvYqxr2+R2knz2nRfCsd8oe+g8GuCoKuxDgCHRlje6jES4YFF4F6MRi+JCczDav5HaTPEcpwW1ZeTDyqZhAUb9MQY=
-X-Received: by 2002:adf:eb48:: with SMTP id u8mr9003242wrn.283.1578556235658;
- Wed, 08 Jan 2020 23:50:35 -0800 (PST)
+        bh=f7jKAd2k6zMLFNHzbXJbak8vuc1kQgCbhm39LF3QafA=;
+        b=ltCQSNLCHch5K1kxyYNVnQ/lV4KRHa2zUPHC5/JY7WXWg8FlZ8Ut65ASBiJ04TRNl1
+         e6eBhoR8vxFPTPSqrIN1s2fUPWkuzy8Tt0gwHONNX16jjYIbNDF+Nzg6tnawYSmVWnkW
+         0AmhkphZjQlDwl94ARBSF1yThUZoPxGG4frPREiugAokNeL1VZsIiIiV3HSzfjX75sxv
+         fCZwScv9vsCYcpNZQLfk3cgkMgB5DFOVdNIja5oQS5T+SqmYpabYNt6dogNN4sXSWyJi
+         SAInn8cL+pT7FHgynkLq23VIvANDub/QOhAwbl1e95IVj7OvfRiScW5rdqrGIvQpnqHB
+         1iwQ==
+X-Gm-Message-State: APjAAAVS5WzykKKH2P5n78/kxi6pgManDu9G3EJ8J5B9toTNSlF9e1Jc
+        L8DLpnPmvp2lFLojxNTT8kukla2IB23e5VEx5lLmaw==
+X-Google-Smtp-Source: APXvYqzZa/dLk/C0E+za19OrHOhco7sEr5NWaZA6GxB3Or3aoyqUEONi1OoE5UpRl/9tcMVVo/SWkRaUqx3IFzKGDQk=
+X-Received: by 2002:adf:ef10:: with SMTP id e16mr8801931wro.336.1578556294102;
+ Wed, 08 Jan 2020 23:51:34 -0800 (PST)
 MIME-Version: 1.0
 References: <20200107133501.327117-1-namhyung@kernel.org> <20200107133501.327117-7-namhyung@kernel.org>
- <20200108221833.GD12995@krava>
-In-Reply-To: <20200108221833.GD12995@krava>
+ <20200108222156.GE12995@krava>
+In-Reply-To: <20200108222156.GE12995@krava>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 9 Jan 2020 16:50:24 +0900
-Message-ID: <CAM9d7ciqCi3Kh9n+Wsgpa6xmhfu0JcVLcT2+bmWVyo13bcDn1Q@mail.gmail.com>
+Date:   Thu, 9 Jan 2020 16:51:23 +0900
+Message-ID: <CAM9d7ci-LfDtjX-e343pUMeMB4BD+bbyduYW8LM0Pweus8yarA@mail.gmail.com>
 Subject: Re: [PATCH 6/9] perf record: Support synthesizing cgroup events
 To:     Jiri Olsa <jolsa@redhat.com>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -68,56 +68,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 7:18 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Thu, Jan 9, 2020 at 7:22 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
 > On Tue, Jan 07, 2020 at 10:34:58PM +0900, Namhyung Kim wrote:
 >
 > SNIP
 >
-> > +     if (perf_tool__process_synth_event(tool, event, machine, process) < 0) {
-> > +             pr_debug("process synth event failed\n");
-> > +             return -1;
-> > +     }
-> > +
-> > +     return 0;
+> > +     closedir(d);
+> > +     return ret;
 > > +}
 > > +
-> > +static int perf_event__walk_cgroup_tree(struct perf_tool *tool,
-> > +                                     union perf_event *event,
-> > +                                     char *path, size_t mount_len,
-> > +                                     perf_event__handler_t process,
-> > +                                     struct machine *machine)
+> > +int perf_event__synthesize_cgroups(struct perf_tool *tool,
+> > +                                perf_event__handler_t process,
+> > +                                struct machine *machine)
 > > +{
-> > +     size_t pos = strlen(path);
-> > +     DIR *d;
-> > +     struct dirent *dent;
-> > +     int ret = 0;
+> > +     union perf_event event;
+> > +     char *cgrp_root;
+> > +     size_t mount_len;  /* length of mount point in the path */
+> > +     int ret = -1;
 > > +
-> > +     if (perf_event__synthesize_cgroup(tool, event, path, mount_len,
-> > +                                       process, machine) < 0)
+> > +     cgrp_root = malloc(PATH_MAX);
+> > +     if (cgrp_root == NULL)
 > > +             return -1;
 > > +
-> > +     d = opendir(path);
-> > +     if (d == NULL) {
-> > +             pr_debug("failed to open directory: %s\n", path);
-> > +             return -1;
-> > +     }
-> > +
-> > +     while ((dent = readdir(d)) != NULL) {
-> > +             if (dent->d_type != DT_DIR)
-> > +                     continue;
-> > +             if (!strcmp(dent->d_name, ".") ||
-> > +                 !strcmp(dent->d_name, ".."))
-> > +                     continue;
-> > +
-> > +             if (path[pos - 1] != '/')
-> > +                     strcat(path, "/");
-> > +             strcat(path, dent->d_name);
 >
-> shouldn't you also check for the max size of path in here?
+> hum, we normally use bufs with PATH_MAX size on stack..
+> is there some reason to use heap in here?
 
-I guess a path should be shorter than PATH_MAX.
-But yes, I can add a check if you want.
+No specific reason, will change.
 
 Thanks
 Namhyung
