@@ -2,89 +2,180 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B0BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE674C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 177452075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:54:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="V6FQkdls"
+	by mail.kernel.org (Postfix) with ESMTP id A4B872067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731879AbgAIOx7 (ORCPT
+        id S1731881AbgAIOyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:53:59 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:36684 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731856AbgAIOx6 (ORCPT
+        Thu, 9 Jan 2020 09:54:49 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39634 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728737AbgAIOyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:53:58 -0500
-Received: by mail-wm1-f47.google.com with SMTP id p17so3171691wma.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:53:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rUxPHa2T/qhjfPbBGgKT0jw2Pzfyyz7G8V70ESCMcRw=;
-        b=V6FQkdls3RdCEqF/mu2mah0JUBnQeCeA2/rmb4KqnquLCXhwFabSCLIUAtoGpGytTu
-         hs37ORj+RgTBBs6BP0kEDsoaqi7d1zj01UB5OvxuJKUmulPxpZmXE5S6BEcYsUxzp6hn
-         17Z+yZ1Kw/5ysSD5DVe7CvuGiTqVJjmXixcog=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rUxPHa2T/qhjfPbBGgKT0jw2Pzfyyz7G8V70ESCMcRw=;
-        b=ES72DlG99Q5A52ObTPabdYQWFjgN/tcw1pOcSLtycVistJbEH5OYG+1xCfp/FbLjKW
-         gaXCEpvgHDUgL4RHGjLbD3mogZOteCxvbokkledMAHLMvJkTrLssXzM99FY3NEVuhD1T
-         fmULs5vYaMm4xUt7yNXl/SgxYfw60KUbUScr1iOJuteRKupKAOBLq+nzAyBCUwhzpQnR
-         CpocWEr3u4LTQ5DC66oQmo2JKFJsFf941s2qVgp6G1cSORSLk6dYY+ggYgsjZjMswkkr
-         NQqA9RAwv/Z+VVCbGTvdGr/BvMffyM1XYFDCYT+b0wEOtE8SmtE2osWhGyre1DCNYY3c
-         Rg2w==
-X-Gm-Message-State: APjAAAVSQQnl13WZLdCdlpI5I0a1XKdgyim4ZalMPmoAZklIMiJ8WJBZ
-        O/GqAjz/5lBXDswT2oZgkuoCnA==
-X-Google-Smtp-Source: APXvYqzq0xB087gtDch3VgcD10JC1IwNoOD11dTRRE2inBUSxt3yaAvEH7p8AntjfBQlsiOZ0U8ijA==
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr5240117wml.138.1578581636799;
-        Thu, 09 Jan 2020 06:53:56 -0800 (PST)
-Received: from localhost ([2620:10d:c092:200::1:37ce])
-        by smtp.gmail.com with ESMTPSA id p7sm2966892wmp.31.2020.01.09.06.53.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 06:53:56 -0800 (PST)
-Date:   Thu, 9 Jan 2020 14:53:55 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thu, 9 Jan 2020 09:54:49 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009Eq42M044161
+        for <linux-kernel@vger.kernel.org>; Thu, 9 Jan 2020 09:54:48 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xdyh2gmx1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 09:54:47 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Thu, 9 Jan 2020 14:54:45 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 Jan 2020 14:54:38 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 009EsaDt56557640
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jan 2020 14:54:36 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B693BA4055;
+        Thu,  9 Jan 2020 14:54:36 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 99DAAA404D;
+        Thu,  9 Jan 2020 14:54:35 +0000 (GMT)
+Received: from bali.tlslab.ibm.com (unknown [9.101.4.17])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jan 2020 14:54:35 +0000 (GMT)
+Subject: Re: [PATCH v2 09/27] ocxl: Free detached contexts in
+ ocxl_context_detach_all()
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][RESEND v5] x86/resctrl: Add task resctrl information
- display
-Message-ID: <20200109145355.GC61542@chrisdown.name>
-References: <20200109135001.10076-1-yu.c.chen@intel.com>
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+ <20191203034655.51561-10-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Thu, 9 Jan 2020 15:54:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200109135001.10076-1-yu.c.chen@intel.com>
+In-Reply-To: <20191203034655.51561-10-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010914-0012-0000-0000-0000037BF30D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010914-0013-0000-0000-000021B814C0
+Message-Id: <4c9da9a0-55f4-6cf4-53b8-e8a69744bf98@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_02:2020-01-09,2020-01-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ malwarescore=0 bulkscore=0 suspectscore=2 lowpriorityscore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001090130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chen Yu writes:
->+#ifdef CONFIG_PROC_CPU_RESCTRL
->+	ONE("resctrl", S_IRUGO, proc_resctrl_show),
 
-There was already some discussion about "resctrl" by itself being a misleading 
-name, hence why the CONFIG option eventually became CONFIG_X86_CPU_RESCTRL. Can 
-you please rethink the name of this /proc file, and have it at least be 
-"cpu_resctrl" or "x86_resctrl" or similar? :-)
+
+Le 03/12/2019 à 04:46, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> ocxl_context_detach_all() is called from ocxl_function_close(), so
+> there is no reason to leave the contexts allocated, as the caller
+> can do nothing useful with them at that point.
+> 
+> This also has the side-effect of freeing any allocated IRQs
+> within the context.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+
+
+I think this is wrong and probably unneeded. In ocxl (and I would assume 
+most drivers), we separate pretty clearly what is setup by the driver 
+framework when a device is probed, and what is allocated by the users 
+(userland or scm). Contexts are allocated by the users. So they should 
+be freed by them only. That separation is also why we have some 
+reference counting on the afu and function structs, to make sure the 
+core data remains valid for as long as required.
+Though it's a bit asking for troubles, it can be seen when unbinding a 
+function from the driver through sysfs. That will end up calling 
+ocxl_function_close() and therefore ocxl_context_detach_all(). However 
+it's possible for a user process to still have a file descriptor opened. 
+The context is detached and marked as CLOSED, so any interaction with it 
+from the user will fail, but it should still be allocated so that it is 
+valid if the user process makes a system call to the driver. The context 
+will be freed when the file descriptor is closed.
+I don't think this is needed for scm either, since you've now added the 
+context detach and free call in free_scm()
+I would just drop this patch.
+
+   Fred
+
+
+
+>   drivers/misc/ocxl/context.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+> index 994563a078eb..6cb36ef96e09 100644
+> --- a/drivers/misc/ocxl/context.c
+> +++ b/drivers/misc/ocxl/context.c
+> @@ -259,10 +259,11 @@ void ocxl_context_detach_all(struct ocxl_afu *afu)
+>   {
+>   	struct ocxl_context *ctx;
+>   	int tmp;
+> +	int rc;
+>   
+>   	mutex_lock(&afu->contexts_lock);
+>   	idr_for_each_entry(&afu->contexts_idr, ctx, tmp) {
+> -		ocxl_context_detach(ctx);
+> +		rc = ocxl_context_detach(ctx);
+>   		/*
+>   		 * We are force detaching - remove any active mmio
+>   		 * mappings so userspace cannot interfere with the
+> @@ -274,6 +275,9 @@ void ocxl_context_detach_all(struct ocxl_afu *afu)
+>   		if (ctx->mapping)
+>   			unmap_mapping_range(ctx->mapping, 0, 0, 1);
+>   		mutex_unlock(&ctx->mapping_lock);
+> +
+> +		if (rc != -EBUSY)
+> +			ocxl_context_free(ctx);
+>   	}
+>   	mutex_unlock(&afu->contexts_lock);
+>   }
+> 
+
