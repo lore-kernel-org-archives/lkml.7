@@ -4,62 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C39C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67456C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34871206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457C220721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbgAITuR (ORCPT
+        id S1732601AbgAITv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:50:17 -0500
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:42428 "EHLO
+        Thu, 9 Jan 2020 14:51:26 -0500
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:43554 "EHLO
         mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730077AbgAITuQ (ORCPT
+        with ESMTP id S1730077AbgAITv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:50:16 -0500
-X-Greylist: delayed 1616 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 14:50:15 EST
-Received: from relay12.mail.gandi.net (unknown [217.70.178.232])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 2BEE63AAB51;
-        Thu,  9 Jan 2020 19:14:47 +0000 (UTC)
+        Thu, 9 Jan 2020 14:51:26 -0500
+X-Greylist: delayed 1685 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 14:51:25 EST
+Received: from relay7-d.mail.gandi.net (unknown [217.70.183.200])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 5A8EE3AB693;
+        Thu,  9 Jan 2020 19:14:53 +0000 (UTC)
+X-Originating-IP: 91.224.148.103
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 4E1D1200007;
-        Thu,  9 Jan 2020 19:14:45 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id DBC1920003;
+        Thu,  9 Jan 2020 19:14:51 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, kyungmin.park@samsung.com,
-        miquel.raynal@bootlin.com, aaro.koskinen@iki.fi, vigneshr@ti.com,
-        hns@goldelico.com
-Cc:     tony@atomide.com, linux-omap@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mtd: onenand: omap2: Pass correct flags for prep_dma_memcpy
-Date:   Thu,  9 Jan 2020 20:14:44 +0100
-Message-Id: <20200109191444.10713-1-miquel.raynal@bootlin.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [RFT] mtd: onenand: samsung: Fix iomem access with regular memcpy
+Date:   Thu,  9 Jan 2020 20:14:50 +0100
+Message-Id: <20200109191450.10775-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200107084544.18547-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20200103164158.4265-1-krzk@kernel.org>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 8bcef0d54067077cf9a6cb129022c77559926e8c
+X-linux-mtd-patch-commit: 14ebf24175df0f216256c8483ee2974f35a1a89c
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-07 at 08:45:44 UTC, Peter Ujfalusi wrote:
-> The commit converting the driver to DMAengine was missing the flags for
-> the memcpy prepare call.
-> It went unnoticed since the omap-dma driver was ignoring them.
+On Fri, 2020-01-03 at 16:41:58 UTC, Krzysztof Kozlowski wrote:
+> The __iomem memory should be copied with memcpy_fromio.  This fixes
+> Sparse warnings like:
 > 
-> Fixes: 3ed6a4d1de2c5 (" mtd: onenand: omap2: Convert to use dmaengine for memcp")
-> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>     drivers/mtd/nand/onenand/samsung_mtd.c:678:40: warning: incorrect type in argument 2 (different address spaces)
+>     drivers/mtd/nand/onenand/samsung_mtd.c:678:40:    expected void const *from
+>     drivers/mtd/nand/onenand/samsung_mtd.c:678:40:    got void [noderef] <asn:2> *[assigned] p
+>     drivers/mtd/nand/onenand/samsung_mtd.c:679:19: warning: incorrect type in assignment (different address spaces)
+>     drivers/mtd/nand/onenand/samsung_mtd.c:679:19:    expected void [noderef] <asn:2> *[assigned] p
+>     drivers/mtd/nand/onenand/samsung_mtd.c:679:19:    got unsigned char *
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/fixes, thanks.
 
