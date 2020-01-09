@@ -2,101 +2,185 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950C3C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D2DC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5E62073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578560854;
-	bh=80VO7IRaadflRsWGeFaWpP4uMh6gHTYCmJeL67RjZyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y029idu/u6Hk4zWPucEUiQc7ZholcskgSJ2skmKIo3M72hG6GLl+TjMRvJq8R3Ito
-	 QfXAZaX8Sl1CdjKncOkw6KL7W1AGx9dHF+k/IfgqL8Z73Ad0FUmbioQykp+ULqt0Ih
-	 DUUBbopl7x3UH1h/UImqKHr6fmPXXJZhGfhv25zI=
+	by mail.kernel.org (Postfix) with ESMTP id EB3B2206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tljAdzLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbgAIJHd (ORCPT
+        id S1728961AbgAIJIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:07:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728782AbgAIJHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:07:33 -0500
-Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1E920673;
-        Thu,  9 Jan 2020 09:07:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578560852;
-        bh=80VO7IRaadflRsWGeFaWpP4uMh6gHTYCmJeL67RjZyc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q5FmlW6oNXmmHi8t5SgWv6hqbdIOcUc7kC9MBmRyqClnLeB0DbMUArm6zNITYQbZM
-         X3khTwxh8dUFqbTImNB9UVzgMvIDlRJW427ftIDOSroG+TSjzJJ7++lD9C0seZcwE+
-         32RfwPZhjFiLV95ZOf0ynTo5+MVxORQ//gS9cugs=
-Date:   Thu, 9 Jan 2020 11:07:20 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH 0/1] arm/arm64: add support for folded p4d page tables
-Message-ID: <20200109090719.GA14426@rapoport-lnx>
-References: <20191230082734.28954-1-rppt@kernel.org>
- <19fc0640-2b7e-a06f-a4c8-2736d54dd565@arm.com>
+        Thu, 9 Jan 2020 04:08:09 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23198 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728782AbgAIJIJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:08:09 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009943ki002842;
+        Thu, 9 Jan 2020 10:07:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=is6x6Xsavc4DrmaKIz9Vu39SoGM1pxSmkBDyOwyjfa0=;
+ b=tljAdzLxNcuZNYbois3hdLfVjFYmM+a7XJR2qA4cbheXmLFBmwcvO4Tyd2PSUhPfrtUP
+ dGkXZNfXXiMRik0oqLpd8MMkk8w2vph+qXFWX5RpZTzayz/MwKQUvtzaBUn9oB6DT/Xm
+ fVEv5X/L+HfQinfv8d96XpjqpEwy/iu0DE07SVJbdbPA87ilcpoRnzVpAXrYHE5Ni44y
+ DJi6tT4FeDBqo7qcL13pXZdGwr4mzsDAarBKJ4WnFg3E+4MH/wyWFxBwMPYr+oBUvd4n
+ G3fWAxEmEzxBt2tq0Ajwg2Ez0Tt/KIWcBff3mLkHMpLMYIQAOsvVE1LNdaplPElsnl3P 1Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xakm5rk43-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 10:07:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A573A10003B;
+        Thu,  9 Jan 2020 10:07:32 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 84DD02A4D87;
+        Thu,  9 Jan 2020 10:07:32 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 Jan
+ 2020 10:07:32 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Thu, 9 Jan 2020 10:07:32 +0100
+From:   Christophe ROULLIER <christophe.roullier@st.com>
+To:     Maxime Ripard <mripard@kernel.org>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Thread-Topic: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Thread-Index: AQHVljS9qESSyYnraEKgryyZ/0O5A6eL1WwAgFaFz4A=
+Date:   Thu, 9 Jan 2020 09:07:32 +0000
+Message-ID: <009e8c0e-6a72-7e14-699e-8a897199ae16@st.com>
+References: <20191108103526.22254-1-christophe.roullier@st.com>
+ <20191108103526.22254-2-christophe.roullier@st.com>
+ <20191108104231.GE4345@gilmour.lan>
+ <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
+ <20191115075008.GY4345@gilmour.lan>
+In-Reply-To: <20191115075008.GY4345@gilmour.lan>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <23EE773BFEB22B40A7851F2EFDD3C50A@st.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19fc0640-2b7e-a06f-a4c8-2736d54dd565@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 08:38:54AM +0530, Anshuman Khandual wrote:
-> 
-> 
-> On 12/30/2019 01:57 PM, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Hi,
-> 
-> Hello Mike,
-> 
-> > 
-> > This is a part of clean up of the page table manipulation code that aims to
-> > remove asm-generic/5level-fixup.h and asm-generic/pgtable-nop4d-hack.h
-> > 
-> > There is a single patch for both arm and arm64 because doing the conversion
-> > separately would mean breaking the shared mmu bits in virt/kvm/arm.
-> > 
-> > The patch is build tested and boot tested on qemu-system-{arm,aarch64}.
-> 
-> There are lots of code changes here for a single patch but as you have
-> mentioned shared KVM bits would have prevented splitting arm and arm64
-> changes into separate patches. Just curious, are you planning to respin
-> this patch sooner after fixing the reported build problems caused by
-> missing p4d_offset_kimg() and p4d_sect() definitions ?
+On 15/11/2019 08:50, Maxime Ripard wrote:
+> On Fri, Nov 08, 2019 at 01:02:14PM +0000, Christophe ROULLIER wrote:
+>> On 11/8/19 11:42 AM, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
+>>>> This change is needed for some soc based on snps,dwmac, which have
+>>>> more than 3 clocks.
+>>>>
+>>>> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
+>>>>    1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/D=
+ocumentation/devicetree/bindings/net/snps,dwmac.yaml
+>>>> index 4845e29411e4..376a531062c2 100644
+>>>> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>>>> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>>>> @@ -27,6 +27,7 @@ select:
+>>>>              - snps,dwmac-3.710
+>>>>              - snps,dwmac-4.00
+>>>>              - snps,dwmac-4.10a
+>>>> +          - snps,dwmac-4.20a
+>>>>              - snps,dwxgmac
+>>>>              - snps,dwxgmac-2.10
+>>>>
+>>>> @@ -62,6 +63,7 @@ properties:
+>>>>            - snps,dwmac-3.710
+>>>>            - snps,dwmac-4.00
+>>>>            - snps,dwmac-4.10a
+>>>> +        - snps,dwmac-4.20a
+>>>>            - snps,dwxgmac
+>>>>            - snps,dwxgmac-2.10
+>>>>
+>>>> @@ -87,7 +89,8 @@ properties:
+>>>>
+>>>>      clocks:
+>>>>        minItems: 1
+>>>> -    maxItems: 3
+>>>> +    maxItems: 5
+>>>> +    additionalItems: true
+>>> Those additional clocks should be documented
+>>>
+>>> Maxime
+>> Hi Maxime,
+>>
+>> The problem it is specific to our soc, so is it possible to
+>>
+>> propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
+>>
+>> and "official" description in soc yaml file (stm32-dwmac.yaml) ?
+>>
+>>   =A0 clocks:
+>>   =A0=A0=A0 minItems: 1
+>>   =A0=A0=A0 maxItems: 5
+>>   =A0=A0=A0 additionalItems: true
+>>   =A0=A0=A0 items:
+>>   =A0=A0=A0=A0=A0 - description: GMAC main clock
+>>   =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
+>>   =A0=A0=A0=A0=A0 - description:
+>>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used fo=
+r programming the
+>>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed t=
+hen the system
+>>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on som=
+e platforms.
+>>
+>> +=A0=A0=A0=A0=A0 - description: optional clock
+>>
+>> +=A0=A0=A0=A0=A0 - description: optional clock
+> I guess we'd really need to figure out what those clocks are doing,
+> they are probably helpful (and used, under a different name) by
+> others.
+>
+> Hopefully the questions Rob asked will clear that out
 
-Well, I was waiting to see if there was some feedback except kbuild robot
-response :)
+Rob, do you have any ideas, suggestions ?
 
-I'm planning to send v2 soon, probably next week.
- 
-> - Anshuman
+Thanks
 
--- 
-Sincerely yours,
-Mike.
+> Maxime=
