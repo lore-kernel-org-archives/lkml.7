@@ -2,99 +2,116 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6022AC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7B8C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142102072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0427820673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="C2t3NIZC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ej7W8jgc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgAIHYi (ORCPT
+        id S1728250AbgAIH3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:24:38 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3825 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgAIHYi (ORCPT
+        Thu, 9 Jan 2020 02:29:09 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:32994 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbgAIH3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:24:38 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e16d5230000>; Wed, 08 Jan 2020 23:24:19 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 08 Jan 2020 23:24:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 08 Jan 2020 23:24:37 -0800
-Received: from [10.24.44.157] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jan
- 2020 07:24:35 +0000
-Subject: Re: [PATCH v3] regmap: add iopoll-like atomic polling macro
-To:     Dmitry Osipenko <digetx@gmail.com>, <broonie@kernel.org>
-CC:     <jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>
-References: <1578546590-24737-1-git-send-email-spujar@nvidia.com>
- <fa5198bf-0001-3a57-017f-1b40e0188606@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <b9f5459f-007e-3139-a3cf-c7dfd3fc335a@nvidia.com>
-Date:   Thu, 9 Jan 2020 12:54:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 9 Jan 2020 02:29:08 -0500
+Received: by mail-pj1-f68.google.com with SMTP id u63so672334pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 23:29:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eb7+4YTwZPIai1tsUX2MFyulW3TpuQQ3q3lzwkxFRow=;
+        b=ej7W8jgc7Qi2towEQUvPZ+HLF2Kev1VG8RzMxUS5owrJ4eTxi+Kf8XMBBX1iBsQitC
+         eMtse3kYPa4wXtk2TSBcfd623EMdWEZsk9Axr5HnIgKhJq6g/bsv/a13TdoLdyZ/A65g
+         p27LdFxT3wMG4atcUFXFjF4Wx7gKd7Yo4MlIc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eb7+4YTwZPIai1tsUX2MFyulW3TpuQQ3q3lzwkxFRow=;
+        b=AvqNvvD7LS4pM8cGD7FuvFq4t/c6MsYTh4yNgPLjt1QXmPT2avFDSAkVOhk3NNJM2W
+         vwUk8nt9xApckez+tEziYtfTwSy2X3bGSRUZquo+kVy5pe3Fe6RpPleKAYawY2oxiD6r
+         q5rQqsvdMfoyvNQGm1g5OqkvwVYyNsdNc19IAC4mR77/ehfyS+K/dmH4TTyTiAzuYExc
+         j4w/LS695HYrO7X0gl8esBNM1ji8ymcndRTWTwcT+t5BL/ym1+HqpcBA9f3/eOu6LsB1
+         HjHFqOr8ZhYr3cvhmi9fMuVdWKUHQ41uzlMjVEXwdZOosIfF3lpJZiGaepj4HM4xN8or
+         II/Q==
+X-Gm-Message-State: APjAAAXoRHxyK2u/5vtPd1WXqVUOARARLvrX3/e8tVpmmsJWSvPDUIFi
+        TpLgQjuvsKcH5WARewcu2rk6Rw==
+X-Google-Smtp-Source: APXvYqxyorOub/tc3oX4xjM6D+1C5Oaw62atk5hhMqHpFC6EWGkz1ky0e/G5dlHrY0x2U1r+CwOnrQ==
+X-Received: by 2002:a17:90a:9284:: with SMTP id n4mr3519891pjo.84.1578554947811;
+        Wed, 08 Jan 2020 23:29:07 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id p16sm6485810pfq.184.2020.01.08.23.29.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 23:29:07 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     CK Hu <ck.hu@mediatek.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/mediatek: check for comp->funcs
+Date:   Thu,  9 Jan 2020 15:29:00 +0800
+Message-Id: <20200109072900.17988-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 MIME-Version: 1.0
-In-Reply-To: <fa5198bf-0001-3a57-017f-1b40e0188606@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578554659; bh=IL/YAb4LXWZegxtbauJrOQG4Bg2KlREeVlVy1iUL9lA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=C2t3NIZCN7gMezuCEAHzg02MvfSXrWWVossQZwndyLA0b8xRc2uaC0iGB6M6o/f6+
-         3dgjv70oZQaJV6I3xOHBJyk9Ng8JybIMqMunPPyW1V1k/jB9yCB0yhYRdeK8W12R8R
-         K0G9pUL1XtHgCxJjQ6jjLHBc8ulUOb5cWjvMfQrPL75efKOwto+D5PM2PiToECVHMD
-         TRehGoX2cstgvWrJM7z1uzmjAj/7H59D7H3A7slDEitPhsQL9saUUrohDcRNeCNRDO
-         vC77UpJ4YRyEcHwUjdqt1n2NK7j13+GTv0xTfJ6oFKXtjMcZSvFaN8w1POdARQe2SZ
-         mT70MdInv/klw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There might be some comp that doesn't have funcs, eg. hdmi-connector.
+Check for comp->funcs otherwise there will be NULL pointer dereference
+crash.
 
-On 1/9/2020 11:30 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 09.01.2020 08:09, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch adds a macro 'regmap_read_poll_timeout_atomic' that works
->> similar to 'readx_poll_timeout_atomic' defined in linux/iopoll.h; This
->> is atomic version of already available 'regmap_read_poll_timeout' macro.
->>
->> It should be noted that above atomic macro cannot be used by all regmaps=
-.
->> If the regmap is set up for atomic use (flat or no cache and MMIO) then
->> only it can use.
->>
->> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->> ---
-> Could you please explain what is the targeted use-case here?
+Fixes: bd3de8cd782b ("drm/mediatek: Add gamma property according to hardware capability")
+Fixes: 7395eab077f9 ("drm/mediatek: Add ctm property support")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+This patch is based on mediatek's drm branch:
+https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.6
 
-I was trying to use regmap_read_poll_timeout() to poll for status change=20
-of a register. This resulted in "BUG: scheduling while atomic". The=20
-callback function, in which I was trying to use the macro, runs in=20
-atomic context. Hence new atomic macro is added. I was checking ALSA=20
-playback/capture and trigger() callback had to monitor some register status=
-.
+After
+https://patchwork.freedesktop.org/patch/344477/?series=63328&rev=59,
+there will also be funcs for hdmi-connector.
+---
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-In general, the new macro can be used in atomic callbacks where regmap=20
-interface is used and polling is required.
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index fb142fcfc353..7b392d6c71cc 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -808,11 +808,13 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 
+ 		mtk_crtc->ddp_comp[i] = comp;
+ 
+-		if (comp->funcs->ctm_set)
+-			has_ctm = true;
++		if (comp->funcs) {
++			if (comp->funcs->ctm_set)
++				has_ctm = true;
+ 
+-		if (comp->funcs->gamma_set)
+-			gamma_lut_size = MTK_LUT_SIZE;
++			if (comp->funcs->gamma_set)
++				gamma_lut_size = MTK_LUT_SIZE;
++		}
+ 	}
+ 
+ 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++)
+-- 
+2.25.0.rc1.283.g88dfdc4193-goog
 
