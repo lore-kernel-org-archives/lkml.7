@@ -2,125 +2,113 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3E8C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FFFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D782072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86324206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8cIsVTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732829AbgAIQAb (ORCPT
+        id S1732752AbgAIQDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:00:31 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:60802 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731268AbgAIQAa (ORCPT
+        Thu, 9 Jan 2020 11:03:17 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42990 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729757AbgAIQDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:00:30 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 2FF0280645;
-        Thu,  9 Jan 2020 17:00:27 +0100 (CET)
-Date:   Thu, 9 Jan 2020 17:00:25 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND 1/1] drm/panel: Add support for BOE NV140FHM-N49 panel
- to panel-simple
-Message-ID: <20200109160025.GA17071@ravnborg.org>
-References: <20200109112952.2620-1-t.schramm@manjaro.org>
- <20200109112952.2620-2-t.schramm@manjaro.org>
+        Thu, 9 Jan 2020 11:03:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578585795;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cv9OEnoxm5jqEof6Q4MR3S73IbKofEk1lKfADeLvzKM=;
+        b=V8cIsVTc2A67aWHgyEgLw5BhgVMdBiEr9SYV5eMdCTozllbdxGVUE0K4YUIxIV6j0fIHMj
+        5wx/MQGBDL+yrZ6nRJz/hom87s0Cd2WiRA8WqbzstN3jWJUZ/CWGx74gaKVm7qdWBDWGAa
+        Z/bEID/5O6FazBL/BYdcdxmRUSROp8o=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365-AQEbG4UsNYaC_a6wriMluw-1; Thu, 09 Jan 2020 11:03:13 -0500
+X-MC-Unique: AQEbG4UsNYaC_a6wriMluw-1
+Received: by mail-wr1-f70.google.com with SMTP id v17so3033378wrm.17
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:03:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cv9OEnoxm5jqEof6Q4MR3S73IbKofEk1lKfADeLvzKM=;
+        b=tZW1vBXN6JJkU/P7hSyOcnOjP0Y6iTqQlD8v0FFUPVYAL7i+iSfQdEULOhokdcD2T0
+         GpAMIIlbBRjAYe/HVnJCkjqGaiSlMvIObZr1KxBw79PCWBdtF7cS4cCpevBnGs2nmD82
+         V1whtoZAwhKKEKDjXszisMjB2A0kkbvVqxwN064lLjriuomFkMyAgU0B72P0coItSVfq
+         YvhQ9LSDppXvg8HMe1SVGC7H5SKpalZzJR2/8fzA8mX8Dilq8R7CilukEIy1gbWeymcx
+         cflkRHLXaJN2VWDm1Ht0qaKdItAYAHjfcYJl3W1whh6MffVwmljIi0hTm0sGxkr/jtc7
+         SKsg==
+X-Gm-Message-State: APjAAAXDHTEnjmoJgZtksR8Q5zEs08aJUOHSydp8xZ2bz7v7f91IV+c7
+        e5QmiocRR0G2ABZqIZMRhUHXQJ85uLwi+FMvT+omJZZhU2fs2VeSpIQwtlOnzm27laPhQCj9dL5
+        7wzND3sm/ct65RB2XuQnQVcnq
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr11942321wrv.358.1578585792182;
+        Thu, 09 Jan 2020 08:03:12 -0800 (PST)
+X-Google-Smtp-Source: APXvYqywPwV2UvQwN4s2qv+/dJ9GOKMz9Upk2KnoXLCCN9ETrzeZJVoqAGjRgbLtFMAu3XU2NN4UVw==
+X-Received: by 2002:a5d:538e:: with SMTP id d14mr11942292wrv.358.1578585791962;
+        Thu, 09 Jan 2020 08:03:11 -0800 (PST)
+Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
+        by smtp.gmail.com with ESMTPSA id z21sm3258969wml.5.2020.01.09.08.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 08:03:11 -0800 (PST)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        Julien Thierry <jthierry@redhat.com>
+Subject: [RFC v5 01/57] objtool: check: Remove redundant checks on operand type
+Date:   Thu,  9 Jan 2020 16:02:04 +0000
+Message-Id: <20200109160300.26150-2-jthierry@redhat.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
+References: <20200109160300.26150-1-jthierry@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109112952.2620-2-t.schramm@manjaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=rveBo4_EAAAA:8
-        a=q4xGkG3yCbrZFByMRZAA:9 a=CjuIK1q_8ugA:10 a=HW1wDYKO1DgdHvS0FfdB:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tobias.
+POP operations are already in code path where destination operand
+is OP_DEST_REG. There is no need to check the operand type again.
 
-On Thu, Jan 09, 2020 at 12:29:52PM +0100, Tobias Schramm wrote:
-> This patch adds support for the BOE NV140FHM-N49 panel to the panel-simple
-> driver. The panel is used by the pine64 Pinebook Pro.
-> 
-> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+---
+ tools/objtool/check.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Applied to drm-misc-next togher with the bindings patch.
-Thanks for the quick r-b.
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 4768d91c6d68..a04778421144 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1672,15 +1672,13 @@ static int update_insn_state(struct instruction *insn, struct insn_state *state)
 
-	Sam
+ 		case OP_SRC_POP:
+ 		case OP_SRC_POPF:
+-			if (!state->drap && op->dest.type == OP_DEST_REG &&
+-			    op->dest.reg == cfa->base) {
++			if (!state->drap && op->dest.reg == cfa->base) {
 
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 35 ++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 5d487686d25c..6320df9765f3 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1036,6 +1036,38 @@ static const struct panel_desc boe_nv101wxmn51 = {
->  	},
->  };
->  
-> +static const struct drm_display_mode boe_nv140fhmn49_modes[] = {
-> +	{
-> +		.clock = 148500,
-> +		.hdisplay = 1920,
-> +		.hsync_start = 1920 + 48,
-> +		.hsync_end = 1920 + 48 + 32,
-> +		.htotal = 2200,
-> +		.vdisplay = 1080,
-> +		.vsync_start = 1080 + 3,
-> +		.vsync_end = 1080 + 3 + 5,
-> +		.vtotal = 1125,
-> +		.vrefresh = 60,
-> +	},
-> +};
-> +
-> +static const struct panel_desc boe_nv140fhmn49 = {
-> +	.modes = boe_nv140fhmn49_modes,
-> +	.num_modes = ARRAY_SIZE(boe_nv140fhmn49_modes),
-> +	.bpc = 6,
-> +	.size = {
-> +		.width = 309,
-> +		.height = 174,
-> +	},
-> +	.delay = {
-> +		.prepare = 210,
-> +		.enable = 50,
-> +		.unprepare = 160,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> +	.connector_type = DRM_MODE_CONNECTOR_eDP,
-> +};
-> +
->  static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
->  	.clock = 9000,
->  	.hdisplay = 480,
-> @@ -3161,6 +3193,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "boe,nv101wxmn51",
->  		.data = &boe_nv101wxmn51,
-> +	}, {
-> +		.compatible = "boe,nv140fhmn49",
-> +		.data = &boe_nv140fhmn49,
->  	}, {
->  		.compatible = "cdtech,s043wq26h-ct7",
->  		.data = &cdtech_s043wq26h_ct7,
-> -- 
-> 2.24.1
+ 				/* pop %rbp */
+ 				cfa->base = CFI_SP;
+ 			}
+
+ 			if (state->drap && cfa->base == CFI_BP_INDIRECT &&
+-			    op->dest.type == OP_DEST_REG &&
+ 			    op->dest.reg == state->drap_reg &&
+ 			    state->drap_offset == -state->stack_size) {
+
+--
+2.21.0
+
