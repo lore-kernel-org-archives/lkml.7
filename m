@@ -2,180 +2,108 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,WEIRD_PORT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E42EC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEC4C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DF82067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 627EA2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sgrs6iYb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PBJuGVD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgAIIu0 (ORCPT
+        id S1728847AbgAIIub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:50:26 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:44711 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728792AbgAIIuZ (ORCPT
+        Thu, 9 Jan 2020 03:50:31 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47144 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728792AbgAIIua (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:50:25 -0500
-Received: by mail-qv1-f67.google.com with SMTP id n8so2616443qvg.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 00:50:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wloqhRoEICQ+k5+VnPqK5Heg13aiPvech9Fyx9hUKYs=;
-        b=sgrs6iYbSodbyCgULyUl+1/bfBjdKlzd2fMgFQnFg4u0F7Lkrl9+F4ge6qZUQ1RAs1
-         r1nLB8snyzT1IW2FxgJ6uFpDVwUONTq9R4zLvF8pQNUXLnXBqtkBHRCf7YQHWgXMKY8+
-         Zeb8Wc7XYHCmN5mowNHDSiJpMHYqpcbBWkSyPAIl3gg3aORjkTLLqHrS9x685/ZtF8BT
-         31NsNBSAfyO0F2jXViW1QWdFqrAO6DpEmqtVIkeowmoRjPbaudexYgyCuiOQnTHbiZWd
-         DbV48PhWZtxqO9Vlxe5448IW9oestTVypzZO6ew24weG7axDkB6LTRBcaES2CAfkSWD1
-         ihpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wloqhRoEICQ+k5+VnPqK5Heg13aiPvech9Fyx9hUKYs=;
-        b=rTv2RuFLaZyejmIcGfMzHwIf1Y/ziCfXzQPOp2PZqFBDHHOgyevIca7mIEDjz1AdKx
-         ua6OG198v3qVFmgVKxKjBlSkUZANhq+uFdT6eWdRypsKmauc7zhj42aubYvhE1M4nk3E
-         U8VLkOJsyr51b1EtCSf0Ckn2AK5geKgKhcxb66R63DqyLRa81I8vlZRy1AmYppfREOnE
-         MrJ0UGeAwbY6XWTECh6m2NZ1k17s3BGMbjCNuX8KcRadPzxkr1iCAbMNlmF8V8A696t5
-         8lG/pZ0nbpzYlnaRZg0fl15p1WOfzdcnxRKHQKQeDWa0QnWRyQq/K6yt5Q8NXpUv+Jjg
-         P3dA==
-X-Gm-Message-State: APjAAAXHShz94xc6WUNhJ3nQWrU8ZxNCf3EzWKOJ4RrOiFU4xEqQRmAf
-        1eIop2pszo21pBIU1wsHgxQYFuu7vt/W5ojqXOUH5g==
-X-Google-Smtp-Source: APXvYqxlaasH3wah/44boniAGnInXKdsP+A6/JY1Fc4PKVzY32l8BPLX4SHihM5+35Fk0GI5xBBg4bqUEmgyz7gZcbs=
-X-Received: by 2002:ad4:4810:: with SMTP id g16mr7563219qvy.22.1578559824505;
- Thu, 09 Jan 2020 00:50:24 -0800 (PST)
+        Thu, 9 Jan 2020 03:50:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0098oMEB107738;
+        Thu, 9 Jan 2020 02:50:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578559822;
+        bh=BmZz4GM008QcVUfmXOfqaIwBn3aJlcL0leg79D9LVbc=;
+        h=From:To:CC:Subject:Date;
+        b=PBJuGVD4APjXiqg5yVm2jm2kE686Ss/0yy8YL8/wnbe6WqursScxnydg6qEV+ISlL
+         l7413nX2pi+v+PQu0TGngxBYQpgjWVqmTsSswrVCFY1PNOn6G7AFigVV37h/tNOGDz
+         eSkyKr94s8rP/kSA+j08kQ4n3a2xU5k84fBgh4Fc=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0098oMhY073027
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Jan 2020 02:50:22 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
+ 2020 02:50:22 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Jan 2020 02:50:22 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0098oJc7055573;
+        Thu, 9 Jan 2020 02:50:20 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <t-kristo@ti.com>, <faiz_abbas@ti.com>
+Subject: [PATCH] arm: dts: ti: k3-am654-main: Update otap-del-sel values
+Date:   Thu, 9 Jan 2020 14:21:52 +0530
+Message-ID: <20200109085152.10573-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-References: <00000000000036decf0598c8762e@google.com> <CACT4Y+YVMUxeLcFMray9n0+cXbVibj5X347LZr8YgvjN5nC8pw@mail.gmail.com>
- <CACT4Y+asdED7tYv462Ui2OhQVKXVUnC+=fumXR3qM1A4d6AvOQ@mail.gmail.com>
- <f7758e0a-a157-56a2-287e-3d4452d72e00@schaufler-ca.com> <87a787ekd0.fsf@dja-thinkpad.axtens.net>
- <87h81zax74.fsf@dja-thinkpad.axtens.net> <CACT4Y+b+Vx1FeCmhMAYq-g3ObHdMPOsWxouyXXUr7S5OjNiVGQ@mail.gmail.com>
- <0b60c93e-a967-ecac-07e7-67aea1a0208e@I-love.SAKURA.ne.jp>
- <6d009462-74d9-96e9-ab3f-396842a58011@schaufler-ca.com> <CACT4Y+bURugCpLm5TG37-7voFEeEoXo_Gb=3sy75_RELZotXHw@mail.gmail.com>
-In-Reply-To: <CACT4Y+bURugCpLm5TG37-7voFEeEoXo_Gb=3sy75_RELZotXHw@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Jan 2020 09:50:12 +0100
-Message-ID: <CACT4Y+avizeUd=nY2w1B_LbEC1cP5prBfpnANYaxhgS_fcL6ag@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in sys_kill
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Alexander Potapenko <glider@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+de8d933e7d153aa0c1bb@syzkaller.appspotmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 9:19 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Wed, Jan 8, 2020 at 6:19 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >
-> > On 1/8/2020 2:25 AM, Tetsuo Handa wrote:
-> > > On 2020/01/08 15:20, Dmitry Vyukov wrote:
-> > >> I temporarily re-enabled smack instance and it produced another 50
-> > >> stalls all over the kernel, and now keeps spewing a dozen every hour.
-> >
-> > Do I have to be using clang to test this? I'm setting up to work on this,
-> > and don't want to waste time using my current tool chain if the problem
-> > is clang specific.
->
-> Humm, interesting. Initially I was going to say that most likely it's
-> not clang-related. Bug smack instance is actually the only one that
-> uses clang as well (except for KMSAN of course). So maybe it's indeed
-> clang-related rather than smack-related. Let me try to build a kernel
-> with clang.
+According to the latest AM65x Data Manual[1], a different output tap
+delay value is optimum for a given speed mode. Update these values.
 
-+clang-built-linux, glider
+[1] http://www.ti.com/lit/gpn/am6526
 
-[clang-built linux is severe broken since early Dec]
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
 
-Building kernel with clang I can immediately reproduce this locally:
+This patch depends on my two kernel series posted here:
+https://patchwork.kernel.org/project/linux-mmc/list/?series=225425
+https://patchwork.kernel.org/project/linux-mmc/list/?series=225459
 
-$ syz-manager
-2020/01/09 09:27:15 loading corpus...
-2020/01/09 09:27:17 serving http on http://0.0.0.0:50001
-2020/01/09 09:27:17 serving rpc on tcp://[::]:45851
-2020/01/09 09:27:17 booting test machines...
-2020/01/09 09:27:17 wait for the connection from test machine...
-2020/01/09 09:29:23 machine check:
-2020/01/09 09:29:23 syscalls                : 2961/3195
-2020/01/09 09:29:23 code coverage           : enabled
-2020/01/09 09:29:23 comparison tracing      : enabled
-2020/01/09 09:29:23 extra coverage          : enabled
-2020/01/09 09:29:23 setuid sandbox          : enabled
-2020/01/09 09:29:23 namespace sandbox       : enabled
-2020/01/09 09:29:23 Android sandbox         : /sys/fs/selinux/policy
-does not exist
-2020/01/09 09:29:23 fault injection         : enabled
-2020/01/09 09:29:23 leak checking           : CONFIG_DEBUG_KMEMLEAK is
-not enabled
-2020/01/09 09:29:23 net packet injection    : enabled
-2020/01/09 09:29:23 net device setup        : enabled
-2020/01/09 09:29:23 concurrency sanitizer   : /sys/kernel/debug/kcsan
-does not exist
-2020/01/09 09:29:23 devlink PCI setup       : PCI device 0000:00:10.0
-is not available
-2020/01/09 09:29:27 corpus                  : 50226 (0 deleted)
-2020/01/09 09:29:27 VMs 20, executed 0, cover 0, crashes 0, repro 0
-2020/01/09 09:29:37 VMs 20, executed 45, cover 0, crashes 0, repro 0
-2020/01/09 09:29:47 VMs 20, executed 74, cover 0, crashes 0, repro 0
-2020/01/09 09:29:57 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:30:07 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:30:17 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:30:27 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:30:37 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:30:47 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:30:57 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:31:07 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:31:17 VMs 20, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:31:26 vm-10: crash: INFO: rcu detected stall in do_idle
-2020/01/09 09:31:27 VMs 13, executed 80, cover 0, crashes 0, repro 0
-2020/01/09 09:31:28 vm-1: crash: INFO: rcu detected stall in sys_futex
-2020/01/09 09:31:29 vm-4: crash: INFO: rcu detected stall in sys_futex
-2020/01/09 09:31:31 vm-0: crash: INFO: rcu detected stall in sys_getsockopt
-2020/01/09 09:31:33 vm-18: crash: INFO: rcu detected stall in sys_clone3
-2020/01/09 09:31:35 vm-3: crash: INFO: rcu detected stall in sys_futex
-2020/01/09 09:31:36 vm-8: crash: INFO: rcu detected stall in do_idle
-2020/01/09 09:31:37 VMs 7, executed 80, cover 0, crashes 6, repro 0
-2020/01/09 09:31:38 vm-19: crash: INFO: rcu detected stall in schedule_tail
-2020/01/09 09:31:40 vm-6: crash: INFO: rcu detected stall in schedule_tail
-2020/01/09 09:31:42 vm-2: crash: INFO: rcu detected stall in schedule_tail
-2020/01/09 09:31:44 vm-12: crash: INFO: rcu detected stall in sys_futex
-2020/01/09 09:31:46 vm-15: crash: INFO: rcu detected stall in sys_nanosleep
-2020/01/09 09:31:47 VMs 1, executed 80, cover 0, crashes 11, repro 0
-2020/01/09 09:31:48 vm-16: crash: INFO: rcu detected stall in sys_futex
-2020/01/09 09:31:50 vm-9: crash: INFO: rcu detected stall in schedule
-2020/01/09 09:31:52 vm-13: crash: INFO: rcu detected stall in schedule_tail
-2020/01/09 09:31:54 vm-11: crash: INFO: rcu detected stall in schedule_tail
-2020/01/09 09:31:56 vm-17: crash: INFO: rcu detected stall in sys_futex
-2020/01/09 09:31:57 VMs 0, executed 80, cover 0, crashes 16, repro 0
-2020/01/09 09:31:58 vm-7: crash: INFO: rcu detected stall in sys_futex
-2020/01/09 09:32:00 vm-5: crash: INFO: rcu detected stall in dput
-2020/01/09 09:32:02 vm-14: crash: INFO: rcu detected stall in sys_nanosleep
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index efb24579922c..c8d812fdfa0a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -253,7 +253,17 @@
+ 		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+ 		mmc-ddr-1_8v;
+ 		mmc-hs200-1_8v;
+-		ti,otap-del-sel = <0x2>;
++		ti,otap-del-sel-legacy = <0x0>;
++		ti,otap-del-sel-mmc-hs = <0x0>;
++		ti,otap-del-sel-sd-hs = <0x0>;
++		ti,otap-del-sel-sdr12 = <0x0>;
++		ti,otap-del-sel-sdr25 = <0x0>;
++		ti,otap-del-sel-sdr50 = <0x8>;
++		ti,otap-del-sel-sdr104 = <0x5>;
++		ti,otap-del-sel-ddr50 = <0x5>;
++		ti,otap-del-sel-ddr52 = <0x5>;
++		ti,otap-del-sel-hs200 = <0x5>;
++		ti,otap-del-sel-hs400 = <0x0>;
+ 		ti,trm-icp = <0x8>;
+ 		dma-coherent;
+ 	};
+-- 
+2.19.2
 
-Then I switched LSM to selinux and I _still_ can reproduce this. So,
-Casey, you may relax, this is not smack-specific :)
-
-Then I disabled CONFIG_KASAN_VMALLOC and CONFIG_VMAP_STACK and it
-started working normally.
-
-So this is somehow related to both clang and KASAN/VMAP_STACK.
-
-The clang I used is:
-https://storage.googleapis.com/syzkaller/clang-kmsan-362913.tar.gz
-(the one we use on syzbot).
