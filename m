@@ -2,955 +2,173 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED03CC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56DBC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6E92077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B20CA2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:45:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QMff/w1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgAILoA (ORCPT
+        id S1728639AbgAILp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:44:00 -0500
-Received: from mga01.intel.com ([192.55.52.88]:56409 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728273AbgAILn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:43:59 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 03:43:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
-   d="scan'208";a="303846467"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 09 Jan 2020 03:43:54 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipWEE-0007dA-4u; Thu, 09 Jan 2020 13:43:54 +0200
-Date:   Thu, 9 Jan 2020 13:43:54 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 34/36] platform/x86: intel_pmc_ipc: Convert to MFD
-Message-ID: <20200109114354.GP32742@smile.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-35-mika.westerberg@linux.intel.com>
+        Thu, 9 Jan 2020 06:45:27 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36591 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728273AbgAILp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 06:45:27 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z3so7082138wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 03:45:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M+Hleybvc0xNgkFFNo5eVdjk4X0NArxdjlsDgPzB5xM=;
+        b=QMff/w1W9s6CsJj7ISgeRx7ZokETKM1nkN+g0axCcpzfZHTd12c1zJ5D+3CHxqwvXE
+         s0k66KlUh3BR7eP7CwGA8+3/BP5ELuADkxMGo4M9/GAGivWntmJQpYwH1TUumw8gW2Da
+         3WioL9jhSPLhwcj2yKVHIpVfXrXXrXdKWEU/rsXeQEHoej8vPyA/iKLBu5AzX0QoFZYm
+         0vyPMJVvnmx3ktn8dFkHTuaGOw9HziD5NrSodSgOWBcH+SiJA7RsOHSNrHnzUSdOFciK
+         QFm7Ly+EYGZMZa72e0H9rkgadLLCSDC+kWdBvN8Cp6kQ0zdj4xD2Y9OangAPTDz9kiWC
+         +0oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=M+Hleybvc0xNgkFFNo5eVdjk4X0NArxdjlsDgPzB5xM=;
+        b=T5qF06rRjHRdSO3u0TZZp22HgLDHpmT7V+AaljhfVU94TV3XGIB5+U4nrHdC8dl9eJ
+         ZWWDgRAXzVNzfQV1xOssweJOJxEHk5YLMbsnQk57vRl2u9WW1puwPeg9p1PVIGkmGpOr
+         D9d+B2UTP/r90ZJTBFee2O6njzCuXVaa7acUqB7bn8WBNyJFAQS/SyN5EPc2O2V1pGxq
+         i+9XaDUhsAgrvWz/Y/Y55Y1Z4SKy+RzWoqxih5JIRxl5uJ6PQ1ZUGYoX2xTBiSmJ5NyW
+         dFW2OPuWM6vI3+fV8wu1qoImQrbmFz0DzKMsdJdu3KtiSdbBevZxgg4S/5gPQNsYxm2G
+         mbYA==
+X-Gm-Message-State: APjAAAUJtJ9UgR1gbKB2iSOCVlaxndVeVF5i49LffARuvPn5Igl9iArT
+        Y6Tv3VegxPaRiGKaQvOiGykfUA==
+X-Google-Smtp-Source: APXvYqz13xiaB2c/AHMygGlCgFvL4DXkCGf0TFO1taGJ+xr9xsy5Q8LnIcRYOXeQIqh7/inPIHKmNw==
+X-Received: by 2002:a5d:6886:: with SMTP id h6mr10473834wru.154.1578570325074;
+        Thu, 09 Jan 2020 03:45:25 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
+        by smtp.googlemail.com with ESMTPSA id b16sm8163491wrj.23.2020.01.09.03.45.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 03:45:24 -0800 (PST)
+Subject: Re: [PATCH v2 06/20] thermal: exynos: Rename Samsung and Exynos to
+ lowercase
+To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Kukjin Kim <kgene@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200104152107.11407-1-krzk@kernel.org>
+ <20200104152107.11407-7-krzk@kernel.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7a61f167-07be-f60d-ec8e-cca171caeb94@linaro.org>
+Date:   Thu, 9 Jan 2020 12:45:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-35-mika.westerberg@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200104152107.11407-7-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:59PM +0300, Mika Westerberg wrote:
-> This driver only creates a bunch of platform devices sharing resources
-> belonging to the PMC device. This is pretty much what MFD subsystem is
-> for so move the driver there, renaming it to intel_pmc_bxt.c which
-> should be more clear what it is.
+On 04/01/2020 16:20, Krzysztof Kozlowski wrote:
+> Fix up inconsistent usage of upper and lowercase letters in "Samsung"
+> and "Exynos" names.
 > 
-> MFD subsystem provides nice helper APIs for subdevice creation so
-> convert the driver to use those. Unfortunately the ACPI device includes
-> separate resources for most of the subdevices so we cannot simply call
-> mfd_add_devices() to create all of them but instead we need to call it
-> separately for each device.
-
-Comments below, after addressing,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
+> "SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
+> names.  Therefore they should be written with lowercase letters starting
+> with capital letter.
 > 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> The lowercase "Exynos" name is promoted by its manufacturer Samsung
+> Electronics Co., Ltd., in advertisement materials and on website.
+> 
+> Although advertisement materials usually use uppercase "SAMSUNG", the
+> lowercase version is used in all legal aspects (e.g. on Wikipedia and in
+> privacy/legal statements on
+> https://www.samsung.com/semiconductor/privacy-global/).
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/mfd/Kconfig                           |  14 +-
->  drivers/mfd/Makefile                          |   1 +
->  .../intel_pmc_ipc.c => mfd/intel_pmc_bxt.c}   | 394 +++++++-----------
->  drivers/platform/x86/Kconfig                  |  16 +-
->  drivers/platform/x86/Makefile                 |   1 -
->  .../platform/x86/intel_telemetry_debugfs.c    |   2 +-
->  drivers/usb/typec/tcpm/Kconfig                |   2 +-
->  .../linux/mfd/intel_pmc_bxt.h                 |  11 +-
->  8 files changed, 171 insertions(+), 270 deletions(-)
->  rename drivers/{platform/x86/intel_pmc_ipc.c => mfd/intel_pmc_bxt.c} (50%)
->  rename arch/x86/include/asm/intel_pmc_ipc.h => include/linux/mfd/intel_pmc_bxt.h (83%)
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 59515142438e..04542feffe25 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -551,7 +551,7 @@ config INTEL_SOC_PMIC
->  
->  config INTEL_SOC_PMIC_BXTWC
->  	tristate "Support for Intel Broxton Whiskey Cove PMIC"
-> -	depends on INTEL_PMC_IPC
-> +	depends on MFD_INTEL_PMC_BXT
->  	select MFD_CORE
->  	select REGMAP_IRQ
->  	help
-> @@ -632,6 +632,18 @@ config MFD_INTEL_MSIC
->  	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
->  	  devices used in Intel Medfield platforms.
->  
-> +config MFD_INTEL_PMC_BXT
-> +	tristate "Intel PMC Driver for Broxton"
 
-> +	depends on X86 && X86_PLATFORM_DEVICES && ACPI
+Applied.
 
-Is the X86_PLATFORM_DEVICES dependency compulsory?
-Quick grep shows that none of drivers (except nouveau) relies on it.
 
-For the rest two I think we might split one per line to be consistent with
-existing example(s) in  drivers/mfd/Kconfig.
-
-> +	select INTEL_SCU_IPC
-> +	select MFD_CORE
-> +	help
-> +	  This driver provides support for PMC (Power Management
-> +	  Controller) on Intel Broxton and Apollo Lake. PMC is a
-> +	  multi-function device that exposes IPC, General Control
-> +	  Register and P-unit access. In addition this creates devices
-> +	  for iTCO watchdog and telemetry that are part of the PMC.
-> +
->  config MFD_IPAQ_MICRO
->  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
->  	depends on SA1100_H3100 || SA1100_H3600
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index aed99f08739f..34563a6a047b 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -211,6 +211,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
->  obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
->  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
->  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
-> +obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
->  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
->  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
->  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/mfd/intel_pmc_bxt.c
-> similarity index 50%
-> rename from drivers/platform/x86/intel_pmc_ipc.c
-> rename to drivers/mfd/intel_pmc_bxt.c
-> index 20a4bb72aeac..76f166c1455b 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/mfd/intel_pmc_bxt.c
-> @@ -1,8 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Driver for the Intel PMC IPC mechanism
-> + * Driver for the Intel Broxton PMC
->   *
-> - * (C) Copyright 2014-2015 Intel Corporation
-> + * (C) Copyright 2014-2015, 2020 Intel Corporation
->   *
->   * This driver is based on Intel SCU IPC driver(intel_scu_ipc.c) by
->   *     Sreedhara DS <sreedhara.ds@intel.com>
-> @@ -16,10 +16,11 @@
->  #include <linux/errno.h>
->  #include <linux/interrupt.h>
->  #include <linux/io-64-nonatomic-lo-hi.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/intel_pmc_bxt.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  
-> -#include <asm/intel_pmc_ipc.h>
->  #include <asm/intel_scu_ipc.h>
->  
->  #include <linux/platform_data/itco_wdt.h>
-> @@ -62,8 +63,6 @@
->  #define TELEM_SSRAM_SIZE		240
->  #define TELEM_PMC_SSRAM_OFFSET		0x1B00
->  #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
-> -#define TCO_PMC_OFFSET			0x08
-> -#define TCO_PMC_SIZE			0x04
->  
->  /* PMC register bit definitions */
->  
-> @@ -72,40 +71,32 @@
->  #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
->  #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
->  
-> -static struct intel_pmc_ipc_dev {
-> +static struct intel_pmc_dev {
->  	struct device *dev;
->  
-> -	/* The following PMC BARs share the same ACPI device with the IPC */
-> -	resource_size_t acpi_io_base;
-> -	int acpi_io_size;
-> -	struct platform_device *tco_dev;
-> +	/* iTCO */
-> +	struct resource tco_res[2];
->  
->  	/* gcr */
->  	void __iomem *gcr_mem_base;
-> -	bool has_gcr_regs;
->  	spinlock_t gcr_lock;
->  
->  	/* punit */
-> -	struct platform_device *punit_dev;
-> +	struct resource punit_res[6];
->  	unsigned int punit_res_count;
->  
->  	/* Telemetry */
-> -	resource_size_t telem_pmc_ssram_base;
-> -	resource_size_t telem_punit_ssram_base;
-> -	int telem_pmc_ssram_size;
-> -	int telem_punit_ssram_size;
-> -	u8 telem_res_inval;
-> -	struct platform_device *telemetry_dev;
-> -} ipcdev;
-> +	struct resource *telem_base;
-> +} pmcdev;
->  
->  static inline u64 gcr_data_readq(u32 offset)
->  {
-> -	return readq(ipcdev.gcr_mem_base + offset);
-> +	return readq(pmcdev.gcr_mem_base + offset);
->  }
->  
->  static inline int is_gcr_valid(u32 offset)
->  {
-> -	if (!ipcdev.has_gcr_regs)
-> +	if (!pmcdev.gcr_mem_base)
->  		return -EACCES;
->  
->  	if (offset > PLAT_RESOURCE_GCR_SIZE)
-> @@ -127,17 +118,17 @@ int intel_pmc_gcr_read64(u32 offset, u64 *data)
->  {
->  	int ret;
->  
-> -	spin_lock(&ipcdev.gcr_lock);
-> +	spin_lock(&pmcdev.gcr_lock);
->  
->  	ret = is_gcr_valid(offset);
->  	if (ret < 0) {
-> -		spin_unlock(&ipcdev.gcr_lock);
-> +		spin_unlock(&pmcdev.gcr_lock);
->  		return ret;
->  	}
->  
-> -	*data = readq(ipcdev.gcr_mem_base + offset);
-> +	*data = readq(pmcdev.gcr_mem_base + offset);
->  
-> -	spin_unlock(&ipcdev.gcr_lock);
-> +	spin_unlock(&pmcdev.gcr_lock);
->  
->  	return 0;
->  }
-> @@ -159,29 +150,29 @@ static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
->  	u32 new_val;
->  	int ret = 0;
->  
-> -	spin_lock(&ipcdev.gcr_lock);
-> +	spin_lock(&pmcdev.gcr_lock);
->  
->  	ret = is_gcr_valid(offset);
->  	if (ret < 0)
-> -		goto gcr_ipc_unlock;
-> +		goto gcr_unlock;
->  
-> -	new_val = readl(ipcdev.gcr_mem_base + offset);
-> +	new_val = readl(pmcdev.gcr_mem_base + offset);
->  
->  	new_val &= ~mask;
->  	new_val |= val & mask;
->  
-> -	writel(new_val, ipcdev.gcr_mem_base + offset);
-> +	writel(new_val, pmcdev.gcr_mem_base + offset);
->  
-> -	new_val = readl(ipcdev.gcr_mem_base + offset);
-> +	new_val = readl(pmcdev.gcr_mem_base + offset);
->  
->  	/* check whether the bit update is successful */
->  	if ((new_val & mask) != (val & mask)) {
->  		ret = -EIO;
-> -		goto gcr_ipc_unlock;
-> +		goto gcr_unlock;
->  	}
->  
-> -gcr_ipc_unlock:
-> -	spin_unlock(&ipcdev.gcr_lock);
-> +gcr_unlock:
-> +	spin_unlock(&pmcdev.gcr_lock);
->  	return ret;
->  }
->  
-> @@ -193,9 +184,9 @@ static int update_no_reboot_bit(void *priv, bool set)
->  				    PMC_CFG_NO_REBOOT_MASK, value);
->  }
->  
-> -static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
-> -					      struct device_attribute *attr,
-> -					      const char *buf, size_t count)
-> +static ssize_t intel_pmc_simple_cmd_store(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  const char *buf, size_t count)
->  {
->  	struct intel_scu_ipc_dev *scu = dev_get_drvdata(dev);
->  	int subcmd;
-> @@ -215,11 +206,11 @@ static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
->  	}
->  	return (ssize_t)count;
->  }
-> -static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_ipc_simple_cmd_store);
-> +static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_simple_cmd_store);
->  
-> -static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
-> -					     struct device_attribute *attr,
-> -					     const char *buf, size_t count)
-> +static ssize_t intel_pmc_northpeak_store(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 const char *buf, size_t count)
->  {
->  	struct intel_scu_ipc_dev *scu = dev_get_drvdata(dev);
->  	unsigned long val;
-> @@ -241,264 +232,183 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
->  	}
->  	return (ssize_t)count;
->  }
-> -static DEVICE_ATTR(northpeak, 0200, NULL, intel_pmc_ipc_northpeak_store);
-> +static DEVICE_ATTR(northpeak, 0200, NULL, intel_pmc_northpeak_store);
->  
-> -static struct attribute *intel_ipc_attrs[] = {
-> +static struct attribute *intel_pmc_attrs[] = {
->  	&dev_attr_northpeak.attr,
->  	&dev_attr_simplecmd.attr,
->  	NULL
->  };
->  
-> -static const struct attribute_group intel_ipc_group = {
-> -	.attrs = intel_ipc_attrs,
-> +static const struct attribute_group intel_pmc_group = {
-> +	.attrs = intel_pmc_attrs,
->  };
->  
-> -static struct resource punit_res_array[] = {
-> -	/* Punit BIOS */
-> -	{
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	{
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	/* Punit ISP */
-> -	{
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	{
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	/* Punit GTD */
-> -	{
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	{
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -};
-> -
-> -#define TCO_RESOURCE_ACPI_IO		0
-> -#define TCO_RESOURCE_SMI_EN_IO		1
-> -#define TCO_RESOURCE_GCR_MEM		2
-> -static struct resource tco_res[] = {
-> -	/* ACPI - TCO */
-> -	{
-> -		.flags = IORESOURCE_IO,
-> -	},
-> -	/* ACPI - SMI */
-> -	{
-> -		.flags = IORESOURCE_IO,
-> -	},
-> -};
-> -
-> -static struct itco_wdt_platform_data tco_info = {
-> -	.name = "Apollo Lake SoC",
-> -	.version = 5,
-> -	.no_reboot_priv = &ipcdev,
-> -	.update_no_reboot_bit = update_no_reboot_bit,
-> -};
-> -
-> -#define TELEMETRY_RESOURCE_PUNIT_SSRAM	0
-> -#define TELEMETRY_RESOURCE_PMC_SSRAM	1
-> -static struct resource telemetry_res[] = {
-> -	/*Telemetry*/
-> -	{
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	{
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -};
-> -
-> -static int ipc_create_punit_device(void)
-> +static int pmc_create_punit_device(void)
->  {
-> -	struct platform_device *pdev;
-> -	const struct platform_device_info pdevinfo = {
-> -		.parent = ipcdev.dev,
-> +	struct mfd_cell punit = {
->  		.name = PUNIT_DEVICE_NAME,
-> -		.id = -1,
-> -		.res = punit_res_array,
-> -		.num_res = ipcdev.punit_res_count,
-> -		};
-> +		.resources = pmcdev.punit_res,
-> +		.num_resources = pmcdev.punit_res_count,
-> +	};
->  
-> -	pdev = platform_device_register_full(&pdevinfo);
-> -	if (IS_ERR(pdev))
-> -		return PTR_ERR(pdev);
-> +	if (!pmcdev.punit_res_count)
-> +		return 0;
->  
-> -	ipcdev.punit_dev = pdev;
-> -
-> -	return 0;
-> +	return devm_mfd_add_devices(pmcdev.dev, PLATFORM_DEVID_AUTO, &punit, 1,
-> +				    NULL, 0, NULL);
->  }
->  
-> -static int ipc_create_tco_device(void)
-> +static int pmc_create_tco_device(void)
->  {
-> -	struct platform_device *pdev;
-> -	struct resource *res;
-> -	const struct platform_device_info pdevinfo = {
-> -		.parent = ipcdev.dev,
-> +	struct itco_wdt_platform_data tco_info = {
-> +		.name = "Apollo Lake SoC",
-> +		.version = 5,
-> +		.no_reboot_priv = &pmcdev,
-> +		.update_no_reboot_bit = update_no_reboot_bit,
-> +	};
-> +	struct mfd_cell tco = {
->  		.name = TCO_DEVICE_NAME,
-> -		.id = -1,
-> -		.res = tco_res,
-> -		.num_res = ARRAY_SIZE(tco_res),
-> -		.data = &tco_info,
-> -		.size_data = sizeof(tco_info),
-> -		};
-> -
-> -	res = tco_res + TCO_RESOURCE_ACPI_IO;
-> -	res->start = ipcdev.acpi_io_base + TCO_BASE_OFFSET;
-> -	res->end = res->start + TCO_REGS_SIZE - 1;
-> -
-> -	res = tco_res + TCO_RESOURCE_SMI_EN_IO;
-> -	res->start = ipcdev.acpi_io_base + SMI_EN_OFFSET;
-> -	res->end = res->start + SMI_EN_SIZE - 1;
-> -
-> -	pdev = platform_device_register_full(&pdevinfo);
-> -	if (IS_ERR(pdev))
-> -		return PTR_ERR(pdev);
-> -
-> -	ipcdev.tco_dev = pdev;
-> -
-> -	return 0;
-> +		.ignore_resource_conflicts = true,
-> +		.platform_data = &tco_info,
-> +		.pdata_size = sizeof(tco_info),
-> +		.resources = pmcdev.tco_res,
-> +		.num_resources = ARRAY_SIZE(pmcdev.tco_res),
-> +	};
-> +
-> +	if (!pmcdev.tco_res[0].start)
-> +		return 0;
-> +
-> +	return devm_mfd_add_devices(pmcdev.dev, PLATFORM_DEVID_AUTO, &tco, 1,
-> +				    NULL, 0, NULL);
->  }
->  
-> -static int ipc_create_telemetry_device(void)
-> +static int pmc_create_telemetry_device(void)
->  {
-> -	struct platform_device *pdev;
-> -	struct resource *res;
-> -	const struct platform_device_info pdevinfo = {
-> -		.parent = ipcdev.dev,
-> +	struct resource telem_res[] = {
-> +		DEFINE_RES_MEM(TELEM_PUNIT_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
-> +		DEFINE_RES_MEM(TELEM_PMC_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
-> +	};
-> +	struct mfd_cell telem  = {
->  		.name = TELEMETRY_DEVICE_NAME,
-> -		.id = -1,
-> -		.res = telemetry_res,
-> -		.num_res = ARRAY_SIZE(telemetry_res),
-> -		};
-> -
-> -	res = telemetry_res + TELEMETRY_RESOURCE_PUNIT_SSRAM;
-> -	res->start = ipcdev.telem_punit_ssram_base;
-> -	res->end = res->start + ipcdev.telem_punit_ssram_size - 1;
-> +		.resources = telem_res,
-> +		.num_resources = ARRAY_SIZE(telem_res),
-> +	};
->  
-> -	res = telemetry_res + TELEMETRY_RESOURCE_PMC_SSRAM;
-> -	res->start = ipcdev.telem_pmc_ssram_base;
-> -	res->end = res->start + ipcdev.telem_pmc_ssram_size - 1;
-> +	if (!pmcdev.telem_base)
-> +		return 0;
->  
-> -	pdev = platform_device_register_full(&pdevinfo);
-> -	if (IS_ERR(pdev))
-> -		return PTR_ERR(pdev);
-> -
-> -	ipcdev.telemetry_dev = pdev;
-> -
-> -	return 0;
-> +	return devm_mfd_add_devices(pmcdev.dev, PLATFORM_DEVID_AUTO, &telem, 1,
-> +				    pmcdev.telem_base, 0, NULL);
->  }
->  
-> -static int ipc_create_pmc_devices(void)
-> +static int pmc_create_devices(void)
->  {
->  	int ret;
->  
->  	/* If we have ACPI based watchdog use that instead */
->  	if (!acpi_has_watchdog()) {
-> -		ret = ipc_create_tco_device();
-> +		ret = pmc_create_tco_device();
->  		if (ret) {
-> -			dev_err(ipcdev.dev, "Failed to add tco platform device\n");
-> +			dev_err(pmcdev.dev, "Failed to add tco platform device\n");
->  			return ret;
->  		}
->  	}
->  
-> -	ret = ipc_create_punit_device();
-> +	ret = pmc_create_punit_device();
->  	if (ret) {
-> -		dev_err(ipcdev.dev, "Failed to add punit platform device\n");
-> -		platform_device_unregister(ipcdev.tco_dev);
-> +		dev_err(pmcdev.dev, "Failed to add punit platform device\n");
->  		return ret;
->  	}
->  
-> -	if (!ipcdev.telem_res_inval) {
-> -		ret = ipc_create_telemetry_device();
-> -		if (ret) {
-> -			dev_warn(ipcdev.dev,
-> -				"Failed to add telemetry platform device\n");
-> -			platform_device_unregister(ipcdev.punit_dev);
-> -			platform_device_unregister(ipcdev.tco_dev);
-> -		}
-> -	}
-> +	ret = pmc_create_telemetry_device();
-> +	if (ret)
-> +		dev_warn(pmcdev.dev, "Failed to add telemetry platform device\n");
->  
->  	return ret;
->  }
->  
-> -static int ipc_plat_get_res(struct platform_device *pdev,
-> +static int pmc_plat_get_res(struct platform_device *pdev,
->  			    struct intel_scu_ipc_pdata *pdata)
->  {
-> -	struct resource *res, *punit_res = punit_res_array;
-> +	struct resource *res, *punit_res = pmcdev.punit_res;
-> +	struct resource *tco_res = pmcdev.tco_res;
->  	void __iomem *addr;
->  	int size;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_IO,
->  				    PLAT_RESOURCE_ACPI_IO_INDEX);
->  	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get io resource\n");
-> +		dev_err(&pdev->dev, "Failed to get IO resource\n");
->  		return -ENXIO;
-> +
->  	}
-> -	size = resource_size(res);
-> -	ipcdev.acpi_io_base = res->start;
-> -	ipcdev.acpi_io_size = size;
-> -	dev_info(&pdev->dev, "io res: %pR\n", res);
-> +	tco_res[0].flags = IORESOURCE_IO;
-> +	tco_res[0].start = res->start + TCO_BASE_OFFSET;
-> +	tco_res[0].end = tco_res[0].start + TCO_REGS_SIZE - 1;
-> +	tco_res[1].flags = IORESOURCE_IO;
-> +	tco_res[1].start = res->start + SMI_EN_OFFSET;
-> +	tco_res[1].end = tco_res[1].start + SMI_EN_SIZE - 1;
-> +	dev_dbg(&pdev->dev, "IO: %pR\n", res);
->  
-> -	ipcdev.punit_res_count = 0;
-> +	pmcdev.punit_res_count = 0;
->  
->  	/* This is index 0 to cover BIOS data register */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM,
->  				    PLAT_RESOURCE_BIOS_DATA_INDEX);
->  	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get res of punit BIOS data\n");
-> +		dev_err(&pdev->dev, "Failed to get res of P-unit BIOS data\n");
->  		return -ENXIO;
->  	}
-> -	punit_res[ipcdev.punit_res_count++] = *res;
-> -	dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
-> +	punit_res[pmcdev.punit_res_count++] = *res;
-> +	dev_dbg(&pdev->dev, "P-unit BIOS data: %pR\n", res);
->  
->  	/* This is index 1 to cover BIOS interface register */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM,
->  				    PLAT_RESOURCE_BIOS_IFACE_INDEX);
->  	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get res of punit BIOS iface\n");
-> +		dev_err(&pdev->dev, "Failed to get res of P-unit BIOS iface\n");
->  		return -ENXIO;
->  	}
-> -	punit_res[ipcdev.punit_res_count++] = *res;
-> -	dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
-> +	punit_res[pmcdev.punit_res_count++] = *res;
-> +	dev_dbg(&pdev->dev, "P-unit BIOS interface: %pR\n", res);
->  
->  	/* This is index 2 to cover ISP data register, optional */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM,
->  				    PLAT_RESOURCE_ISP_DATA_INDEX);
->  	if (res) {
-> -		punit_res[ipcdev.punit_res_count++] = *res;
-> -		dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
-> +		punit_res[pmcdev.punit_res_count++] = *res;
-> +		dev_dbg(&pdev->dev, "P-unit ISP data: %pR\n", res);
->  	}
->  
->  	/* This is index 3 to cover ISP interface register, optional */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM,
->  				    PLAT_RESOURCE_ISP_IFACE_INDEX);
->  	if (res) {
-> -		punit_res[ipcdev.punit_res_count++] = *res;
-> -		dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
-> +		punit_res[pmcdev.punit_res_count++] = *res;
-> +		dev_dbg(&pdev->dev, "P-unit ISP interface: %pR\n", res);
->  	}
->  
->  	/* This is index 4 to cover GTD data register, optional */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM,
->  				    PLAT_RESOURCE_GTD_DATA_INDEX);
->  	if (res) {
-> -		punit_res[ipcdev.punit_res_count++] = *res;
-> -		dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
-> +		punit_res[pmcdev.punit_res_count++] = *res;
-> +		dev_dbg(&pdev->dev, "P-unit GTD data: %pR\n", res);
->  	}
->  
->  	/* This is index 5 to cover GTD interface register, optional */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM,
->  				    PLAT_RESOURCE_GTD_IFACE_INDEX);
->  	if (res) {
-> -		punit_res[ipcdev.punit_res_count++] = *res;
-> -		dev_info(&pdev->dev, "punit GTD interface res: %pR\n", res);
-> +		punit_res[pmcdev.punit_res_count++] = *res;
-> +		dev_dbg(&pdev->dev, "P-unit GTD interface: %pR\n", res);
->  	}
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM,
->  				    PLAT_RESOURCE_IPC_INDEX);
->  	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get ipc resource\n");
-> +		dev_err(&pdev->dev, "Failed to get IPC resource\n");
->  		return -ENXIO;
->  	}
->  	size = PLAT_RESOURCE_IPC_SIZE + PLAT_RESOURCE_GCR_SIZE;
-> @@ -510,23 +420,16 @@ static int ipc_plat_get_res(struct platform_device *pdev,
->  
->  	pdata->ipc_regs = addr;
->  
-> -	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
-> -	dev_info(&pdev->dev, "ipc res: %pR\n", res);
-> +	pmcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
-> +	dev_dbg(&pdev->dev, "IPC: %pR\n", res);
->  
-> -	ipcdev.telem_res_inval = 0;
->  	res = platform_get_resource(pdev, IORESOURCE_MEM,
->  				    PLAT_RESOURCE_TELEM_SSRAM_INDEX);
->  	if (!res) {
-> -		dev_err(&pdev->dev, "Failed to get telemetry ssram resource\n");
-> -		ipcdev.telem_res_inval = 1;
-> +		dev_err(&pdev->dev, "Failed to get telemetry SSRAM resource\n");
->  	} else {
-> -		ipcdev.telem_punit_ssram_base = res->start +
-> -						TELEM_PUNIT_SSRAM_OFFSET;
-> -		ipcdev.telem_punit_ssram_size = TELEM_SSRAM_SIZE;
-> -		ipcdev.telem_pmc_ssram_base = res->start +
-> -						TELEM_PMC_SSRAM_OFFSET;
-> -		ipcdev.telem_pmc_ssram_size = TELEM_SSRAM_SIZE;
-> -		dev_info(&pdev->dev, "telemetry ssram res: %pR\n", res);
-> +		dev_dbg(&pdev->dev, "Telemetry SSRAM: %pR\n", res);
-> +		pmcdev.telem_base = res;
->  	}
->  
->  	return 0;
-> @@ -542,7 +445,7 @@ int intel_pmc_s0ix_counter_read(u64 *data)
->  {
->  	u64 deep, shlw;
->  
-> -	if (!ipcdev.has_gcr_regs)
-> +	if (!pmcdev.gcr_mem_base)
->  		return -EACCES;
->  
->  	deep = gcr_data_readq(PMC_GCR_TELEM_DEEP_S0IX_REG);
-> @@ -554,15 +457,13 @@ int intel_pmc_s0ix_counter_read(u64 *data)
->  }
->  EXPORT_SYMBOL_GPL(intel_pmc_s0ix_counter_read);
->  
-> -#ifdef CONFIG_ACPI
-> -static const struct acpi_device_id ipc_acpi_ids[] = {
-> +static const struct acpi_device_id intel_pmc_acpi_ids[] = {
->  	{ "INT34D2", 0},
->  	{ }
->  };
-> -MODULE_DEVICE_TABLE(acpi, ipc_acpi_ids);
-> -#endif
-> +MODULE_DEVICE_TABLE(acpi, intel_pmc_acpi_ids);
->  
-> -static int ipc_plat_probe(struct platform_device *pdev)
-> +static int intel_pmc_probe(struct platform_device *pdev)
->  {
->  	struct intel_scu_ipc_pdata pdata;
->  	struct intel_scu_ipc_dev *scu;
-> @@ -573,10 +474,10 @@ static int ipc_plat_probe(struct platform_device *pdev)
->  	if (pdata.irq < 0)
->  		return -EINVAL;
->  
-> -	ipcdev.dev = &pdev->dev;
-> -	spin_lock_init(&ipcdev.gcr_lock);
-> +	pmcdev.dev = &pdev->dev;
-> +	spin_lock_init(&pmcdev.gcr_lock);
->  
-> -	ret = ipc_plat_get_res(pdev, &pdata);
-> +	ret = pmc_plat_get_res(pdev, &pdata);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to request resource\n");
->  		return ret;
-> @@ -588,67 +489,58 @@ static int ipc_plat_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, scu);
->  
-> -	ret = ipc_create_pmc_devices();
-> +	ret = pmc_create_devices();
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to create pmc devices\n");
->  		goto err_ipc;
->  	}
->  
-> -	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
-> +	ret = sysfs_create_group(&pdev->dev.kobj, &intel_pmc_group);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
->  			ret);
-> -		goto err_devs;
-> +		goto err_ipc;
->  	}
->  
-> -	ipcdev.has_gcr_regs = true;
-> -
->  	return 0;
->  
->  err_ipc:
->  	intel_scu_ipc_remove(scu);
-> -err_devs:
-> -	platform_device_unregister(ipcdev.tco_dev);
-> -	platform_device_unregister(ipcdev.punit_dev);
-> -	platform_device_unregister(ipcdev.telemetry_dev);
->  
->  	return ret;
->  }
->  
-> -static int ipc_plat_remove(struct platform_device *pdev)
-> +static int intel_pmc_remove(struct platform_device *pdev)
->  {
-> -	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
-> -	platform_device_unregister(ipcdev.tco_dev);
-> -	platform_device_unregister(ipcdev.punit_dev);
-> -	platform_device_unregister(ipcdev.telemetry_dev);
-> +	sysfs_remove_group(&pdev->dev.kobj, &intel_pmc_group);
->  	intel_scu_ipc_remove(platform_get_drvdata(pdev));
-> -	ipcdev.dev = NULL;
-> +	pmcdev.dev = NULL;
->  	return 0;
->  }
->  
-> -static struct platform_driver ipc_plat_driver = {
-> -	.remove = ipc_plat_remove,
-> -	.probe = ipc_plat_probe,
-> +static struct platform_driver intel_pmc_driver = {
-> +	.remove = intel_pmc_remove,
-> +	.probe = intel_pmc_probe,
->  	.driver = {
-> -		.name = "pmc-ipc-plat",
-> -		.acpi_match_table = ACPI_PTR(ipc_acpi_ids),
-> +		.name = "intel_pmc_bxt",
-> +		.acpi_match_table = ACPI_PTR(intel_pmc_acpi_ids),
->  	},
->  };
->  
-> -static int __init intel_pmc_ipc_init(void)
-> +static int __init intel_pmc_init(void)
->  {
-> -	return platform_driver_register(&ipc_plat_driver);
-> +	return platform_driver_register(&intel_pmc_driver);
->  }
->  
-> -static void __exit intel_pmc_ipc_exit(void)
-> +static void __exit intel_pmc_exit(void)
->  {
-> -	platform_driver_unregister(&ipc_plat_driver);
-> +	platform_driver_unregister(&intel_pmc_driver);
->  }
->  
->  MODULE_AUTHOR("Zha Qipeng <qipeng.zha@intel.com>");
-> -MODULE_DESCRIPTION("Intel PMC IPC driver");
-> +MODULE_DESCRIPTION("Intel Broxton PMC driver");
->  MODULE_LICENSE("GPL v2");
->  
->  /* Some modules are dependent on this, so init earlier */
-> -fs_initcall(intel_pmc_ipc_init);
-> -module_exit(intel_pmc_ipc_exit);
-> +fs_initcall(intel_pmc_init);
-> +module_exit(intel_pmc_exit);
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 1c5afb9e4965..e01aba797656 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1195,19 +1195,11 @@ config INTEL_SMARTCONNECT
->  	  This driver checks to determine whether the device has Intel Smart
->  	  Connect enabled, and if so disables it.
->  
-> -config INTEL_PMC_IPC
-> -	tristate "Intel PMC IPC Driver"
-> -	depends on ACPI
-> -	select INTEL_SCU_IPC
-> -	---help---
-> -	This driver provides support for PMC control on some Intel platforms.
-> -	The PMC is an ARC processor which defines IPC commands for communication
-> -	with other entities in the CPU.
-> -
->  config INTEL_BXTWC_PMIC_TMU
->  	tristate "Intel BXT Whiskey Cove TMU Driver"
->  	depends on REGMAP
-> -	depends on INTEL_SOC_PMIC_BXTWC && INTEL_PMC_IPC
-> +	depends on MFD_INTEL_PMC_BXT
-> +	depends on INTEL_SOC_PMIC_BXTWC
->  	---help---
->  	  Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
->  	  This driver enables the alarm wakeup functionality in the TMU unit
-> @@ -1233,7 +1225,9 @@ config INTEL_PUNIT_IPC
->  
->  config INTEL_TELEMETRY
->  	tristate "Intel SoC Telemetry Driver"
-> -	depends on INTEL_PMC_IPC && INTEL_PUNIT_IPC && X86_64
-> +	depends on X86_64
-> +	depends on MFD_INTEL_PMC_BXT
-> +	depends on INTEL_PUNIT_IPC
->  	---help---
->  	  This driver provides interfaces to configure and use
->  	  telemetry for INTEL SoC from APL onwards. It is also
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index c7a42feaa521..f1abce3e1720 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -86,7 +86,6 @@ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
->  obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
->  
->  obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
-> -obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
->  obj-$(CONFIG_TOUCHSCREEN_DMI)	+= touchscreen_dmi.o
->  obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
->  obj-$(CONFIG_SURFACE_3_BUTTON)	+= surface3_button.o
-> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-> index e84d3e983e0c..7b7a766a6cb8 100644
-> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
-> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-> @@ -16,13 +16,13 @@
->  #include <linux/debugfs.h>
->  #include <linux/device.h>
->  #include <linux/module.h>
-> +#include <linux/mfd/intel_pmc_bxt.h>
->  #include <linux/pci.h>
->  #include <linux/seq_file.h>
->  #include <linux/suspend.h>
->  
->  #include <asm/cpu_device_id.h>
->  #include <asm/intel-family.h>
-> -#include <asm/intel_pmc_ipc.h>
->  #include <asm/intel_telemetry.h>
->  
->  #define DRIVER_NAME			"telemetry_soc_debugfs"
-> diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
-> index 5b986d6c801d..fa3f39336246 100644
-> --- a/drivers/usb/typec/tcpm/Kconfig
-> +++ b/drivers/usb/typec/tcpm/Kconfig
-> @@ -41,8 +41,8 @@ config TYPEC_FUSB302
->  config TYPEC_WCOVE
->  	tristate "Intel WhiskeyCove PMIC USB Type-C PHY driver"
->  	depends on ACPI
-> +	depends on MFD_INTEL_PMC_BXT
->  	depends on INTEL_SOC_PMIC
-> -	depends on INTEL_PMC_IPC
->  	depends on BXT_WC_PMIC_OPREGION
->  	help
->  	  This driver adds support for USB Type-C on Intel Broxton platforms
-> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/include/linux/mfd/intel_pmc_bxt.h
-> similarity index 83%
-> rename from arch/x86/include/asm/intel_pmc_ipc.h
-> rename to include/linux/mfd/intel_pmc_bxt.h
-> index 22848df5faaf..f03a80df0728 100644
-> --- a/arch/x86/include/asm/intel_pmc_ipc.h
-> +++ b/include/linux/mfd/intel_pmc_bxt.h
-> @@ -1,6 +1,9 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef _ASM_X86_INTEL_PMC_IPC_H_
-> -#define  _ASM_X86_INTEL_PMC_IPC_H_
-> +#ifndef MFD_INTEL_PMC_BXT_H
-> +#define MFD_INTEL_PMC_BXT_H
-> +
-> +#include <linux/errno.h>
-> +#include <linux/types.h>
->  
->  /* Commands */
->  #define PMC_IPC_USB_PWR_CTRL		0xF0
-> @@ -25,7 +28,7 @@
->  #define PMC_GCR_TELEM_DEEP_S0IX_REG	0x78
->  #define PMC_GCR_TELEM_SHLW_S0IX_REG	0x80
->  
-> -#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
-> +#if IS_ENABLED(CONFIG_MFD_INTEL_PMC_BXT)
->  
->  int intel_pmc_s0ix_counter_read(u64 *data);
->  int intel_pmc_gcr_read64(u32 offset, u64 *data);
-> @@ -42,6 +45,6 @@ static inline int intel_pmc_gcr_read64(u32 offset, u64 *data)
->  	return -EINVAL;
->  }
->  
-> -#endif /*CONFIG_INTEL_PMC_IPC*/
-> +#endif /* CONFIG_MFD_INTEL_PMC_BXT */
->  
->  #endif
-> -- 
-> 2.24.1
-> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
