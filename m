@@ -2,63 +2,85 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2200EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901CBC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036942072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6342F20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UO5rej+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbgAIKWN (ORCPT
+        id S1730099AbgAIKXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:22:13 -0500
-Received: from mga01.intel.com ([192.55.52.88]:50873 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgAIKWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:22:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 02:22:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
-   d="scan'208";a="226947030"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 09 Jan 2020 02:22:09 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 09 Jan 2020 12:22:08 +0200
-Date:   Thu, 9 Jan 2020 12:22:08 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/2] pinctrl: intel: Pass irqchip when adding gpiochip
-Message-ID: <20200109102208.GD2838@lahna.fi.intel.com>
-References: <20200109075329.398347-1-linus.walleij@linaro.org>
- <20200109075329.398347-2-linus.walleij@linaro.org>
+        Thu, 9 Jan 2020 05:23:38 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40073 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728770AbgAIKXi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 05:23:38 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u1so6621486ljk.7;
+        Thu, 09 Jan 2020 02:23:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CaANccIy4gA5baF7u0foL4cTjRF5faDrgsD1szRUw5E=;
+        b=UO5rej+fgTEj4BzkweWqxr6L3b6qwha15PplzQPyrrBsMDip6EmUJnthyJBfGMiy1z
+         2EbjLNjDWItj3igGmLr23dx+t1RNTHC2qDlQTsSqzLxkxDbvY0NFE9Vt2kXqc19a3Yj7
+         v+5BTkYYRG3mc8/YuJVRs2AagJsLLhIMco3EOCntVOmHntAdVt/ka1jxq0utwtrcTQIA
+         xTGWWLca7U+KMPfZcTIEloY57MCP0+Zpomk0nR+BeX6TuSZsUbyxXT+43mS1ACjM3hZw
+         KUNlzmtG6OznoLTdlax16AqxaWT2kUGPtDkpm2SmGq7XKSWWAhwbkpm0uE6uPpBGbZ3W
+         QWuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CaANccIy4gA5baF7u0foL4cTjRF5faDrgsD1szRUw5E=;
+        b=jnuoDxslV4LL6qHTnYlSy211imIlUpG35MQ00oFDz2kQH0VlqzZK3UToebgbIf9ijY
+         WqEGNoq9wN/msTFkacEi98mEMpf1VdVsLASAh7LPAwaLc0dBPwRPF+5mARB7WrGaP1Kz
+         JPanzqHF2WweHn4I6yaaKP2XuANaam4IPynTYzA7dye6cEsmHcLZgEPFTlaqO9CbLHI7
+         48EheTUndYC1OhHIyUns/uRRjAO5YRxoWKDkzL6aNjRorcQ30lCA7B8U6upScXN2YbiG
+         HY6+VozoKHetppvaT4ukppnl27N4Z25815I+YRpEiJ8W7OaOiSwy32r9+iUiC2xk5FV7
+         REGA==
+X-Gm-Message-State: APjAAAXKYfZ8Swd9j4KzqttRyeRU76egQNpnISR/cedXzDT/yULropX3
+        c8naMqzTcldRvO6M4uRw0/R7kdG8VczmcOP/vFQ=
+X-Google-Smtp-Source: APXvYqwschtN+QMw6TDSpzE3jWTVQY0TbWx42jhGhs2ONEfm9f4uWmnz8gZ2X6CpDhrbkgbEDT4fKD4qTn+o/FJdvfk=
+X-Received: by 2002:a2e:b5ac:: with SMTP id f12mr6292547ljn.0.1578565416928;
+ Thu, 09 Jan 2020 02:23:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109075329.398347-2-linus.walleij@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200109095403.GA26453@Red>
+In-Reply-To: <20200109095403.GA26453@Red>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 9 Jan 2020 07:23:25 -0300
+Message-ID: <CAOMZO5DtOj8csUR+cWPy8D=78eGcC08H3vX4J4bcZ_O06h9ohA@mail.gmail.com>
+Subject: Re: ata: sunxi: Regression due to 5253fe05bb47 ("phy: core: Add
+ consumer device link support")
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>, mripard@kernel.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        linux-ide@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 08:53:29AM +0100, Linus Walleij wrote:
-> We need to convert all old gpio irqchips to pass the irqchip
-> setup along when adding the gpio_chip. For more info see
-> drivers/gpio/TODO.
-> 
-> For chained irqchips this is a pretty straight-forward conversion.
-> 
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Hi Corentin,
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Thu, Jan 9, 2020 at 6:54 AM Corentin Labbe <clabbe.montjoie@gmail.com> wrote:
+
+> The problem was bisected to 5253fe05bb47a2402f471d76078b3dcc66442d6c ("phy: core: Add consumer device link support")
+> Reverting this patch fix the problem
+
+This problem has been fixed in linux-next 20200109.
