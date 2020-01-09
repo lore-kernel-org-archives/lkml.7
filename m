@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F49BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB54C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7992073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64DC0206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N4S0B6F8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JKmLYh76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732743AbgAIP7U (ORCPT
+        id S1732732AbgAIP7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:59:20 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:47088 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732721AbgAIP7Q (ORCPT
+        Thu, 9 Jan 2020 10:59:19 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46861 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732714AbgAIP7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:59:16 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so3394573pgb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 07:59:14 -0800 (PST)
+        Thu, 9 Jan 2020 10:59:15 -0500
+Received: by mail-pf1-f196.google.com with SMTP id n9so3547991pff.13
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 07:59:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BBjMceqifOSdeK4z+Ks0h7Q/aDc8IcTUGADsTXrO7L0=;
-        b=N4S0B6F8IiE4z7opHsaM94l0+7I7mIXpXfhh4cWzMU03K7Rq+OB/5q9XAJaHpFq9UL
-         kO5VFAvpuZBHubHCqOLlzSS62K2N8C+f0DZzVa3f7OlSG2OuTQCsigLZsa+5xEjyqnL/
-         sfzuU1BJPn3tzn5+tX5ZsxuPR+IYrZmfrm2pY=
+        bh=nXeS+ouA9N1i5qwsZQvBHp9ywLVGIMgkBuIimwXxsas=;
+        b=JKmLYh76Glb/+LD2AOn/d24gD8ZdhYqsiIopZq90nxjan5djoLTVmn1pDGdTdLWRjJ
+         wVcd6DEmmD7FxxJeQx4St8uxS2kVUHuAfJUDeVgpHHlaEmFOhpN5w/jd+VkO7jsUMPKY
+         CqRxvXwb8uIZ63a3TcNIG4dRuleeRauOyW2DY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BBjMceqifOSdeK4z+Ks0h7Q/aDc8IcTUGADsTXrO7L0=;
-        b=Z8Y2xu01fBocVNwr7QqRB9oU1u7mZ88f9/2WbdhzcmPooT6+IccKTF3Jf6LqTILVCX
-         HySuKIXBlm5oeco77UWWIJsI2DMU0ftllL3O27WaLOLwmXQHTLAqj+drVAgFFCZKfale
-         k1SkPwlW1pKJ+zc7pbHI20yBuHsXC/vGWhH9w9tyqCDTPCaQEOvW1rt8zbbm6Hb6mlkN
-         F+Trg4kBC3WQJF80fN988WxdNTYYbPbAljvs6TtrRgUjL3fV0EzcaYX3U28YjVTjWl7x
-         yCL7zIWIjm9VGvJg/uZn0Fyb3FVqvf5BRUzJsEk1msVxJ8qxb4jGknP/uxeO5ft7J6+Q
-         ETrg==
-X-Gm-Message-State: APjAAAUf+ULIRhwQiX4vDZIWyXXvE0cItRaSuMgi1skOIUtNQUlAS2hE
-        PoJVMqxEAxHxQZtdx1Xu3Ivgfg==
-X-Google-Smtp-Source: APXvYqxZQBTxxTUzwW63ixfVQkxfS1lOCFCTsOehZM4baWW5fOxuZtd1cXy9Hkr9yzUPJlSXgd1FWA==
-X-Received: by 2002:a63:28c7:: with SMTP id o190mr11615317pgo.394.1578585554258;
-        Thu, 09 Jan 2020 07:59:14 -0800 (PST)
+        bh=nXeS+ouA9N1i5qwsZQvBHp9ywLVGIMgkBuIimwXxsas=;
+        b=OGqhE62uroAkTG+W3xAh06gX87l4jF8joXT8EV1NlIQloA7J7Mnv5NQuaCa/k2/Ea4
+         IxP9UsdV+Z8lGZCuTKXr9nx5ukZd6QJY7bkl6GkMZn1DGqP0BNI+NG1ivtPWk2PNc2bF
+         SFa6xVL4h3x2IrX/kTVKmHLQT4HllnMu6PM7BZ9IGQ6Lnt4gypB4TuBy0hslhWLKeOZm
+         tDHNN6xmkXw7PFg46B/43m1xGaduLX9and8F10VGNawOoIKkILSpDkoBnGpyjh56mHq3
+         qGoX+qCYuUKvzE/74aMgrh+4S3YKerxuNiGJ2bELYosuOExJh0wQCQo0AvEr1WmUjpQH
+         vkxg==
+X-Gm-Message-State: APjAAAWGNBl9hh1K5ZggBFWSrgy4aN6EhWtwIsgs7gCPp0T/Gh0F3cpc
+        P4diKnIzuSduabx5Pt/OQnlw9w==
+X-Google-Smtp-Source: APXvYqydkJbjdH41BgUDyFKNd0kKSGCw1CblLwqe6bJi5fgYETzwsf4N/Jxu5Jod5R2qpPqVrHg4fQ==
+X-Received: by 2002:a62:8202:: with SMTP id w2mr12191386pfd.100.1578585553586;
+        Thu, 09 Jan 2020 07:59:13 -0800 (PST)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j20sm7832793pfe.168.2020.01.09.07.59.13
+        by smtp.gmail.com with ESMTPSA id j20sm7832793pfe.168.2020.01.09.07.59.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 09 Jan 2020 07:59:13 -0800 (PST)
 From:   Stephen Boyd <swboyd@chromium.org>
@@ -59,9 +59,9 @@ To:     John Stultz <john.stultz@linaro.org>,
 Cc:     Douglas Anderson <dianders@chromium.org>,
         Ravi Chandra Sadineni <ravisadineni@chromium.org>,
         linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4/4] alarmtimer: Always export alarmtimer_get_rtcdev() and update docs
-Date:   Thu,  9 Jan 2020 07:59:10 -0800
-Message-Id: <20200109155910.907-5-swboyd@chromium.org>
+Subject: [PATCH 3/4] alarmtimer: Use wakeup source from alarmtimer platform device
+Date:   Thu,  9 Jan 2020 07:59:09 -0800
+Message-Id: <20200109155910.907-4-swboyd@chromium.org>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 In-Reply-To: <20200109155910.907-1-swboyd@chromium.org>
 References: <20200109155910.907-1-swboyd@chromium.org>
@@ -72,50 +72,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The export isn't there for the stubbed version of
-alarmtimer_get_rtcdev(), so move the export outside of the ifdef. And
-rtcdev isn't used outside of this ifdef so we don't need to redefine it
-as NULL.
+Use the wakeup source that can be associated with the 'alarmtimer'
+platform device instead of registering another one by hand.
 
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- kernel/time/alarmtimer.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ kernel/time/alarmtimer.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index be057638e89d..dc4d3edc2a7d 100644
+index ccb6aea4f1d4..be057638e89d 100644
 --- a/kernel/time/alarmtimer.c
 +++ b/kernel/time/alarmtimer.c
-@@ -64,8 +64,6 @@ static DEFINE_SPINLOCK(rtcdev_lock);
-  * alarmtimer_get_rtcdev - Return selected rtcdevice
-  *
-  * This function returns the rtc device to use for wakealarms.
-- * If one has not already been chosen, it checks to see if a
-- * functional rtc device is available.
-  */
- struct rtc_device *alarmtimer_get_rtcdev(void)
+@@ -55,8 +55,6 @@ static DEFINE_SPINLOCK(freezer_delta_lock);
+ #endif
+ 
+ #ifdef CONFIG_RTC_CLASS
+-static struct wakeup_source *ws;
+-
+ /* rtc timer and device for setting alarm wakeups at suspend */
+ static struct rtc_timer		rtctimer;
+ static struct rtc_device	*rtcdev;
+@@ -87,7 +85,6 @@ static int alarmtimer_rtc_add_device(struct device *dev,
  {
-@@ -78,7 +76,6 @@ struct rtc_device *alarmtimer_get_rtcdev(void)
+ 	unsigned long flags;
+ 	struct rtc_device *rtc = to_rtc_device(dev);
+-	struct wakeup_source *__ws;
+ 	struct platform_device *pdev;
+ 	int ret = 0;
+ 
+@@ -99,8 +96,9 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 	if (!device_may_wakeup(rtc->dev.parent))
+ 		return -1;
+ 
+-	__ws = wakeup_source_register(dev, "alarmtimer");
+ 	pdev = platform_device_register_data(dev, "alarmtimer", -1, NULL, 0);
++	if (pdev)
++		device_init_wakeup(&pdev->dev, true);
+ 
+ 	spin_lock_irqsave(&rtcdev_lock, flags);
+ 	if (!rtcdev) {
+@@ -112,15 +110,12 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 		rtcdev = rtc;
+ 		/* hold a reference so it doesn't go away */
+ 		get_device(dev);
+-		ws = __ws;
+-		__ws = NULL;
+ 		pdev = NULL;
+ 	}
+ unlock:
+ 	spin_unlock_irqrestore(&rtcdev_lock, flags);
+ 
+ 	platform_device_unregister(pdev);
+-	wakeup_source_unregister(__ws);
  
  	return ret;
  }
--EXPORT_SYMBOL_GPL(alarmtimer_get_rtcdev);
+@@ -287,7 +282,7 @@ static int alarmtimer_suspend(struct device *dev)
+ 		return 0;
  
- static int alarmtimer_rtc_add_device(struct device *dev,
- 				struct class_interface *class_intf)
-@@ -143,11 +140,11 @@ struct rtc_device *alarmtimer_get_rtcdev(void)
- {
- 	return NULL;
+ 	if (ktime_to_ns(min) < 2 * NSEC_PER_SEC) {
+-		__pm_wakeup_event(ws, 2 * MSEC_PER_SEC);
++		pm_wakeup_event(dev, 2 * MSEC_PER_SEC);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -302,7 +297,7 @@ static int alarmtimer_suspend(struct device *dev)
+ 	/* Set alarm, if in the past reject suspend briefly to handle */
+ 	ret = rtc_timer_start(rtc, &rtctimer, now, 0);
+ 	if (ret < 0)
+-		__pm_wakeup_event(ws, MSEC_PER_SEC);
++		pm_wakeup_event(dev, MSEC_PER_SEC);
+ 	return ret;
  }
--#define rtcdev (NULL)
- static inline int alarmtimer_rtc_interface_setup(void) { return 0; }
- static inline void alarmtimer_rtc_interface_remove(void) { }
- static inline void alarmtimer_rtc_timer_init(void) { }
- #endif
-+EXPORT_SYMBOL_GPL(alarmtimer_get_rtcdev);
  
- /**
-  * alarmtimer_enqueue - Adds an alarm timer to an alarm_base timerqueue
 -- 
 Sent by a computer, using git, on the internet
 
