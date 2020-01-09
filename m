@@ -2,114 +2,192 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A00C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C95C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AB0206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E359B206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:58:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ag8nqYeW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgAIEwe (ORCPT
+        id S1727951AbgAIE63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 23:52:34 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27328 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726913AbgAIEwd (ORCPT
+        Wed, 8 Jan 2020 23:58:29 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36441 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgAIE63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 23:52:33 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0094qQpB019663
-        for <linux-kernel@vger.kernel.org>; Wed, 8 Jan 2020 23:52:32 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xdvqy97et-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 23:52:32 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 9 Jan 2020 04:52:30 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 Jan 2020 04:52:26 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0094pcG138011312
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jan 2020 04:51:38 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2F414C046;
-        Thu,  9 Jan 2020 04:52:25 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F3C34C044;
-        Thu,  9 Jan 2020 04:52:24 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.236.182])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jan 2020 04:52:24 +0000 (GMT)
-Subject: Re: [PATCH v1] IMA: fix measuring asymmetric keys Kconfig
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        James.Bottomley@HansenPartnership.com, arnd@arndb.de,
-        linux-integrity@vger.kernel.org
-Cc:     dhowells@redhat.com, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Date:   Wed, 08 Jan 2020 23:52:23 -0500
-In-Reply-To: <20200108160508.5938-1-nramas@linux.microsoft.com>
-References: <20200108160508.5938-1-nramas@linux.microsoft.com>
+        Wed, 8 Jan 2020 23:58:29 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so1324322wma.1;
+        Wed, 08 Jan 2020 20:58:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/VMi5RKokSD1bSLba837QPSe93h6ZNWDgrRnva2rnDU=;
+        b=ag8nqYeWGk2pLTA0jJLgOeLPs6j/8VzJrYnQflUrxpAuHEVC545WyJuOXttmHNsluR
+         2ZH1X28E9gpXSqn3YiRnWsqI1l5a4IhoFaMKgH2WI8DjxScbecbQm4qB9TN3Wdi4pXSN
+         zOl7Tn/UsEHSTnZEl1pQhc5Swjg1eW7aWK1ayjVqOTck9E8bGRamt65sOZCNXcQaD/53
+         IO0RwTVbet55WKsk3d696k0Ite+YoCHee/1AP5OuScjTBQh7c+JKQ5+QgMJuKz/paBD0
+         gK5CJ4Biuo94bkQquF3KhJiAdb5aL3zDPDJ4Fve8sdy/x6liyacgigvgwia0FqOrI6yD
+         ybaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/VMi5RKokSD1bSLba837QPSe93h6ZNWDgrRnva2rnDU=;
+        b=KQ+FL+epLt+yLc50Eupq7jtAfKZYZ43rrhZMb+ldaop3y7W/M5SyjoX5kGzEEsXFjA
+         hEQMx99mvue7PZ0O10Db8r0jn/ogr2mQw15ugQ7cZBMkdtQ+r5AVFq8mZI9a26StsHog
+         W09zRu8h8eR0lCJYxrpU56paJ+s3dstP7FIkAJn7gYUnUN7kAMGjajU+xj+Ka7E6Vlex
+         nZe50k4IEWk0cVa/EbwQhFE86kr+H96RZBqEf+hazaxv4QUcEwJ98nhJcKVEPOxjs/Dn
+         RXvlCHRYNGsFSyG/z0VIUx6z5FesLM2EXwU0AfaVtQTqobmctjVx0mgS0uiLYP9uBqE7
+         MH5g==
+X-Gm-Message-State: APjAAAWMuAUnirIe6CYTbvCYip4/hrXZsBApAWRNQQNNhTgHETBmdYks
+        3zS5Twzi3YH/827WdyInHPpoQIKBIJS4LUyvxjQ=
+X-Google-Smtp-Source: APXvYqwYFA/wMpc6nvrIl61VRVfUPbN3ir93M5LfqjI+X4VbbeKgVjzJrn0QKex0Xjtz1VOP6CJpnivX1VhkTpB4cnc=
+X-Received: by 2002:a1c:488a:: with SMTP id v132mr2154030wma.153.1578545906700;
+ Wed, 08 Jan 2020 20:58:26 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1569493933.git.shengjiu.wang@nxp.com> <d728f65194e9978cbec4132b522d4fed420d704a.1569493933.git.shengjiu.wang@nxp.com>
+In-Reply-To: <d728f65194e9978cbec4132b522d4fed420d704a.1569493933.git.shengjiu.wang@nxp.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 8 Jan 2020 20:58:15 -0800
+Message-ID: <CANcMJZBy=yH+4YgZWwphiE-PO6d4hzhFK3XFtpN677ZAv_N4WQ@mail.gmail.com>
+Subject: Re: [PATCH V6 3/4] ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, lars@metafoo.de
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010904-4275-0000-0000-00000395FAC4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010904-4276-0000-0000-000038A9E990
-Message-Id: <1578545543.5147.32.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_07:2020-01-08,2020-01-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- suspectscore=0 clxscore=1015 mlxscore=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001090044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-08 at 08:05 -0800, Lakshmi Ramasubramanian wrote:
-> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is a tristate. If this config
-> is set to "=m", ima_asymmetric_keys.c is built as a kernel module.
-> 
-> Defined an intermediate boolean config namely
-> CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS that is
-> defined when CONFIG_IMA and CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-> are defined.
-> 
-> Asymmetric key structure is defined only when
-> CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is defined. Since the IMA hook
-> measures asymmetric keys, the IMA hook is defined in
-> ima_asymmetric_keys.c which is built only if
-> CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is defined.
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+On Thu, Sep 26, 2019 at 6:50 PM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
+>
+> When set the runtime hardware parameters, we may need to query
+> the capability of DMA to complete the parameters.
+>
+> This patch is to Extract this operation from
+> dmaengine_pcm_set_runtime_hwparams function to a separate function
+> snd_dmaengine_pcm_refine_runtime_hwparams, that other components
+> which need this feature can call this function.
+>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-For the time being, I've pushed out this patch with the existing patch
-description to next-integrity-testing, but the patch description
-should be rewritten clearer.  For example,
+As a heads up, this patch seems to be causing a regression on the HiKey board.
 
-As a result of the asymmetric public keys subtype being defined as a
-tristate, with the existing IMA Makefile, ima_asymmetric_keys.c could
-be built as a kernel module.  To prevent this from happening, this
-patch defines and uses an intermediate Kconfig boolean option named
-IMA_MEASURE_ASYMMETRIC_KEYS.
+On boot up I'm seeing:
+[   17.721424] hi6210_i2s f7118000.i2s: ASoC: can't open component
+f7118000.i2s: -6
 
-Please let me know if you're ok with this wording.
+And HDMI audio isn't working. With this patch reverted, audio works again.
 
-thanks,
 
-Mimi
+> diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
+> index 89a05926ac73..5749a8a49784 100644
+> --- a/sound/core/pcm_dmaengine.c
+> +++ b/sound/core/pcm_dmaengine.c
+> @@ -369,4 +369,87 @@ int snd_dmaengine_pcm_close_release_chan(struct snd_pcm_substream *substream)
+...
+> +       ret = dma_get_slave_caps(chan, &dma_caps);
+> +       if (ret == 0) {
+> +               if (dma_caps.cmd_pause && dma_caps.cmd_resume)
+> +                       hw->info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
+> +               if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
+> +                       hw->info |= SNDRV_PCM_INFO_BATCH;
+> +
+> +               if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> +                       addr_widths = dma_caps.dst_addr_widths;
+> +               else
+> +                       addr_widths = dma_caps.src_addr_widths;
+> +       }
 
+It seems a failing ret from dma_get_slave_caps() here is being returned...
+
+> +
+> +       /*
+> +        * If SND_DMAENGINE_PCM_DAI_FLAG_PACK is set keep
+> +        * hw.formats set to 0, meaning no restrictions are in place.
+> +        * In this case it's the responsibility of the DAI driver to
+> +        * provide the supported format information.
+> +        */
+> +       if (!(dma_data->flags & SND_DMAENGINE_PCM_DAI_FLAG_PACK))
+> +               /*
+> +                * Prepare formats mask for valid/allowed sample types. If the
+> +                * dma does not have support for the given physical word size,
+> +                * it needs to be masked out so user space can not use the
+> +                * format which produces corrupted audio.
+> +                * In case the dma driver does not implement the slave_caps the
+> +                * default assumption is that it supports 1, 2 and 4 bytes
+> +                * widths.
+> +                */
+> +               for (i = SNDRV_PCM_FORMAT_FIRST; i <= SNDRV_PCM_FORMAT_LAST; i++) {
+> +                       int bits = snd_pcm_format_physical_width(i);
+> +
+> +                       /*
+> +                        * Enable only samples with DMA supported physical
+> +                        * widths
+> +                        */
+> +                       switch (bits) {
+> +                       case 8:
+> +                       case 16:
+> +                       case 24:
+> +                       case 32:
+> +                       case 64:
+> +                               if (addr_widths & (1 << (bits / 8)))
+> +                                       hw->formats |= pcm_format_to_bits(i);
+> +                               break;
+> +                       default:
+> +                               /* Unsupported types */
+> +                               break;
+> +                       }
+> +               }
+> +
+> +       return ret;
+
+... down here.
+
+Where as in the old code...
+
+> diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+> index 748f5f641002..b9f147eaf7c4 100644
+> --- a/sound/soc/soc-generic-dmaengine-pcm.c
+> +++ b/sound/soc/soc-generic-dmaengine-pcm.c
+
+> @@ -145,56 +140,12 @@ static int dmaengine_pcm_set_runtime_hwparams(struct snd_pcm_substream *substrea
+>         if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
+>                 hw.info |= SNDRV_PCM_INFO_BATCH;
+>
+> -       ret = dma_get_slave_caps(chan, &dma_caps);
+> -       if (ret == 0) {
+> -               if (dma_caps.cmd_pause && dma_caps.cmd_resume)
+> -                       hw.info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
+> -               if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
+> -                       hw.info |= SNDRV_PCM_INFO_BATCH;
+> -
+> -               if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> -                       addr_widths = dma_caps.dst_addr_widths;
+> -               else
+> -                       addr_widths = dma_caps.src_addr_widths;
+> -       }
+
+...the ret from dma_get_slave_caps()  checked above, but is not
+actually returned.
+
+Suggestions on how to sort this out?
+
+thanks
+-john
