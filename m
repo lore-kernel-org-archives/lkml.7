@@ -2,90 +2,90 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA60C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4123BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C237206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8A420721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578597420;
+	bh=CRRqeSCie+w4CJwWyv/PNUWCLkxIA/QXQ2H8s/BlBTw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XeqsXHYx1c0YOGnKKUdB0ygl5UXZPQe62lDzVV2XW2ZJ1WdEutEdK+4/LsV5YoFZM
+	 nmV5MqWnAvUFIwDWOnnVUQeDM1QdXHs34uN8zGOfdo6TLo5f8PQQM2qA1N3J2O0D+d
+	 XCGcO2wadULxaK5MzlEXYz3JwRLEy1G3Sib4v/q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgAITQw convert rfc822-to-8bit (ORCPT
+        id S1729189AbgAITQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:16:52 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:59229 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728971AbgAITQw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:16:52 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 6E53C240003;
-        Thu,  9 Jan 2020 19:16:45 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 20:16:44 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
-        <eugen.hristev@microchip.com>, <jic23@kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <mchehab@kernel.org>, <lee.jones@linaro.org>,
-        <richard.genoud@gmail.com>, <radu_nicolae.pirea@upb.ro>,
-        <tudor.ambarus@microchip.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <wg@grandegger.com>, <mkl@pengutronix.de>, <a.zummo@towertech.it>,
-        <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH 07/16] dt-bindings: atmel-nand: add
- microchip,sam9x60-pmecc
-Message-ID: <20200109201644.34c6b936@xps13>
-In-Reply-To: <1578488123-26127-8-git-send-email-claudiu.beznea@microchip.com>
-References: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
-        <1578488123-26127-8-git-send-email-claudiu.beznea@microchip.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 14:16:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:35950 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728925AbgAITQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 14:16:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4501831B;
+        Thu,  9 Jan 2020 11:16:57 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF31F3F703;
+        Thu,  9 Jan 2020 11:16:56 -0800 (PST)
+Date:   Thu, 9 Jan 2020 19:16:54 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/4] regulator: mpq7920: add mpq7920 regulator driver
+Message-ID: <20200109191654.GC3702@sirena.org.uk>
+References: <20200109112548.23914-1-sravanhome@gmail.com>
+ <20200109112548.23914-4-sravanhome@gmail.com>
+ <20200109132835.GA7768@sirena.org.uk>
+ <aefe7c78-6bd9-bafd-9215-5784f8168400@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qtZFehHsKgwS5rPz"
+Content-Disposition: inline
+In-Reply-To: <aefe7c78-6bd9-bafd-9215-5784f8168400@gmail.com>
+X-Cookie: Killing turkeys causes winter.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Claudiu,
 
-Claudiu Beznea <claudiu.beznea@microchip.com> wrote on Wed, 8 Jan 2020
-14:55:14 +0200:
+--qtZFehHsKgwS5rPz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Add microchip,sam9x60-pmecc to DT bindings documentation.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/mtd/atmel-nand.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> index 68b51dc58816..3aa297c97ab6 100644
-> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> @@ -57,6 +57,7 @@ Required properties:
->  	"atmel,at91sam9g45-pmecc"
->  	"atmel,sama5d4-pmecc"
->  	"atmel,sama5d2-pmecc"
-> +	"microchip,sam9x60-pmecc"
->  - reg: should contain 2 register ranges. The first one is pointing to the PMECC
->         block, and the second one to the PMECC_ERRLOC block.
->  
+On Thu, Jan 09, 2020 at 07:34:04PM +0100, saravanan sekar wrote:
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Means should I rebase this v6 patch to linux-next and send, or
+> of_parse_cb callback changes as separate patch on top of v5?
 
-Thanks,
-Miquèl
+Send based on -next, no need to resend the other patches which were
+already applied.
+
+--qtZFehHsKgwS5rPz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4XfCYACgkQJNaLcl1U
+h9DiEgf/QUCnXEMlNCMPMbJFKITDyHLVu1W4kgM8q0ushmz1qMFgq/qz7U1dr0uZ
+ZBUvp4uPnhYS2GAkp/j8J8XGvlQVECwicxpyXzgnzkJIh8DLladDdZ8f/EhC7ZcB
+Xhb/c2u1vUwrEbPvkseIND71Aps8M75Kt6LfBa2TIuaJj7V2Xwo5atQGLkOKlEjN
+vgDhQUOWDF4sChPBb8RWzztAFIEKGFIcIMmNwumf5Xa03dTC9AueyjWXLROAyXuE
+wNKmWrLjR7kCMJ47TcD9Rwdw2ksEGB1a87BEouHEM0SQgw5M5QS+bdz6NW/VVaab
+Z2f+w42UfUUVAp7dn2vEFABx4w44kg==
+=BWkd
+-----END PGP SIGNATURE-----
+
+--qtZFehHsKgwS5rPz--
