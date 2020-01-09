@@ -2,189 +2,248 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CCEC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F34C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFD82067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C25E206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbgAIOHv (ORCPT
+        id S1731528AbgAIOIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:07:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46478 "EHLO mx2.suse.de"
+        Thu, 9 Jan 2020 09:08:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:59810 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgAIOHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:07:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 64C12B2DFC;
-        Thu,  9 Jan 2020 14:07:35 +0000 (UTC)
-Subject: Re: SLUB: purpose of sysfs events on cache creation/removal
-To:     Christopher Lameter <cl@linux.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191126121901.GE20912@dhcp22.suse.cz>
- <alpine.DEB.2.21.1911261632030.9857@www.lameter.com>
- <20191126165420.GL20912@dhcp22.suse.cz>
- <alpine.DEB.2.21.1911271535560.16935@www.lameter.com>
- <20191127162400.GT20912@dhcp22.suse.cz>
- <alpine.DEB.2.21.1911271625110.17727@www.lameter.com>
- <20191127174317.GD26807@dhcp22.suse.cz>
- <20191204132812.GF25242@dhcp22.suse.cz>
- <alpine.DEB.2.21.1912041524290.18825@www.lameter.com>
- <20191204153225.GM25242@dhcp22.suse.cz>
- <alpine.DEB.2.21.1912041652410.29709@www.lameter.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <00126ed6-e12c-4d6f-338b-3f08897c9a13@suse.cz>
-Date:   Thu, 9 Jan 2020 15:07:34 +0100
+        id S1728406AbgAIOIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 09:08:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E6011FB;
+        Thu,  9 Jan 2020 06:08:53 -0800 (PST)
+Received: from [10.1.27.38] (unknown [10.1.27.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34AA63F534;
+        Thu,  9 Jan 2020 06:08:49 -0800 (PST)
+Subject: Re: [PATCH v2 5/7] drm/panfrost: Add support for multiple power
+ domain support
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200108052337.65916-1-drinkcat@chromium.org>
+ <20200108052337.65916-6-drinkcat@chromium.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <b58a8cf9-3275-cf89-6dff-596aceeb8000@arm.com>
+Date:   Thu, 9 Jan 2020 14:08:48 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1912041652410.29709@www.lameter.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200108052337.65916-6-drinkcat@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/4/19 5:53 PM, Christopher Lameter wrote:
-> On Wed, 4 Dec 2019, Michal Hocko wrote:
+On 08/01/2020 05:23, Nicolas Boichat wrote:
+> When there is a single power domain per device, the core will
+> ensure the power domains are all switched on.
 > 
->> As I've said I believe it is quite risky. But if you as a maintainer
->> believe this is the right thing to do I will not object. Care to send a
->> patch?
+> However, when there are multiple ones, as in MT8183 Bifrost GPU,
+> we need to handle them in driver code.
 > 
-> From: Christoph Lameter <cl@linux.com>
-> Subject: slub: Remove userspace notifier for cache add/remove
 > 
-> Kmem caches are internal kernel structures so it is strange that
-> userspace notifiers would be needed. And I am not aware of any use
-> of these notifiers. These notifiers may just exist because in the
-> initial slub release the sysfs code was copied from another
-> subsystem.
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> ---
 > 
-> Signed-off-by: Christoph Lameter <cl@linux.com>
+> The downstream driver we use on chromeos-4.19 currently uses 2
+> additional devices in device tree to accomodate for this [1], but
+> I believe this solution is cleaner.
 
-If anyone cares, we'll find out eventually.
+I'm not sure what is best, but it seems odd to encode this into the Panfrost driver itself - it doesn't have any knowledge of what to do with these power domains. The naming of the domains looks suspiciously like someone thought that e.g. only half of the cores could be powered, but it doesn't look like that was implemented in the chromeos driver linked and anyway that is *meant* to be automatic in the hardware! (I.e. if you only power up one cores in one core stack then the PDC should only enable the power domain for that set of cores).
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Steve
 
 > 
-> Index: linux/mm/slub.c
-> ===================================================================
-> --- linux.orig/mm/slub.c	2019-12-02 15:13:23.948312925 +0000
-> +++ linux/mm/slub.c	2019-12-04 16:32:34.648550310 +0000
-> @@ -5632,19 +5632,6 @@ static struct kobj_type slab_ktype = {
->  	.release = kmem_cache_release,
->  };
+> [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
 > 
-> -static int uevent_filter(struct kset *kset, struct kobject *kobj)
-> -{
-> -	struct kobj_type *ktype = get_ktype(kobj);
-> -
-> -	if (ktype == &slab_ktype)
-> -		return 1;
-> -	return 0;
-> -}
-> -
-> -static const struct kset_uevent_ops slab_uevent_ops = {
-> -	.filter = uevent_filter,
-> -};
-> -
->  static struct kset *slab_kset;
+> drivers/gpu/drm/panfrost/panfrost_device.c | 87 ++++++++++++++++++++--
+>   drivers/gpu/drm/panfrost/panfrost_device.h |  4 +
+>   2 files changed, 83 insertions(+), 8 deletions(-)
 > 
->  static inline struct kset *cache_kset(struct kmem_cache *s)
-> @@ -5712,7 +5699,6 @@ static void sysfs_slab_remove_workfn(str
->  #ifdef CONFIG_MEMCG
->  	kset_unregister(s->memcg_kset);
->  #endif
-> -	kobject_uevent(&s->kobj, KOBJ_REMOVE);
->  out:
->  	kobject_put(&s->kobj);
->  }
-> @@ -5770,7 +5756,6 @@ static int sysfs_slab_add(struct kmem_ca
->  	}
->  #endif
-> 
-> -	kobject_uevent(&s->kobj, KOBJ_ADD);
->  	if (!unmergeable) {
->  		/* Setup first alias */
->  		sysfs_slab_alias(s, s->name);
-> @@ -5851,7 +5836,7 @@ static int __init slab_sysfs_init(void)
-> 
->  	mutex_lock(&slab_mutex);
-> 
-> -	slab_kset = kset_create_and_add("slab", &slab_uevent_ops, kernel_kobj);
-> +	slab_kset = kset_create_and_add("slab", NULL, kernel_kobj);
->  	if (!slab_kset) {
->  		mutex_unlock(&slab_mutex);
->  		pr_err("Cannot register slab subsystem.\n");
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> index a0b0a6fef8b4e63..c6e9e059de94a4d 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> @@ -5,6 +5,7 @@
+>   #include <linux/clk.h>
+>   #include <linux/reset.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>   #include <linux/regulator/consumer.h>
+>   
+>   #include "panfrost_device.h"
+> @@ -131,6 +132,67 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+>   	regulator_disable(pfdev->regulator_sram);
+>   }
+>   
+> +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> +		if (!pfdev->pm_domain_devs[i])
+> +			break;
+> +
+> +		if (pfdev->pm_domain_links[i])
+> +			device_link_del(pfdev->pm_domain_links[i]);
+> +
+> +		dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> +	}
+> +}
+> +
+> +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> +{
+> +	int err;
+> +	int i, num_domains;
+> +
+> +	num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> +						 "power-domains",
+> +						 "#power-domain-cells");
+> +	/* Single domains are handled by the core. */
+> +	if (num_domains < 2)
+> +		return 0;
+> +
+> +	if (num_domains > ARRAY_SIZE(pfdev->pm_domain_devs)) {
+> +		dev_err(pfdev->dev, "Too many pm-domains: %d\n", num_domains);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < num_domains; i++) {
+> +		pfdev->pm_domain_devs[i] =
+> +			dev_pm_domain_attach_by_id(pfdev->dev, i);
+> +		if (IS_ERR(pfdev->pm_domain_devs[i])) {
+> +			err = PTR_ERR(pfdev->pm_domain_devs[i]);
+> +			pfdev->pm_domain_devs[i] = NULL;
+> +			dev_err(pfdev->dev,
+> +				"failed to get pm-domain %d: %d\n", i, err);
+> +			goto err;
+> +		}
+> +
+> +		pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> +				pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> +				DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> +		if (!pfdev->pm_domain_links[i]) {
+> +			dev_err(pfdev->pm_domain_devs[i],
+> +				"adding device link failed!\n");
+> +			err = -ENODEV;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	panfrost_pm_domain_fini(pfdev);
+> +	return err;
+> +}
+> +
+>   int panfrost_device_init(struct panfrost_device *pfdev)
+>   {
+>   	int err;
+> @@ -161,37 +223,45 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+>   		goto err_out1;
+>   	}
+>   
+> +	err = panfrost_pm_domain_init(pfdev);
+> +	if (err) {
+> +		dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
+> +		goto err_out2;
+> +	}
+> +
+>   	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
+>   	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
+>   	if (IS_ERR(pfdev->iomem)) {
+>   		dev_err(pfdev->dev, "failed to ioremap iomem\n");
+>   		err = PTR_ERR(pfdev->iomem);
+> -		goto err_out2;
+> +		goto err_out3;
+>   	}
+>   
+>   	err = panfrost_gpu_init(pfdev);
+>   	if (err)
+> -		goto err_out2;
+> +		goto err_out3;
+>   
+>   	err = panfrost_mmu_init(pfdev);
+>   	if (err)
+> -		goto err_out3;
+> +		goto err_out4;
+>   
+>   	err = panfrost_job_init(pfdev);
+>   	if (err)
+> -		goto err_out4;
+> +		goto err_out5;
+>   
+>   	err = panfrost_perfcnt_init(pfdev);
+>   	if (err)
+> -		goto err_out5;
+> +		goto err_out6;
+>   
+>   	return 0;
+> -err_out5:
+> +err_out6:
+>   	panfrost_job_fini(pfdev);
+> -err_out4:
+> +err_out5:
+>   	panfrost_mmu_fini(pfdev);
+> -err_out3:
+> +err_out4:
+>   	panfrost_gpu_fini(pfdev);
+> +err_out3:
+> +	panfrost_pm_domain_fini(pfdev);
+>   err_out2:
+>   	panfrost_reset_fini(pfdev);
+>   err_out1:
+> @@ -208,6 +278,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
+>   	panfrost_mmu_fini(pfdev);
+>   	panfrost_gpu_fini(pfdev);
+>   	panfrost_reset_fini(pfdev);
+> +	panfrost_pm_domain_fini(pfdev);
+>   	panfrost_regulator_fini(pfdev);
+>   	panfrost_clk_fini(pfdev);
+>   }
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+> index a124334d69e7e93..92d471676fc7823 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> @@ -19,6 +19,7 @@ struct panfrost_job;
+>   struct panfrost_perfcnt;
+>   
+>   #define NUM_JOB_SLOTS 3
+> +#define MAX_PM_DOMAINS 3
+>   
+>   struct panfrost_features {
+>   	u16 id;
+> @@ -62,6 +63,9 @@ struct panfrost_device {
+>   	struct regulator *regulator;
+>   	struct regulator *regulator_sram;
+>   	struct reset_control *rstc;
+> +	/* pm_domains for devices with more than one. */
+> +	struct device *pm_domain_devs[MAX_PM_DOMAINS];
+> +	struct device_link *pm_domain_links[MAX_PM_DOMAINS];
+>   
+>   	struct panfrost_features features;
+>   
 > 
 
