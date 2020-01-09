@@ -7,69 +7,74 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2772C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E0AC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A63C20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF8620661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O0UYF3ir"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODQVEDcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733265AbgAIQI0 (ORCPT
+        id S1733273AbgAIQI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:08:26 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37398 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731574AbgAIQIY (ORCPT
+        Thu, 9 Jan 2020 11:08:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23136 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733254AbgAIQIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:08:24 -0500
+        Thu, 9 Jan 2020 11:08:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578586102;
+        s=mimecast20190719; t=1578586103;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TNAXbPtYol4IFhdKQN1YW+us8aGhYHcAVGnDfkl/GLg=;
-        b=O0UYF3irk3kYI2LNDbueoKcYnK/gbohCSJlXR0pm72g6jtxKX2dBSnDJw39qkWB8yH3RiA
-        GMDaCQw0LLzFm8QP+JBh/7OjsOLe6R8ZmOra3eOmj4PboXHZ1pD1ljFi553M7KTkRNTYO7
-        cQRYNAU5ZsMZJrUipbpcXtlf983+xmw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-DYFj-dCDMxuASrjN03OkmQ-1; Thu, 09 Jan 2020 11:08:20 -0500
-X-MC-Unique: DYFj-dCDMxuASrjN03OkmQ-1
-Received: by mail-wm1-f72.google.com with SMTP id c4so1095736wmb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:08:20 -0800 (PST)
+        bh=XdbyLSo/LKwv0IS4UY8BmEznN2tnAhqPqp9PsERe1ZM=;
+        b=ODQVEDcgbOoiLXSv4Wy9tqRH7MSY4o2tXwWHHNQg0mSVcqfaWT4SLIAcj144wJI2BLxTwP
+        dRgvLdq0Ksj1ZzAikgCaoO8mBERib7ETKq9bb8gVzYcCIbzM7GyYIwJqcfBltq1JN2LUXb
+        4Y9GfVfa6q/vJmI0n2zJW6s9YmdW1p8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-vl6AkKC0OE2g2Qp_PWcN7w-1; Thu, 09 Jan 2020 11:08:22 -0500
+X-MC-Unique: vl6AkKC0OE2g2Qp_PWcN7w-1
+Received: by mail-wr1-f69.google.com with SMTP id r2so3049961wrp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:08:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TNAXbPtYol4IFhdKQN1YW+us8aGhYHcAVGnDfkl/GLg=;
-        b=M6lFUoNUZPIVPme68Q6C1BqSEvlLlMDXL5FgmTULWHxneYtw781ixRuNNNhifHhQv7
-         iYbWLB5QvuMTNf+TdL3SueLZ4dak4mR41MkJ6JgDlmg4215kc9ApwExZp279OJO+E9P0
-         IePK/QJyEhBqLqWWgvPPLNcfv3axouZFtsssRhTu9TOlbT0dSAP6z4j4qnpQZlXi8p9l
-         CYxciHCtE0lyeDX28PFHSQAmgVF4VTc+4eJ1ZPSp2v2oOjWvRMOGVR0Ty+X3ekJbnF5k
-         Q1O+kewM+Y4Qz2/2hIbKvU1D2+JqOQIny0IpmjOyeUvs7Bgg3iH5Ew43CMqe06n4HD2/
-         cpjA==
-X-Gm-Message-State: APjAAAX42yZgelqdGiowaY7Vrg+cYOg3kgE5ZPXrjIJ2RiYIjN3tqAJw
-        QJvBM0vaOA7rmpNDqLoapMhwUMpY4SwTE7TbzyrSY4+mS4R6OvN8CKhrro6eKi3dQAx1kytxz9/
-        EizfspAa0Na4p4P7kzHFOOpx1
-X-Received: by 2002:a7b:c957:: with SMTP id i23mr5784654wml.49.1578586099469;
-        Thu, 09 Jan 2020 08:08:19 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwVETqaEKCmXpHz5yplDHZ/sfX5dJd+AzP3YinwYC57N0IL5r0ZPXWJGPR5IniwcSWePRIULw==
-X-Received: by 2002:a7b:c957:: with SMTP id i23mr5784636wml.49.1578586099286;
-        Thu, 09 Jan 2020 08:08:19 -0800 (PST)
+        bh=XdbyLSo/LKwv0IS4UY8BmEznN2tnAhqPqp9PsERe1ZM=;
+        b=GQBEBUz942VFLc25YJeUr/KVv5Jq1z8vpjJ10HZq9BdkxWVh+27JgWbE0iCfmYoU2O
+         7LT7z+FrdpF3lstNDnhwoTyoxlP77GJLNywlWa7nghGc4Z28/ITLcBWS8lWV7CmPH7FD
+         d747v62A5SNolFQih3JSCw+XS6+g1O09lX6ZccdB4YVzPGmbYXBseEKQxqA6iyndZ19L
+         LGXlvhvXcSc7PdgGLXOBDxjN5kOH54nsF0Zh5Dj18TvAlU4Q2LLZbDET+TKa+vd/SuM4
+         ahL/xq8/gSky1p77zxkmcnFWlakYWWQS+brDTtQjRq9xNdxA2PQtTj/PrhAyxe72y1w0
+         M1Mw==
+X-Gm-Message-State: APjAAAXDtEy/2RVkVaZikqPWTirhMq5luudbtTrHXTH483lAIx27Me64
+        ggsao33C/EGMRM9f8bsyzOZIHz6ckFnKWzBMOk629cKp96OXMEMOLDjo1arZzSN/4Kh9s1jGXTC
+        kRVDHN8mBWlSqe4koCbgly0Fz
+X-Received: by 2002:a7b:c935:: with SMTP id h21mr5629111wml.173.1578586100903;
+        Thu, 09 Jan 2020 08:08:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqybaGwF2SifAH/vF/5c/Zg4lZFldMQtCNPmw+l0nkZ5ezrMFKLX54upiO65e6Aqyi7sdLTdig==
+X-Received: by 2002:a7b:c935:: with SMTP id h21mr5629084wml.173.1578586100669;
+        Thu, 09 Jan 2020 08:08:20 -0800 (PST)
 Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id m10sm8562605wrx.19.2020.01.09.08.08.17
+        by smtp.gmail.com with ESMTPSA id m10sm8562605wrx.19.2020.01.09.08.08.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:08:18 -0800 (PST)
+        Thu, 09 Jan 2020 08:08:20 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
         catalin.marinas@arm.com, will@kernel.org,
-        Julien Thierry <jthierry@redhat.com>
-Subject: [RFC v5 42/57] objtool: arm64: Decode SVE instructions
-Date:   Thu,  9 Jan 2020 16:02:45 +0000
-Message-Id: <20200109160300.26150-43-jthierry@redhat.com>
+        Julien Thierry <jthierry@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Kees Cook <keescook@chromium.org>,
+        Emese Revfy <re.emese@gmail.com>, linux-kbuild@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: [RFC v5 43/57] gcc-plugins: objtool: Add plugin to detect switch table on arm64
+Date:   Thu,  9 Jan 2020 16:02:46 +0000
+Message-Id: <20200109160300.26150-44-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
 References: <20200109160300.26150-1-jthierry@redhat.com>
@@ -80,164 +85,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Decode instructions from the SVE architecture extension.
+From: Raphael Gault <raphael.gault@arm.com>
 
-These instructions do not modify the stack or frame pointer. Simply
-acknowledge the corresponding opcodes are valid.
+This plugins comes into play before the final 2 RTL passes of GCC and
+detects switch-tables that are to be outputed in the ELF and writes
+information in an ".discard.switch_table_info" section which will be
+used by objtool.
 
-Suggested-by: Raphael Gault <raphael.gault@arm.com>
+Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+[J.T.: Change section name to store switch table information,
+       Make plugin Kconfig be selected rather than opt-in by user,
+       Add a relocation in the switch_table_info that points to
+       the jump operation itself]
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Emese Revfy <re.emese@gmail.com>
+Cc: linux-kbuild@vger.kernel.org
+Cc: kernel-hardening@lists.openwall.com
 ---
- tools/objtool/arch/arm64/decode.c             | 109 ++++++++++++++++++
- .../objtool/arch/arm64/include/insn_decode.h  |   4 +
- 2 files changed, 113 insertions(+)
+ arch/arm64/Kconfig                            |  1 +
+ scripts/Makefile.gcc-plugins                  |  2 +
+ scripts/gcc-plugins/Kconfig                   |  4 +
+ .../arm64_switch_table_detection_plugin.c     | 94 +++++++++++++++++++
+ 4 files changed, 101 insertions(+)
+ create mode 100644 scripts/gcc-plugins/arm64_switch_table_detection_plugin.c
 
-diff --git a/tools/objtool/arch/arm64/decode.c b/tools/objtool/arch/arm64/decode.c
-index d35c2b58d309..5a5f82b5cb81 100644
---- a/tools/objtool/arch/arm64/decode.c
-+++ b/tools/objtool/arch/arm64/decode.c
-@@ -126,6 +126,7 @@ static int is_arm64(struct elf *elf)
- static arm_decode_class aarch64_insn_class_decode_table[NR_INSN_CLASS] = {
- 	[INSN_RESERVED]			= arm_decode_unknown,
- 	[INSN_UNKNOWN]			= arm_decode_unknown,
-+	[INSN_SVE_ENC]			= arm_decode_sve_encoding,
- 	[INSN_UNALLOC]			= arm_decode_unknown,
- 	[INSN_LD_ST_4]			= arm_decode_ld_st,
- 	[INSN_DP_REG_5]			= arm_decode_dp_reg,
-@@ -2755,3 +2756,111 @@ int arm_decode_dp_simd(u32 instr, enum insn_type *type,
- 	*type = INSN_OTHER;
- 	return 0;
- }
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b1b4476ddb83..a7b2116d5d13 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -90,6 +90,7 @@ config ARM64
+ 	select DMA_DIRECT_REMAP
+ 	select EDAC_SUPPORT
+ 	select FRAME_POINTER
++	select GCC_PLUGIN_SWITCH_TABLES if STACK_VALIDATION
+ 	select GENERIC_ALLOCATOR
+ 	select GENERIC_ARCH_TOPOLOGY
+ 	select GENERIC_CLOCKEVENTS
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index 5f7df50cfe7a..a56736df9dc2 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -44,6 +44,8 @@ ifdef CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK
+ endif
+ export DISABLE_ARM_SSP_PER_TASK_PLUGIN
+
++gcc-plugin-$(CONFIG_GCC_PLUGIN_SWITCH_TABLES)	+= arm64_switch_table_detection_plugin.so
 +
-+static struct aarch64_insn_decoder sve_enc_decoder[] = {
-+	{
-+		.mask = 0b1111010000111000,
-+		.value = 0b0000010000011000,
-+	},
-+	{
-+		.mask = 0b1111110000111000,
-+		.value = 0b0001110000000000,
-+	},
-+	{
-+		.mask = 0b1111010000110000,
-+		.value = 0b0011010000010000,
-+	},
-+	{
-+		.mask = 0b1111011100111000,
-+		.value = 0b0011010100101000,
-+	},
-+	{
-+		.mask = 0b1111011000110000,
-+		.value = 0b0011011000100000,
-+	},
-+	{
-+		.mask = 0b1111010000100000,
-+		.value = 0b0100000000100000,
-+	},
-+	{
-+		.mask = 0b1111000000000000,
-+		.value = 0b0101000000000000,
-+	},
-+	{
-+		.mask = 0b1111011111111000,
-+		.value = 0b0110000000101000,
-+	},
-+	{
-+		.mask = 0b1111011111110000,
-+		.value = 0b0110000000110000,
-+	},
-+	{
-+		.mask = 0b1111011111100000,
-+		.value = 0b0110000001100000,
-+	},
-+	{
-+		.mask = 0b1111011110100000,
-+		.value = 0b0110000010100000,
-+	},
-+	{
-+		.mask = 0b1111011100100000,
-+		.value = 0b0110000100100000,
-+	},
-+	{
-+		.mask = 0b1111011000100000,
-+		.value = 0b0110001000100000,
-+	},
-+	{
-+		.mask = 0b1111010000110110,
-+		.value = 0b0110010000000010,
-+	},
-+	{
-+		.mask = 0b1111010000111111,
-+		.value = 0b0110010000001001,
-+	},
-+	{
-+		.mask = 0b1111010000111100,
-+		.value = 0b0110010000001100,
-+	},
-+	{
-+		.mask = 0b1111010000110000,
-+		.value = 0b0110010000010000,
-+	},
-+	{
-+		.mask = 0b1111010000100000,
-+		.value = 0b0110010000100000,
-+	},
-+	{
-+		.mask = 0b1111011100111100,
-+		.value = 0b0111000100001000,
-+	},
-+};
+ # All the plugin CFLAGS are collected here in case a build target needs to
+ # filter them out of the KBUILD_CFLAGS.
+ GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
+diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+index e3569543bdac..f50047939660 100644
+--- a/scripts/gcc-plugins/Kconfig
++++ b/scripts/gcc-plugins/Kconfig
+@@ -112,4 +112,8 @@ config GCC_PLUGIN_ARM_SSP_PER_TASK
+ 	bool
+ 	depends on GCC_PLUGINS && ARM
+
++config GCC_PLUGIN_SWITCH_TABLES
++	bool
++	depends on GCC_PLUGINS && ARM64
 +
-+int arm_decode_sve_encoding(u32 instr, enum insn_type *type,
-+			    unsigned long *immediate,
-+			    struct list_head *ops_list)
+ endif
+diff --git a/scripts/gcc-plugins/arm64_switch_table_detection_plugin.c b/scripts/gcc-plugins/arm64_switch_table_detection_plugin.c
+new file mode 100644
+index 000000000000..9b8b2ec6a3c8
+--- /dev/null
++++ b/scripts/gcc-plugins/arm64_switch_table_detection_plugin.c
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <stdio.h>
++#include "gcc-common.h"
++
++__visible int plugin_is_GPL_compatible;
++
++#define GEN_QUAD(rtx)	assemble_integer_with_op(".quad ", rtx)
++
++/*
++ * Create an array of metadata for each jump table found in the rtl.
++ * The metadata contains:
++ * - A pointer to the table of offsets used for the actual branch
++ * - A pointer to first instruction of the group getting expanded into an
++ *   acutal jump
++ * - The number of entries in the table of offsets
++ * - Whether the offsets in the table are signed or not
++ */
++static unsigned int arm64_switchtbl_rtl_execute(void)
 +{
-+	int i = 0;
-+	unsigned char op0 = 0, op1 = 0, op2 = 0, op3 = 0;
-+	u32 decode_field = 0;
++	rtx_insn *insn;
++	rtx_insn *labelp = NULL;
++	rtx_jump_table_data *tablep = NULL;
++	section *swt_sec;
++	section *curr_sec = current_function_section();
 +
-+	op0 = (instr >> 29) & ONES(3);
-+	op1 = (instr >> 23) & ONES(2);
-+	op2 = (instr >> 17) & ONES(5);
-+	op3 = (instr >> 10) & ONES(6);
++	swt_sec = get_section(".discard.switch_table_info",
++			      SECTION_EXCLUDE | SECTION_COMMON, NULL);
 +
-+	decode_field = (op0 << 2) | op1;
-+	decode_field = (decode_field << 5) | op2;
-+	decode_field = (decode_field << 6) | op3;
++	for (insn = get_insns(); insn; insn = NEXT_INSN(insn)) {
++		/*
++		 * Find a tablejump_p INSN (using a dispatch table)
++		 */
++		if (!tablejump_p(insn, &labelp, &tablep))
++			continue;
 +
-+	for (i = 0; i < ARRAY_SIZE(sve_enc_decoder); i++) {
-+		if ((decode_field & sve_enc_decoder[i].mask) ==
-+		    sve_enc_decoder[i].value)
-+			return arm_decode_unknown(instr, type, immediate,
-+						  ops_list);
++		if (labelp && tablep) {
++			rtx_code_label *label_to_jump;
++
++			/*
++			 * GCC is a bit touchy about adding the label right
++			 * before the jump rtx_insn as it modifies the
++			 * basic_block created for the jump table.
++			 * Make sure we create the label before the whole
++			 * basic_block of the jump table.
++			 */
++			label_to_jump = gen_label_rtx();
++			SET_LABEL_KIND(label_to_jump, LABEL_NORMAL);
++			emit_label_before(label_to_jump, insn);
++			/* Force label to be kept, apparently LABEL_PRESERVE_P is an rvalue :) */
++			LABEL_PRESERVE_P(label_to_jump) = 1;
++
++			switch_to_section(swt_sec);
++			GEN_QUAD(gen_rtx_LABEL_REF(Pmode, labelp));
++			GEN_QUAD(gen_rtx_LABEL_REF(Pmode, label_to_jump));
++			GEN_QUAD(GEN_INT(GET_NUM_ELEM(tablep->get_labels())));
++			GEN_QUAD(GEN_INT(ADDR_DIFF_VEC_FLAGS(tablep).offset_unsigned));
++			switch_to_section(curr_sec);
++
++			/*
++			 * Scheduler isn't very happy about leaving labels in
++			 * the middle of jump table basic blocks.
++			 */
++			delete_insn(label_to_jump);
++		}
++	}
++	return 0;
++}
++
++#define PASS_NAME arm64_switchtbl_rtl
++
++#define NO_GATE
++#include "gcc-generate-rtl-pass.h"
++
++__visible int plugin_init(struct plugin_name_args *plugin_info,
++			  struct plugin_gcc_version *version)
++{
++	const char * const plugin_name = plugin_info->base_name;
++	int tso = 0;
++	int i;
++
++	if (!plugin_default_version_check(version, &gcc_version)) {
++		error(G_("incompatible gcc/plugin versions"));
++		return 1;
 +	}
 +
-+	*type = INSN_OTHER;
++	PASS_INFO(arm64_switchtbl_rtl, "expand", 1,
++		  PASS_POS_INSERT_AFTER);
++
++	register_callback(plugin_info->base_name, PLUGIN_PASS_MANAGER_SETUP,
++			  NULL, &arm64_switchtbl_rtl_pass_info);
 +
 +	return 0;
 +}
-diff --git a/tools/objtool/arch/arm64/include/insn_decode.h b/tools/objtool/arch/arm64/include/insn_decode.h
-index 2bff4d7da007..89cff8791c0b 100644
---- a/tools/objtool/arch/arm64/include/insn_decode.h
-+++ b/tools/objtool/arch/arm64/include/insn_decode.h
-@@ -7,6 +7,7 @@
- 
- #define INSN_RESERVED	0b0000
- #define INSN_UNKNOWN	0b0001
-+#define INSN_SVE_ENC	0b0010
- #define INSN_UNALLOC	0b0011
- #define INSN_DP_IMM	0b1001	//0x100x
- #define INSN_SYS_BRANCH	0b1011	//0x101x
-@@ -41,6 +42,9 @@ struct aarch64_insn_decoder {
- };
- 
- /* arm64 instruction classes */
-+int arm_decode_sve_encoding(u32 instr, enum insn_type *type,
-+			    unsigned long *immediate,
-+			    struct list_head *ops_list);
- int arm_decode_dp_imm(u32 instr, enum insn_type *type,
- 		      unsigned long *immediate, struct list_head *ops_list);
- int arm_decode_dp_reg(u32 instr, enum insn_type *type,
--- 
+--
 2.21.0
 
