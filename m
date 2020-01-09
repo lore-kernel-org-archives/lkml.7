@@ -2,117 +2,75 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF9BC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740D2C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E66D2075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549532075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgAIMD5 (ORCPT
+        id S1730750AbgAIMEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:03:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:58044 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgAIMD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:03:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7293831B;
-        Thu,  9 Jan 2020 04:03:56 -0800 (PST)
-Received: from [10.1.32.29] (e122027.cambridge.arm.com [10.1.32.29])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C6553F534;
-        Thu,  9 Jan 2020 04:03:53 -0800 (PST)
-Subject: Re: [PATCH v2 3/7] drm/panfrost: Improve error reporting in
- panfrost_gpu_power_on
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200108052337.65916-1-drinkcat@chromium.org>
- <20200108052337.65916-4-drinkcat@chromium.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3997e444-e388-929f-b764-537d62643bae@arm.com>
-Date:   Thu, 9 Jan 2020 12:03:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 07:04:50 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:44002 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730101AbgAIMEu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 07:04:50 -0500
+X-IronPort-AV: E=Sophos;i="5.69,413,1571695200"; 
+   d="scan'208";a="430608229"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 13:04:48 +0100
+Date:   Thu, 9 Jan 2020 13:04:48 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: julia@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Wen Yang <wenyang@linux.alibaba.com>, cocci@systeme.lip6.fr,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        =?ISO-8859-15?Q?Matthias_M=E4nnich?= <maennich@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [v2] coccinelle: semantic patch to check for inappropriate
+ do_div() calls
+In-Reply-To: <e479c5c7-2556-eb77-9e9c-8833fb883a39@web.de>
+Message-ID: <alpine.DEB.2.21.2001091304310.10786@hadrien>
+References: <20200107170240.47207-1-wenyang@linux.alibaba.com> <9a2b7d00-442e-0c1b-73cc-aed2bbecd13a@web.de> <alpine.DEB.2.21.2001091140380.10786@hadrien> <e479c5c7-2556-eb77-9e9c-8833fb883a39@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200108052337.65916-4-drinkcat@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-300527455-1578571488=:10786"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/2020 05:23, Nicolas Boichat wrote:
-> It is useful to know which component cannot be powered on.
-> 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Looks like helpful error reporting.
+--8323329-300527455-1578571488=:10786
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Reviewed-by: Steven Price <steven.price@arm.com>
 
-> 
-> ---
-> 
-> Was useful when trying to probe bifrost GPU, to understand what
-> issue we are facing.
-> ---
->   drivers/gpu/drm/panfrost/panfrost_gpu.c | 15 ++++++++++-----
->   1 file changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> index 8822ec13a0d619f..ba02bbfcf28c011 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> @@ -308,21 +308,26 @@ void panfrost_gpu_power_on(struct panfrost_device *pfdev)
->   	gpu_write(pfdev, L2_PWRON_LO, pfdev->features.l2_present);
->   	ret = readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
->   		val, val == pfdev->features.l2_present, 100, 1000);
-> +	if (ret)
-> +		dev_err(pfdev->dev, "error powering up gpu L2");
->   
->   	gpu_write(pfdev, STACK_PWRON_LO, pfdev->features.stack_present);
-> -	ret |= readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
-> +	ret = readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
->   		val, val == pfdev->features.stack_present, 100, 1000);
-> +	if (ret)
-> +		dev_err(pfdev->dev, "error powering up gpu stack");
 
-As mentioned in my previous email - we could just drop this entire section dealing with the core stacks and let the GPU's own dependency management code handle it. Of course there might be a GPU out there for which that is broken... in which case some sort of quirk handling will be needed :(
+On Thu, 9 Jan 2020, Markus Elfring wrote:
 
-Steve
+> >> Thus I suggest now to split the source code search pattern into
+> >> four separate rules.
+> >
+> > Why?
+>
+> Does the Coccinelle software ensure that a variable like “r.ul” contains
+> really useful data even if the expected branch of the SmPL disjunction
+> was occasionally not matched?
 
->   
->   	gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
-> -	ret |= readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
-> +	ret = readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
->   		val, val == pfdev->features.shader_present, 100, 1000);
-> +	if (ret)
-> +		dev_err(pfdev->dev, "error powering up gpu shader");
->   
->   	gpu_write(pfdev, TILER_PWRON_LO, pfdev->features.tiler_present);
-> -	ret |= readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
-> +	ret = readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
->   		val, val == pfdev->features.tiler_present, 100, 1000);
-> -
->   	if (ret)
-> -		dev_err(pfdev->dev, "error powering up gpu");
-> +		dev_err(pfdev->dev, "error powering up gpu tiler");
->   }
->   
->   void panfrost_gpu_power_off(struct panfrost_device *pfdev)
-> 
+The python code will only be executed if it does.
 
+julia
+--8323329-300527455-1578571488=:10786--
