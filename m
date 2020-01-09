@@ -2,179 +2,193 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8CBC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D9EC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB942077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 298382067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QjTTPpKd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g3+jX2mD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgAIHlF (ORCPT
+        id S1728313AbgAIHma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:41:05 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37596 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbgAIHlF (ORCPT
+        Thu, 9 Jan 2020 02:42:30 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43388 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728231AbgAIHma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:41:05 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cy15so4810675edb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 23:41:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Tc2D6Fddcx4jsd+C+veXGGQQuxMll3GdXqPaTOZ3Rv8=;
-        b=QjTTPpKdzKtvc8m2GWDyHtt0EbLVlhhr8Pu5etCFNi+g/bA76m/0AIgVN9cNi8DsHN
-         9EY+zNdSWzPrUt+ii0aUmfHxG109EUt3JrD3RBZMKrx+3AMTf2OJKh/JvPru2ETZXfpZ
-         Bj5qTOA0dLNp5e/aRdDHOHjUlPsxq3poG0thL2F4FH3et14KwMCRCRCsZwzOFulVRzeJ
-         PG6n6n5shWPwGGKyLbzWMsCsHcE1Q+leV47bIKpgge/Y5KWixieuOaUfC954msHUvnGl
-         ry1NiYRy91fBEnsBKR4xLxS4FSD0qbFksu/IalZCkBmb2Gt1ukg/4gwlKX6cMaAFcxWS
-         3IDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Tc2D6Fddcx4jsd+C+veXGGQQuxMll3GdXqPaTOZ3Rv8=;
-        b=rigq0vU/Y9QWTkC70BV5dceZmCrmFVjH8Lfq58fDSOfosncceJfUQfWBU+o24DkwsS
-         yNc0qSlOK5diV8Iprn4OlawCPnE+tzB/408LN+ah8CBRBV5VUyqERPPhrsbCU0vqiXGF
-         HXd/jJw46CxJ+EYhruoN7eT5uGCsXZVPE5DSC4k+PUj98s7zSEKpZ3/jwTEdBZUl+DUG
-         DHlTZT6upE9XvLR+zM4vMaxmf2XdFl5s8vDtYfk8WvAxkNfI4x+0CwoLWDwJ0ty1jJiR
-         Mr81aIyb7jEAlVLu93oDRUIjnMp2SQWynwUbwPXFTXzLAlAW6/uOwBBUXHbsvswNkCHp
-         PwvA==
-X-Gm-Message-State: APjAAAXY9PCTfCkS1EivvyTZ9YOyfPzXIJcRd9hsXd7efRi5pfVHjgSt
-        T4QOS/Lg2TVOPU4w2PnhLOCcbw==
-X-Google-Smtp-Source: APXvYqxexeYCvUclhR2/21VigWRLKTkpkK7LqIRm2opKYvdDcU7Dc38V3W5WB8bMCIHYHs3MIZ3eEw==
-X-Received: by 2002:a17:906:944d:: with SMTP id z13mr9156035ejx.4.1578555662883;
-        Wed, 08 Jan 2020 23:41:02 -0800 (PST)
-Received: from [192.168.1.13] (hst-221-28.medicom.bg. [84.238.221.28])
-        by smtp.googlemail.com with ESMTPSA id m6sm99623ejj.19.2020.01.08.23.41.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 23:41:02 -0800 (PST)
-Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
-To:     Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
-References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
- <20200106154929.4331-5-stanimir.varbanov@linaro.org>
- <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
-Date:   Thu, 9 Jan 2020 09:41:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 02:42:30 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0097gN2H020521;
+        Thu, 9 Jan 2020 01:42:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578555743;
+        bh=vwU6q6zvMd5OU31CXYsLStuFLRdqUJGECJE4onbG3Bw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=g3+jX2mDYQqns4Ll8bBE2WWIUYJkH10YRYQla3uuHQ6DImu7QWIOncPXcAa3tXMYo
+         s5aY6aUkAo01Tw+mitFJLsoMXSmadK+uJyOzrANu0QmNzcx+CBxPmnXOlSnDGs6cR2
+         f/kAG9FUfMwEzJhuQ33cy9wd4lqgY9p0nV8K6TC4=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0097gNPF070204
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Jan 2020 01:42:23 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
+ 2020 01:42:22 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Jan 2020 01:42:22 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0097gJuf121104;
+        Thu, 9 Jan 2020 01:42:20 -0600
+Subject: Re: [PATCH v2 2/2] phy: ti: j721e-wiz: Implement DisplayPort mode to
+ the wiz driver
+To:     Jyri Sarha <jsarha@ti.com>, <linux-kernel@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <yamonkar@cadence.com>,
+        <sjakhade@cadence.com>, <robh+dt@kernel.org>, <rogerq@ti.com>
+References: <cover.1578471433.git.jsarha@ti.com>
+ <08f35af7ad6b948bd6ccab9f0807e36b6ddfb1c3.1578471433.git.jsarha@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <7c793ac4-59ae-1fcb-227c-2029240cf009@ti.com>
+Date:   Thu, 9 Jan 2020 13:14:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <08f35af7ad6b948bd6ccab9f0807e36b6ddfb1c3.1578471433.git.jsarha@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+Hi Jyri,
 
-On 1/8/20 6:09 PM, Hans Verkuil wrote:
-> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
->> This event indicate that the source color bit-depth is changed
->> during run-time. The client must get the new format and re-allocate
->> buffers for it. This can usually happens with video decoder (encoders)
->> when the bit-stream color bit-depth is changed from 8 to 10bits
->> or vice versa.
->>
->> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
->>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>  include/uapi/linux/videodev2.h                  | 1 +
->>  3 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> index 42659a3d1705..fad853d440cf 100644
->> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> @@ -402,7 +402,13 @@ call.
->>  	that many Video Capture devices are not able to recover from a temporary
->>  	loss of signal and so restarting streaming I/O is required in order for
->>  	the hardware to synchronize to the video signal.
->> -
->> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
->> +      - 0x0002
->> +      - This event gets triggered when color bit-depth change is detected
->> +	from a video decoder. Applications will have to query the new pixel
->> +	format and re-negotiate the queue. In most cases the streaming must be
->> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
->> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+On 08/01/20 2:00 PM, Jyri Sarha wrote:
+> For DisplayPort use we need to set WIZ_CONFIG_LANECTL register's
+> P_STANDARD_MODE bits to "mode 3". In the DisplayPort use also the
+> P_ENABLE bits of the same register are set to P_ENABLE instead of
+> P_ENABLE_FORCE, so that the DisplayPort driver can enable and disable
+> the lane as needed. The DisplayPort mode is selected according to
+> "cdns,phy-type"-properties found in link subnodes under the managed
+> serdes (see "ti,sierra-phy-t0" and "ti,j721e-serdes-10g" devicetree
+> bindings for details). All other values of "cdns,phy-type"-property
+> but PHY_TYPE_DP will set P_STANDARD_MODE bits to 0 and P_ENABLE bits
+> to force enable.
 > 
-> I think this is too specific for decoders. Something similar to the
-> CH_RESOLUTION description would be more appropriate:
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  drivers/phy/ti/phy-j721e-wiz.c | 59 +++++++++++++++++++++++++++++++---
+>  1 file changed, 55 insertions(+), 4 deletions(-)
 > 
->       - This event gets triggered when a color bit-depth change (but not a
-> 	resolution change!) is detected	at an input. This can come from an
+> diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
+> index b5f6019e5c7d..22bc04846cdb 100644
+> --- a/drivers/phy/ti/phy-j721e-wiz.c
+> +++ b/drivers/phy/ti/phy-j721e-wiz.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/regmap.h>
+>  #include <linux/reset-controller.h>
+> +#include <dt-bindings/phy/phy.h>
+>  
+>  #define WIZ_SERDES_CTRL		0x404
+>  #define WIZ_SERDES_TOP_CTRL	0x408
+> @@ -78,6 +79,8 @@ static const struct reg_field p_enable[WIZ_MAX_LANES] = {
+>  	REG_FIELD(WIZ_LANECTL(3), 30, 31),
+>  };
+>  
+> +enum p_enable { P_ENABLE = 2, P_ENABLE_FORCE = 1, P_ENABLE_DISABLE = 0 };
+> +
+>  static const struct reg_field p_align[WIZ_MAX_LANES] = {
+>  	REG_FIELD(WIZ_LANECTL(0), 29, 29),
+>  	REG_FIELD(WIZ_LANECTL(1), 29, 29),
+> @@ -220,6 +223,7 @@ struct wiz {
+>  	struct reset_controller_dev wiz_phy_reset_dev;
+>  	struct gpio_desc	*gpio_typec_dir;
+>  	int			typec_dir_delay;
+> +	u32 lane_phy_type[WIZ_MAX_LANES];
+>  };
+>  
+>  static int wiz_reset(struct wiz *wiz)
+> @@ -242,12 +246,17 @@ static int wiz_reset(struct wiz *wiz)
+>  static int wiz_mode_select(struct wiz *wiz)
+>  {
+>  	u32 num_lanes = wiz->num_lanes;
+> +	enum wiz_lane_standard_mode mode;
+>  	int ret;
+>  	int i;
+>  
+>  	for (i = 0; i < num_lanes; i++) {
+> -		ret = regmap_field_write(wiz->p_standard_mode[i],
+> -					 LANE_MODE_GEN4);
+> +		if (wiz->lane_phy_type[i] == PHY_TYPE_DP)
+> +			mode = LANE_MODE_GEN1;
+> +		else
+> +			mode = LANE_MODE_GEN4;
+> +
+> +		ret = regmap_field_write(wiz->p_standard_mode[i], mode);
+>  		if (ret)
+>  			return ret;
+>  	}
+> @@ -707,7 +716,7 @@ static int wiz_phy_reset_assert(struct reset_controller_dev *rcdev,
+>  		return ret;
+>  	}
+>  
+> -	ret = regmap_field_write(wiz->p_enable[id - 1], false);
+> +	ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE_DISABLE);
+>  	return ret;
+>  }
+>  
+> @@ -734,7 +743,11 @@ static int wiz_phy_reset_deassert(struct reset_controller_dev *rcdev,
+>  		return ret;
+>  	}
+>  
+> -	ret = regmap_field_write(wiz->p_enable[id - 1], true);
+> +	if (wiz->lane_phy_type[id - 1] == PHY_TYPE_DP)
+> +		ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE);
+> +	else
+> +		ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE_FORCE);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -761,6 +774,40 @@ static const struct of_device_id wiz_id_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, wiz_id_table);
+>  
+> +static int wiz_get_lane_phy_types(struct device *dev, struct wiz *wiz)
+> +{
+> +	struct device_node *serdes, *subnode;
+> +
+> +	serdes = of_get_child_by_name(dev->of_node, "serdes");
+> +	if (!serdes) {
+> +		dev_err(dev, "%s: Getting \"serdes\"-node failed\n", __func__);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for_each_child_of_node(serdes, subnode) {
+> +		u32 reg, num_lanes = 1, phy_type = PHY_NONE;
+> +		int ret, i;
+> +
+> +		ret = of_property_read_u32(subnode, "reg", &reg);
+> +		if (ret) {
+> +			dev_err(dev,
+> +				"%s: Reading \"reg\" from \"%s\" failed: %d\n",
+> +				__func__, subnode->name, ret);
+> +			return ret;
+> +		}
+> +		of_property_read_u32(subnode, "cdns,num-lanes", &num_lanes);
+> +		of_property_read_u32(subnode, "cdns,phy-type", &phy_type);
+This would require the Torrent bindings to be Reviewed and Acked.
 
-What you mean by "but not a resolution change" here? Resolution change
-and bit-depth change cannot occur on the same time, or something else.
-
-I would say that for Venus (and probably others) on initialization time
-both could be changed on the same time, because we cannot predict the
-resolution and bit-depth before parsing bitstream headers.
-
-> 	input connector or from a video decoder. Applications will have to query
-> 	the new pixel format and re-negotiate the queue.
-> 
-> 	For stateful decoders follow the guidelines in :ref:`decoder`.
-> 	Video capture devices will in most cases have to stop and restart
-> 	streaming (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>` followed by
-> 	:ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
-> 
-> And update dev-decoder.rst where needed with this new event flag.
-> 
-> As to your question on irc: once I've acked this patch it can be merged
-> via a venus PR.
-> 
-> Regards,
-> 
-> 	Hans
-> 
->>  
->>  Return Value
->>  ============
->> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
->> index cb6ccf91776e..209709114378 100644
->> --- a/Documentation/media/videodev2.h.rst.exceptions
->> +++ b/Documentation/media/videodev2.h.rst.exceptions
->> @@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
->>  replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
->>  
->>  replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
->> +replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
->>  
->>  replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
->>  
->> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->> index 5f9357dcb060..1d349c9d57a7 100644
->> --- a/include/uapi/linux/videodev2.h
->> +++ b/include/uapi/linux/videodev2.h
->> @@ -2332,6 +2332,7 @@ struct v4l2_event_frame_sync {
->>  };
->>  
->>  #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
->> +#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
->>  
->>  struct v4l2_event_src_change {
->>  	__u32 changes;
->>
-> 
-
--- 
-regards,
-Stan
+Thanks
+Kishon
