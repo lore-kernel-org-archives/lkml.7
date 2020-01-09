@@ -6,99 +6,84 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25102C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DAEC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F8720678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071E820678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388277AbgAIRqZ (ORCPT
+        id S2388288AbgAIRqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:46:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:35174 "EHLO foss.arm.com"
+        Thu, 9 Jan 2020 12:46:53 -0500
+Received: from mga03.intel.com ([134.134.136.65]:13542 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728724AbgAIRqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:46:25 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58D57328;
-        Thu,  9 Jan 2020 09:46:24 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDE423F703;
-        Thu,  9 Jan 2020 09:46:23 -0800 (PST)
-Date:   Thu, 9 Jan 2020 17:46:22 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 11/18] KVM: arm64: don't trap Statistical Profiling
- controls to EL2
-Message-ID: <20200109174621.GB42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-12-andrew.murray@arm.com>
- <86bls0iqv6.wl-maz@kernel.org>
- <20191223115651.GA42593@e119886-lin.cambridge.arm.com>
- <1bb190091362262021dbaf41b5fe601e@www.loen.fr>
- <20191223121042.GC42593@e119886-lin.cambridge.arm.com>
- <20200109172511.GA42593@e119886-lin.cambridge.arm.com>
- <20200109174251.GJ3112@lakrids.cambridge.arm.com>
+        id S1731838AbgAIRqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 12:46:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 09:46:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="396165253"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga005.jf.intel.com with ESMTP; 09 Jan 2020 09:46:49 -0800
+Date:   Fri, 10 Jan 2020 01:45:45 +0800
+From:   Yu Chen <yu.c.chen@intel.com>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][RESEND v5] x86/resctrl: Add task resctrl information
+ display
+Message-ID: <20200109174544.GC11490@chenyu-office.sh.intel.com>
+References: <20200109135001.10076-1-yu.c.chen@intel.com>
+ <20200109142444.GB61542@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200109174251.GJ3112@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20200109142444.GB61542@chrisdown.name>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 05:42:51PM +0000, Mark Rutland wrote:
-> Hi Andrew,
+Hi Chris,
+On Thu, Jan 09, 2020 at 02:24:44PM +0000, Chris Down wrote:
+> Chen Yu writes:
+> > +#ifdef CONFIG_PROC_CPU_RESCTRL
+> > +
+> > +/*
+> > + * A task can only be part of one control
+> > + * group and of one monitoring group which
+> > + * is associated to that control group.
+> > + * So one line is simple and clear enough:
 > 
-> On Thu, Jan 09, 2020 at 05:25:12PM +0000, Andrew Murray wrote:
-> > On Mon, Dec 23, 2019 at 12:10:42PM +0000, Andrew Murray wrote:
-> > > On Mon, Dec 23, 2019 at 12:05:12PM +0000, Marc Zyngier wrote:
-> > > > On 2019-12-23 11:56, Andrew Murray wrote:
-> > > > > My original concern in the cover letter was in how to prevent
-> > > > > the guest from attempting to use these registers in the first
-> > > > > place - I think the solution I was looking for is to
-> > > > > trap-and-emulate ID_AA64DFR0_EL1 such that the PMSVer bits
-> > > > > indicate that SPE is not emulated.
-> > > > 
-> > > > That, and active trapping of the SPE system registers resulting in injection
-> > > > of an UNDEF into the offending guest.
-> > > 
-> > > Yes that's no problem.
-> > 
-> > The spec says that 'direct access to [these registers] are UNDEFINED' - is it
-> > not more correct to handle this with trap_raz_wi than an undefined instruction?
+> Can we please avoid using the word "control group" to describe these? It's
+> extremely confusing for readers since it's exactly the same word as used for
+> actual cgroups, especially since those are also a form of "resource
+> control"...
 > 
-> The term UNDEFINED specifically means treated as an undefined
-> instruction. The Glossary in ARM DDI 0487E.a says for UNDEFINED:
-> 
-> | Indicates cases where an attempt to execute a particular encoding bit
-> | pattern generates an exception, that is taken to the current Exception
-> | level, or to the default Exception level for taking exceptions if the
-> | UNDEFINED encoding was executed at EL0. This applies to:
-> |
-> | * Any encoding that is not allocated to any instruction.
-> |
-> | * Any encoding that is defined as never accessible at the current
-> |   Exception level.
-> |
-> | * Some cases where an enable, disable, or trap control means an
-> |   encoding is not accessible at the current Exception level.
-> 
-> So these should trigger an UNDEFINED exception rather than behaving as
-> RAZ/WI.
+> Doesn't official documentation refer to them as "resource groups" to avoid
+> this?
+Right, how abut changing change this description to:
+control group  ->   resctrl allocation group
+monitor group  ->   resctrl monitor group?
 
-OK thanks for the clarification - I'll leave it as an undefined instruction.
+Yes, the Documentation/x86/resctrl_ui.rst described them as
+"Resource Control feature", which is composed of allocation
+and monitor, so distinguish them as above seems to be appropriate.
 
 Thanks,
-
-Andrew Murray
-
-> 
-> Thanks,
-> Mark.
+Chenyu
