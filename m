@@ -2,101 +2,89 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BB1C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F354C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC342072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578557016;
-	bh=7XvTC5kB36KuLK7zd1wFe8Scqv4MqoW/teqSDD+VGqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UowoTCPbs4kbD0x5qBP7hXr7vG7hRAVUKX/lW+0c0WiQrjySUI4/jQuMFia30AKZm
-	 61dNb99Xu8vugCQZ5CPVjr1y+cIOnghFPdBhS4yHHyFk7JP9D/fcNVcL5JSIAC9IIG
-	 1JrBClRMsnWr3C4aO7Nsvny75IMbEf6DCpI9UlFA=
+	by mail.kernel.org (Postfix) with ESMTP id 63F54206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D3Zm8BAv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgAIIDf (ORCPT
+        id S1728388AbgAIIFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:03:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbgAIIDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:03:35 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 9 Jan 2020 03:05:41 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21462 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728340AbgAIIFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 03:05:41 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578557140; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-Id: Date: Subject: To: From: Sender;
+ bh=BuUdAvhMRovZFUB4BJ0UiwY2Y6k8o8mctzHNiqvFTHc=; b=D3Zm8BAvqplK//+gjHBRdggiEsRIzx1/aho097KjVF759u9XFRwhbWVMEoQFm0ll3DLEXqR6
+ sU7ttJPYSUOMjSgJ4rFJjewcOGeNA1UTwr12T/xl0KhCdOIMoevk7I1+mWcK4EN1ix/Ly1ff
+ pHjQ6pABNnfFFcHrunB+By7/XmI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e16ded1.7fc6d05c2148-smtp-out-n01;
+ Thu, 09 Jan 2020 08:05:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E44E8C447A5; Thu,  9 Jan 2020 08:05:35 +0000 (UTC)
+Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A40B206ED;
-        Thu,  9 Jan 2020 08:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578557014;
-        bh=7XvTC5kB36KuLK7zd1wFe8Scqv4MqoW/teqSDD+VGqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QG5X6xnQaJ7jCwtwIMFpR8dQA+hRdkOodGTB/0ZXTscE2zalO7KLx7eghDIrzl+Ku
-         KYscjlBRzUw5d+7OHmubqvfV0GtcfSwKWJyFN1nnfUSFDUuqUgcb25SzWlxv5LxkFl
-         7B3Km2ffEZ3/Z1PPvJtcbrzEJjmu5QYtFsxHkKDk=
-Date:   Thu, 9 Jan 2020 09:03:30 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     liuyang34 <yangliuxm34@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        liuyang34 <liuyang34@xiaomi.com>
-Subject: Re: [PATCH] x86: event, use scnprintf instead of snprintf
-Message-ID: <20200109080330.GA2579993@kroah.com>
-References: <cover.1578550730.git.liuyang34@xiaomi.com>
- <5fc0611a37b6c73fb524b8469cced8fd4cefc6a1.1578550730.git.liuyang34@xiaomi.com>
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD78EC4479C;
+        Thu,  9 Jan 2020 08:05:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD78EC4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, robh+dt@kernel.org,
+        sivaprak@codeaurora.org, sricharan@codeaurora.org, sboyd@kernel.org
+Subject: [PATCH V2 0/2] Add Global clock controller support for IPQ6018
+Date:   Thu,  9 Jan 2020 13:35:19 +0530
+Message-Id: <1578557121-423-1-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5fc0611a37b6c73fb524b8469cced8fd4cefc6a1.1578550730.git.liuyang34@xiaomi.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:36:26PM +0800, liuyang34 wrote:
-> the return size will low than PAGE_SIZE but maybe over 40 in show_sysctl_tfa,
-> so use scnprintf instead of snprintf to get real size
-> 
-> Signed-off-by: liuyang34 <liuyang34@xiaomi.com>
-> ---
->  arch/x86/events/intel/core.c    | 6 +++---
->  arch/x86/events/intel/pt.c      | 2 +-
->  arch/x86/platform/uv/uv_sysfs.c | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 3be51aa..bf287b4 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4372,7 +4372,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
->  			      struct device_attribute *attr,
->  			      char *buf)
->  {
-> -	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
-> +	return scnprintf(buf, 40, "%d\n", allow_tsx_force_abort);
+The IPQ6018 is Qualcomm’s 802.11ax/u2019s SoC for Routers,
+Gateways and Access Points.
 
-No, just use sprintf() for all of these.  We "know" the buffer size is
-big enough for a single number.  There's no need for fancy checks for
-any sysfs file.
+[V2]
+ * Addressed sparse warnings reported by Kbuild test robot.
 
-thanks,
+This series adds Global clock controller support for ipq6018.
 
-greg k-h
+Sricharan R (2):
+  clk: qcom: Add DT bindings for ipq6018 gcc clock controller
+  clk: qcom: Add ipq6018 Global Clock Controller support
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |    3 +-
+ drivers/clk/qcom/Kconfig                           |    8 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq6018.c                     | 4643 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-ipq6018.h       |  262 ++
+ include/dt-bindings/reset/qcom,gcc-ipq6018.h       |  157 +
+ 6 files changed, 5073 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq6018.h
+
+-- 
+1.9.1
