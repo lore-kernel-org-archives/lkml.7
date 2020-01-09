@@ -7,69 +7,69 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B228C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83F1C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015EB20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB3C20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EUL0vCJ8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qe09McnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733297AbgAIQJA (ORCPT
+        id S2387401AbgAIQJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:09:00 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47872 "EHLO
+        Thu, 9 Jan 2020 11:09:02 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26125 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729201AbgAIQI7 (ORCPT
+        by vger.kernel.org with ESMTP id S1733300AbgAIQJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:08:59 -0500
+        Thu, 9 Jan 2020 11:09:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578586138;
+        s=mimecast20190719; t=1578586141;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SOQjJaPeQ6AkeMaBkCNADMS/kyh8erzQiBDqDRYV0Ec=;
-        b=EUL0vCJ8ZrnWjvsaczDdGHnKKVKoNO7Bdnqk53iDOGWRBr+ILjB8qsqBbEmx3MlTNdea2Y
-        vcIDXFIp9JvqsbnWKYgEtcvmghYEi1+PsUMuilTtBBeeL3wULQJwND4U02q9IpJeaoSXSp
-        uAAbKFjVhDSz3BLOcZykcO1vlzddjXo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-s1m8si7nP72QKk9XVYs6DA-1; Thu, 09 Jan 2020 11:08:57 -0500
-X-MC-Unique: s1m8si7nP72QKk9XVYs6DA-1
-Received: by mail-wm1-f70.google.com with SMTP id g26so622299wmk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:08:56 -0800 (PST)
+        bh=kEfbHgsVU9eDoIkKPm/bUyQidxKwrK2z05bxXpj07hQ=;
+        b=Qe09McnFhMy5DL6rGU1IruhX+EF8DypSZDafMSjzwam/+FMECMbprppyREzfYJnQzVcEZI
+        ZHmheZbEBH3J9cq+BGfsSAfF2DAxznCQQKgWku/gxqTbMRUifoByy/f1B567m1TofxCWNx
+        mPjoCj3IyvTA0ZuPQM0UP7EIz8ygx3g=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-jD3QavGYMq-dWS1hAy2coQ-1; Thu, 09 Jan 2020 11:09:00 -0500
+X-MC-Unique: jD3QavGYMq-dWS1hAy2coQ-1
+Received: by mail-wr1-f70.google.com with SMTP id f15so3079858wrr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:08:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SOQjJaPeQ6AkeMaBkCNADMS/kyh8erzQiBDqDRYV0Ec=;
-        b=XiznIvTvpSGPFlX9Ozz34tEoBJMRgjZLKVXSloBX+C0hr54xAB/2We2cP59yzQlrDe
-         rO0+3lZCwj7oGOtnRPKUQMFK9Yy+MP9J6Lc6FMkXiQ0RBORk5HVHgUkNnlOsnVIhk5i8
-         sW/RB2364qeO1PDVQxHT93CwljkP6xuEhk2W/OCQ+hM1xRcdm5ZmgPHhY0ZFbXgbx04Q
-         +DWHscBkzDhh5s1fFKta7S5aPwhxjwcFVKlmf8ywHV4OELRPn6TfnftV4is/E77V76bA
-         nGE3ptLKnY9oqIjfITtXNA1uahMnqiimu8YnhfVj9FIPoF76QQwqjFol+H/SaDAhvdq+
-         VZ5A==
-X-Gm-Message-State: APjAAAWU0cuCB3WZrI8Oq7GDNKxPDeLD+AIIOqumvcQtTDSPZg871npg
-        kzwWC2AISLTPEK0A30z9MNk97r7qgrUE/6QmsCM3yxQMY9iEDnM9oyQnE9Z4biVScwGYaTCcRfE
-        o4DhHcbXVTQD8tAuxiXiQa7Aw
-X-Received: by 2002:a1c:8095:: with SMTP id b143mr5978376wmd.7.1578586135883;
-        Thu, 09 Jan 2020 08:08:55 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxEszMufKupL2p3ncLrB7YUBRc575U8Mr//L6Fw6AnOA6p/ZOQdu3ZNuVMIx6ccyJ0DT1HBiQ==
-X-Received: by 2002:a1c:8095:: with SMTP id b143mr5978353wmd.7.1578586135722;
-        Thu, 09 Jan 2020 08:08:55 -0800 (PST)
+        bh=kEfbHgsVU9eDoIkKPm/bUyQidxKwrK2z05bxXpj07hQ=;
+        b=Cxzcmaw5LfBMZ95Xsrye4Z7uQ1+wfubw3irpyVcD0noxzR7zW7j8fIP0J6ye/a7cv9
+         kjAs4nl9QQ7/u2K4E0CY7hmeM/LMkHtl9b0CDDxZH20LVPr86JVXPgM/XwWIdxq4I/Z1
+         8idlgNhrG7hpDjm8sJVlpRQL/oJIbZE0ErubRCVbX6F2G01SZxhsQQmLi2zg43ajxq9l
+         hMQPXssrnKkxp4Ktc6EN9m7blwSaOkc0UfIvzYULXTgCwplaKv/lvaHzVi6VkY2d2oSF
+         JDHXwiNSmyIDsuRfXEC7cjdrUyERv8BoV12o9G0Fn6vdFCHwYZtiiIUiEuvZOFkffxVb
+         Z2cA==
+X-Gm-Message-State: APjAAAXHh6sOhko+swX6KUohT0bDbjCD9qfT519JOBtVFI27rbe9Beq4
+        ebneqeyhpYX95m2aFL57gefNrn+yMk+Cg7CseWIK1aFTj7qY0LfeG7JYPpFqaTo5qgSFr4R8nSD
+        7PtPFXUyXUxu97iJTDFQQvu6Q
+X-Received: by 2002:adf:e3d0:: with SMTP id k16mr12018284wrm.241.1578586138794;
+        Thu, 09 Jan 2020 08:08:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzSLia58QbEuzIUwye/7K2S8R5lieQsiVKxVvK2wzbrjNJr4CLjCo4Rn4vyl1YI3pmhsGWMjA==
+X-Received: by 2002:adf:e3d0:: with SMTP id k16mr12018264wrm.241.1578586138549;
+        Thu, 09 Jan 2020 08:08:58 -0800 (PST)
 Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id v8sm8403505wrw.2.2020.01.09.08.08.54
+        by smtp.gmail.com with ESMTPSA id v8sm8403505wrw.2.2020.01.09.08.08.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:08:55 -0800 (PST)
+        Thu, 09 Jan 2020 08:08:58 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
         catalin.marinas@arm.com, will@kernel.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [RFC v5 46/57] arm64: alternative: Mark .altinstr_replacement as containing executable instructions
-Date:   Thu,  9 Jan 2020 16:02:49 +0000
-Message-Id: <20200109160300.26150-47-jthierry@redhat.com>
+Subject: [RFC v5 48/57] arm64: sleep: Prevent stack frame warnings from objtool
+Date:   Thu,  9 Jan 2020 16:02:51 +0000
+Message-Id: <20200109160300.26150-49-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
 References: <20200109160300.26150-1-jthierry@redhat.com>
@@ -82,29 +82,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Raphael Gault <raphael.gault@arm.com>
 
-Until now, the section .altinstr_replacement wasn't marked as containing
-executable instructions on arm64. This patch changes that so that it is
-coherent with what is done on x86.
+This code doesn't respect the Arm PCS but it is intended this
+way. Adapting it to respect the PCS would result in altering the
+behaviour.
+
+In order to suppress objtool's warnings, we setup a stack frame
+for __cpu_suspend_enter and annotate cpu_resume and _cpu_resume
+as having non-standard stack frames.
 
 Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- arch/arm64/include/asm/alternative.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/sleep.S | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-index b9f8d787eea9..e9e6b81e3eb4 100644
---- a/arch/arm64/include/asm/alternative.h
-+++ b/arch/arm64/include/asm/alternative.h
-@@ -71,7 +71,7 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- 	ALTINSTR_ENTRY(feature,cb)					\
- 	".popsection\n"							\
- 	" .if " __stringify(cb) " == 0\n"				\
--	".pushsection .altinstr_replacement, \"a\"\n"			\
-+	".pushsection .altinstr_replacement, \"ax\"\n"			\
- 	"663:\n\t"							\
- 	newinstr "\n"							\
- 	"664:\n\t"							\
---
+diff --git a/arch/arm64/kernel/sleep.S b/arch/arm64/kernel/sleep.S
+index f5b04dd8a710..55c7c099d32c 100644
+--- a/arch/arm64/kernel/sleep.S
++++ b/arch/arm64/kernel/sleep.S
+@@ -1,5 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #include <linux/errno.h>
++#include <linux/frame.h>
+ #include <linux/linkage.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/assembler.h>
+@@ -90,6 +91,7 @@ ENTRY(__cpu_suspend_enter)
+ 	str	x0, [x1]
+ 	add	x0, x0, #SLEEP_STACK_DATA_SYSTEM_REGS
+ 	stp	x29, lr, [sp, #-16]!
++	mov	x29, sp
+ 	bl	cpu_do_suspend
+ 	ldp	x29, lr, [sp], #16
+ 	mov	x0, #1
+@@ -146,3 +148,6 @@ ENTRY(_cpu_resume)
+ 	mov	x0, #0
+ 	ret
+ ENDPROC(_cpu_resume)
++
++	asm_stack_frame_non_standard cpu_resume
++	asm_stack_frame_non_standard _cpu_resume
+-- 
 2.21.0
 
