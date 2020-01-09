@@ -2,125 +2,109 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E757FC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C41DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCEAD20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:13:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kG4db/Ul"
+	by mail.kernel.org (Postfix) with ESMTP id DD4B320661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578586447;
+	bh=ePLE/0kjcY61EZrnQGGWVzvEAMoiXTEJ2zxMzL3drEg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mKXtEIGGJ26lueBQUYq8kIh7FS8daOw7gcoi/xywt/8be+ure3FGv+IR9r4jaYu20
+	 j4p4++bwCTi7W+iuLq49wEitVe88axL3xXO1j3d/BOBzFgx/etpNIKWPtAfxWCeRD9
+	 9IuvZuyyYUp3pPkDRuRVuQ7azOm4usVg5WOLPH+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732132AbgAIQNG (ORCPT
+        id S2387515AbgAIQOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:13:06 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42678 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbgAIQNF (ORCPT
+        Thu, 9 Jan 2020 11:14:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49606 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728737AbgAIQOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:13:05 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q6so7960502wro.9;
-        Thu, 09 Jan 2020 08:13:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6yj/7YzjyQLNXZxnms2P7cgL7F7rs/s3UQWjrOh43+M=;
-        b=kG4db/UlXTZTtrXORtrdw0qjW5GSB/oI1yoHqtyCKe5w1V0xdEvFji7JXxeNi7/9gq
-         WKknDUKq0fWfzzKlsNbDxJzuMB2ddozV8I4blStX/mY6liPmlKZa58s4/4gLaEJZ3wxi
-         K9hNxynYWjq0bZxBYcTQ7Nar+MnPQC1lFAip5OaqxoseMEwEpqgblyO2eXU3exoQ55vj
-         op0cQq6WM3ZI0stiQdTw9X0s49/ZWg9xhlzXa6EiPRzCtmbHVyAetl25FyCXLWA2utU/
-         5HGdKD0gfOz3Bnv0GAfYKf7X9gkj5ortU4/AeRXtnDx+aIa/4KVUNv7AZlcpvbneaqtl
-         MVbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6yj/7YzjyQLNXZxnms2P7cgL7F7rs/s3UQWjrOh43+M=;
-        b=aUd4mrU69zenWgIlh2odpfs2L7DvyTN20LKnElxfikS/FDzkKsfpEC6HTnQQGMSi2e
-         B4zc82pzbFeU2+eruIbjHU1eFEd9+VECqKdr0FyNh526nYpAUAlD4kCKr4Yi7jDwT5oK
-         8TsKOFX7NwgI96itJirJxcYBaZwgbw3ARD0JIVPGL3U/rqisI1FIh4qg5JPtMr9KxjPb
-         QdUUoKJPDqOzG7//HqAdqV+YIGKx2/bKBdx3Vqs6Rr+TXLdq2WsaLDj8cRvFnMWrtJKz
-         X9lx98kL1QAcoBL8ITGT4Oe2iEN8vGUXwZz5CvF3L3dZSZXMNV8/D/STVkn4HfbvpQ/N
-         4BQg==
-X-Gm-Message-State: APjAAAUBmDy1h/BVNI1/0AIT4ouXXNN+HsPoP9HlFPjL5Tsk2+HE4BF8
-        cj6wxCOJqLiag/7G1mlM87JAIH7OSwSzROQ/
-X-Google-Smtp-Source: APXvYqz/XsB+7WKpfDYPN9KlZHkXtMjU9SVQU7TYvChK4c06DMBhMUujcTYbpkxMDPbZ8CFxvnbACQ==
-X-Received: by 2002:adf:eb8e:: with SMTP id t14mr11737489wrn.384.1578586383105;
-        Thu, 09 Jan 2020 08:13:03 -0800 (PST)
-Received: from andrea ([159.253.226.36])
-        by smtp.gmail.com with ESMTPSA id z6sm8467573wrw.36.2020.01.09.08.13.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:13:02 -0800 (PST)
-Date:   Thu, 9 Jan 2020 17:12:57 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: Re: [PATCH 0/2] clocksource/hyperv: Miscellaneous changes
-Message-ID: <20200109161257.GA16332@andrea>
-References: <20191210093054.32230-1-parri.andrea@gmail.com>
- <20200108133344.GA8179@andrea>
- <7069f7ce-4ff7-3569-0d7e-615d1399283a@linaro.org>
+        Thu, 9 Jan 2020 11:14:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=23iMw4u+/DVo7oz9I68gScHBJuS7WAFFLyCdELFXaPM=; b=TXzR4VXX2s5VyCBs5oKtVPrTw
+        yHb9OfAxH0ZDUVrcmxYyGIxXK33AvONs/jnHI5eyDzIAtRLeRlUQ3Qky4FzdNoM+5yQvPmDPcG6kL
+        vSAKJ/yCH3gDvF1bthd/9HcvS8G0p9adTaMxExDSwPdKNP/g/NrMGK3hDlQb1F1Yk4EeoeTctjm+8
+        aWHwvdNpdPML5xf6wdwIF+qVKhLHXgBpg2b6FfKGmZDTcjDDPrjWULZEnnTgUX37GkVtKZPs4mn3+
+        TNq/smGYGs1u/LnHlGfwxs+IC/Xr3uTrxJh1WkoKZ4zlJqn7gltar1n/eiPgmb36YbyW+VsfSdgUk
+        Z18m9BCVw==;
+Received: from 177.206.132.169.dynamic.adsl.gvt.net.br ([177.206.132.169] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipaRd-0007cV-Ng; Thu, 09 Jan 2020 16:14:03 +0000
+Date:   Thu, 9 Jan 2020 17:13:45 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     sean@mess.org, tglx@linutronix.de, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 1/1] media: dvb_dummy_tuner: implement driver skeleton
+Message-ID: <20200109171345.2cf30990@kernel.org>
+In-Reply-To: <20200109152408.919325-2-dwlsalmeida@gmail.com>
+References: <20200109152408.919325-1-dwlsalmeida@gmail.com>
+        <20200109152408.919325-2-dwlsalmeida@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7069f7ce-4ff7-3569-0d7e-615d1399283a@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 12:40:04PM +0100, Daniel Lezcano wrote:
-> On 08/01/2020 14:33, Andrea Parri wrote:
-> > Thomas, Daniel,
-> > 
-> > On Tue, Dec 10, 2019 at 10:30:52AM +0100, Andrea Parri wrote:
-> >> Provide some refactoring and adjustments to the Hyper-V clocksources
-> >> code.  Applies to -rc1 plus Boqun's:
-> >>
-> >>   https://lkml.kernel.org/r/20191126021723.4710-1-boqun.feng@gmail.com
-> >>
-> >> Thanks,
-> >>   Andrea
-> >>
-> >> Andrea Parri (2):
-> >>   clocksource/hyperv: Untangle stimers and timesync from clocksources
-> >>   clocksource/hyperv: Set TSC clocksource as default w/ InvariantTSC
-> > 
-> > I'm wondering if you could route these patches via tip; for reference,
-> > 
-> >    https://lkml.kernel.org/r/20191210093054.32230-1-parri.andrea@gmail.com
-> > 
-> > Both patches got Reviewed-by: Michael (even though I can't find his replies
-> > on lore ATM).
-> > 
-> > Also, I realized that this series has a minor conflict with Dexuan's:
-> > 
-> >   https://lkml.kernel.org/r/1578350617-130430-1-git-send-email-decui@microsoft.com
-> > 
-> > (added to Cc:); please let me know if a rebase/resend is needed.
+Em Thu,  9 Jan 2020 12:24:08 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
+
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 > 
-> Yes please based on:
+> Implement the skeleton for the tuner driver in a separate file.
 > 
-> https://git.linaro.org/people/daniel.lezcano/linux.git timers/drivers/next
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> ---
+>  drivers/media/tuners/Kconfig           |   7 ++
+>  drivers/media/tuners/Makefile          |   1 +
+>  drivers/media/tuners/dvb_dummy_tuner.c | 153 +++++++++++++++++++++++++
+>  drivers/media/tuners/dvb_dummy_tuner.h |  20 ++++
+>  4 files changed, 181 insertions(+)
+>  create mode 100644 drivers/media/tuners/dvb_dummy_tuner.c
+>  create mode 100644 drivers/media/tuners/dvb_dummy_tuner.h
+> 
+> diff --git a/drivers/media/tuners/Kconfig b/drivers/media/tuners/Kconfig
+> index e104bb7766e1..efa1591fe0ae 100644
+> --- a/drivers/media/tuners/Kconfig
+> +++ b/drivers/media/tuners/Kconfig
+> @@ -296,4 +296,11 @@ config MEDIA_TUNER_QM1D1B0004
+>  	default m if !MEDIA_SUBDRV_AUTOSELECT
+>  	help
+>  	  Sharp QM1D1B0004 ISDB-S tuner driver.
+> +
+> +config MEDIA_TUNER_DVB_DUMMY_TUNER
+> +	tristate "Dummy tuner"
+> +	depends on MEDIA_SUPPORT && I2C
 
-Done: https://lkml.kernel.org/r/20200109160650.16150-1-parri.andrea@gmail.com
+> +	default m if !MEDIA_SUBDRV_AUTOSELECT
 
-Thanks Daniel.
+Actually, this is a dummy driver. It should not be auto-selected, as no
+real hardware depends on it. We don't want production distros to come with
+those test drivers.
 
-  Andrea
+When we add a bridge driver (let's say we call it DVB_DUMMY_BRIDGE), then
+what we could do here would be something like:
+
+	depends on DVB_DUMMY_BRIDGE
+	default y
+
+Cheers,
+Mauro
