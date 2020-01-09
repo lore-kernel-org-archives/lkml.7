@@ -2,134 +2,254 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1DBC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD50C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A40120721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A391206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbgAIQgZ (ORCPT
+        id S2387726AbgAIQhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:36:25 -0500
-Received: from mga05.intel.com ([192.55.52.43]:21216 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731354AbgAIQgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:36:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 08:36:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="235422089"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.69])
-  by orsmga002.jf.intel.com with ESMTP; 09 Jan 2020 08:36:24 -0800
-Date:   Thu, 9 Jan 2020 08:36:24 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: x86/mmu: Fix a benign Bitwise vs. Logical OR mixup
-Message-ID: <20200109163624.GA15001@linux.intel.com>
-References: <20200108001859.25254-1-sean.j.christopherson@intel.com>
- <c716f793e22e4885a3dee3c91f93e517@AcuMS.aculab.com>
- <20200109152629.GA25610@rani.riverdale.lan>
+        Thu, 9 Jan 2020 11:37:03 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54951 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbgAIQhD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:37:03 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ipanq-0007bb-QK; Thu, 09 Jan 2020 17:36:58 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7596F1C2CE8;
+        Thu,  9 Jan 2020 17:36:58 +0100 (CET)
+Date:   Thu, 09 Jan 2020 16:36:58 -0000
+From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: smp/urgent] cpu/SMT: Fix x86 link error without CONFIG_SYSFS
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Kosina <jkosina@suse.cz>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191210195614.786555-1-arnd@arndb.de>
+References: <20191210195614.786555-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109152629.GA25610@rani.riverdale.lan>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Message-ID: <157858781831.30329.9402583283109438334.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 10:26:30AM -0500, Arvind Sankar wrote:
-> On Thu, Jan 09, 2020 at 02:13:48PM +0000, David Laight wrote:
-> > From: Sean Christopherson
-> > > Sent: 08 January 2020 00:19
-> > > 
-> > > Use a Logical OR in __is_rsvd_bits_set() to combine the two reserved bit
-> > > checks, which are obviously intended to be logical statements.  Switching
-> > > to a Logical OR is functionally a nop, but allows the compiler to better
-> > > optimize the checks.
-> > > 
-> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > ---
-> > >  arch/x86/kvm/mmu/mmu.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > > index 7269130ea5e2..72e845709027 100644
-> > > --- a/arch/x86/kvm/mmu/mmu.c
-> > > +++ b/arch/x86/kvm/mmu/mmu.c
-> > > @@ -3970,7 +3970,7 @@ __is_rsvd_bits_set(struct rsvd_bits_validate *rsvd_check, u64 pte, int level)
-> > >  {
-> > >  	int bit7 = (pte >> 7) & 1, low6 = pte & 0x3f;
-> > > 
-> > > -	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) |
-> > > +	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) ||
-> > >  		((rsvd_check->bad_mt_xwr & (1ull << low6)) != 0);
-> > 
-> > Are you sure this isn't deliberate?
-> > The best code almost certainly comes from also removing the '!= 0'.
+The following commit has been merged into the smp/urgent branch of tip:
 
-The '!= 0' is truly superfluous, removing it doesn't affect code
-generation.
+Commit-ID:     dc8d37ed304eeeea47e65fb9edc1c6c8b0093386
+Gitweb:        https://git.kernel.org/tip/dc8d37ed304eeeea47e65fb9edc1c6c8b0093386
+Author:        Arnd Bergmann <arnd@arndb.de>
+AuthorDate:    Tue, 10 Dec 2019 20:56:04 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 09 Jan 2020 17:31:45 +01:00
 
-> > You also don't want to convert the expression result to zero.
-> 
-> The function is static inline bool, so it's almost certainly a mistake
-> originally. The != 0 is superfluous, but this will get inlined anyway.
+cpu/SMT: Fix x86 link error without CONFIG_SYSFS
 
-Ya, the bitwise-OR was added in commit 25d92081ae2f ("nEPT: Add nEPT
-violation/misconfigration support"), and AFAICT it's unintentional.
+When CONFIG_SYSFS is disabled, but CONFIG_HOTPLUG_SMT is enabled,
+the kernel fails to link:
 
-That being said, I was a bit hasty in stating that a logical-OR allows for
-better optimization, sort of.
+arch/x86/power/cpu.o: In function `hibernate_resume_nonboot_cpu_disable':
+(.text+0x38d): undefined reference to `cpuhp_smt_enable'
+arch/x86/power/hibernate.o: In function `arch_resume_nosmt':
+hibernate.c:(.text+0x291): undefined reference to `cpuhp_smt_enable'
+hibernate.c:(.text+0x29c): undefined reference to `cpuhp_smt_disable'
 
-For FNAME(prefetch_invalid_gpte) and FNAME(walk_addr_generic), which
-branch on the result of is_rsvd_bits_set(), the logical-OR is marginally
-better.  FNAME(prefetch_invalid_gpte) is what I initially looked at when
-saying "yep, that's better!".
+Move the exported functions out of the #ifdef section into its
+own with the correct conditions.
 
-But for walk_shadow_page_get_mmio_spte(), because it aggregates the result
-in a loop, the bitwise-OR is better in that it eliminates a Jcc.
+The patch that caused this is marked for stable backports, so
+this one may need to be backported as well.
 
-And all that being said, there are two vastly superior optimizations that
-can be made:
+Fixes: ec527c318036 ("x86/power: Fix 'nosmt' vs hibernation triple fault during resume")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Jiri Kosina <jkosina@suse.cz>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191210195614.786555-1-arnd@arndb.de
 
-  - Reorder the checks in FNAME(prefetch_invalid_gpte) to perform the
-    !PRESENT and !ACCESSED checks before checking the reserved bits, as
-    they are both more likely to fail and do not require additional memory
-    accesses.
+---
+ kernel/cpu.c | 143 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 72 insertions(+), 71 deletions(-)
 
-  - Rewrite __is_rsvd_bits_set() to make it templated.  The reserved MT
-    check is EPT only, i.e. bad_mt_xwr is always 0 for legacy 32/64-bit
-    paging.
-
-So, I'll scrap this patch and send a mini series to effect the above
-optimizations.
-
-> > 
-> > So:
-> > 	return (pte & rsvd_check->rsvd_bits_mask[bit7][level-1]) | (rsvd_check->bad_mt_xwr & (1ull << low6));
-> > The code then doesn't have any branches to get mispredicted.
-> > 
-> > 	David
-> > 
-> > -
-> > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> > Registration No: 1397386 (Wales)
-> > 
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index a59cc98..4dc279e 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1909,6 +1909,78 @@ void __cpuhp_remove_state(enum cpuhp_state state, bool invoke)
+ }
+ EXPORT_SYMBOL(__cpuhp_remove_state);
+ 
++#ifdef CONFIG_HOTPLUG_SMT
++static void cpuhp_offline_cpu_device(unsigned int cpu)
++{
++	struct device *dev = get_cpu_device(cpu);
++
++	dev->offline = true;
++	/* Tell user space about the state change */
++	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
++}
++
++static void cpuhp_online_cpu_device(unsigned int cpu)
++{
++	struct device *dev = get_cpu_device(cpu);
++
++	dev->offline = false;
++	/* Tell user space about the state change */
++	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
++}
++
++int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
++{
++	int cpu, ret = 0;
++
++	cpu_maps_update_begin();
++	for_each_online_cpu(cpu) {
++		if (topology_is_primary_thread(cpu))
++			continue;
++		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
++		if (ret)
++			break;
++		/*
++		 * As this needs to hold the cpu maps lock it's impossible
++		 * to call device_offline() because that ends up calling
++		 * cpu_down() which takes cpu maps lock. cpu maps lock
++		 * needs to be held as this might race against in kernel
++		 * abusers of the hotplug machinery (thermal management).
++		 *
++		 * So nothing would update device:offline state. That would
++		 * leave the sysfs entry stale and prevent onlining after
++		 * smt control has been changed to 'off' again. This is
++		 * called under the sysfs hotplug lock, so it is properly
++		 * serialized against the regular offline usage.
++		 */
++		cpuhp_offline_cpu_device(cpu);
++	}
++	if (!ret)
++		cpu_smt_control = ctrlval;
++	cpu_maps_update_done();
++	return ret;
++}
++
++int cpuhp_smt_enable(void)
++{
++	int cpu, ret = 0;
++
++	cpu_maps_update_begin();
++	cpu_smt_control = CPU_SMT_ENABLED;
++	for_each_present_cpu(cpu) {
++		/* Skip online CPUs and CPUs on offline nodes */
++		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
++			continue;
++		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
++		if (ret)
++			break;
++		/* See comment in cpuhp_smt_disable() */
++		cpuhp_online_cpu_device(cpu);
++	}
++	cpu_maps_update_done();
++	return ret;
++}
++#endif
++
+ #if defined(CONFIG_SYSFS) && defined(CONFIG_HOTPLUG_CPU)
+ static ssize_t show_cpuhp_state(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+@@ -2063,77 +2135,6 @@ static const struct attribute_group cpuhp_cpu_root_attr_group = {
+ 
+ #ifdef CONFIG_HOTPLUG_SMT
+ 
+-static void cpuhp_offline_cpu_device(unsigned int cpu)
+-{
+-	struct device *dev = get_cpu_device(cpu);
+-
+-	dev->offline = true;
+-	/* Tell user space about the state change */
+-	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
+-}
+-
+-static void cpuhp_online_cpu_device(unsigned int cpu)
+-{
+-	struct device *dev = get_cpu_device(cpu);
+-
+-	dev->offline = false;
+-	/* Tell user space about the state change */
+-	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+-}
+-
+-int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+-{
+-	int cpu, ret = 0;
+-
+-	cpu_maps_update_begin();
+-	for_each_online_cpu(cpu) {
+-		if (topology_is_primary_thread(cpu))
+-			continue;
+-		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
+-		if (ret)
+-			break;
+-		/*
+-		 * As this needs to hold the cpu maps lock it's impossible
+-		 * to call device_offline() because that ends up calling
+-		 * cpu_down() which takes cpu maps lock. cpu maps lock
+-		 * needs to be held as this might race against in kernel
+-		 * abusers of the hotplug machinery (thermal management).
+-		 *
+-		 * So nothing would update device:offline state. That would
+-		 * leave the sysfs entry stale and prevent onlining after
+-		 * smt control has been changed to 'off' again. This is
+-		 * called under the sysfs hotplug lock, so it is properly
+-		 * serialized against the regular offline usage.
+-		 */
+-		cpuhp_offline_cpu_device(cpu);
+-	}
+-	if (!ret)
+-		cpu_smt_control = ctrlval;
+-	cpu_maps_update_done();
+-	return ret;
+-}
+-
+-int cpuhp_smt_enable(void)
+-{
+-	int cpu, ret = 0;
+-
+-	cpu_maps_update_begin();
+-	cpu_smt_control = CPU_SMT_ENABLED;
+-	for_each_present_cpu(cpu) {
+-		/* Skip online CPUs and CPUs on offline nodes */
+-		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
+-			continue;
+-		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
+-		if (ret)
+-			break;
+-		/* See comment in cpuhp_smt_disable() */
+-		cpuhp_online_cpu_device(cpu);
+-	}
+-	cpu_maps_update_done();
+-	return ret;
+-}
+-
+-
+ static ssize_t
+ __store_smt_control(struct device *dev, struct device_attribute *attr,
+ 		    const char *buf, size_t count)
