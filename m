@@ -2,126 +2,121 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C821C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA33C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526602067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pAGT+6E4"
+	by mail.kernel.org (Postfix) with ESMTP id 39AB620656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgAIWHl (ORCPT
+        id S1729236AbgAIWKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 17:07:41 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12965 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgAIWHk (ORCPT
+        Thu, 9 Jan 2020 17:10:48 -0500
+Received: from excelsior.roeckx.be ([195.234.45.115]:36751 "EHLO
+        excelsior.roeckx.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgAIWKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 17:07:40 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e17a4190000>; Thu, 09 Jan 2020 14:07:21 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 Jan 2020 14:07:39 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 Jan 2020 14:07:39 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jan
- 2020 22:07:38 +0000
-Subject: Re: [PATCH v12 00/22] mm/gup: prereqs to track dma-pinned pages:
- FOLL_PIN
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200107224558.2362728-1-jhubbard@nvidia.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <2a9145d4-586e-6489-64e4-0c54f47afaa1@nvidia.com>
-Date:   Thu, 9 Jan 2020 14:07:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 9 Jan 2020 17:10:48 -0500
+X-Greylist: delayed 493 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 17:10:46 EST
+Received: from intrepid.roeckx.be (localhost [127.0.0.1])
+        by excelsior.roeckx.be (Postfix) with ESMTP id 3842EA8A05A9;
+        Thu,  9 Jan 2020 22:02:31 +0000 (UTC)
+Received: by intrepid.roeckx.be (Postfix, from userid 1000)
+        id EB6ED1FE0C79; Thu,  9 Jan 2020 23:02:30 +0100 (CET)
+Date:   Thu, 9 Jan 2020 23:02:30 +0100
+From:   Kurt Roeckx <kurt@roeckx.be>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Stephan Mueller <smueller@chronox.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: Re: [PATCH v3 0/8] Rework random blocking
+Message-ID: <20200109220230.GA39185@roeckx.be>
+References: <20191226140423.GB3158@mit.edu>
+ <4048434.Q8HajmOrkZ@tauon.chronox.de>
+ <20191227130436.GC70060@mit.edu>
+ <15817620.rmTN4T87Wr@tauon.chronox.de>
+ <20191227220857.GD70060@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <20200107224558.2362728-1-jhubbard@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578607641; bh=+NEvkiCKN4muU9xEMv7O0vL5DDgA+srq0dD5KyM2g5Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=pAGT+6E4t/5Sgzls83W8rrhD73PbNnbQX0v+uLgN6NdK6ox1s0YILXA5+Q9WkB7U5
-         Qgdq4MfQKXM00HXiVUvw/MN1+0Npjsn2yckDImY4OPUy9vKTHUQrRr5b/32qyPv6Y4
-         G8uphKhloBfTQ9ova5uKctNKv/z/ybtCLuSP2dniMP6oLwVdc9frqv+uSdiahegES7
-         HZtKpaUzMnUGCyRfUKLB2LXhSyGZIEwOR/UkaAhKUOx0B4NaRtt8Qz56svVPCLTYZD
-         6dBjR9cwNa9He9WTH1/ZpC5nBgZ5v8YIJX6cYUd/1MLjMgnC8wrJfdT7uC+HoO76Fq
-         StnhQb6FNJNXA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191227220857.GD70060@mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/7/20 2:45 PM, John Hubbard wrote:
-> Hi,
+On Fri, Dec 27, 2019 at 05:08:57PM -0500, Theodore Y. Ts'o wrote:
+> On Fri, Dec 27, 2019 at 10:22:23PM +0100, Stephan Mueller wrote:
+> > > So let's take a step back and ask the question: "Exactly what _value_
+> > > do you want to provide by creating some kind of true random
+> > > interface?"  What does this enable?  What applications does this
+> > > really help?
+> > 
+> > There are simply cryptographers who have use cases for such random numbers. 
+> > The core use case is to seed other DRNGs and avoiding the chaining of free-
+> > running DRNGs.
 > 
-> The "track FOLL_PIN pages" would have been the very next patch, but it is
-> not included here because I'm still debugging a bug report from Leon.
-> Let's get all of the prerequisite work (it's been reviewed) into the tree
-> so that future reviews are easier. It's clear that any fixes that are
-> required to the tracking patch, won't affect these patches here.
-> 
-> This implements an API naming change (put_user_page*() -->
-> unpin_user_page*()), and also adds FOLL_PIN page support, up to
-> *but not including* actually tracking FOLL_PIN pages. It extends
-> the FOLL_PIN support to a few select subsystems. More subsystems will
-> be added in follow up work.
-> 
+> For this very specialized use case, what I think the kernel should
+> provide is maximal transparency; that is, given the DRBG direct access
+> to the TPM's random number generator, or direct access to the
+> ChaosKey, and the userspace DRBG should be able to get a list of the
+> various hardware RNG's, and select one, with the characterization
+> being done userspace, not in the kernel.
 
-Hi Andrew and all,
+One thing the NIST DRBGs have is prediction resistance, which is
+done by reseeding. If you chain DRBGs, you tell your parent DRBG
+that you want prediction resistance, so your parent will also
+reseed. There currently is no way to tell the kernel to reseed.
 
-To clarify: I'm hoping that this series can go into 5.6.
+This reseed option might be something that some people would like
+to see. If such an option is added, I expect that the kernel might
+block until it has gotten enough new entropy from it's entropy
+sources. But I don't actually see a need to add such an option.
 
-Meanwhile, I'm working on tracking down and solving the problem that Leon
-reported, in the "track FOLL_PIN pages" patch, and that patch is not part of
-this series.
+If the kernel provides a good RNG, the only reason I can see why
+you would like to have direct access to a hwrng is to verify that
+it's working correctly. That might mean that you put it in some
+special mode where it returns raw unprocessed values. If the device
+is in such a mode, it's output will not provide the same entropy
+per bit, and so I would expect the kernel to stop using it directly.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+I guess there might be people who would like to use it directly,
+but I think we should instead encourage them kernel RNG.
+
+> You can talk about providing tools that try to make these estimations
+> --- but these sorts of things would have to be done on each user's
+> hardware, and for most distro users, it's just not practical.
+
+I would check my own hardware if such an option was available. I
+think it can be useful to see if the current estimates in the
+kernel are conservative enough or not. But it would require that
+you can know what the entropy source is, like the keyboard or
+harddisk.
+
+> So if it's just for cryptographers, then let it all be done in
+> userspace, and let's not make it easy for GPG, OpenSSL, etc., to all
+> say, "We want TrueRandom(tm); we won't settle for less".
+
+I don't think we want that. As far as I know, the only reason for
+using /dev/random is that /dev/urandom returns data before it
+has sufficient entropy.
+
+
+Kurt
+
