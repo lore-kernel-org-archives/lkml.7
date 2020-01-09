@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B23C33CA3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6843EC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB962067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE522067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="QJIiAeT3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="yB+cXjha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731229AbgAINjW (ORCPT
+        id S1731240AbgAINjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:39:22 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35763 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731159AbgAINjV (ORCPT
+        Thu, 9 Jan 2020 08:39:24 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39821 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728503AbgAINjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:39:21 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so2894329wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:39:19 -0800 (PST)
+        Thu, 9 Jan 2020 08:39:24 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so7435541wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:39:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iSLBbyZMom5Gh2asx6vSf9spPxO1dtGNpvUOI6kKFOE=;
-        b=QJIiAeT3487JndkFw1jxkB1fCvzWWv1O/7PNOPDhXs5owXnctuTcuHcb1znb8OtuO9
-         Yu4bJeEkL3whooM4CuY9LnTpi+PR2IOFXUY1iqV0UG2KmRoaITgkSSog+eyBrDp1yh9N
-         Va/CFMOSakJqAkXehUGqRdpGniZFLlTrYVtGhWmq7YHBBMcsrEJHkXfK0PzXXtY4mEr/
-         iQk1hg9dVrsTPRwOAKBoBUQGre82zVyKrNN3a0xplz322eKPr+GuXIlXUUoyFDInhKQI
-         5MVkN5kYQJrZC0Z86vsy6hfZC48nhM5DP0DPS0kRcBxmqWUURi0P0ocbfA0N0ZaN4hZ8
-         kyPg==
+        bh=r7WTFcFTk1QmmtFD4T5h5vDKOxEbNevvnGjMspC9SaQ=;
+        b=yB+cXjham6iu3QWUiauzuVhna2pI/lM3ap1PyFVUgIdf30z80pj5V0REouRFMrmXeb
+         bxHZZ3PvHKPP1+LkEXDd9Gde0FPU3HRc6pALcVoVz4lW2JKgdN0qWpOloTRNYIs/+JsR
+         PSr02LwEXLY1Y/8kDuEkbMsnKt4iK9RpGiq8N37cls+E7WBdBvMQ5VG3g0bU9P5m1pAj
+         51cSJpVp2nw7HJlV1B8w/yUNvoa0uM6JoiyXEAJ1fugzcAE+Afj/1kFkgl1t2A0lGBwg
+         9G4vyVJtLJNKoBaMVpn60KFoDIlCkBGHlcsfaTMcrFK22AH2+5s8G1GXHWwx7xsyy6iR
+         07hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=iSLBbyZMom5Gh2asx6vSf9spPxO1dtGNpvUOI6kKFOE=;
-        b=r3bI31QBQZCHg1vEtLjUA2sJEwDUVxoAZcsgt/cpzGigYs2+bvhtaxfcOHKxr4OLIR
-         W65MatbWTWH135meAqb5JFuEP2kawZSGxEjwBsykF2YoLEzHk2yqbN21W3cNn7iah1Ym
-         mEK88qDe9d2k6tMPB7Yjfmy8h/ZwNg7nRG7iihK6ARnKvznyLi3I1xP1WlrzGqcVihVB
-         Wqx35XxbTAFMLBWEkr8EsHefTD9a6/4tx/uDIf+YR9bc+oIKutCyhTwkPGPQSNphkZLf
-         WheY/yjYyvWBp9uv8gUMT2JVJZea6RN7jBPi05D1/aOsMxTsq/xJ+v0THHvRrjXWYJ1M
-         k2aw==
-X-Gm-Message-State: APjAAAVVV7w2J1q6LmEYh/5NaJa4GMooxluCmhFI7Y6l0dOaaLJ5WKq2
-        tE5dxj+JFwSQK1Ot3LaX6N9bK6b5ESSmgg==
-X-Google-Smtp-Source: APXvYqwGbw1JXeoKM7gwrs21nIc0OoNINaE7UVW4HZCYixEZBd/0C48GvM2p3JS33LvusyNKo9Tkag==
-X-Received: by 2002:a1c:81ce:: with SMTP id c197mr5072174wmd.96.1578577159200;
-        Thu, 09 Jan 2020 05:39:19 -0800 (PST)
+        bh=r7WTFcFTk1QmmtFD4T5h5vDKOxEbNevvnGjMspC9SaQ=;
+        b=tgcUpfVn2ztPposWY24KkIoldis6pf/sC9nDXjsZbGS1Mwi+jaGomdfzNFRZ2DKt40
+         bXUnfqYnL/1I9K+3xvGk9WRPqfs5Xg0J+J8U3MrVyq3MELCph/vCwK8e6D5cSM8Ymhxe
+         GQlYibizyhmsRq9STWiY0VOYEWaeZ4W00BIE7V+JT7mfUjXxAFbF3fgp+LoDwHkUbmOW
+         QRbPXb6Js2MnnfQeoUdOFT4ig+BraLnw2w0pbUFamlpkdGp+VfQHqK7FWNlnP/Fl6bEs
+         mL5QrPOmUs2RjVV2XAb3gSRf9ZchshJtqHS583W3m0FpfLu/uyiqcEwRgZUj5kpcQBeU
+         pPNw==
+X-Gm-Message-State: APjAAAWJBlI0CwNJnMY3NAqUx5v2A2mcZUvuqbJ2y0psvd3r5mR0buYP
+        XHtjuGml96oNF/sQhajgF5314g==
+X-Google-Smtp-Source: APXvYqzBNJJfU6vCVqf/kckPeYyOk9us+nNsVs1xLIoX1DFcfCCm47/9vDfpkL8wjDjT2Bi7VzAFnw==
+X-Received: by 2002:a05:6000:118e:: with SMTP id g14mr1797127wrx.39.1578577161031;
+        Thu, 09 Jan 2020 05:39:21 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id q68sm3136809wme.14.2020.01.09.05.39.18
+        by smtp.gmail.com with ESMTPSA id a16sm8167344wrt.37.2020.01.09.05.39.20
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:39:18 -0800 (PST)
+        Thu, 09 Jan 2020 05:39:20 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
@@ -64,9 +64,9 @@ Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
         Rajan Vaja <rajan.vaja@xilinx.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] arm64: zynqmp: Fix address for tca6416_u97 chip on zcu104
-Date:   Thu,  9 Jan 2020 14:39:10 +0100
-Message-Id: <c542d6e305010dd08ff1d434de6f9d1996a6b0d6.1578577147.git.michal.simek@xilinx.com>
+Subject: [PATCH 2/6] arm64: zynqmp: Turn comment to gpio-line-names
+Date:   Thu,  9 Jan 2020 14:39:11 +0100
+Message-Id: <5c7d1ef3643f6ac96e8a7c0144da224d8eabc529.1578577147.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1578577147.git.michal.simek@xilinx.com>
 References: <cover.1578577147.git.michal.simek@xilinx.com>
@@ -77,30 +77,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I2c address is not 0x21 but 0x20.
+Label gpio lines properly.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    | 43 ++++---------------
+ 1 file changed, 9 insertions(+), 34 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-index 2d71b4431cce..7a4614e3f5fa 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-@@ -118,9 +118,9 @@ i2c@4 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <4>;
--			tca6416_u97: gpio@21 {
-+			tca6416_u97: gpio@20 {
- 				compatible = "ti,tca6416";
--				reg = <0x21>;
-+				reg = <0x20>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 				/*
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+index 7c6b538490f8..c96e8416fa7e 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+@@ -125,21 +125,11 @@ &i2c0 {
+ 	tca6416_u97: gpio@20 {
+ 		compatible = "ti,tca6416";
+ 		reg = <0x20>;
+-		gpio-controller;
++		gpio-controller; /* IRQ not connected */
+ 		#gpio-cells = <2>;
+-		/*
+-		 * IRQ not connected
+-		 * Lines:
+-		 * 0 - PS_GTR_LAN_SEL0
+-		 * 1 - PS_GTR_LAN_SEL1
+-		 * 2 - PS_GTR_LAN_SEL2
+-		 * 3 - PS_GTR_LAN_SEL3
+-		 * 4 - PCI_CLK_DIR_SEL
+-		 * 5 - IIC_MUX_RESET_B
+-		 * 6 - GEM3_EXP_RESET_B
+-		 * 7, 10 - 17 - not connected
+-		 */
+-
++		gpio-line-names = "PS_GTR_LAN_SEL0", "PS_GTR_LAN_SEL1", "PS_GTR_LAN_SEL2", "PS_GTR_LAN_SEL3",
++				"PCI_CLK_DIR_SEL", "IIC_MUX_RESET_B", "GEM3_EXP_RESET_B",
++				"", "", "", "", "", "", "", "", "";
+ 		gtr-sel0 {
+ 			gpio-hog;
+ 			gpios = <0 0>;
+@@ -169,27 +159,12 @@ gtr-sel3 {
+ 	tca6416_u61: gpio@21 {
+ 		compatible = "ti,tca6416";
+ 		reg = <0x21>;
+-		gpio-controller;
++		gpio-controller; /* IRQ not connected */
+ 		#gpio-cells = <2>;
+-		/*
+-		 * IRQ not connected
+-		 * Lines:
+-		 * 0 - VCCPSPLL_EN
+-		 * 1 - MGTRAVCC_EN
+-		 * 2 - MGTRAVTT_EN
+-		 * 3 - VCCPSDDRPLL_EN
+-		 * 4 - MIO26_PMU_INPUT_LS
+-		 * 5 - PL_PMBUS_ALERT
+-		 * 6 - PS_PMBUS_ALERT
+-		 * 7 - MAXIM_PMBUS_ALERT
+-		 * 10 - PL_DDR4_VTERM_EN
+-		 * 11 - PL_DDR4_VPP_2V5_EN
+-		 * 12 - PS_DIMM_VDDQ_TO_PSVCCO_ON
+-		 * 13 - PS_DIMM_SUSPEND_EN
+-		 * 14 - PS_DDR4_VTERM_EN
+-		 * 15 - PS_DDR4_VPP_2V5_EN
+-		 * 16 - 17 - not connected
+-		 */
++		gpio-line-names = "VCCPSPLL_EN", "MGTRAVCC_EN", "MGTRAVTT_EN", "VCCPSDDRPLL_EN", "MIO26_PMU_INPUT_LS",
++				"PL_PMBUS_ALERT", "PS_PMBUS_ALERT", "MAXIM_PMBUS_ALERT", "PL_DDR4_VTERM_EN",
++				"PL_DDR4_VPP_2V5_EN", "PS_DIMM_VDDQ_TO_PSVCCO_ON", "PS_DIMM_SUSPEND_EN",
++				"PS_DDR4_VTERM_EN", "PS_DDR4_VPP_2V5_EN", "", "";
+ 	};
+ 
+ 	i2c-mux@75 { /* u60 */
 -- 
 2.24.0
 
