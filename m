@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6D1C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F88C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDAC2077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED862080D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578605370;
-	bh=BhwW9ZVjSZK+DGsmHK8idKRTibrEJR+ee4Tg01VCLPE=;
+	s=default; t=1578605374;
+	bh=psDmMSxAo8l2FMaG8nyRMSX71wmF0khdZ9Zb2z/djXQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=iMg5YBuEPQpbAjizdLob8HpeRSXcbclsro70Uca766lEoG882mi/QZrHgg5RDoK6X
-	 AfyFavheB6aIl0OzNwfZVKItLvd3ABuBMFj4FpFt8xolR2vAQflbak8M/Nv9oizMV5
-	 b+R+BJohagvB1MUkbd/jji097DVsfLOlil6GXxJQ=
+	b=H2adQTa/XZrwUPw/c2atq/CkcGbJFdTzArNFCljH/ozCsOoAY+tkYTbED80POi2dI
+	 Rysvqrm/76R+aCFUGQO9jy7VwJb5woL910S8Fz0g577lKLnlPqWVTVOzPZGGPe4VwC
+	 weTbVSi5uASG5R9adk409oEn2mwxUxWOhSk1qrks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgAIV33 (ORCPT
+        id S1728894AbgAIV3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:29:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:36988 "EHLO foss.arm.com"
+        Thu, 9 Jan 2020 16:29:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:37004 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbgAIV32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:29:28 -0500
+        id S1725763AbgAIV3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 16:29:33 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0993631B;
-        Thu,  9 Jan 2020 13:29:28 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F39B31B;
+        Thu,  9 Jan 2020 13:29:32 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 850BF3F534;
-        Thu,  9 Jan 2020 13:29:27 -0800 (PST)
-Date:   Thu, 09 Jan 2020 21:29:26 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB9863F534;
+        Thu,  9 Jan 2020 13:29:31 -0800 (PST)
+Date:   Thu, 09 Jan 2020 21:29:30 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Marek Szyprowski <m.szyprowski@samsung.com>
 Cc:     alsa-devel@alsa-project.org,
@@ -46,13 +46,14 @@ Cc:     alsa-devel@alsa-project.org,
         Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Tzung-Bi Shih <tzungbi@google.com>
 Subject: Applied "ASoC: max98090: fix incorrect helper in max98090_dapm_put_enum_double()" to the asoc tree
-In-Reply-To: <20200108115007.31095-1-m.szyprowski@samsung.com>
+In-Reply-To:  <20200108115007.31095-1-m.szyprowski@samsung.com>
 Message-Id: <applied-20200108115007.31095-1-m.szyprowski@samsung.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200109212930.RDQWEAHS8i6lH7e60n5qSDlcWn-wcDFHUi0SFxY_Yhc@z>
 
 The patch
 
@@ -60,7 +61,7 @@ The patch
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -81,7 +82,7 @@ to this mail.
 Thanks,
 Mark
 
-From 4e93c1294f4b051d574d6bc59755d2863286990e Mon Sep 17 00:00:00 2001
+From 1d7b051891722a36ee0b228bc940dd245f161ab1 Mon Sep 17 00:00:00 2001
 From: Marek Szyprowski <m.szyprowski@samsung.com>
 Date: Wed, 8 Jan 2020 12:50:06 +0100
 Subject: [PATCH] ASoC: max98090: fix incorrect helper in
@@ -128,10 +129,10 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index c01ce4a3f86d..ede03663cbed 100644
+index 4c7b16d557e2..c01ce4a3f86d 100644
 --- a/sound/soc/codecs/max98090.c
 +++ b/sound/soc/codecs/max98090.c
-@@ -98,7 +98,7 @@ static int max98090_put_enum_double(struct snd_kcontrol *kcontrol,
+@@ -82,7 +82,7 @@ static int max98090_dapm_put_enum_double(struct snd_kcontrol *kcontrol,
  	struct snd_ctl_elem_value *ucontrol)
  {
  	struct snd_soc_component *component =
