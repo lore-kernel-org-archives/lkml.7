@@ -2,181 +2,140 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D892C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F7BC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E092075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33CF20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:53:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="KU32mdi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731842AbgAIOxM (ORCPT
+        id S1731851AbgAIOxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:53:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:60462 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730159AbgAIOxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:53:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2267C1FB;
-        Thu,  9 Jan 2020 06:53:11 -0800 (PST)
-Received: from [10.1.27.38] (e122027.cambridge.arm.com [10.1.27.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 120D93F534;
-        Thu,  9 Jan 2020 06:53:08 -0800 (PST)
-Subject: Re: [PATCH v2 1/6] KVM: arm64: Document PV-lock interface
-To:     Zengruan Ye <yezengruan@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     maz@kernel.org, james.morse@arm.com, linux@armlinux.org.uk,
-        suzuki.poulose@arm.com, julien.thierry.kdev@gmail.com,
-        catalin.marinas@arm.com, mark.rutland@arm.com, will@kernel.org,
-        daniel.lezcano@linaro.org
-References: <20191226135833.1052-1-yezengruan@huawei.com>
- <20191226135833.1052-2-yezengruan@huawei.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <c26ebc8d-6a10-6bc4-0af8-cd4883addbf0@arm.com>
-Date:   Thu, 9 Jan 2020 14:53:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 09:53:14 -0500
+Received: from mail-eopbgr10049.outbound.protection.outlook.com ([40.107.1.49]:33537
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731828AbgAIOxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 09:53:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RUUnni0f+4KFIfE4FNSyU6J/nqQ9xX5Qj5qjjn1XZlAH8HjL9Mwfcw2XeEuwnMvUaZ3MOVbEcDBe/gMLkSK1/NScprORjFO3PxPbUrZsQ9VFpUY2uy7PdX2+y6xlczoRJRaX7ws/HWTQ4DB76QLEvCBJ38sDvZiOEYCKh8CH+/Jwzr9gSCYNwCn2++aTRWdBf1uAmUpeGkISRY3GQW9BEaNvC6txaIqtERAO9L8HRUmUmVi9YOdxvsi2rJGYpETjbXssfpoV8xYrrBjOYz/mtkVW3lKMGs/64I+UAqVv30YDta0DI2wAQDVqvFlixRv+kubIR4+1LgIBwG2it67DbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f0ATy1b4E3suKZK6doB2snn5SjorABiMGoiwns1dzyM=;
+ b=Rwd9Mg4+k75j6Pin6KrtF5g/mjYPlxpKN0D6+XxhsDebyzn174z6J4otxFrpBOE2opUm7zb9C87sq5tM00ScXeTUtBCkUxmWWGmpcM6C+D/JF+MWwa/dZuAcTYAGTaaSioMiwQdffaf2/OssZojVWT++jLsdg7EiG6t0n5+G+lSdyTjWx3gfw4LwJ7miIfOIGBnbjfqQALQXLuZPUsFTREgqCwk89vT9GFuekCJNoaZZgvOIbuE+px9Qff4IXL4Diw7YDhhWNUIWtwQgvGnzJ/Rt+kgdJ6wubSPppDpMXy1/bIlimgcng6li1uP32tyvUlP39SCCR79k0i87h6ivyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f0ATy1b4E3suKZK6doB2snn5SjorABiMGoiwns1dzyM=;
+ b=KU32mdi7If9PNeLQE+XqTp2+kA+W+xOG+pJi4mbET9dV74YXCZesWqiqcDg/9/JU2Tai06KhkIZfMMLX0J6++vNPj6ZfLMT2ydu8V1Ggoqxx+8mAnCQiBhOpC3r0g7r0sP+DEiWguDjmvC2YNl5ziT5BPjHwShyypZLKQrJFOLE=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5246.eurprd05.prod.outlook.com (20.178.11.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.10; Thu, 9 Jan 2020 14:53:10 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2623.008; Thu, 9 Jan 2020
+ 14:53:10 +0000
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR05CA0047.namprd05.prod.outlook.com (2603:10b6:208:236::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.6 via Frontend Transport; Thu, 9 Jan 2020 14:53:09 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1ipZBJ-00064R-Ux; Thu, 09 Jan 2020 10:53:05 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: Re: [BUG] nouveau lockdep splat
+Thread-Topic: [BUG] nouveau lockdep splat
+Thread-Index: AQHVxop40iaTho7qbUKqgrcuG+zr9afia+qA
+Date:   Thu, 9 Jan 2020 14:53:09 +0000
+Message-ID: <20200109145305.GV20978@mellanox.com>
+References: <20200109011640.19678-1-rcampbell@nvidia.com>
+In-Reply-To: <20200109011640.19678-1-rcampbell@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR05CA0047.namprd05.prod.outlook.com
+ (2603:10b6:208:236::16) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.68.57.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 07309543-e7be-4084-0d84-08d79513a4c0
+x-ms-traffictypediagnostic: VI1PR05MB5246:
+x-microsoft-antispam-prvs: <VI1PR05MB5246291D6A076B2665502640CF390@VI1PR05MB5246.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02778BF158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(199004)(189003)(36756003)(86362001)(33656002)(4326008)(2906002)(6916009)(81156014)(66556008)(66946007)(9746002)(9786002)(5660300002)(186003)(81166006)(8676002)(66476007)(66446008)(64756008)(8936002)(54906003)(1076003)(52116002)(316002)(71200400001)(26005)(2616005)(478600001)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5246;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: B/J6ZYMldnU2P26XFX01gTkW8Vw1mFBFzWaS9kzwTpjJg5XNZyIYveYii9nIio4E8CCudIXESSGd5q/83mhvSQYnIM++LU7Q2kXjPo6hZSQ0tk18cSKA3c6Y9L+zF1k9mZKmZtsktqSV9uoRCvlhNts2+k70OJQ+1YV8O1X6drJOBw3/ifsdxqG7P/e5MKfLp8KFEFWoPlaA5+BSixNGBvhBzTaWISaVWpM6PZulEoSi/4mu15clllUm066Yi/TDkEhfGTSa/8Uie3TuzBOVYsKMEbiL1rl3RWew20HeqKJTwiXUsFExjvggKYGJ5NoT+HwOJRkTqlSRaYzxqDP/xeTX4Sq/TgD8g799jriiYF/DNRRInZ7Pb5Y35rbh/2jxtsFM0/fRgcDIpKYpskFMJqtVcgi8+qT2Q9RHnfgnYLshHNdiqkpXWgdGAT78Jp37S8vypHpXzSN8atpM+sUFANyRW3FodV3lOBlg9ICKTBBn17BTKxtoJ3fsqFhwtGwW
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EFCCE5C3CA7FC54D9497CF2317C63284@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20191226135833.1052-2-yezengruan@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07309543-e7be-4084-0d84-08d79513a4c0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 14:53:09.8860
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eeI/5U2K+twQHQaiZDCYgP0vQaQRfa+AEFl2o2bVgTSeIMrXlzYuZbjRGD0nbAKEwFgaz70lm38pZAyUdYdwYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5246
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/12/2019 13:58, Zengruan Ye wrote:
-> Introduce a paravirtualization interface for KVM/arm64 to obtain the VCPU
-> is currently running or not.
-> 
-> The PV lock structure of the guest is allocated by user space.
-> 
-> A hypercall interface is provided for the guest to interrogate the
-> hypervisor's support for this interface and the location of the shared
-> memory structures.
-> 
-> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
-> ---
->   Documentation/virt/kvm/arm/pvlock.rst   | 63 +++++++++++++++++++++++++
->   Documentation/virt/kvm/devices/vcpu.txt | 14 ++++++
->   2 files changed, 77 insertions(+)
->   create mode 100644 Documentation/virt/kvm/arm/pvlock.rst
-> 
-> diff --git a/Documentation/virt/kvm/arm/pvlock.rst b/Documentation/virt/kvm/arm/pvlock.rst
-> new file mode 100644
-> index 000000000000..58b3b8ee7537
-> --- /dev/null
-> +++ b/Documentation/virt/kvm/arm/pvlock.rst
-> @@ -0,0 +1,63 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Paravirtualized lock support for arm64
-> +======================================
-> +
-> +KVM/arm64 provides some hypervisor service calls to support a paravirtualized
-> +guest obtaining the VCPU is currently running or not.
-NIT:              ^ whether
+On Wed, Jan 08, 2020 at 05:16:40PM -0800, Ralph Campbell wrote:
+> I hit this while testing HMM with nouveau on linux-5.5-rc5.
+> I'm not a lockdep expert but my understanding of this is that an
+> invalidation callback could potentially call kzalloc(GFP_KERNEL)
+> which could cause another invalidation and recursively deadlock.
+> Looking at the drivers/gpu/drm/nouveau/nvkm/ layer, I do see a
+> number of places where GFP_KERNEL is used for allocations and I
+> don't see an easy way to avoid that.
 
-> +
-> +Two new SMCCC compatible hypercalls are defined:
-> +
-> +* PV_LOCK_FEATURES:   0xC6000020
-> +* PV_LOCK_PREEMPTED:  0xC6000021
-> +
-> +The existence of the PV_LOCK hypercall should be probed using the SMCCC 1.1
-> +ARCH_FEATURES mechanism before calling it.
+Not quite..
 
-Since these are within the "vendor specific" SMCCC region ideally you should also check that you are talking to KVM. (Other hypervisors could allocate SMCCC IDs differently within this block). Will has a patch on a branch which gives an example of how this could work [1]
+Any lock held by the invalidation callback becomes a lock where
+GFP_KERNEL cannot be used within it's critical region.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/commit/?h=kvm/hvc&id=464f5a1741e5959c3e4d2be1966ae0093b4dce06
+Ie we can't have a notifier callback block on a lock which is held by
+another thread which is blocked on GFP_KERNEL as we now risk
+deadlocking on other mm locks if that allocation triggers reclaim.
 
-> +
-> +PV_LOCK_FEATURES
-> +    ============= ========    ==========
-> +    Function ID:  (uint32)    0xC6000020
-> +    PV_call_id:   (uint32)    The function to query for support.
-> +    Return value: (int64)     NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
-> +                              PV-lock feature is supported by the hypervisor.
-> +    ============= ========    ==========
-> +
-> +PV_LOCK_PREEMPTED
-> +    ============= ========    ==========
-> +    Function ID:  (uint32)    0xC6000021
-> +    Return value: (int64)     NOT_SUPPORTED (-1) or SUCCESS (0) if the IPA of
-> +                              this VCPU's pv data structure is configured by
-> +                              the hypervisor.
-> +    ============= ========    ==========
+AFAIK there is no fix from the core side. The driver must respect this
+and be organized to deal with it. Daniel fixed the intel driver
+already, I fixed RDMA recently, the other drivers must also be fixed.
 
-PV_LOCK_PREEMPTED also needs to return the address of this data structure. Either by returning this in another register, or by e.g. treating a positive return as an address and a negative value as an error.
+Some choices
+ - Split up the lock held by the notifier callback so it doesn't need
+   to cover allocations
+ - Use GFP_ATOMIC for allocations
+ - Speculatively do allocations before obtaining the lock and free if
+   they were not needed.
 
-> +
-> +The IPA returned by PV_LOCK_PREEMPTED should be mapped by the guest as normal
-> +memory with inner and outer write back caching attributes, in the inner
-> +shareable domain.
-> +
-> +PV_LOCK_PREEMPTED returns the structure for the calling VCPU.
-> +
-> +PV lock state
-> +-------------
-> +
-> +The structure pointed to by the PV_LOCK_PREEMPTED hypercall is as follows:
-> +
-> ++-----------+-------------+-------------+---------------------------------+
-> +| Field     | Byte Length | Byte Offset | Description                     |
-> ++===========+=============+=============+=================================+
-> +| preempted |      8      |      0      | Indicate the VCPU who owns this |
+I suppose it will be some troublbe for nouveau, but it must be done
+there..
 
-NIT: s/Indicate/Indicates that/. Also more common English would be "the VCPU *that* owns"
-
-> +|           |             |             | struct is running or not.       |
-> +|           |             |             | Non-zero values mean the VCPU   |
-> +|           |             |             | has been preempted. Zero means  |
-> +|           |             |             | the VCPU is not preempted.      |
-> ++-----------+-------------+-------------+---------------------------------+
-> +
-> +The preempted field will be updated to 1 by the hypervisor prior to scheduling
-> +a VCPU. When the VCPU is scheduled out, the preempted field will be updated
-> +to 0 by the hypervisor.
-> +
-> +The structure will be present within a reserved region of the normal memory
-> +given to the guest. The guest should not attempt to write into this memory.
-> +There is a structure per VCPU of the guest.
-
-I think it would be worth mentioning in this document that the structure is guaranteed to be 64-byte aligned.
-
-Steve
-
-> +
-> +For the user space interface see Documentation/virt/kvm/devices/vcpu.txt
-> +section "4. GROUP: KVM_ARM_VCPU_PVLOCK_CTRL".
-> diff --git a/Documentation/virt/kvm/devices/vcpu.txt b/Documentation/virt/kvm/devices/vcpu.txt
-> index 6f3bd64a05b0..c10a5945075b 100644
-> --- a/Documentation/virt/kvm/devices/vcpu.txt
-> +++ b/Documentation/virt/kvm/devices/vcpu.txt
-> @@ -74,3 +74,17 @@ Specifies the base address of the stolen time structure for this VCPU. The
->   base address must be 64 byte aligned and exist within a valid guest memory
->   region. See Documentation/virt/kvm/arm/pvtime.txt for more information
->   including the layout of the stolen time structure.
-> +
-> +4. GROUP: KVM_ARM_VCPU_PVLOCK_CTRL
-> +Architectures: ARM64
-> +
-> +4.1 ATTRIBUTE: KVM_ARM_VCPU_PVLOCK_IPA
-> +Parameters: 64-bit base address
-> +Returns: -ENXIO:  PV lock not implemented
-> +         -EEXIST: Base address already set for this VCPU
-> +         -EINVAL: Base address not 64 byte aligned
-> +
-> +Specifies the base address of the PV lock structure for this VCPU. The
-> +base address must be 64 byte aligned and exist within a valid guest memory
-> +region. See Documentation/virt/kvm/arm/pvlock.rst for more information
-> +including the layout of the pv lock structure.
-> 
-
+Jason
