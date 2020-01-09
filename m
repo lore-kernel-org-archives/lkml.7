@@ -2,108 +2,92 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443C8C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA878C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1828420721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ieR+qxqT"
+	by mail.kernel.org (Postfix) with ESMTP id 8CFB12075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgAIVvS (ORCPT
+        id S1728925AbgAIVwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:51:18 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36417 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgAIVvR (ORCPT
+        Thu, 9 Jan 2020 16:52:45 -0500
+Received: from shells.gnugeneration.com ([66.240.222.126]:60058 "EHLO
+        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgAIVwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:51:17 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n12so6368917lfe.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 13:51:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=pSJuCv0q0/z1FIFOdOKkUBldJYopo2x6Df2DsyN6P7E=;
-        b=ieR+qxqTsANxu9KU5tWvLhl0Mvyhhs134onZh4oxgiuiYnDaI00xsh7R4b8zmrZO7C
-         8ISLUpepGZmuHi71A542ASURhzsBRrjZWenRDQuFFx3ZcZfnuv2LQVb8KHEi4NZprJcp
-         2iEAW2ufL+CvgdswRTShu6qWP3kYnkIIZh4PTCpIWvMqc7ga4peCC1RcAHSAc7di1Dh0
-         MPIe4QLEIs29g9aSugBTsYe2rC3mc/koptJ6bZMKayeriQ6mROz2r5XbkBEJ0JcpZysp
-         bdGhnwr9KjVEbLGvdNWPbh3uhrKOZOlRRVYXl3vevQ31CwpbpAZKEbyfVKL9iW9N4abT
-         J8Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=pSJuCv0q0/z1FIFOdOKkUBldJYopo2x6Df2DsyN6P7E=;
-        b=lTBapmpvSSLuHvVWliVdinmFLGkOQ4Evzxr7/wxI3+NUzhXJHdMimFEoVT+6wK3Zwj
-         P83LTlwxYxEfsP2H7LJ+EVt2DkFKkcZm4BOxIKUSVWyZPkvmB5xgZ1AkfmE2cAW4bGaL
-         JBklOk0wJtFZCkB6rUqgcP1ZHKmn8CC4Fni/UoNmcDV1RQtXMzXl5+rdMkOWC5OMnIZa
-         54AE3eCGaPLWo3nMaKGpdYIAVS3V2IefLzBfBvLluR7UzJtFbqPnUsFCL7lHXH9zOpUL
-         qvhrj8iRHNUlvkVV+062DxIrvd0JCkyYHBn5PbjFdLqZotVIRoE1TYRh6SezkhGSZLto
-         iAnQ==
-X-Gm-Message-State: APjAAAV5pffWKqy8RrkotRBADzOq8yUEOGAsg4L2dfRXG+tuA4BiFm8v
-        DFeM8y5nzx9rTI5nqSAazY1021Oieb2kCbSUvmI67g==
-X-Google-Smtp-Source: APXvYqww+xa/shqmj3ALY2JAcM4t2Oi9yfUMtjGqluc3+ah50x+EtFXlht3Em5G6Av0vEY0z2OhZ80T5Hgfzp+ShcR4=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr7373029lfp.133.1578606675739;
- Thu, 09 Jan 2020 13:51:15 -0800 (PST)
+        Thu, 9 Jan 2020 16:52:45 -0500
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 16:52:45 EST
+Received: by shells.gnugeneration.com (Postfix, from userid 1000)
+        id 09BEB1A40239; Thu,  9 Jan 2020 13:46:04 -0800 (PST)
+Date:   Thu, 9 Jan 2020 13:46:04 -0800
+From:   Vito Caputo <vcaputo@pengaru.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Subject: Re: OOM killer not nearly agressive enough?
+Message-ID: <20200109214604.nfzsksyv3okj3ec2@shells.gnugeneration.com>
+References: <20200107204412.GA29562@amd>
+ <20200109115633.GR4951@dhcp22.suse.cz>
+ <20200109210307.GA1553@duo.ucw.cz>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Jan 2020 22:51:04 +0100
-Message-ID: <CACRpkdbR2Ssr1WWfS2HZ-jd6XFgEvEsqrjVAcgPsR8RerE-xfQ@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v5.5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Qianggui Song <qianggui.song@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109210307.GA1553@duo.ucw.cz>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Jan 09, 2020 at 10:03:07PM +0100, Pavel Machek wrote:
+> On Thu 2020-01-09 12:56:33, Michal Hocko wrote:
+> > On Tue 07-01-20 21:44:12, Pavel Machek wrote:
+> > > Hi!
+> > > 
+> > > I updated my userspace to x86-64, and now chromium likes to eat all
+> > > the memory and bring the system to standstill.
+> > > 
+> > > Unfortunately, OOM killer does not react:
+> > > 
+> > > I'm now running "ps aux", and it prints one line every 20 seconds or
+> > > more. Do we agree that is "unusable" system? I attempted to do kill
+> > > from other session.
+> > 
+> > Does sysrq+f help?
+> 
+> May try that next time.
+> 
+> > > Do we agree that OOM killer should have reacted way sooner?
+> > 
+> > This is impossible to answer without knowing what was going on at the
+> > time. Was the system threshing over page cache/swap? In other words, is
+> > the system completely out of memory or refaulting the working set all
+> > the time because it doesn't fit into memory?
+> 
+> Swap was full, so "completely out of memory", I guess. Chromium does
+> that fairly often :-(.
+> 
 
-some two fixes for pin control, not much to say about
-it, it's just regular driver fixes.
+Have you considered restricting its memory limits a la `ulimit -m`?
 
-Please pull them in!
+I've taken to running browsers in nspawn containers for general
+isolation improvements, but this also makes it easy to set cgroup
+resource limits like memcg.  i.e. --property MemoryMax=2G
 
-Yours,
-Linus Walleij
+This prevents the browser from bogging down the entire system, but it
+doesn't prevent thrashing before FF OOMs within its control group.
 
-The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
+I do feel there's a problem with the kernel's reclaim algorithm, it
+seems far too willing to evict file-backed pages that are recently in
+use.  But at least with memcg this behavior is isolated to the cgroup,
+though it still generates a crapload of disk reads from all the
+thrashing.
 
-  Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.5-4
-
-for you to fetch changes up to 35c60be220572de7d6605c4318f640d133982040:
-
-  pinctrl: meson: Fix wrong shift value when get drive-strength
-(2020-01-07 11:21:07 +0100)
-
-----------------------------------------------------------------
-Pin control fixes for the v5.5 kernel cycle:
-
-- Fix erroneous shift in the Meson driver
-
-- Make Lochnagar select the GPIOLIB Kconfig symbol
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      pinctrl: lochnagar: select GPIOLIB
-
-Qianggui Song (1):
-      pinctrl: meson: Fix wrong shift value when get drive-strength
-
- drivers/pinctrl/cirrus/Kconfig        | 1 +
- drivers/pinctrl/meson/pinctrl-meson.c | 1 +
- 2 files changed, 2 insertions(+)
+Regards,
+Vito Caputo
