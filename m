@@ -2,100 +2,168 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D96C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF48C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4EE72077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D25206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PjAv93AN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbgAINVc (ORCPT
+        id S1730390AbgAINWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:21:32 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:58571 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgAINVc (ORCPT
+        Thu, 9 Jan 2020 08:22:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33544 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727861AbgAINWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:21:32 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 5C8EE40004;
-        Thu,  9 Jan 2020 13:21:27 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 14:21:26 +0100
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Igor Russkikh <irusskikh@marvell.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "sd@queasysnail.net" <sd@queasysnail.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
-        "Simon.Edelhaus@aquantia.com" <Simon.Edelhaus@aquantia.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
-        Mark Starovoytov <mstarovoitov@marvell.com>
-Subject: Re: [EXT] [PATCH net-next v4 15/15] net: macsec: add support for
- offloading to the MAC
-Message-ID: <20200109132126.GD5472@kwain>
-References: <20191219105515.78400-1-antoine.tenart@bootlin.com>
- <20191219105515.78400-16-antoine.tenart@bootlin.com>
- <MN2PR18MB26387BD6B59565D21F936FE5B72E0@MN2PR18MB2638.namprd18.prod.outlook.com>
+        Thu, 9 Jan 2020 08:22:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578576161;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dE4ryLd3fwXYcbBtXTnMIpC4ft/UG9Rj8eEUk0vFsRo=;
+        b=PjAv93ANWoJDOVfjvmoH/47u7ugV687I3ofvvnrffgMjJv0h/yYQhGOWYZqK1mMZOoAHLE
+        RvIM6JxBx6qn35iGdNDikIiCma2TbPcoA8VRxNl5qJ/8EnA9USe16mKbg8wOFIF0LfS6Ym
+        n9iqhRUfoHBFCi/gXSGltmX/VJ+wso0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-0vvOMYTwOpKc-AJibRDE-g-1; Thu, 09 Jan 2020 08:22:38 -0500
+X-MC-Unique: 0vvOMYTwOpKc-AJibRDE-g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB9DA10054E3;
+        Thu,  9 Jan 2020 13:22:36 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DA0AC1000322;
+        Thu,  9 Jan 2020 13:22:34 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 14:22:32 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Michael Petlan <mpetlan@redhat.com>,
+        Andres Freund <andres@anarazel.de>,
+        linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] perf c2c: Fix sorting.
+Message-ID: <20200109132232.GA82989@krava>
+References: <20200109043030.233746-1-andres@anarazel.de>
+ <alpine.LRH.2.20.2001091055430.4075@Diego>
+ <20200109131834.GA4404@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <MN2PR18MB26387BD6B59565D21F936FE5B72E0@MN2PR18MB2638.namprd18.prod.outlook.com>
+In-Reply-To: <20200109131834.GA4404@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Igor,
-
-On Mon, Dec 23, 2019 at 11:36:48AM +0000, Igor Russkikh wrote:
+On Thu, Jan 09, 2020 at 10:18:34AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Jan 09, 2020 at 10:58:43AM +0100, Michael Petlan escreveu:
+> > On Wed, 8 Jan 2020, Andres Freund wrote:
+> > > Commit 722ddfde366f ("perf tools: Fix time sorting") changed -
+> > > correctly so - hist_entry__sort to return int64. Unfortunately several
+> > > of the builtin-c2c.c comparison routines only happened to work due the
+> > > cast caused by the wrong return type.
+> > > 
+> > > This causes meaningless ordering of both the cacheline list, and the
+> > > cacheline details page. E.g a simple
+> > >   perf c2c record -a sleep 3
+> > >   perf c2c report
+> > > will result in cacheline table like
+> > >   =================================================
+> > >              Shared Data Cache Line Table
+> > >   =================================================
+> > >   #
+> > >   #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----  ---- Store Reference ----  --- Load Dram ----      LLC    Total  ----- Core Load Hit -----  -- LLC Load Hit --
+> > >   # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt    Total    L1Hit   L1Miss       Lcl       Rmt  Ld Miss    Loads       FB       L1       L2       Llc       Rmt
+> > >   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  ........  ........  .......  .......  .......  .......  .......  ........  ........
+> > >   #
+> > >         0      0x7f0d27ffba00   N/A       0       52    0.12%       13        6        7       12       12        0         0         7       14       40        4       16        0         0         0
+> > >         1      0x7f0d27ff61c0   N/A       0     6353   14.04%     1475      801      674      779      779        0         0       718     1392     5574     1299     1967        0       115         0
+> > >         2      0x7f0d26d3ec80   N/A       0       71    0.15%       16        4       12       13       13        0         0        12       24       58        1       20        0         9         0
+> > >         3      0x7f0d26d3ec00   N/A       0       98    0.22%       23       17        6       19       19        0         0         6       12       79        0       40        0        10         0
+> > > i.e. with the list not being ordered by Total Hitm.
+> > > 
+> > > Fixes: 722ddfde366f ("perf tools: Fix time sorting")
+> > > Signed-off-by: Andres Freund <andres@anarazel.de>
+> > 
+> > Tested on top of Arnaldo's perf/core branch. After the patch, the rows
+> > are ordered by Tot Hitm.
+> > 
+> > Tested-by: Michael Petlan <mpetlan@redhat.com>
 > 
-> > diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-> > index 024af2d1d0af..771371d5b996 100644
-> > --- a/include/uapi/linux/if_link.h
-> > +++ b/include/uapi/linux/if_link.h
-> > @@ -489,6 +489,7 @@ enum macsec_validation_type {
-> >  enum macsec_offload {
-> >  	MACSEC_OFFLOAD_OFF = 0,
-> >  	MACSEC_OFFLOAD_PHY = 1,
-> > +	MACSEC_OFFLOAD_MAC = 2,
-> >  	__MACSEC_OFFLOAD_END,
-> >  	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
+> Jiri, so you think we should use a different Fixes: cset? Or plain
+> remove it? I haven't checked it, just trying to figure out if you guys
+> came up with a conclusion so that I can review/apply.
+
+waiting for Andres's answer.. making sure I understand the issue ;-)
+
+jirka
+
 > 
-> So from uapi perspective user have to explicitly specify "offload mac"
-> or "offload phy"? And from non experienced user perspective he always
-> have to try these two before rolling back to "offload none" ?
-> 
-> I'm not saying this is wrong, just trying to understand if there any
-> more streamlined way to do this..
+> - Arnaldo
+>  
+> > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > Cc: Andi Kleen <ak@linux.intel.com>
+> > > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > > Cc: Michael Petlan <mpetlan@redhat.com>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: stable@vger.kernel.org # v3.16+
+> > > ---
+> > >  tools/perf/builtin-c2c.c | 10 ++++++----
+> > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > > index e69f44941aad..f2e9d2b1b913 100644
+> > > --- a/tools/perf/builtin-c2c.c
+> > > +++ b/tools/perf/builtin-c2c.c
+> > > @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+> > >  {
+> > >  	struct c2c_hist_entry *c2c_left;
+> > >  	struct c2c_hist_entry *c2c_right;
+> > > -	unsigned int tot_hitm_left;
+> > > -	unsigned int tot_hitm_right;
+> > > +	uint64_t tot_hitm_left;
+> > > +	uint64_t tot_hitm_right;
+> > >  
+> > >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+> > >  	c2c_right = container_of(right, struct c2c_hist_entry, he);
+> > > @@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __maybe_unused,			\
+> > >  									\
+> > >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
+> > >  	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
+> > > -	return c2c_left->stats.__f - c2c_right->stats.__f;		\
+> > > +	return (uint64_t) c2c_left->stats.__f -				\
+> > > +	       (uint64_t) c2c_right->stats.__f;				\
+> > >  }
+> > >  
+> > >  #define STAT_FN(__f)		\
+> > > @@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+> > >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+> > >  	c2c_right = container_of(right, struct c2c_hist_entry, he);
+> > >  
+> > > -	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
+> > > +	return (uint64_t) llc_miss(&c2c_left->stats) -
+> > > +	       (uint64_t) llc_miss(&c2c_right->stats);
+> > >  }
+> > >  
+> > >  static uint64_t total_records(struct c2c_stats *stats)
+> > > -- 
+> > > 2.25.0.rc1
+> > > 
+> > > 
 
-That is the idea, the commands will be:
-# ip macsec offload macsec0 off
-# ip macsec offload macsec0 phy
-# ip macsec offload macsec0 mac
-
-We should be able to report what's supported for a given interface, for
-a more user friendly experience though. (We could include the
-information in `ip macsec show` for example). Would that improve things?
-
-Thanks!
-Antoine
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
