@@ -2,98 +2,118 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9DCC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48878C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF01620661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E7F20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:17:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="2HAoL1j7"
+	dkim=pass (1024-bit key) header.d=eaxlabs.cz header.i=@eaxlabs.cz header.b="XjaCUP7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387574AbgAIQR3 (ORCPT
+        id S2387582AbgAIQRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:17:29 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42204 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730483AbgAIQR2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:17:28 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q6so7976534wro.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:17:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y2Twc/4NGWAktor1LtRx/8ZfV8fNdobSeF8VACd7NtQ=;
-        b=2HAoL1j70ejT1gsCA47ItX4L13c+Lekgn7PQbHRsc3wvFSvbceA78tijG7wyydNu/v
-         7E1eeoe+xN52OGGz3u8G2lJOHwdB6m35cn5erVnDgAd6DbUsSAoXZ0yG3S5aOYNxx2aR
-         knPuvKahtwohE/TdnBKi1Imvjt+SLfTd+z5MvA3cUEw+dTrHyM0oQxMJ84FwNLuDkLAA
-         qMOWe+/y3qLPXRd3VwoD2oKr9V5lLWCe3/WjnfTXDFSNEY+fXXAqKIHHSevM6wXVi15q
-         U1ApapyPufoAOKqkoPqmQLKd7s4/Lw6+77uvwHEnNcuOzuEo+zXEv9oc8VU2b2/MKkT6
-         SvVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y2Twc/4NGWAktor1LtRx/8ZfV8fNdobSeF8VACd7NtQ=;
-        b=k+UBmGi6MiZ4U1zXW7SJ6oKfwupe4hrg6amT22tL16e5wxaaMuqwysVINtw5zMpuaS
-         +zXb+rf+2v3/Lt5wM4lyFl2bfTTe1XNlWfQqr9P6tlC7REBauGvck2HNlva6+mfmbN/B
-         yZpf+T/wy6vqwQeGhuhbXW1gp1tx7hpOvCkx53mAC1sTIkKMxQLYHHkbQnSmFAUwKoNv
-         BaNEzcXoZPFwRZnq3sf35Q3v2UdCOeE24P+7/tY8uOEHWQ8bUB6lKQDZIDEy86SMeZPp
-         cDR7ypI1y05N9jHbzPQ94ZP8iPekaRJEUQTX6FxpwTrjkQA182K2SEnnpI0rcPsIoWV9
-         u28w==
-X-Gm-Message-State: APjAAAWRokfKIcICb64IEAcSjtP+8s3lV6oJ+hEm+XEPrmZR/B1mnNcG
-        xYdpNRRHLpwF7VeWKYh1oPc8TA==
-X-Google-Smtp-Source: APXvYqyPbGB4LHfHSMgYlyKMfT1GnPO5HFRg6dAa1V/RyHOBmdlI4zTb5yC8nxMYCgtgWfzpA/AziQ==
-X-Received: by 2002:adf:ed83:: with SMTP id c3mr11402659wro.51.1578586646632;
-        Thu, 09 Jan 2020 08:17:26 -0800 (PST)
-Received: from debian-brgl.home (amontpellier-652-1-53-230.w109-210.abo.wanadoo.fr. [109.210.44.230])
-        by smtp.gmail.com with ESMTPSA id f207sm3805207wme.9.2020.01.09.08.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:17:26 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] kconfig: ignore temporary generated files
-Date:   Thu,  9 Jan 2020 17:17:24 +0100
-Message-Id: <20200109161724.9546-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        Thu, 9 Jan 2020 11:17:48 -0500
+Received: from ms9.eaxlabs.cz ([147.135.177.209]:57216 "EHLO ms9.eaxlabs.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730483AbgAIQRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:17:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=eaxlabs.cz; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=XxKBnJNt9e56ZyYpPr2hAC9xIc4T57rxccAPh3vRQeg=;
+        b=XjaCUP7mKXP2VXRj8RRoOZW/XYPNwgONi0ntcJO2YjeTt6KQpw59oSJeI0bMlTkDPBWdWUQC0LZgXBeUE2ice+ywQ/sAcsrBoro6crgyHy5i6+ZWEVHocE7BPMOJq5XgDbv9uJ3XXDVkdoFKinz11MbYFZ45/fqr5cHmmxGfDr8=;
+Received: from [82.99.129.6] (helo=[10.76.6.116])
+        by ms9.eaxlabs.cz with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <devik@eaxlabs.cz>)
+        id 1ipaV1-00068I-Lx; Thu, 09 Jan 2020 17:17:33 +0100
+Subject: Re: [PATCH] mtd: rawnand: Fix unexpected timeouts in waitrdy
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     linux-kernel@vger.kernel.org, jan.pohanka@merz.cz,
+        Christophe Kerello <christophe.kerello@st.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-mtd@lists.infradead.org
+References: <20191210150319.3125-1-devik@eaxlabs.cz>
+ <20200109163752.621c6248@xps13>
+From:   Martin DEVERA <devik@eaxlabs.cz>
+Message-ID: <73164aea-d889-21e4-4e7d-345ebd4e5197@eaxlabs.cz>
+Date:   Thu, 9 Jan 2020 17:17:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200109163752.621c6248@xps13>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 1/9/20 4:37 PM, Miquel Raynal wrote:
+> Hi Martin,
+>
+> Martin Devera <devik@eaxlabs.cz> wrote on Tue, 10 Dec 2019 16:03:18
+> +0100:
+>
+>> The used way to compute jiffies timeout brokes when
+>> jiffie difference is 1. Simply add 1 - it has no other
+>> side effects.
+>> Fixes STM32MP1 FMC2 NAND controller which sometimes failed
+>> exactly in this way.
+>>
+>> Signed-off-by: Martin Devera <devik@eaxlabs.cz>
+>> ---
+>>   drivers/mtd/nand/raw/nand_base.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+>> index d527e448ce19..beab3a775cc7 100644
+>> --- a/drivers/mtd/nand/raw/nand_base.c
+>> +++ b/drivers/mtd/nand/raw/nand_base.c
+>> @@ -721,7 +721,11 @@ int nand_soft_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms);
+>> +	/* +1 below is necessary because if we are now in the last fraction
+>> +	 * of jiffy and msecs_to_jiffies is 1 then we will wait only that
+>> +	 * small jiffy fraction - possibly leading to false timeout
+>> +	 */
+>> +	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms) + 1;
+>>   	do {
+>>   		ret = nand_read_data_op(chip, &status, sizeof(status), true);
+>>   		if (ret)
+> I don't really what you are fixing here, I suspect the root cause to be
+> a wrongly calculated timeout_ms in the calling driver.
+>
+> It is the responsibility of the caller to use this function with a
+> relevant timeout_ms parameter. Maybe Christophe can help you here?
+>
+Hi Miquel,
 
-If building gconfig fails, a temporary gtk config file is left in the
-kconfig directory and is not ignored by git. Add an appropriate pattern
-to .gitignore.
+assume that nand_soft_waitrdy is called with timeout_ms==1. I suppose it is
+valid case. Jiffies are 1000 for example (assume something more like 
+1000.99 -
+just before incrementing to 1001).
+We compute timeout_ms = 1000+msecs_to_jiffies(1) = 1001 (at least for my 
+jiffies rate).
+nand_read_data_op is called for the first time and returns 0. During the 
+call jiffies changes
+to 1001 thus "while loop" ends here (wrongly).
+Notice that routine was called with expected timeout 1ms but actual 
+timeout used was something
+between 0...1ms (which I also measured by tracing & scope on the bus).
+Or is my analysis flawed somewhere ?
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- scripts/kconfig/.gitignore | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
 
-diff --git a/scripts/kconfig/.gitignore b/scripts/kconfig/.gitignore
-index b5bf92f66d11..d22e6753397d 100644
---- a/scripts/kconfig/.gitignore
-+++ b/scripts/kconfig/.gitignore
-@@ -3,6 +3,7 @@
- #
- *.moc
- *conf-cfg
-+*conf-cfg.tmp
- 
- #
- # configuration programs
--- 
-2.23.0
+Martin
 
