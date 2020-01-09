@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6390FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B001C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D682067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C7D2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="KZUsxg5z"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="NzBNdntB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbgAINja (ORCPT
+        id S1731273AbgAINjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:39:30 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38455 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731251AbgAINj2 (ORCPT
+        Thu, 9 Jan 2020 08:39:32 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53709 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731266AbgAINjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:39:28 -0500
-Received: by mail-wm1-f67.google.com with SMTP id u2so2876974wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:39:26 -0800 (PST)
+        Thu, 9 Jan 2020 08:39:31 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m24so2959589wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:39:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GqLLvQg0ATNSkIqLQkyWCN1a7OI6F+wbBlqHUwVhDqw=;
-        b=KZUsxg5zoTR27cOYUpRPW0MMQGUMVqL8dSxF38ru+enYB3/9og7B6YHPMqXzyw5FA0
-         YZQdS6H/seiUdrmxrns7fTSM8XQ0jlus1MDonLPscioPzx6kXFzT0CGlpcSXghec2X8w
-         RCFLDtpL/n8u6NBe2fHgLItRs/2aPqHNh3O3TXkiEIfd7ZmqWKG0bFmN1Q3KryAB1/R3
-         YVINW4DMINnoZymQK+Antr5KLEVLxPn7E0QFwJWS6732bcFfvzl1uY/Xpzq3hftFK3iD
-         zefZY/ambvqr10cx8eUB3NukWMWIRr7O6MAx+3BQGYHs4LgJuY/RRB7XDEItQZRe760N
-         0ULw==
+        bh=3uTRVYc3CwuaK7vmscKhsuq+TjWl2SbzmcNvk0jneyE=;
+        b=NzBNdntB5n+8cI1SL4hqMv75gF5qlYVZoch0u5XZUNN4uJshZpMC51TbpQMMmZfbz4
+         /2T+YoXIspoZOzWP7ZZp2UN/RCcGF882X7PoCZ86N8BWE6MXAmqVVqSbBKbeYE0XmQZM
+         tESlcMvjCBE24H8bTMS5E1AGelx5r61vXOojuK8GbCRdchRQ7lVB++1TT7gVfM0usSD/
+         iS2T3WgMxXxWXF8QWlfW6xUiRoJsABW+Z/uoss5qUGF9PvrlI5gZR64dLhTr351ioKeX
+         mZoxh4DBVAjdM3a6aLJzGN/bXBq4dBjShu18PMl/Dt1UcljrSlVPQpSfzbDbBmJc7DPu
+         FEpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=GqLLvQg0ATNSkIqLQkyWCN1a7OI6F+wbBlqHUwVhDqw=;
-        b=HMClKHorLBMXMYHp8WUZaPGLxWvi2lnH3iMqISYuBkYW0TfZs3dLWc0taL0vGlLe6w
-         Y2CP8dg94bFm47PlgL/pWgGFu18NKvUczBm/irgrcPb41dTzZSj6WsnjSKZpvbd0jMGR
-         3nA/YXtZcaSu0mOLtdC3rfysiiE34D6V+oZP37xLA42TFl7xFB+cOJbnppKmoIU62CWy
-         XdhQ3SWlDoOrC55CQTnBkPJC3V6wJsSWelAe/HWXM1u+8GsI+FGGI28XvJ9LcQuP1WD8
-         yYtwQqs5xKr9y3U7UwT4+Ydq+fV9EIq7kNGgx41ImWrMTbFMGSukVfiis4O7n3CoBTEu
-         rSwQ==
-X-Gm-Message-State: APjAAAUwE95uLcDIjr0r/V5AiDMYrf55Re6sHNYos9EkLBisT7iDjZ97
-        kWOMb6NMePG0bn/D7Pn4wQ9Cyw==
-X-Google-Smtp-Source: APXvYqz8lgccZsUdV6UcoZDn9lP0mGIaJjc7CrvVVs2WxQzH/y/hefKVpUtfJMMVEspmFeMBK37knQ==
-X-Received: by 2002:a1c:ddc5:: with SMTP id u188mr4750512wmg.83.1578577166217;
-        Thu, 09 Jan 2020 05:39:26 -0800 (PST)
+        bh=3uTRVYc3CwuaK7vmscKhsuq+TjWl2SbzmcNvk0jneyE=;
+        b=sZkd08fzbmtFjeyk35jaEeFk06Lk7MkgmKvruQpIOeB/fj8bEBYzTCS0MWySVhHlwO
+         Oc7rNST9iSx4CEPoTynX9/V2Tf8DCbieTcEvWHAHkrJBJx+rOjujP+WY6KzEszj2A3it
+         fyRLhZYUvUnYlpFQN5tnG74ZJZjGXJ6RK9hit93nkw7XIMIkyypsOJjmK3d95QRjR3wQ
+         fRjvpZvXLAx4ONz8s1s2XoquqcE28pByluXCAyKxquBJkn8RBnOidBm4shl89oHnjHvU
+         Esdbt4F4Mcu7DgCd29nN5t5d8XDofqZKlZllBu+Jz7+fKAAEfSmNrIaJ2g4oYDJXKa3r
+         i6mA==
+X-Gm-Message-State: APjAAAVq5A7Y/7+5yVM0hRK2Ru2xVk47kBQvGiPMaZIzCW5HulYDiI/e
+        rgfW9zdwLlDOAWC2pvM6/Dhw5A==
+X-Google-Smtp-Source: APXvYqxf0QTNnxUA/HlCe/Xc2QU9JGp9/9H2D79UhXJ9ShL1knOd6pTuDj94GA14KOuiRGe/kR1Lvw==
+X-Received: by 2002:a1c:720a:: with SMTP id n10mr4856590wmc.74.1578577168009;
+        Thu, 09 Jan 2020 05:39:28 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id g21sm8673580wrb.48.2020.01.09.05.39.25
+        by smtp.gmail.com with ESMTPSA id s8sm7846492wrt.57.2020.01.09.05.39.27
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:39:25 -0800 (PST)
+        Thu, 09 Jan 2020 05:39:27 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
@@ -65,9 +65,9 @@ Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
         Rob Herring <robh+dt@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] arm64: zynqmp: Remove broken-cd from zcu100-revC
-Date:   Thu,  9 Jan 2020 14:39:14 +0100
-Message-Id: <0976295a021145b7b1ef1f225b7c6314c91f0daa.1578577147.git.michal.simek@xilinx.com>
+Subject: [PATCH 6/6] arm64: zynqmp: Setup default number of chipselects for zcu100
+Date:   Thu,  9 Jan 2020 14:39:15 +0100
+Message-Id: <0565b9a88830f0d995d666a9c4bf346641a2b040.1578577147.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1578577147.git.michal.simek@xilinx.com>
 References: <cover.1578577147.git.michal.simek@xilinx.com>
@@ -78,27 +78,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Card detect bit was broken on revA and it is working fine with revC
-board that's why this property can be removed.
+There is only one chipselect on each connector.
+Define it directly in board dts file.
+There should be an option to use more chipselects via gpios.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-index dd60f7d85cc8..2b3757dd74cc 100644
+index 2b3757dd74cc..a109e82982ae 100644
 --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
 +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-@@ -226,7 +226,6 @@ &rtc {
- &sdhci0 {
+@@ -250,11 +250,13 @@ wlcore: wifi@2 {
+ &spi0 { /* Low Speed connector */
  	status = "okay";
- 	no-1-8-v;
--	broken-cd; /* CD has to be enabled by default */
- 	disable-wp;
+ 	label = "LS-SPI0";
++	num-cs = <1>;
  };
  
+ &spi1 { /* High Speed connector */
+ 	status = "okay";
+ 	label = "HS-SPI1";
++	num-cs = <1>;
+ };
+ 
+ &uart0 {
 -- 
 2.24.0
 
