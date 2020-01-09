@@ -2,95 +2,88 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F04C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF7CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA7D2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578607325;
-	bh=88y37HxDUMffX0HsWQMZbo0p/Dn1R5k39rJxWhAGkv8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=paxmzBFu1R17BT6Bx/ko+BOfNspHw+I1k5uiyENkTYudH31enFWXJe+uj4+vf3tJq
-	 sMu6nw5S3SgDXMgT29MQaTL+EoUWGfg4k9fuy6fhTmKSHMNve2NIQWCAEKsXXKXgls
-	 TRghOKfowPuMPwdM8u9FuubBXpCwKHckLCq9jYfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2E23D2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgAIWCE (ORCPT
+        id S1729131AbgAIWED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 17:02:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40794 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 17:04:03 -0500
+Received: from mga09.intel.com ([134.134.136.24]:49496 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgAIWCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 17:02:04 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BF9F2075D;
-        Thu,  9 Jan 2020 22:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578607323;
-        bh=88y37HxDUMffX0HsWQMZbo0p/Dn1R5k39rJxWhAGkv8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RR5TIJx35kahaEVAxbdZSd2dD4wvvD8AygQIteNvGlhu412PcwBHI8AA++92FE7LS
-         vzWA2mF2npuuF4AhWN+5xyBED2EGGDYnXNcNBvr/hY+Hz8EZplxNFIix9KXqE8N71x
-         B3NTTHoTPXneC2tJYdwo7CNOgOrCKoT755DN3CLY=
-Date:   Thu, 9 Jan 2020 14:02:02 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Oleksandr Natalenko <oleksandr@redhat.com>, linux-mm@kvack.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        id S1725840AbgAIWEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 17:04:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 14:04:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="246804087"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Jan 2020 14:04:01 -0800
+Date:   Thu, 9 Jan 2020 14:04:01 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Barret Rhoden <brho@google.com>
+Cc:     pbonzini@redhat.com, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kallsyms: work around bogus -Wrestrict warning
-Message-Id: <20200109140202.fd5488a2ac02f81b25d83b88@linux-foundation.org>
-In-Reply-To: <20200108102602.43d4c5433eb495cdbf387e9b@kernel.org>
-References: <20200107214042.855757-1-arnd@arndb.de>
-        <20200108102602.43d4c5433eb495cdbf387e9b@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] KVM: squelch uninitialized variable warning
+Message-ID: <20200109220401.GA2682@linux.intel.com>
+References: <20200109195855.17353-1-brho@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109195855.17353-1-brho@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jan 2020 10:26:02 +0900 Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Hi Arnd,
+On Thu, Jan 09, 2020 at 02:58:55PM -0500, Barret Rhoden wrote:
+> If gfn_to_hva_many() fails, __kvm_gfn_to_hva_cache_init() will return an
+> error.  Before it does, it might use nr_pages_avail, which my compiler
+> complained about:
 > 
-> On Tue,  7 Jan 2020 22:40:26 +0100
-> Arnd Bergmann <arnd@arndb.de> wrote:
+> 	virt/kvm/kvm_main.c:2193:13: warning: 'nr_pages_avail' may be
+> 	used uninitialized in this function [-Wmaybe-uninitialized]
 > 
-> > gcc -O3 produces some really odd warnings for this file:
-> > 
-> > kernel/kallsyms.c: In function 'sprint_symbol':
-> > kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
-> >    strcpy(buffer, name);
-> >    ^~~~~~~~~~~~~~~~~~~~
-> > kernel/kallsyms.c: In function 'sprint_symbol_no_offset':
-> > kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
-> >    strcpy(buffer, name);
-> >    ^~~~~~~~~~~~~~~~~~~~
-> > kernel/kallsyms.c: In function 'sprint_backtrace':
-> > kernel/kallsyms.c:369:3: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
-> >    strcpy(buffer, name);
-> >    ^~~~~~~~~~~~~~~~~~~~
-> > 
-> > This obviously cannot be since it is preceded by an 'if (name != buffer)'
-> > check.
+> 	   start_gfn += nr_pages_avail;
+
+Ugh, this whole flow is funky.  The change is correct, and is certainly the
+minimal change if we want to backport this to stable, but IMO it's putting
+lipstick on a pig.  I'd rather fix the underlying issues and make the code
+more readable in the process.  I'll send a patch.
+
+If we want to take this as a minimal fix,
+
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+> Signed-off-by: Barret Rhoden <brho@google.com>
+> ---
+>  virt/kvm/kvm_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Hmm, this looks like a bug in gcc.
-
-Yes, we're getting a lot of such reports.  I don't think current gcc is
-ready for this patch so I'll drop it, sorry.
-
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index d9aced677ddd..f8249b153d33 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2172,7 +2172,7 @@ static int __kvm_gfn_to_hva_cache_init(struct kvm_memslots *slots,
+>  	gfn_t start_gfn = gpa >> PAGE_SHIFT;
+>  	gfn_t end_gfn = (gpa + len - 1) >> PAGE_SHIFT;
+>  	gfn_t nr_pages_needed = end_gfn - start_gfn + 1;
+> -	gfn_t nr_pages_avail;
+> +	gfn_t nr_pages_avail = 0;
+>  	int r = start_gfn <= end_gfn ? 0 : -EINVAL;
+>  
+>  	ghc->gpa = gpa;
+> -- 
+> 2.25.0.rc1.283.g88dfdc4193-goog
+> 
