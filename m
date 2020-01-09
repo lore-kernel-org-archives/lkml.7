@@ -2,89 +2,178 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB58C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A08C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7ADA20838
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090D520678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JCOdhCaX"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="oVpiwGh+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgAII4f (ORCPT
+        id S1729011AbgAII5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:56:35 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52843 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728782AbgAII4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:56:34 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tg2l4VSNz9sR0;
-        Thu,  9 Jan 2020 19:56:31 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578560191;
-        bh=80jI77AOoYFB7RRyd6uDjLgdDaixjsEjEGudOjmOH/A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JCOdhCaXZ5S1ODqx4HOTSwZAQqa7f5B5wIEZVMRNVeeFNUfo4Vhc+pnG4e+TfLG+G
-         1D81VF1EnMfrQq9hyh/WUc0pbtyxSs88pDfuspfpo4D/xWnnDlwvpz8TijeLo9BmBQ
-         r5gTmNzT9XBCOIRxgEXEMYXrkbykZx/2wfhhFuLwwyS774rTyVS4HcsmIanTtXT4pq
-         xtzKnaxZGsRjBWoodOFTOczsjq8zJgPSjYalDHqqtVcD+1CBoHlg7Bf/EVMnd5qyfF
-         fh5NczIvS7yAmll2GeN0/weBcvKi3CFhdR30/rfw3+kjEQ3gpvIzoGVh3KUoj82RMd
-         3sTdVK0HUnFXg==
-Date:   Thu, 9 Jan 2020 19:56:30 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: linux-next: Signed-off-by missing for commit in the arm-soc tree
-Message-ID: <20200109195630.2dba4028@canb.auug.org.au>
+        Thu, 9 Jan 2020 03:57:47 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:37077 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728782AbgAII5r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 03:57:47 -0500
+Received: from [192.168.2.10] ([62.249.185.68])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id pTdLifcDmT6sRpTdPiJiDr; Thu, 09 Jan 2020 09:57:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578560264; bh=Vk/kifmXgDbLQKwwbiuGi3FO7KWx9DtEyC44qbawP/Y=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=oVpiwGh+ljBx8V9cDVtwgSxqDuL4IwsY1hPavlas1AfQQArwIpFQj+Ns9elb3td/c
+         4MxsyDMBK4HzmVD7mQWtpbGuhd8u8hoV/u5ahLCH5rcnv/M8I25xZGgT/5Skj7dxjR
+         OP8z5VZHjKHV4fkeRNKWtMvJdOVqobPxJ8ZlvmHEp+b4Duip/irkJVl5mpPYZFfIza
+         KB0vdWAPjJSRBLNL489+syB+Ky6YtdLIsvDUjraj+TajAJ8g2DZ6CJCpl9YGZjaQYU
+         zG0Rww8xUZXGDeoWa8X+Ge/kVjBKaiy4zs4V87YybYTvDNyZ81agPZ6NvstwuOeEjv
+         r/OrdClh6WiyA==
+Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-5-stanimir.varbanov@linaro.org>
+ <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
+ <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <fb27b5cc-0eef-a7b4-f45b-a3986b77c4c9@xs4all.nl>
+Date:   Thu, 9 Jan 2020 09:57:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/824GcS9jCs456SzDeQhXmGM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEjH4eGnUttPRLLZn2wIUrksqeIOrr79iVk+71v2HW3c1s23i6AUvXDG6nOxpxTCJL8f4vf3BDtJS4BCsbP6tyG3MMiR+gAUSHxms1gbAZE5EBM8Em0m
+ r4JMymfFTlE297FzNwczBZLXuclC8SuwpjsRAzxlCHlqYHPDihNW+ogauozlNVREAhhKrhNSCejCdPwwu6P+1ijYB/01otPI2zGCU3d7X/LsbCY1r6a1u7tS
+ I/rXdzF328DG1xtzEvr78rQW8g2SIO7G+QjnHsG28CQ1h4GDmn7WwHbmLNOVcw3n3iUoKbmjvaKfeMqwNJZVjeOX+j7/7pcXw5rTdfphAPyorS9zxLMQeJnw
+ hpeAi1jV1wJnd3IvkIARRU3t/JEJ3yHx4ra7YajsQUHJ3AKi3IW47BQa6Akl10Li4v5W3ikp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/824GcS9jCs456SzDeQhXmGM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 1/9/20 8:41 AM, Stanimir Varbanov wrote:
+> Hi Hans,
+> 
+> On 1/8/20 6:09 PM, Hans Verkuil wrote:
+>> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
+>>> This event indicate that the source color bit-depth is changed
+>>> during run-time. The client must get the new format and re-allocate
+>>> buffers for it. This can usually happens with video decoder (encoders)
+>>> when the bit-stream color bit-depth is changed from 8 to 10bits
+>>> or vice versa.
+>>>
+>>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>> ---
+>>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+>>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>>  include/uapi/linux/videodev2.h                  | 1 +
+>>>  3 files changed, 9 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>> index 42659a3d1705..fad853d440cf 100644
+>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>> @@ -402,7 +402,13 @@ call.
+>>>  	that many Video Capture devices are not able to recover from a temporary
+>>>  	loss of signal and so restarting streaming I/O is required in order for
+>>>  	the hardware to synchronize to the video signal.
+>>> -
+>>> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
+>>> +      - 0x0002
+>>> +      - This event gets triggered when color bit-depth change is detected
+>>> +	from a video decoder. Applications will have to query the new pixel
+>>> +	format and re-negotiate the queue. In most cases the streaming must be
+>>> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
+>>> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+>>
+>> I think this is too specific for decoders. Something similar to the
+>> CH_RESOLUTION description would be more appropriate:
+>>
+>>       - This event gets triggered when a color bit-depth change (but not a
+>> 	resolution change!) is detected	at an input. This can come from an
+> 
+> What you mean by "but not a resolution change" here? Resolution change
+> and bit-depth change cannot occur on the same time, or something else.
 
-Hi all,
+What I was trying to say is that a resolution change implies a possible bit-depth
+change as well, whereas V4L2_EVENT_SRC_CH_COLOR_DEPTH is only set if there is
+a bit-depth change but no resolution change.
 
-Commit
+V4L2_EVENT_SRC_CH_RESOLUTION requires that userspace does a full resync to the
+new format, CH_COLOR_DEPTH implies that only the bit depth changed.
 
-  4386aa866d99 ("cpuidle: psci: Align psci_power_state count with idle stat=
-e count")
+Which actually makes me wonder: is there a difference between the two change flags
+w.r.t. userspace behavior? If there is, then that should be carefully documented,
+if there isn't, then is this new flag really needed?
 
-is missing a Signed-off-by from its committer.
+Regards,
 
---=20
-Cheers,
-Stephen Rothwell
+	Hans
 
---Sig_/824GcS9jCs456SzDeQhXmGM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> 
+> I would say that for Venus (and probably others) on initialization time
+> both could be changed on the same time, because we cannot predict the
+> resolution and bit-depth before parsing bitstream headers.
+> 
+>> 	input connector or from a video decoder. Applications will have to query
+>> 	the new pixel format and re-negotiate the queue.
+>>
+>> 	For stateful decoders follow the guidelines in :ref:`decoder`.
+>> 	Video capture devices will in most cases have to stop and restart
+>> 	streaming (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>` followed by
+>> 	:ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+>>
+>> And update dev-decoder.rst where needed with this new event flag.
+>>
+>> As to your question on irc: once I've acked this patch it can be merged
+>> via a venus PR.
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>  
+>>>  Return Value
+>>>  ============
+>>> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+>>> index cb6ccf91776e..209709114378 100644
+>>> --- a/Documentation/media/videodev2.h.rst.exceptions
+>>> +++ b/Documentation/media/videodev2.h.rst.exceptions
+>>> @@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
+>>>  replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+>>>  
+>>>  replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
+>>> +replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
+>>>  
+>>>  replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+>>>  
+>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>>> index 5f9357dcb060..1d349c9d57a7 100644
+>>> --- a/include/uapi/linux/videodev2.h
+>>> +++ b/include/uapi/linux/videodev2.h
+>>> @@ -2332,6 +2332,7 @@ struct v4l2_event_frame_sync {
+>>>  };
+>>>  
+>>>  #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
+>>> +#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
+>>>  
+>>>  struct v4l2_event_src_change {
+>>>  	__u32 changes;
+>>>
+>>
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4W6r4ACgkQAVBC80lX
-0GwZlQgAirkY8xW4wHeY2GrIGzjzWjMtLySs51/+GFxYIQkiukdFuzXStFgI6sqZ
-m02dL0NKR2rmKx9Imk2Q/NI5Y+J0pOId2l8HSCGLBJqYJnYeqzG+8/eSuYYngmHr
-OVQ0WvgR32aD90t10v+0B6ynscsROyCc/e+kUDuQoeQpod1xmME3J50g3a3sbGr8
-VHusxWauZifmjl2IWzvaVIgGo+CGpf79iiEue7pMMkodrfAIF93Ie933ai9wTwIu
-ycUjU4kgRC20myd1bPjvi/977JsrC/lDp//jUkhX31sWl1z82Jqnzem18ePzJ1b2
-bRo5rCD9sTF454g9dMy0rfCJUeTyhA==
-=l+fn
------END PGP SIGNATURE-----
-
---Sig_/824GcS9jCs456SzDeQhXmGM--
