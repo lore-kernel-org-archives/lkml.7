@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C06C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9799CC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 641F020673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675C020673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:07:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OC+bfD98"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mTrUtVuU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgAIJHE (ORCPT
+        id S1729198AbgAIJHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:07:04 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35228 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbgAIJHC (ORCPT
+        Thu, 9 Jan 2020 04:07:07 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43442 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729182AbgAIJHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:07:02 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so6522229wro.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:07:01 -0800 (PST)
+        Thu, 9 Jan 2020 04:07:05 -0500
+Received: by mail-wr1-f67.google.com with SMTP id d16so6460415wre.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:07:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=g8+nW7WUiZHp/JTJe3ieEHrqcqpq+rbcRaXX3uhxHvs=;
-        b=OC+bfD98D0zbY38YLn1j6UUzuvzFCsCffoXx6rd75N/l27A6rInDg3eqrAq7JhZSfe
-         DG5TH/0OgKZMoNsKVCR/F/6ZHsSuZdI8h7T1WnTUa2RarMO3IpiAncNvcQT5KgsrIXWj
-         ThXdo7sidBhOB/wY6g5Dk7DOGKxzxCzzHPz1qfbfghYVMB46sLHofTAzlAxFm403evhO
-         iUHPp/RTMP1zLjtRwtLJT7ZGYZcFaL31inuCWL38jRxnOD+isDXRSYD/HTysAgCHNrsS
-         z8SlhxOv8pI4DC6jGm5x6ju+zg14BuRzJu1vYod4KgYc0QrnolfPoEpGQdoLItjjWRSj
-         HTyw==
+        bh=OZjGs6UaTVRsqD7bMcmmmmdB5ZvGFZd3+9egdXlSicM=;
+        b=mTrUtVuUIgMGMeKiU3qViZO4W1gDjq0b1y5RuoDM/aFt4XoqNTHLGJQVabcB1LrKIQ
+         iwC6NKhxaZQbazMlWOJ/Ng3mHn7vj29OSM0Vqor+RkQiWPTI8pVMCCcYEJcc7GqItlkL
+         jOXRR1Jjn7htMPtWKITbvLNrboggGbVRebPzRg9ZfR73/heOcRifuOIjp6m+4RgM3qSK
+         rNBmkYt2Wsr39XhhMLkTcWBYMSySDDdVOlVHa/l+Vh14E5HOhnJ5hsy/KlCqDCP2xHDT
+         dkvr65sEz90V4v7jR/SUITLIkCcGpX7+GcEm/fwwcmCPdGl4HiHF37+YVNXxHcEfGv5A
+         sGjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=g8+nW7WUiZHp/JTJe3ieEHrqcqpq+rbcRaXX3uhxHvs=;
-        b=H/AWiVxRia6wh4XC6GVteZaOSv4vwqjACjEJadl0RWSGxsLusDwQm5fHdMq89VapIP
-         o5PYPy6wAWKOuVYVdipmkEmkK4GxZOStjDNsX7QGARftNdaNojXwdB1WuzTkDzvvZyZw
-         3SoKUJhzwXDfnMqX/TWMk5jxBDDrSNKl5FuueKtgGOs4LDe9XavChCyOerlKVGcs6tCj
-         lzn2A2CZH6kz1JOgDBZT6aXjcQXGWydiobXnL3whwr4DhgRInpZsBKn4B/3/Ir0RLUo2
-         JLuTX8aDg/SztUpfkEcdniGj9NwDWXjH7l782Om2N2n9gn5x1CEGeWOenkKDhiPnW05f
-         kmlg==
-X-Gm-Message-State: APjAAAWu1eC7uCeMlzi2HdxX1jgX5qii3WV9Z1bZ/I0l2ve2RqU1nfge
-        hpiFJTSPt4F4wtjuHyjPecc=
-X-Google-Smtp-Source: APXvYqzCEUpEv+edqK9ll9+pCMUADVtECHnGemRB5PnQJQWZIgbIFRMja/Fq8jnHGZy/6Mx18My0Mw==
-X-Received: by 2002:adf:fa87:: with SMTP id h7mr9357843wrr.172.1578560821062;
-        Thu, 09 Jan 2020 01:07:01 -0800 (PST)
+        bh=OZjGs6UaTVRsqD7bMcmmmmdB5ZvGFZd3+9egdXlSicM=;
+        b=kOnpRc4J6ZDgO1VV9yBr6BKeoRmDbZhsk1K7ncJL9ALefWtS76pxKLZdq5fYutrJD0
+         gfjiCAHoWkbqw4C2OGaHJi1642P9ATNq92qWcT550nXv4RBtMJHNDov9hCoIu6g0uHJU
+         uW5qjyUCUd1BCqX1465ahOASsLBuhJDdOAxCiKhs2zhI39FU6KwIZyjauMLkiXVav3vb
+         uLBNdFSAz6twELPYoBzzo9goEN9VkB4YntKYlpo0gzt3i6ibkjjORvH+/MMkbzX1IyeB
+         tZGWpl8nysx5FIFcVkUALDKyCVJCR5StZO0YePYZ7goyUGB6VXafsFHB6UjccO/6Lq60
+         0ipQ==
+X-Gm-Message-State: APjAAAXbrZW0eeXGO2UVLKj6xIPnge5rS1bWvBW3Llao1JL2aM6IOyxy
+        Wf2aGK0Hcv+KDvpI43d+SW0=
+X-Google-Smtp-Source: APXvYqyy6dELvru4OOP3T6y3Yj7E8EV8t3vnuNoSlszG4R1U2avG9l79QFwVBUUis2bzJ3P8u3dXpA==
+X-Received: by 2002:a5d:690e:: with SMTP id t14mr9518982wru.65.1578560823717;
+        Thu, 09 Jan 2020 01:07:03 -0800 (PST)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id i8sm8004734wro.47.2020.01.09.01.06.57
+        by smtp.googlemail.com with ESMTPSA id i8sm8004734wro.47.2020.01.09.01.07.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 01:07:00 -0800 (PST)
+        Thu, 09 Jan 2020 01:07:03 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
         rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch
 Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] drm/i915: conversion to new logging macros in i915/intel_device_info.c
-Date:   Thu,  9 Jan 2020 12:06:44 +0300
-Message-Id: <e404429ff2a5e5080867f577beccd7b578a671cd.1578560355.git.wambui.karugax@gmail.com>
+Subject: [PATCH 4/5] drm/i915: convert to new logging macros in i915/intel_gvt.c
+Date:   Thu,  9 Jan 2020 12:06:45 +0300
+Message-Id: <44f3839820a32ed03d73dc56a6ef3581994802c9.1578560355.git.wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1578560355.git.wambui.karugax@gmail.com>
 References: <cover.1578560355.git.wambui.karugax@gmail.com>
@@ -75,88 +75,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This replaces the printk and struct device based logging macros with the
-new struct drm_device style based logging macros i915/intel_device_info.c.
+This converts the use of printk based logging macros in i915/intel_gvt.c
+with the new struct drm_device based logging macros.
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/gpu/drm/i915/intel_device_info.c | 25 +++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/i915/intel_gvt.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_device_info.c b/drivers/gpu/drm/i915/intel_device_info.c
-index 6670a0763be2..fcdacd6d4aa5 100644
---- a/drivers/gpu/drm/i915/intel_device_info.c
-+++ b/drivers/gpu/drm/i915/intel_device_info.c
-@@ -974,10 +974,11 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
- 		    sfuse_strap & SFUSE_STRAP_DISPLAY_DISABLED ||
- 		    (HAS_PCH_CPT(dev_priv) &&
- 		     !(sfuse_strap & SFUSE_STRAP_FUSE_LOCK))) {
--			DRM_INFO("Display fused off, disabling\n");
-+			drm_info(&dev_priv->drm,
-+				 "Display fused off, disabling\n");
- 			info->pipe_mask = 0;
- 		} else if (fuse_strap & IVB_PIPE_C_DISABLE) {
--			DRM_INFO("PipeC fused off\n");
-+			drm_info(&dev_priv->drm, "PipeC fused off\n");
- 			info->pipe_mask &= ~BIT(PIPE_C);
- 		}
- 	} else if (HAS_DISPLAY(dev_priv) && INTEL_GEN(dev_priv) >= 9) {
-@@ -1000,8 +1001,9 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
- 		 * in the mask.
- 		 */
- 		if (enabled_mask == 0 || !is_power_of_2(enabled_mask + 1))
--			DRM_ERROR("invalid pipe fuse configuration: enabled_mask=0x%x\n",
--				  enabled_mask);
-+			drm_err(&dev_priv->drm,
-+				"invalid pipe fuse configuration: enabled_mask=0x%x\n",
-+				enabled_mask);
- 		else
- 			info->pipe_mask = enabled_mask;
+diff --git a/drivers/gpu/drm/i915/intel_gvt.c b/drivers/gpu/drm/i915/intel_gvt.c
+index 2b6c016387c2..38ebd5562c7c 100644
+--- a/drivers/gpu/drm/i915/intel_gvt.c
++++ b/drivers/gpu/drm/i915/intel_gvt.c
+@@ -67,12 +67,13 @@ void intel_gvt_sanitize_options(struct drm_i915_private *dev_priv)
+ 		return;
  
-@@ -1036,7 +1038,8 @@ void intel_device_info_runtime_init(struct drm_i915_private *dev_priv)
- 		gen12_sseu_info_init(dev_priv);
+ 	if (intel_vgpu_active(dev_priv)) {
+-		DRM_INFO("GVT-g is disabled for guest\n");
++		drm_info(&dev_priv->drm, "GVT-g is disabled for guest\n");
+ 		goto bail;
+ 	}
  
- 	if (IS_GEN(dev_priv, 6) && intel_vtd_active()) {
--		DRM_INFO("Disabling ppGTT for VT-d support\n");
+ 	if (!is_supported_device(dev_priv)) {
+-		DRM_INFO("Unsupported device. GVT-g is disabled\n");
 +		drm_info(&dev_priv->drm,
-+			 "Disabling ppGTT for VT-d support\n");
- 		info->ppgtt_type = INTEL_PPGTT_NONE;
++			 "Unsupported device. GVT-g is disabled\n");
+ 		goto bail;
  	}
  
-@@ -1084,7 +1087,7 @@ void intel_device_info_init_mmio(struct drm_i915_private *dev_priv)
+@@ -99,18 +100,20 @@ int intel_gvt_init(struct drm_i915_private *dev_priv)
+ 		return -ENODEV;
  
- 		if (!(BIT(i) & vdbox_mask)) {
- 			info->engine_mask &= ~BIT(_VCS(i));
--			DRM_DEBUG_DRIVER("vcs%u fused off\n", i);
-+			drm_dbg(&dev_priv->drm, "vcs%u fused off\n", i);
- 			continue;
- 		}
- 
-@@ -1096,8 +1099,8 @@ void intel_device_info_init_mmio(struct drm_i915_private *dev_priv)
- 		if (INTEL_GEN(dev_priv) >= 12 || logical_vdbox++ % 2 == 0)
- 			RUNTIME_INFO(dev_priv)->vdbox_sfc_access |= BIT(i);
+ 	if (!i915_modparams.enable_gvt) {
+-		DRM_DEBUG_DRIVER("GVT-g is disabled by kernel params\n");
++		drm_dbg(&dev_priv->drm,
++			"GVT-g is disabled by kernel params\n");
+ 		return 0;
  	}
--	DRM_DEBUG_DRIVER("vdbox enable: %04x, instances: %04lx\n",
--			 vdbox_mask, VDBOX_MASK(dev_priv));
-+	drm_dbg(&dev_priv->drm, "vdbox enable: %04x, instances: %04lx\n",
-+		vdbox_mask, VDBOX_MASK(dev_priv));
- 	GEM_BUG_ON(vdbox_mask != VDBOX_MASK(dev_priv));
  
- 	for (i = 0; i < I915_MAX_VECS; i++) {
-@@ -1108,10 +1111,10 @@ void intel_device_info_init_mmio(struct drm_i915_private *dev_priv)
- 
- 		if (!(BIT(i) & vebox_mask)) {
- 			info->engine_mask &= ~BIT(_VECS(i));
--			DRM_DEBUG_DRIVER("vecs%u fused off\n", i);
-+			drm_dbg(&dev_priv->drm, "vecs%u fused off\n", i);
- 		}
+ 	if (USES_GUC_SUBMISSION(dev_priv)) {
+-		DRM_ERROR("i915 GVT-g loading failed due to Graphics virtualization is not yet supported with GuC submission\n");
++		drm_err(&dev_priv->drm,
++			"i915 GVT-g loading failed due to Graphics virtualization is not yet supported with GuC submission\n");
+ 		return -EIO;
  	}
--	DRM_DEBUG_DRIVER("vebox enable: %04x, instances: %04lx\n",
--			 vebox_mask, VEBOX_MASK(dev_priv));
-+	drm_dbg(&dev_priv->drm, "vebox enable: %04x, instances: %04lx\n",
-+		vebox_mask, VEBOX_MASK(dev_priv));
- 	GEM_BUG_ON(vebox_mask != VEBOX_MASK(dev_priv));
- }
+ 
+ 	ret = intel_gvt_init_device(dev_priv);
+ 	if (ret) {
+-		DRM_DEBUG_DRIVER("Fail to init GVT device\n");
++		drm_dbg(&dev_priv->drm, "Fail to init GVT device\n");
+ 		goto bail;
+ 	}
+ 
 -- 
 2.24.1
 
