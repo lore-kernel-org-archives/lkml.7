@@ -2,113 +2,84 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216CEC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90EDC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C8D2051A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3D320842
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:32:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dV4vHbO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbgAITcK (ORCPT
+        id S1730429AbgAITc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:32:10 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:46294 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728823AbgAITcJ (ORCPT
+        Thu, 9 Jan 2020 14:32:58 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43701 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728823AbgAITc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:32:09 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id E612A80497;
-        Thu,  9 Jan 2020 20:32:04 +0100 (CET)
-Date:   Thu, 9 Jan 2020 20:32:03 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: display: simple: Add Satoz panel
-Message-ID: <20200109193203.GA22666@ravnborg.org>
-References: <20200109184037.9091-1-miquel.raynal@bootlin.com>
+        Thu, 9 Jan 2020 14:32:58 -0500
+Received: by mail-ot1-f68.google.com with SMTP id p8so8393885oth.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:32:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=15Z89BEz3MyoZ6v5HIMpK8EJU4eXUmvvtENLzMT47po=;
+        b=dV4vHbO3yJC1YETzxVL8c6ZqJvPK9/XcK4jmRax+j7rcA7nRe6Tg5p7OfTgAMVhZxj
+         e5Z5Wz8HFFnS/PXc5hVscrwiMThqKeZZ1RlE97vx/ne+T3jFL6xiKrKa7+wn04fW3D8P
+         4HxzwPNHX2cV8MwihYbe3NTfU6UU+isJM2TQyQx0nsSf8MLY4U00rc5+n0z0LxSifQ49
+         lpG9eFHrMCgEfgnF+hQ9i4kDziMqVe8WLeI9l/ve93HrMOh1zJ737sTQeqUZ/ZA0uVYI
+         iD/QwSOGX7LLSmYE2fJ9xkCp4ULxjKOvURfi9psbijceK5Bpevv4hGaK622MC6wVDylv
+         X3EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=15Z89BEz3MyoZ6v5HIMpK8EJU4eXUmvvtENLzMT47po=;
+        b=hEJWIumiYiHDQVwkaA71YKWXh/1WIfDn5maMWOEUJozzfNhKoeiD14NaDLpUwgC5MA
+         6DlxAx/XqfsKw1Jcb5qkXDed/e6Z7f6JLYlnnBjfQWyI9HzVKxZNIic2he+EyAn3Ueo9
+         MmTlCDnRAtlMsdLYJ6X7IgqyQi4/wi5mu4tlJud41i7ar0vXRUxiX2sMjQm0wfudj3i5
+         HMux50u/39wCSh5v0zFPzPCweksWkqGhQxYKTB7RyMDPaGexWqrf1lMh2X6gHXaIC6jv
+         eCfXnHPFvDQCbu/bia7ghtI/RKkoUaJ9cO0kjZqq0L187soqkWZztR2WBcw6B9yz5576
+         k3WQ==
+X-Gm-Message-State: APjAAAVAnFfIw8gp7gp/bXBjyPRDKC4E2DfgycSj1v1iIZwRISSGoYDq
+        00MkBXvFHIRaW/v4HFtPa5otwiUN9w3Jv4oIH540oA==
+X-Google-Smtp-Source: APXvYqwP3eFYrodvtdZcfAfAqu8xqamJQA9sIs1h0qRh427F+yfPvleK68+NS8Lx2t66bO7knqd07EAla5mtgaQWbio=
+X-Received: by 2002:a9d:4e99:: with SMTP id v25mr10115311otk.363.1578598377813;
+ Thu, 09 Jan 2020 11:32:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109184037.9091-1-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=oYh99mQ5AAAA:8
-        a=P-IC7800AAAA:8 a=iQciiuR6OtxbVP0T3JUA:9 a=CjuIK1q_8ugA:10
-        a=Dexii-P0nw1V_nRav-Pa:22 a=d3PnA9EDa4IxuAV0gXij:22
+References: <157835762222.1456824.290100196815539830.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <157835764298.1456824.224151767362114611.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200107040415.GA19309@dhcp-128-65.nay.redhat.com> <CAPcyv4g_W4PoH6Wfj_SDGzGLpNLwxtoeGP7uwpzVMS4JWbXSTg@mail.gmail.com>
+ <20200107051919.GC19080@dhcp-128-65.nay.redhat.com> <CAKv+Gu-djB=3zTxjEbyjJXXpw=8NE6YA82hMW-JYyAQ2TSywtQ@mail.gmail.com>
+ <CAPcyv4ixPchDOet=ztRQxLMgnJf9DauSFgBs3+TEoaua7R1s_Q@mail.gmail.com> <CAKv+Gu8W_EyMNAtDG6zK+dKRcaUEzeJ3fmPAiASdqatD3ewQJQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu8W_EyMNAtDG6zK+dKRcaUEzeJ3fmPAiASdqatD3ewQJQ@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 9 Jan 2020 11:32:46 -0800
+Message-ID: <CAPcyv4gjLaDgV0rVttrWHivkzPJ+-OesT3srNomENmT8_FhmFQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] efi: Fix handling of multiple efi_fake_mem= entries
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kexec Mailing List <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel.
+On Thu, Jan 9, 2020 at 1:36 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+[..]
+> If it's just for the comment, I can just slap that on, as I already
+> queued the patches with the fixes tags dropped.
 
-On Thu, Jan 09, 2020 at 07:40:36PM +0100, Miquel Raynal wrote:
-> Satoz is a Chinese TFT manufacturer.
-> Website: http://www.sat-sz.com/English/index.html
-> 
-> Add the compatible for its SAT050AT40H12R2 5.0 inch LCD panel.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Applied this and the following patch to drm-misc-next.
-I manually resolved the conflict in panel-simple.yaml.
-
-Thanks,
-
-	Sam
-
-
-> ---
-> 
-> Changes since v4:
-> * Drop the satoz,sat050at40h12r2.yaml file in favor of the very new
->   panel-simple.yaml common file. Just add the compatible there.
-> 
-> Changes since v3:
-> * Added the missing ".yaml" suffix in the $id.
-> * Removed the unnecessary "contains" assertion about the compatible.
-> * Added a precision : there is no public specification for this panel
->   (known for the moment).
-> * Bindings checked with "make dt_binding_check"
-> 
-> Changes since v2:
-> * None.
-> 
-> Changes since v1:
-> * New patch
-> 
->  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> index 090866260f4f..8a9c37640dc0 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> @@ -33,6 +33,8 @@ properties:
->        - ampire,am-480272h3tmqw-t01h
->          # Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
->        - ampire,am800480r3tmqwa1h
-> +        # Satoz SAT050AT40H12R2 5.0" WVGA TFT LCD panel
-> +      - satoz,sat050at40h12r2
->  
->    backlight: true
->    enable-gpios: true
-> -- 
-> 2.20.1
+That would be great. Thanks Ard!
