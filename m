@@ -2,104 +2,133 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C0EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5A3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76469206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB9120721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FumRKMU0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxUvCC+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbgAIPM7 (ORCPT
+        id S1731017AbgAIPO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:12:59 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45926 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730812AbgAIPM7 (ORCPT
+        Thu, 9 Jan 2020 10:14:28 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40019 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729743AbgAIPO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:12:59 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n16so6078018oie.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 07:12:59 -0800 (PST)
+        Thu, 9 Jan 2020 10:14:27 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s21so2681134plr.7;
+        Thu, 09 Jan 2020 07:14:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vbqpZrIDLpDQLH9KUn0l1vMdgrmF9gTvIFjb1L/duXc=;
-        b=FumRKMU0RlSPUHrew9kPUV4LHUhfpAsw8FDUVYsyRhgXL8EFZJGgko3coO8RLYG9nZ
-         NDmaf3z+oLebNfRrWyafrPH3vZn7lAj0cdTMW4anTa3/DAXSwktL+zxA8ITABoOlQ858
-         QfNAeWgiyuoahLzgWFK7EK72hxK44bBOW8fhlk6rJWnzh3SUZN0q+9pP+m8zrPXGYq/U
-         iBzzSSxVIDQgthrPQgZ/+dm8r/77aPcGsupZwYcyLfNkOb17KxRhsEg6upleFpRafcGD
-         8aEEaHwUKfxl3D0qiE7d6Kc+51Jv87amj2UFGfa7cm0o4gM5uH8Bv/XSOBi331aEvy/s
-         fmfg==
+        bh=O9xo3Z+N4tPUCqhrAfSBGF7r5Z2K9ZGhUqfbuVV8hoM=;
+        b=lxUvCC+0RKw0b94T4bdUZl2bCXjAbELX4jtycsNEKXKXe39s+s8Gn0W8hHuXNDIbh+
+         6Oe8+l47CS+TtdK89ej4lAOrxSyiOmLgu0aG1uUl8564KXhuEOT3wGvHSau5cMpDtytA
+         sKkMSoSPUJ5+x4JS4M2o0OCJ0Z7Ob14Xt/z5tdB/Ej9RF5cEw6PP+EWg8bE9v5vpPgNd
+         ZqAYXcT45N1lSuwoR9NZ43+tX2KS33TDcwy3ZJ0ozSzJNTBOznmzww8ybKc0evHtQ8fy
+         Z8i2Z07MIooxsDv8jaAwjclqmTyV3rMO7UcwzdP4E/71M4U+kJiSaLnxkxgVC098wj7F
+         LMAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vbqpZrIDLpDQLH9KUn0l1vMdgrmF9gTvIFjb1L/duXc=;
-        b=G8Nn3h3/MWAcD7TZ/jyP4DA2g9ZmPhpzVNepMIXfbTOHieuGFYGj5BcFIG7bA4UekJ
-         BVEZNjjwuTZJn4JhEL2b+5CNbcoJcLu7+9Xw61Iv2bzh168pvA8NHuqYWQ23bszcSRnZ
-         HWfv5Idz1vnxy9SBCUmIFvEb9pZRNY8z40AkcD/59itvkbOxuQw5jnHUQ76ax5VKvgeR
-         PrLLQ9vDe5uVzfsikicB7VokqZE9gOL0tUrsxXkRBYme3XuGrURSLF7cbzMcLWddTd7K
-         UMIRbzVwT5/eIAahHXhDXcXS6D481QMlvEbf8oLwa2nPK7Ou3q2KGvqklG4Z1BMWfUd4
-         3lnw==
-X-Gm-Message-State: APjAAAUEhWPDnjLau7GVm95pMX/D9XZxgX0BW1T8Wc4ziJBh6veV5lU+
-        vvnIl4+Adv7dltebHyEjwY+cdq+D/JsOr3Ky6td7fA==
-X-Google-Smtp-Source: APXvYqxiY3rySMQtSFIOjSYkHFjQCfCCLQdprTUhbnhtyefAvZaXnm8HWD7dj3MA3hZnzHZ4C/OYID58g5hGQLMoio4=
-X-Received: by 2002:aca:4a08:: with SMTP id x8mr3559134oia.39.1578582778388;
- Thu, 09 Jan 2020 07:12:58 -0800 (PST)
+        bh=O9xo3Z+N4tPUCqhrAfSBGF7r5Z2K9ZGhUqfbuVV8hoM=;
+        b=uQjSaKwIHWg/vodCJJREvxaAwu28iTFvYhga8vJ5abi2C+djrjAdibbwU7yn8BzyjX
+         k1wlOzASC17ix1VgJeRohYWxa20IILOOtYrvt0L4mHKM1AC9oQbzgvKs0sHaSnjO+KL2
+         j089MnEqw8IuQZlopdPfp6bWOwpM9JvMjuKSg7xIMXdOcUtK58ARSWvaABFxlFadDhRb
+         rKSWd5dvuNMeAD+IrudouE746zxbz/T4kRbBMTL2GKSeMWwnoJP0WyPszb98uWl4ep8z
+         A6wA2IIsdiEMNyuJcZ6DGu3mojDL/Ou0UBT4Mxu8mxnlrVw2tVq6b8FTT3Dh2RSdx0QB
+         20Nw==
+X-Gm-Message-State: APjAAAVb0B4RBqotIWkCiK6LYrclgW6Eft/p4gPkadHLPpouYlyHRs43
+        mNJ5uzRYX/oKWsCn156pkiMvgWtPBhnnnrwEjVQ=
+X-Google-Smtp-Source: APXvYqykijgPqZap77w/ss1b1SSCYYIK5P/tUErVqhYhvsUty2ugVwFAiZtifCQmVXeKw/CLfz65q2TF0/9P8NLU6KA=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr5972285pjq.132.1578582867271;
+ Thu, 09 Jan 2020 07:14:27 -0800 (PST)
 MIME-Version: 1.0
-References: <CAG48ez0eULP6pH26H9ac-YYa88_RSGt6v_hDhsrZ92iZoRdsoQ@mail.gmail.com>
- <20200109151059.GB8602@kernel.org>
-In-Reply-To: <20200109151059.GB8602@kernel.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 9 Jan 2020 16:12:30 +0100
-Message-ID: <CAG48ez18J4m5_BppHLRidSYnLTt8K809Hqiv4bDiFz52u_=8hA@mail.gmail.com>
-Subject: Re: "perf ftrace" segfault because ->cpus!=NULL but ->all_cpus==NULL
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
+References: <20191231102917.24181-1-vadimp@mellanox.com> <20191231102917.24181-3-vadimp@mellanox.com>
+In-Reply-To: <20191231102917.24181-3-vadimp@mellanox.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jan 2020 17:14:18 +0200
+Message-ID: <CAHp75Veu7PhR0FiufXM2R=dU4vLmeL5sf3kuVi2g=NZSw3L6OA@mail.gmail.com>
+Subject: Re: [PATCH platform-next v1 2/9] Documentation/ABI: Fix attributes
+ for mlxreg-io sysfs interfaces
+To:     Vadim Pasternak <vadimp@mellanox.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 4:11 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
-> Em Thu, Jan 09, 2020 at 12:37:14PM +0100, Jann Horn escreveu:
-> > I was clumsily trying to use "perf ftrace" from git master (I might
-> > very well be using it wrong), and it's falling over with a NULL deref.
-> > I don't really understand the perf code, but it looks to me like it
-> > might be related to Andi Kleen's refactoring that introduced
-> > evlist->all_cpus?
+On Tue, Dec 31, 2019 at 12:29 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
 >
-> > I think the problem is that evlist_close() assumes that ->cpus!=NULL
-> > implies ->all_cpus!=NULL, but perf_evlist__propagate_maps() doesn't
-> > set ->all_cpus if the evlist is empty.
+> Fix attribute name from "jtag_enable" to "cpld3_version" and
+> extend description for "cpld3_version" attribute.
 >
-> > Here's the crash I encountered:
+> Add missed "cpld4_version" attribute.
 >
-> I've reproduced it and Jiri provided a patch, I'll test it, meanwhile
-> you could alternatively drop an 'f' and try 'perf trace' + 'perf probe'
-> instead, perhaps that could be enough, some examples:
->
-> [root@quaco ~]# perf probe kmem_cache_alloc
-> Added new event:
->   probe:kmem_cache_alloc (on kmem_cache_alloc)
->
-> You can now use it in all perf tools, such as:
->
->         perf record -e probe:kmem_cache_alloc -aR sleep 1
 
-Ah, thanks for the help. :)
+From this commit message it's still unclear if we have had the ABI
+change or Documentation inconsistency.
+
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+>  Documentation/ABI/stable/sysfs-driver-mlxreg-io | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> index 8ca498447aeb..fe30fe505c9b 100644
+> --- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> @@ -29,13 +29,13 @@ Description:        This file shows the system fans direction:
+>
+>                 The files are read only.
+>
+> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
+> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld3_version
+>
+>  Date:          November 2018
+>  KernelVersion: 5.0
+>  Contact:       Vadim Pasternak <vadimpmellanox.com>
+>  Description:   These files show with which CPLD versions have been burned
+> -               on LED board.
+> +               on LED or Gearbox board.
+>
+>                 The files are read only.
+>
+> @@ -121,6 +121,16 @@ Description:       These files show the system reset cause, as following: ComEx
+>
+>                 The files are read only.
+>
+> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld4_version
+> +
+> +Date:          November 2018
+> +KernelVersion: 5.0
+> +Contact:       Vadim Pasternak <vadimpmellanox.com>
+> +Description:   These files show with which CPLD versions have been burned
+> +               on LED board.
+> +
+> +               The files are read only.
+> +
+>  Date:          June 2019
+>  KernelVersion: 5.3
+>  Contact:       Vadim Pasternak <vadimpmellanox.com>
+> --
+> 2.11.0
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
