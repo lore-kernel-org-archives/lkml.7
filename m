@@ -2,88 +2,184 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAAFC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC41C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3FC20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90047206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="RhIcuWxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732274AbgAIPSc convert rfc822-to-8bit (ORCPT
+        id S1732288AbgAIPTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:18:32 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:36057 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgAIPSb (ORCPT
+        Thu, 9 Jan 2020 10:19:43 -0500
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:39617 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727945AbgAIPTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:18:31 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id AA51DE0009;
-        Thu,  9 Jan 2020 15:18:27 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 16:18:26 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 3/3] mtd: onenand: Enable compile testing of OMAP and
- Samsung drivers
-Message-ID: <20200109161826.7fda02a4@xps13>
-In-Reply-To: <20191231073339.GA6747@pi3>
-References: <20191229183612.22133-3-krzk@kernel.org>
-        <201912310904.9iM6MaFr%lkp@intel.com>
-        <20191231073339.GA6747@pi3>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 10:19:42 -0500
+Received: from [192.168.2.10] ([62.249.185.68])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id pZasihcxsT6sRpZaviL3MC; Thu, 09 Jan 2020 16:19:40 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578583180; bh=VNEi5PU7IG9NfDb52u/2pR82DSRm5KClWM9VRFCCDUo=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=RhIcuWxZ9+hiD/y9DDq/k2ryV450adLGGpoEY9pPMi8aRaHitS67FsDwMo70iZ2vP
+         g8sdS0liOzLVh9KB1/CvPIJyx8nP8CGXbSYUurfalOGLRqbgHMnV1GzGoHwSzPC/aR
+         /MWedl7UUKNI1hNfahNa/XkqD0MLopaU0EbZaAsCO/WO/SSWvKQWgnj6i8aOGe1SOC
+         acrckfmsfDrt8iAiOE91+OHWhrhBAbu3AkP0TbJZ5RwGiaTFdfFsSKaCoDdLu6GFfg
+         gr19sPlqN/gDm2AwtMSTOiQIlkHdEhe4EghCb1yWi4500WH5Qil6kasAeWcRIlxSif
+         d0mZY5Li0VXxA==
+Subject: Re: [PATCH v2 1/4] media: uapi: hevc: Add scaling matrix control
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@siol.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     mripard@kernel.org, gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+References: <20191213160428.54303-1-jernej.skrabec@siol.net>
+ <20200108151157.17cf9774@kernel.org> <20200108144336.GB229960@aptenodytes>
+ <3030664.44csPzL39Z@jernej-laptop>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <16682efd-763a-8cb1-c5ee-b48ee6063c6b@xs4all.nl>
+Date:   Thu, 9 Jan 2020 16:19:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <3030664.44csPzL39Z@jernej-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfOF7U22xoTpAUEvOw1tUUHvhY8l8MGCYN6pm66YVC1msyl/wb+aPV6ofqVnScSZSFqW+nC1UviknZzPIYd5r6e+AywVxKkehHqEolEDAW0goIbOeEpdT
+ xYnO5Xi82/ote3XVG+kxN7/LU0Cjo7M0yO2o4lkJ/HlDHFwxSgFqdiFmckw7gLb8dizx5TpRR/ZbW0LDNmoW99uojm0xmYQr3dJ9HFwdY+JlMi4mKTMcMRo7
+ M3xUSygvwUCUNPkJHqtAWpIfvdfV2vf7yYxwhLPUYXpk1RMEk1TfV2CEwDH3gyUhYo17zoIEBuFS8wr5pu49HLLhKUb+n7pPvEt87XpRHIAb07On6pfHyZ+h
+ 3Qy7V+SUOQiifwumvZgQJYnsilU8xYP7ezbz4JgivjXT2/PY1KtXwv1yenNj6zcNFD7K7J/tsMy69vUwsNwMnQMAl9RQvb8BKPAuXIa+0hvNgV7CkHXjpzA1
+ 5Fuli1a9Nd1fKEm2YMv2dTAIvJCr6OlYmL2oQlwcw3+tJV09eD4M7ZGzLB4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
-
-Krzysztof Kozlowski <krzk@kernel.org> wrote on Tue, 31 Dec 2019
-08:33:39 +0100:
-
-> On Tue, Dec 31, 2019 at 10:00:48AM +0800, kbuild test robot wrote:
-> > Hi Krzysztof,
-> > 
-> > I love your patch! Perhaps something to improve:
-> > 
-> > [auto build test WARNING on linus/master]
-> > [also build test WARNING on v5.5-rc4 next-20191220]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Krzysztof-Kozlowski/mtd-onenand-samsung-Fix-pointer-cast-Wpointer-to-int-cast-warnings-on-64-bit/20191230-030838
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git bf8d1cd4386535004c4afe7f03d37f9864c9940e
-> > reproduce:
-> >         # apt-get install sparse
-> >         # sparse version: v0.6.1-129-g341daf20-dirty
-> >         make ARCH=x86_64 allmodconfig
-> >         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> > 
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >   
+On 1/9/20 4:17 PM, Jernej Škrabec wrote:
+> Hi!
 > 
-> It is not related to my patch. I'll fix it up soon.
+> Dne sreda, 08. januar 2020 ob 15:43:36 CET je Paul Kocialkowski napisal(a):
+>> Hi Mauro,
+>>
+>> On Wed 08 Jan 20, 15:11, Mauro Carvalho Chehab wrote:
+>>> Em Fri, 13 Dec 2019 17:04:25 +0100
+>>>
+>>> Jernej Skrabec <jernej.skrabec@siol.net> escreveu:
+>>>> HEVC has a scaling matrix concept. Add support for it.
+>>>>
+>>>> +struct v4l2_ctrl_hevc_scaling_matrix {
+>>>> +	__u8	scaling_list_4x4[6][16];
+>>>> +	__u8	scaling_list_8x8[6][64];
+>>>> +	__u8	scaling_list_16x16[6][64];
+>>>> +	__u8	scaling_list_32x32[2][64];
+>>>> +	__u8	scaling_list_dc_coef_16x16[6];
+>>>> +	__u8	scaling_list_dc_coef_32x32[2];
+>>>> +};
+>>>
+>>> I never looked at HEVC spec, but the above seems really weird.
+>>>
+>>> Please correct me if I am wrong, but each of the above matrixes
+>>> is independent, and the driver will use just one of the above on
+>>> any specific time (for a given video output node), right?
+>>
+>> I am not too sure about what the specification really entails, but it is my
+>> understanding that HEVC allows simultaneous block sizes between 4x4 and
+>> 32x32 to exist within the same coding tree and slice. That suggests that it
+>> makes sense to have specific coefficients for each case.
+> 
+> Specs ITU-T REC. H.265 (06/2019), chapter 7.3.4 shows that multiple different 
+> matrices can be present at the same time. If they are not, default values 
+> should be used instead. But in general, more than one can be needed at the 
+> same time.
+> 
+> Only real question is if default values should be also provided by userspace 
+> or by kernel. Since place has to be reserved for all different scaling lists 
+> anyway, we won't save any space by providing default values in kernel. Cedrus 
+> VPU has only bit switch for using default values for all matrices at the same 
+> time or all custom.
+> 
+> Note that this control contains slightly processed data. Frame has stored 
+> these matrices in form of deltas. But because this is the only driver that use 
+> this structure I have no idea what is the most proper form of this data (raw 
+> values or deltas). That's why this will stay in staging using private headers 
+> until we figure this out.
 
-I would like this to be fixed before enabling compile testing, is your
-fix read?
+This definitely needs to be documented! Otherwise this will be forgotten.
 
-Thanks,
-Miquèl
+Regards,
+
+	Hans
+
+> 
+> Best regards,
+> Jernej
+> 
+>>
+>> Note that the hardware also has distinct registers for each scaling list.
+>>
+>> Cheers,
+>>
+>> Paul
+>>
+>>> If so, why would userspace be forced to update lots of matrixes, if would
+>>> likely use just one at a given time?
+>>>
+>>> IMO, the proper way would be, instead, to use an uAPI like:
+>>>
+>>> /*
+>>>
+>>>  * Actually, as this is uAPI, we will use a fixed size integer type, like
+>>>  *  unsigned int
+>>>  */
+>>>
+>>> enum hevc_scaling_matrix_type {
+>>>
+>>> 	HEVC_SCALING_MATRIX_4x4,
+>>> 	HEVC_SCALING_MATRIX_8x8,
+>>>
+>>> ...
+>>>
+>>> 	HEVC_SCALING_MATRIX_DC_COEF_32x32,
+>>>
+>>> };
+>>>
+>>> struct v4l2_ctrl_hevc_scaling_matrix {
+>>>
+>>> 	__u32	scaling_type 		/* as defined by enum 
+> hevc_scaling_matrix_type */
+>>> 	
+>>> 	union {
+>>> 	
+>>> 		__u8	scaling_list_4x4[6][16];
+>>> 		__u8	scaling_list_8x8[6][64];
+>>> 		__u8	scaling_list_16x16[6][64];
+>>> 		__u8	scaling_list_32x32[2][64];
+>>> 		__u8	scaling_list_dc_coef_16x16[6];
+>>> 		__u8	scaling_list_dc_coef_32x32[2];
+>>> 	
+>>> 	};
+>>>
+>>> };
+>>>
+>>> And let the core use a default for each scaling matrix, if userspace
+>>> doesn't set it.
+>>>
+>>>
+>>>
+>>> Cheers,
+>>> Mauro
+> 
+> 
+> 
+> 
+
