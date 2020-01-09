@@ -1,139 +1,210 @@
 Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,WEIRD_PORT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8924FC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB84C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5380D2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE31F206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EJZX9s7d"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CF29A5OZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbgAIJ3Y (ORCPT
+        id S1729601AbgAIJ3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:29:24 -0500
-Received: from mail-am6eur05on2067.outbound.protection.outlook.com ([40.107.22.67]:48763
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729269AbgAIJ3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:29:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XZDv87qtQtpFi6G+7PgwyaKrHeganXg+SMZ4OT+lFh1IRCFOicB4y8vjW4n4BKyLlcro7JIxPNDoDK/9IlbeQZcGzE6JW/Z58tL6SkJRm2mkC8ub+bp3335QLJpMH5ACEPW/dCmFdkeGxL8j3hQmIzsiMy5gwUPWfLyxOSJfzhkwj3mWVi+mP/yZXinPk3uXUnBL//CEx3dmK3VwGT+jp0yoER4t3L+szQtl0GjgA5FnGjXplZKKi4NhtJ5Ln1NUv1/2nUmnvvLT0f3rTn/ISxh3vny0YSx+v9x3fn4B2GwPn5pmHn84AXmr6qaIr5df7GxuFfRc4zTcxnlpc5T6Yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/nB/HfAO3wEXRfHhM/7aUCtcVjiQqSrdig+6cNj0JAM=;
- b=jScsGqFlE8l1UYc29uAL/TdCgb935wSFwjcDk8q5nt5Td9uV8xVhb+POkY+qdxRhn5a5qXHoa+srukM7OdeAdlwdXUEkj8eVIzILn34xYzBion7SKmot9vRqbNj5cnM11/lW5XKdFULE5RgZh27WhHnZsBHH8V66/AUdDOhTLJG16t7NpQ9TECUMl84tnPDPQcowtxknCw/gb426p5LX/j/jdOyLOs4kdL9ci8viX/fAl55kHDzBgjnF29vJpi+n3WtEWlMcZjUKkj6QfG75CrEZ0gQdvPdbnhoS5ChoN+tL3KX4UBw5ZpjLNMwqhwx2Bs3P7wIgMEHNuDpY8enrWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/nB/HfAO3wEXRfHhM/7aUCtcVjiQqSrdig+6cNj0JAM=;
- b=EJZX9s7dR9z9yXC7vdCq1naVdLKcM1yBm0D6QyClvZ/kvYO5L/SKhLRSvMbcAD8CbHKxalqZNZzYPvWQH5M22tP0ljfXHQ2QPHBJq/s4CVgUeQYpdbcrl3+h6kfggfb7XxenWaIsxHfhsQYwJsn+2P/asifIo8WGgmnPr+gIEOM=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3867.eurprd04.prod.outlook.com (52.134.65.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.15; Thu, 9 Jan 2020 09:28:35 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d968:56ad:4c0c:616f]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d968:56ad:4c0c:616f%7]) with mapi id 15.20.2602.018; Thu, 9 Jan 2020
- 09:28:35 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "andreas@kemnade.info" <andreas@kemnade.info>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect power
- supply assignment
-Thread-Topic: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect power
- supply assignment
-Thread-Index: AQHVvrKzedU6q1PoEkWGPbnH76QqjKfiCd2AgAAE9sCAAAzggIAAA3owgAABkZA=
-Date:   Thu, 9 Jan 2020 09:28:35 +0000
-Message-ID: <DB3PR0402MB39167704253BE1FD4E106766F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1577670071-1322-1-git-send-email-Anson.Huang@nxp.com>
- <20200109080600.GH4456@T480>
- <DB3PR0402MB39168406714A06869C33D037F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200109090950.GJ4456@T480>
- <DB3PR0402MB3916EBF00EECB42C1F4E2D40F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916EBF00EECB42C1F4E2D40F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 110f144a-0949-445d-f04a-08d794e64d1d
-x-ms-traffictypediagnostic: DB3PR0402MB3867:|DB3PR0402MB3867:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB38673F8BA285B19A77CF4D55F5390@DB3PR0402MB3867.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02778BF158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(199004)(189003)(54906003)(71200400001)(66946007)(8936002)(316002)(76116006)(2906002)(5660300002)(81166006)(6916009)(81156014)(8676002)(478600001)(2940100002)(33656002)(186003)(4326008)(66446008)(64756008)(66556008)(66476007)(44832011)(7696005)(7416002)(55016002)(26005)(52536014)(9686003)(86362001)(6506007)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3867;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 801B/THufiIxCoMGKOG/O9zuVQytLQv9yvFRgW3cMxngHqpTgPh2dzq+y93BZF51fgVWlPca/aElOD35Q8dzQefKPPqDLRNpn9EipkJgp9Xn1Si0yvY+ObXnKHiRbLH2ZJ49NYtwjRLHhoQZ52WxHDBVGKpm+GalKyDe7ii83InnefE9ImXuUwFva2KQ/0dD3OAnbxtvE3npx5vDbYhPzJDLJwSO8Ytfy8Fi7otGt5+fL/UTichctjDYNEbnw7uvdiiJ+V0EnLncsN0qOGYgyzuoFUSLlnyDziTHibXXQTblwg3FPqFLB2+qV9GrsUTViqSpToU7vrvzUmVTQTCSSTYMx1v4iL/Bg6xxHy5AdAib4tcSc0f4X4jzMfu41Nk7UlEHflA/Mv9dD3kF9eO95oMPjvi+5uFj43uUKXObl5xmEo/bPSlOLkL5v/Ggj6N/ZHuK0YskEYenwmdtry5eVINf14cAZJSr0g8KLRhXSlSAJGNFlCRxBkV8MuGQ4YdL
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 Jan 2020 04:29:37 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41876 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729269AbgAIJ3h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:29:37 -0500
+Received: by mail-qv1-f68.google.com with SMTP id x1so2662110qvr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:29:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=htGEPzh2cvAg6/SqoSQkw2b0L7SR3bZlTMACQb3VVDc=;
+        b=CF29A5OZttbLoIKGXoB7I3DCk4mt1HLnFYxw/ucF+wQ1+6kKCDaZV3YtdjWTpVibek
+         iQMzTU+7FD+icgHt3c0ssmi2QzYxwcXXKbYyPc+1DBjf8pEjhbl7W6nPvBZEsMsj5yoj
+         Aw6Hs2mTckfrsf021cwOyW/q5VkojRDMsZsyoyHODNxwNL6AJU4VmM5h+MXJ/Xi8QQ9s
+         6hsdcOK3wmW+GDVsqEITNmQvoz1knU3eVyjpY/D2doEKrNTdNfrBXNZHsm0+Ul1GUX4R
+         qbV8fc/tVUVZ9qKP+MnyYKLbLi2NcYAvdNJlTIBMBPhqbO/KkAUnONCUt46XwdwPgFbJ
+         E4jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=htGEPzh2cvAg6/SqoSQkw2b0L7SR3bZlTMACQb3VVDc=;
+        b=HRBoAArwZN4ssO5RbqvPLIUcAmwLUSPoSNYztnkSjSuT7zmPT4DS1CvDS0tc7ydZpz
+         E9fbFwvkCpcrodER9nICX4iM9h1JXOadtozhkWIIRqtKb8j0Ft0SefJcPX4uPzY2Zcke
+         GW57uY3zdz5WZui1EUzZ0+aJtNh0KdNzdB7pzSTXIPHQmugW8kdkXIKi80k6zjpw5/pw
+         qfDyUfHfmLa2bVd9MEnLjhFutdGBS+N9B6nPTcqzbjs6iwSoL2+DFGD1t3aU96DH8vNm
+         gxvStLLXcnDqWvftMUpnblwEFvrebrUhfvOu7QWtEhwDgJ1xXU05eFQIy6Qk1+37Z8V2
+         znTw==
+X-Gm-Message-State: APjAAAWwth+e/Q9RlZDYChOYHd2kz1FP6wzD0W1IBAgfXdxEp/M2Alq5
+        ut3zKrQWFoMAy/ax9L4wuPBUkgw5iIvDtOpul4Nivw==
+X-Google-Smtp-Source: APXvYqzap8l7wYZegCXgMVixomdo3lUj9OoQhfyhx2UDFoOAfq+am8NlHLq0X41rml13WxX6CecoI5gj//0iinTIXEk=
+X-Received: by 2002:ad4:5a53:: with SMTP id ej19mr8036254qvb.34.1578562175261;
+ Thu, 09 Jan 2020 01:29:35 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 110f144a-0949-445d-f04a-08d794e64d1d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 09:28:35.1862
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZJgbv0cfBirV/dFH4lB8tvTttF8P+jxYbGF5dCuVquS02gXZf19e5r9Nt3DWzw4umhIFJtLUO9HQpwudye8VKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3867
+References: <00000000000036decf0598c8762e@google.com> <CACT4Y+YVMUxeLcFMray9n0+cXbVibj5X347LZr8YgvjN5nC8pw@mail.gmail.com>
+ <CACT4Y+asdED7tYv462Ui2OhQVKXVUnC+=fumXR3qM1A4d6AvOQ@mail.gmail.com>
+ <f7758e0a-a157-56a2-287e-3d4452d72e00@schaufler-ca.com> <87a787ekd0.fsf@dja-thinkpad.axtens.net>
+ <87h81zax74.fsf@dja-thinkpad.axtens.net> <CACT4Y+b+Vx1FeCmhMAYq-g3ObHdMPOsWxouyXXUr7S5OjNiVGQ@mail.gmail.com>
+ <0b60c93e-a967-ecac-07e7-67aea1a0208e@I-love.SAKURA.ne.jp>
+ <6d009462-74d9-96e9-ab3f-396842a58011@schaufler-ca.com> <CACT4Y+bURugCpLm5TG37-7voFEeEoXo_Gb=3sy75_RELZotXHw@mail.gmail.com>
+ <CACT4Y+avizeUd=nY2w1B_LbEC1cP5prBfpnANYaxhgS_fcL6ag@mail.gmail.com>
+In-Reply-To: <CACT4Y+avizeUd=nY2w1B_LbEC1cP5prBfpnANYaxhgS_fcL6ag@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 9 Jan 2020 10:29:23 +0100
+Message-ID: <CACT4Y+Z3GCncV3G1=36NmDRX_XOZsdoRJ3UshZoornbSRSN28w@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in sys_kill
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Alexander Potapenko <glider@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+de8d933e7d153aa0c1bb@syzkaller.appspotmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSCAxLzVdIEFSTTogZHRzOiBpbXg2cWRsLXNhYnJlc2Q6
-IFJlbW92ZSBpbmNvcnJlY3QNCj4gcG93ZXIgc3VwcGx5IGFzc2lnbm1lbnQNCj4gDQo+IEhpLCBT
-aGF3bg0KPiANCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvNV0gQVJNOiBkdHM6IGlteDZxZGwt
-c2FicmVzZDogUmVtb3ZlIGluY29ycmVjdA0KPiA+IHBvd2VyIHN1cHBseSBhc3NpZ25tZW50DQo+
-ID4NCj4gPiBPbiBUaHUsIEphbiAwOSwgMjAyMCBhdCAwODoyNTowM0FNICswMDAwLCBBbnNvbiBI
-dWFuZyB3cm90ZToNCj4gPiA+IEhpLCBTaGF3bg0KPiA+ID4NCj4gPiA+ID4gU3ViamVjdDogUmU6
-IFtQQVRDSCAxLzVdIEFSTTogZHRzOiBpbXg2cWRsLXNhYnJlc2Q6IFJlbW92ZQ0KPiA+ID4gPiBp
-bmNvcnJlY3QgcG93ZXIgc3VwcGx5IGFzc2lnbm1lbnQNCj4gPiA+ID4NCj4gPiA+ID4gT24gTW9u
-LCBEZWMgMzAsIDIwMTkgYXQgMDk6NDE6MDdBTSArMDgwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+
-ID4gPiA+ID4gVGhlIHZkZDNwMCdzIGlucHV0IHNob3VsZCBiZSBmcm9tIGV4dGVybmFsIFVTQiBW
-QlVTIGRpcmVjdGx5LA0KPiA+ID4gPiA+IE5PVA0KPiA+ID4gPg0KPiA+ID4gPiBTaG91bGRuJ3Qg
-VVNCIFZCVVMgdXN1YWxseSBiZSA1Vj8gIEl0IGRvZXNuJ3Qgc2VlbSB0byBtYXRjaCAzLjBWDQo+
-ID4gPiA+IHdoaWNoIGlzIHN1Z2dlc3RlZCBieSB2ZGQzcDAgbmFtZS4NCj4gPiA+ID4NCj4gPiA+
-ID4gPiBQTUlDJ3Mgc3cyLCBzbyByZW1vdmUgdGhlIHBvd2VyIHN1cHBseSBhc3NpZ25tZW50IGZv
-ciB2ZGQzcDAuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBGaXhlczogOTMzODU1NDZiYTM2ICgiQVJN
-OiBkdHM6IGlteDZxZGwtc2FicmVzZDogQXNzaWduDQo+ID4gPiA+ID4gY29ycmVzcG9uZGluZyBw
-b3dlciBzdXBwbHkgZm9yIExET3MiKQ0KPiA+ID4gPg0KPiA+ID4gPiBJcyBpdCBvbmx5IGEgZGVz
-Y3JpcHRpb24gY29ycmVjdGluZyBvciBpcyBpdCBmaXhpbmcgYSByZWFsIHByb2JsZW0/DQo+ID4g
-PiA+IEknbSB0cnlpbmcgdG8gdW5kZXJzdGFuZCBpdCBpcyBhIDUuNS1yYyBtYXRlcmlhbCBvciBj
-YW4gYmUgYXBwbGllZCBmb3IgNS42Lg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEl0IGlzIGZpeGlu
-ZyBhIHJlYWwgcHJvYmxlbSBhYm91dCBVU0IgTERPIHZvbHRhZ2UsIHRoYXQgaXMgd2h5IHdlDQo+
-ID4gPiBub3RpY2VkDQo+ID4gdGhpcyBpc3N1ZS4NCj4gPg0KPiA+IE9rYXksIHBsZWFzZSBkZXNj
-cmliZSB0aGUgcHJvYmxlbSBhIGxpdHRsZSBiaXQgaW4gdGhlIGNvbW1pdCBsb2cuDQo+ID4gQWxz
-byBzcXVhc2ggdGhlIHNlcmllcyBpbnRvIG9uZSBwYXRjaCwgd2hpY2ggaXMgZWFzaWVyIHRvIGJl
-IG1lcmdlZCBpbnRvIC1yYw0KPiBhcyBhIGZpeC4NCj4gDQo+IE9LLCB3aWxsIHNlbmQgYSBuZXcg
-cGF0Y2ggd2l0aCBzcXVhc2hpbmcgdGhlbSB0b2dldGhlciwgYnV0IHdpbGwgTk9UIGhhdmUNCj4g
-dGhlIGZpeCB0YWcsIGlzIGl0IE9LPyBBcyB0aGUgZml4IHRhZyBhcmUgZGlmZmVyZW50IGZvciBl
-YWNoIHBhdGNoLg0KDQpOZXZlciBtaW5kLCBJIHRoaW5rIEkgY2FuIHB1dCBhbGwgNSBGaXhlcyB0
-YWcgdG9nZXRoZXIgaW4gbmV3IHBhdGNoLg0KDQpUaGFua3MsDQpBbnNvbg0K
+On Thu, Jan 9, 2020 at 9:50 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Thu, Jan 9, 2020 at 9:19 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > On Wed, Jan 8, 2020 at 6:19 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> > >
+> > > On 1/8/2020 2:25 AM, Tetsuo Handa wrote:
+> > > > On 2020/01/08 15:20, Dmitry Vyukov wrote:
+> > > >> I temporarily re-enabled smack instance and it produced another 50
+> > > >> stalls all over the kernel, and now keeps spewing a dozen every hour.
+> > >
+> > > Do I have to be using clang to test this? I'm setting up to work on this,
+> > > and don't want to waste time using my current tool chain if the problem
+> > > is clang specific.
+> >
+> > Humm, interesting. Initially I was going to say that most likely it's
+> > not clang-related. Bug smack instance is actually the only one that
+> > uses clang as well (except for KMSAN of course). So maybe it's indeed
+> > clang-related rather than smack-related. Let me try to build a kernel
+> > with clang.
+>
+> +clang-built-linux, glider
+>
+> [clang-built linux is severe broken since early Dec]
+>
+> Building kernel with clang I can immediately reproduce this locally:
+>
+> $ syz-manager
+> 2020/01/09 09:27:15 loading corpus...
+> 2020/01/09 09:27:17 serving http on http://0.0.0.0:50001
+> 2020/01/09 09:27:17 serving rpc on tcp://[::]:45851
+> 2020/01/09 09:27:17 booting test machines...
+> 2020/01/09 09:27:17 wait for the connection from test machine...
+> 2020/01/09 09:29:23 machine check:
+> 2020/01/09 09:29:23 syscalls                : 2961/3195
+> 2020/01/09 09:29:23 code coverage           : enabled
+> 2020/01/09 09:29:23 comparison tracing      : enabled
+> 2020/01/09 09:29:23 extra coverage          : enabled
+> 2020/01/09 09:29:23 setuid sandbox          : enabled
+> 2020/01/09 09:29:23 namespace sandbox       : enabled
+> 2020/01/09 09:29:23 Android sandbox         : /sys/fs/selinux/policy
+> does not exist
+> 2020/01/09 09:29:23 fault injection         : enabled
+> 2020/01/09 09:29:23 leak checking           : CONFIG_DEBUG_KMEMLEAK is
+> not enabled
+> 2020/01/09 09:29:23 net packet injection    : enabled
+> 2020/01/09 09:29:23 net device setup        : enabled
+> 2020/01/09 09:29:23 concurrency sanitizer   : /sys/kernel/debug/kcsan
+> does not exist
+> 2020/01/09 09:29:23 devlink PCI setup       : PCI device 0000:00:10.0
+> is not available
+> 2020/01/09 09:29:27 corpus                  : 50226 (0 deleted)
+> 2020/01/09 09:29:27 VMs 20, executed 0, cover 0, crashes 0, repro 0
+> 2020/01/09 09:29:37 VMs 20, executed 45, cover 0, crashes 0, repro 0
+> 2020/01/09 09:29:47 VMs 20, executed 74, cover 0, crashes 0, repro 0
+> 2020/01/09 09:29:57 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:30:07 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:30:17 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:30:27 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:30:37 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:30:47 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:30:57 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:31:07 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:31:17 VMs 20, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:31:26 vm-10: crash: INFO: rcu detected stall in do_idle
+> 2020/01/09 09:31:27 VMs 13, executed 80, cover 0, crashes 0, repro 0
+> 2020/01/09 09:31:28 vm-1: crash: INFO: rcu detected stall in sys_futex
+> 2020/01/09 09:31:29 vm-4: crash: INFO: rcu detected stall in sys_futex
+> 2020/01/09 09:31:31 vm-0: crash: INFO: rcu detected stall in sys_getsockopt
+> 2020/01/09 09:31:33 vm-18: crash: INFO: rcu detected stall in sys_clone3
+> 2020/01/09 09:31:35 vm-3: crash: INFO: rcu detected stall in sys_futex
+> 2020/01/09 09:31:36 vm-8: crash: INFO: rcu detected stall in do_idle
+> 2020/01/09 09:31:37 VMs 7, executed 80, cover 0, crashes 6, repro 0
+> 2020/01/09 09:31:38 vm-19: crash: INFO: rcu detected stall in schedule_tail
+> 2020/01/09 09:31:40 vm-6: crash: INFO: rcu detected stall in schedule_tail
+> 2020/01/09 09:31:42 vm-2: crash: INFO: rcu detected stall in schedule_tail
+> 2020/01/09 09:31:44 vm-12: crash: INFO: rcu detected stall in sys_futex
+> 2020/01/09 09:31:46 vm-15: crash: INFO: rcu detected stall in sys_nanosleep
+> 2020/01/09 09:31:47 VMs 1, executed 80, cover 0, crashes 11, repro 0
+> 2020/01/09 09:31:48 vm-16: crash: INFO: rcu detected stall in sys_futex
+> 2020/01/09 09:31:50 vm-9: crash: INFO: rcu detected stall in schedule
+> 2020/01/09 09:31:52 vm-13: crash: INFO: rcu detected stall in schedule_tail
+> 2020/01/09 09:31:54 vm-11: crash: INFO: rcu detected stall in schedule_tail
+> 2020/01/09 09:31:56 vm-17: crash: INFO: rcu detected stall in sys_futex
+> 2020/01/09 09:31:57 VMs 0, executed 80, cover 0, crashes 16, repro 0
+> 2020/01/09 09:31:58 vm-7: crash: INFO: rcu detected stall in sys_futex
+> 2020/01/09 09:32:00 vm-5: crash: INFO: rcu detected stall in dput
+> 2020/01/09 09:32:02 vm-14: crash: INFO: rcu detected stall in sys_nanosleep
+>
+>
+> Then I switched LSM to selinux and I _still_ can reproduce this. So,
+> Casey, you may relax, this is not smack-specific :)
+>
+> Then I disabled CONFIG_KASAN_VMALLOC and CONFIG_VMAP_STACK and it
+> started working normally.
+>
+> So this is somehow related to both clang and KASAN/VMAP_STACK.
+>
+> The clang I used is:
+> https://storage.googleapis.com/syzkaller/clang-kmsan-362913.tar.gz
+> (the one we use on syzbot).
+
+
+Clustering hangs, they all happen within very limited section of the code:
+
+      1  free_thread_stack+0x124/0x590 kernel/fork.c:284
+      5  free_thread_stack+0x12e/0x590 kernel/fork.c:280
+     39  free_thread_stack+0x12e/0x590 kernel/fork.c:284
+      6  free_thread_stack+0x133/0x590 kernel/fork.c:280
+      5  free_thread_stack+0x13d/0x590 kernel/fork.c:280
+      2  free_thread_stack+0x141/0x590 kernel/fork.c:280
+      6  free_thread_stack+0x14c/0x590 kernel/fork.c:280
+      9  free_thread_stack+0x151/0x590 kernel/fork.c:280
+      3  free_thread_stack+0x15b/0x590 kernel/fork.c:280
+     67  free_thread_stack+0x168/0x590 kernel/fork.c:280
+      6  free_thread_stack+0x16d/0x590 kernel/fork.c:284
+      2  free_thread_stack+0x177/0x590 kernel/fork.c:284
+      1  free_thread_stack+0x182/0x590 kernel/fork.c:284
+      1  free_thread_stack+0x186/0x590 kernel/fork.c:284
+     16  free_thread_stack+0x18b/0x590 kernel/fork.c:284
+      4  free_thread_stack+0x195/0x590 kernel/fork.c:284
+
+Here is disass of the function:
+https://gist.githubusercontent.com/dvyukov/a283d1aaf2ef7874001d56525279ccbd/raw/ac2478bff6472bc473f57f91a75f827cd72bb6bf/gistfile1.txt
+
+But if I am not mistaken, the function only ever jumps down. So how
+can it loop?...
