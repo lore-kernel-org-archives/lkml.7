@@ -2,110 +2,247 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EB0C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B408C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD29206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578601641;
-	bh=1Kxn0W9HOmtfwzP9pJ+qAOertJWVT6zsMDQwuf7JnTo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=UYqfzgVKg/op+B2le59I2eYwhZZHSuSnejcwaCYA0U2hVu8HjacaX2tfvAi5VxkUf
-	 d+rBaEbnS/Hq0OYFG1CMa/G5LM+OQ8clhK6MKX2QUOOeuWtyLbAhbOSdoGiJO4WVnK
-	 fn4CGgsc5MSpXyWdkSEL1t9NPIHOu9aP3skwEphg=
+	by mail.kernel.org (Postfix) with ESMTP id 25E2F2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:27:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mYX0znWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgAIU1U (ORCPT
+        id S1730387AbgAIU1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 9 Jan 2020 15:27:23 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:24638 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730292AbgAIU1U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jan 2020 15:27:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730289AbgAIU1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 15:27:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0BEC206ED;
-        Thu,  9 Jan 2020 20:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578601639;
-        bh=1Kxn0W9HOmtfwzP9pJ+qAOertJWVT6zsMDQwuf7JnTo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ToB67fm/N1Qu8XFj/olIWHjgQHZ31gVLuAwH6QMw05y9/VBBKDCzNotlFPokqxTOw
-         MiCrw/ILY9OjdBiowlkdiqBh2h9lPpT1OLBYU398OIQcwaMp0jnSL2wRldKlLCV2ZX
-         HniHTtpeE0a+CZDOqRYvZZzKIT1iEpJo4DIlpkeM=
-Date:   Thu, 9 Jan 2020 21:27:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 5.4.10
-Message-ID: <20200109202717.GA7962@kroah.com>
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009KPGwG015318
+        for <linux-kernel@vger.kernel.org>; Thu, 9 Jan 2020 12:27:19 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=li10RzsyPJHqKSxRt9DvUMjm2XwDuaW25VjV0/XB8yI=;
+ b=mYX0znWsTFEKdiftQTpNFMiFw7puXOlixFf9fawLF8XPbHhYYvnN/1Lh5XfUTd4RIuvB
+ sZMmgS8JQC1AYAkZVqsCg5rco5/Jm1AGkBKJMxpoPF4qQ/YlEZz2ZTm+cx3NspvedwOs
+ C46crCCqUQZgUpQ6JBYhguR8tsYt4yjJ3WE= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xdrj8nhkm-7
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 12:27:19 -0800
+Received: from intmgw002.06.prn3.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Thu, 9 Jan 2020 12:27:16 -0800
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 3AC391D2F0DCE; Thu,  9 Jan 2020 12:27:07 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2 6/6] mm: kmem: rename (__)memcg_kmem_(un)charge_memcg() to __memcg_kmem_(un)charge()
+Date:   Thu, 9 Jan 2020 12:26:59 -0800
+Message-ID: <20200109202659.752357-7-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200109202659.752357-1-guro@fb.com>
+References: <20200109202659.752357-1-guro@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
-Content-Disposition: inline
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_04:2020-01-09,2020-01-09 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ adultscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0
+ clxscore=1015 mlxscore=0 mlxlogscore=982 priorityscore=1501 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001090168
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Drop the _memcg suffix from (__)memcg_kmem_(un)charge functions.
+It's shorter and more obvious.
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+These are the most basic functions which are just (un)charging the
+given cgroup with the given amount of pages.
 
-I'm announcing the release of the 5.4.10 kernel.
+Also fix up the corresponding comments.
 
-Only powerpc users need to update from 5.4.9, there was a missing patch
-in that release that is in here.  Sorry for the confusion.
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ include/linux/memcontrol.h | 19 +++++++++---------
+ mm/memcontrol.c            | 40 +++++++++++++++++++-------------------
+ mm/slab.h                  |  4 ++--
+ 3 files changed, 31 insertions(+), 32 deletions(-)
 
-The updated 5.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.4.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 851c373edb74..c372bed6be80 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1362,12 +1362,11 @@ struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
+ void memcg_kmem_put_cache(struct kmem_cache *cachep);
+ 
+ #ifdef CONFIG_MEMCG_KMEM
++int __memcg_kmem_charge(struct mem_cgroup *memcg, gfp_t gfp,
++			unsigned int nr_pages);
++void __memcg_kmem_uncharge(struct mem_cgroup *memcg, unsigned int nr_pages);
+ int __memcg_kmem_charge_page(struct page *page, gfp_t gfp, int order);
+ void __memcg_kmem_uncharge_page(struct page *page, int order);
+-int __memcg_kmem_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp,
+-			      unsigned int nr_pages);
+-void __memcg_kmem_uncharge_memcg(struct mem_cgroup *memcg,
+-				 unsigned int nr_pages);
+ 
+ extern struct static_key_false memcg_kmem_enabled_key;
+ extern struct workqueue_struct *memcg_kmem_cache_wq;
+@@ -1403,19 +1402,19 @@ static inline void memcg_kmem_uncharge_page(struct page *page, int order)
+ 		__memcg_kmem_uncharge_page(page, order);
+ }
+ 
+-static inline int memcg_kmem_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp,
+-					  unsigned int nr_pages)
++static inline int memcg_kmem_charge(struct mem_cgroup *memcg, gfp_t gfp,
++				    unsigned int nr_pages)
+ {
+ 	if (memcg_kmem_enabled())
+-		return __memcg_kmem_charge_memcg(memcg, gfp, nr_pages);
++		return __memcg_kmem_charge(memcg, gfp, nr_pages);
+ 	return 0;
+ }
+ 
+-static inline void memcg_kmem_uncharge_memcg(struct mem_cgroup *memcg,
+-					     unsigned int nr_pages)
++static inline void memcg_kmem_uncharge(struct mem_cgroup *memcg,
++				       unsigned int nr_pages)
+ {
+ 	if (memcg_kmem_enabled())
+-		__memcg_kmem_uncharge_memcg(memcg, nr_pages);
++		__memcg_kmem_uncharge(memcg, nr_pages);
+ }
+ 
+ /*
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 8dbfb9fed9d8..8bcd231e6e7b 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2819,15 +2819,15 @@ void memcg_kmem_put_cache(struct kmem_cache *cachep)
+ }
+ 
+ /**
+- * __memcg_kmem_charge_memcg: charge a kmem page
++ * __memcg_kmem_charge: charge a number of kernel pages to a memcg
+  * @memcg: memory cgroup to charge
+  * @gfp: reclaim mode
+  * @nr_pages: number of pages to charge
+  *
+  * Returns 0 on success, an error code on failure.
+  */
+-int __memcg_kmem_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp,
+-			      unsigned int nr_pages)
++int __memcg_kmem_charge(struct mem_cgroup *memcg, gfp_t gfp,
++			unsigned int nr_pages)
+ {
+ 	struct page_counter *counter;
+ 	int ret;
+@@ -2854,6 +2854,21 @@ int __memcg_kmem_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp,
+ 	return 0;
+ }
+ 
++/**
++ * __memcg_kmem_uncharge: uncharge a number of kernel pages from a memcg
++ * @memcg: memcg to uncharge
++ * @nr_pages: number of pages to uncharge
++ */
++void __memcg_kmem_uncharge(struct mem_cgroup *memcg, unsigned int nr_pages)
++{
++	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
++		page_counter_uncharge(&memcg->kmem, nr_pages);
++
++	page_counter_uncharge(&memcg->memory, nr_pages);
++	if (do_memsw_account())
++		page_counter_uncharge(&memcg->memsw, nr_pages);
++}
++
+ /**
+  * __memcg_kmem_charge_page: charge a kmem page to the current memory cgroup
+  * @page: page to charge
+@@ -2872,7 +2887,7 @@ int __memcg_kmem_charge_page(struct page *page, gfp_t gfp, int order)
+ 
+ 	memcg = get_mem_cgroup_from_current();
+ 	if (!mem_cgroup_is_root(memcg)) {
+-		ret = __memcg_kmem_charge_memcg(memcg, gfp, 1 << order);
++		ret = __memcg_kmem_charge(memcg, gfp, 1 << order);
+ 		if (!ret) {
+ 			page->mem_cgroup = memcg;
+ 			__SetPageKmemcg(page);
+@@ -2882,21 +2897,6 @@ int __memcg_kmem_charge_page(struct page *page, gfp_t gfp, int order)
+ 	return ret;
+ }
+ 
+-/**
+- * __memcg_kmem_uncharge_memcg: uncharge a kmem page
+- * @memcg: memcg to uncharge
+- * @nr_pages: number of pages to uncharge
+- */
+-void __memcg_kmem_uncharge_memcg(struct mem_cgroup *memcg,
+-				 unsigned int nr_pages)
+-{
+-	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+-		page_counter_uncharge(&memcg->kmem, nr_pages);
+-
+-	page_counter_uncharge(&memcg->memory, nr_pages);
+-	if (do_memsw_account())
+-		page_counter_uncharge(&memcg->memsw, nr_pages);
+-}
+ /**
+  * __memcg_kmem_uncharge_page: uncharge a kmem page
+  * @page: page to uncharge
+@@ -2911,7 +2911,7 @@ void __memcg_kmem_uncharge_page(struct page *page, int order)
+ 		return;
+ 
+ 	VM_BUG_ON_PAGE(mem_cgroup_is_root(memcg), page);
+-	__memcg_kmem_uncharge_memcg(memcg, nr_pages);
++	__memcg_kmem_uncharge(memcg, nr_pages);
+ 	page->mem_cgroup = NULL;
+ 
+ 	/* slab pages do not have PageKmemcg flag set */
+diff --git a/mm/slab.h b/mm/slab.h
+index 43f8ce4aa325..207c83ef6e06 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -366,7 +366,7 @@ static __always_inline int memcg_charge_slab(struct page *page,
+ 		return 0;
+ 	}
+ 
+-	ret = memcg_kmem_charge_memcg(memcg, gfp, nr_pages);
++	ret = memcg_kmem_charge(memcg, gfp, nr_pages);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -397,7 +397,7 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
+ 	if (likely(!mem_cgroup_is_root(memcg))) {
+ 		lruvec = mem_cgroup_lruvec(memcg, page_pgdat(page));
+ 		mod_lruvec_state(lruvec, cache_vmstat_idx(s), -nr_pages);
+-		memcg_kmem_uncharge_memcg(memcg, nr_pages);
++		memcg_kmem_uncharge(memcg, nr_pages);
+ 	} else {
+ 		mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
+ 				    -nr_pages);
+-- 
+2.21.1
 
-thanks,
-
-greg k-h
-
-------------
-
- Makefile              |    2 +-
- arch/powerpc/mm/mem.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-Aneesh Kumar K.V (1):
-      powerpc/pmem: Fix kernel crash due to wrong range value usage in flush_dcache_range
-
-Greg Kroah-Hartman (1):
-      Linux 5.4.10
-
-
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl4XjKQACgkQONu9yGCS
-aT4tUxAAkNd7HLc8ZhlQIjx32vZ0azgvsI5WoJ4f5Sr8+cimmXkWVDWFINXt8HTb
-Za6yY+pQPk39LoB7MqZKQ552weS7Lr4m5by+IY996xg49L8cu/jtib+q2/18oHNn
-rqok3KP+pUEXNzbdIXXfoPdVCWvGqwZJ0E/eH9zXZM3R3K7T0tf9WBM+a1LfaJBk
-trQHKN2U56GcQJW269djsqRWGE84lhHbuvKhH7p6CgpSPiF0t/lA5gVsFZ2UJHIP
-2Sl5KEZVeu85FPARKNWV3Fm/UEfNsdCCsMAr2CEJz6NpVnoQvHQcCLG9XFCBjrmF
-1S1Thp+hhDamEUtIpX4VJmXrdBRiQDELg2OfB6eAcLJAqRLTeqSfLjXyTPZcETtw
-ezLx2JGj9JQWR7FQpt++321dXjscydVokl5wdWJGmKRWlbrXNv8VFh1N4Q28xrlW
-ryhm/ypdJsoO5keLWsiEg0l0/7w4eZcKaSvYLdpP/d8oFjHc2QO7TR4qtyQ+Q3KB
-nHWIUOMYvNNovDOY8JNEc2JLOE/SsCjIb4AZ666fFlO/Eop27K6XsvkTpuDzsaTZ
-hLBtWvc0EdFVUV/x3KUxrt7wZRgMruubpgU/Lkje53DRxTrVCvx7KYk2ZtIb8z+F
-GF9tFmqK+Jxmosh4hlyGUKyfPBio648tirnndxRwXa+ZHZxSNWU=
-=treM
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
