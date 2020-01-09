@@ -2,210 +2,128 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A600C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631C5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619F72067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gfa4k3DW"
+	by mail.kernel.org (Postfix) with ESMTP id 4094E2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgAIA7P (ORCPT
+        id S1727784AbgAIBBH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:59:15 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46697 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727737AbgAIA7P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:59:15 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r9so5522169otp.13
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 16:59:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Fgy4gBsnNDhvVOVnNjUhXi1MEMb8Zuk1lMJfG95h70=;
-        b=Gfa4k3DW+bK3x+Fb5EJ7YEGcSey+eNjFZEw7HfBF0DTflbvNacUsFd5DDahJnij83j
-         /Z36JmzQlEbgDubnN/NTi9LB7SNhaxmPYSvWtLtQc/czukrG2y3+ndOuHGjO1DkI2E4T
-         ZwfPxLUFkVkV6czF2pFrOIGjeUC+eLWLQMoDOreu6s2VHgG9g223fRjVcj6KU+RtcobH
-         uIgYMz44sn2W4a8ifK9z5HZj/qo3kVn1/fJOEfsNg3JoxoBLGNwJ7464QL0Tyo8chjtL
-         BwMMxa/IeE2Kfs1gUkothnSfSA+r5wrx6UOG0u0TFag1GYxRm6pTogkejtm0D5LZ/U7q
-         0sLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Fgy4gBsnNDhvVOVnNjUhXi1MEMb8Zuk1lMJfG95h70=;
-        b=bHZvCMMiPtDJxqtsWqNtj68NgfbkW+eSp1YUnkZM6RftGvZA4ekjwdtbR3k8op8/7z
-         C4g441nOsgNp1EPaveiGXJAxf/v/VVMoohSsdq4xkm07KoxNpV7pBnUiOmR1FckJHgL6
-         4uv5iFg3EZeEhDJTKzYpCMqCDm7S6Mf0LfdWgkBIA7BFc6lMEkIanEB8J982f65/Pnwt
-         Nnn43JTLZvdFK3t3Be6wcEK3lkR3JXCYH9+nieloprY68Pu3hkH/6npjC3lnkwIEpoud
-         xwcHg7IxFLRjqfZlwMiszL1rHH+1xSOh29BxMb3sU8jrijmdT6aDt8BK25crrKDLu8DT
-         3faA==
-X-Gm-Message-State: APjAAAW9/pCL874+on9fYM75r+0VRSZUSXu2V5awC1adke0k/KmkxG4p
-        G3Pzkz/n+jrYU8OXn6aqw5zTHgOj9fKoTkfZLNlmhQ==
-X-Google-Smtp-Source: APXvYqwjwFClxrTy/XuUbDeOil0j1vYMARYAI98fBCmBlP5FWFo8hJswWYfeoJtxQGvZURgI56ERiVn6apAi6N2UaVY=
-X-Received: by 2002:a05:6830:22ee:: with SMTP id t14mr6258010otc.236.1578531553965;
- Wed, 08 Jan 2020 16:59:13 -0800 (PST)
+        Wed, 8 Jan 2020 20:01:07 -0500
+Received: from mga05.intel.com ([192.55.52.43]:19165 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbgAIBBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 20:01:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 17:01:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
+   d="scan'208";a="233869969"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by orsmga002.jf.intel.com with ESMTP; 08 Jan 2020 17:01:05 -0800
+Received: from orsmsx103.amr.corp.intel.com ([169.254.5.250]) by
+ ORSMSX110.amr.corp.intel.com ([169.254.10.84]) with mapi id 14.03.0439.000;
+ Wed, 8 Jan 2020 17:01:05 -0800
+From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] net: intel: e1000e: fix possible
+ sleep-in-atomic-context bugs in e1000e_get_hw_semaphore()
+Thread-Topic: [PATCH] net: intel: e1000e: fix possible
+ sleep-in-atomic-context bugs in e1000e_get_hw_semaphore()
+Thread-Index: AQHVta3aFEjLZ+EvHEi0p4CGcL5CcqfhpOxw
+Date:   Thu, 9 Jan 2020 01:01:05 +0000
+Message-ID: <309B89C4C689E141A5FF6A0C5FB2118B971A925B@ORSMSX103.amr.corp.intel.com>
+References: <20191218141656.12416-1-baijiaju1990@gmail.com>
+In-Reply-To: <20191218141656.12416-1-baijiaju1990@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjlkZmI1NDAtYjM2NC00MTIwLWI2MjgtZjQ3ZTk4Y2IyZDM1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWGdFY0pPWVVaVjZhVkNlSlhkVDZtdDlJdXc2V2EwUEs4ZEI3ZUtEa2xSRnEyU20ybEZcL2tySzlwWEM0UHVcL1A4In0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-4-saravanak@google.com>
- <20200108111947.q5aafrlz26tnk3nq@vireshk-i7>
-In-Reply-To: <20200108111947.q5aafrlz26tnk3nq@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 8 Jan 2020 16:58:38 -0800
-Message-ID: <CAGETcx_T7VONkSd-r9CY-5OpZBZ2iD0tFoCf0+d8CY2b5zgr9g@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] OPP: Add helper function for bandwidth OPP tables
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 3:19 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 06-12-19, 16:24, Saravana Kannan wrote:
-> > The frequency OPP tables have helper functions to search for entries in the
-> > table based on frequency and get the frequency values for a given (or
-> > suspend) OPP entry.
-> >
-> > Add similar helper functions for bandwidth OPP tables to search for entries
-> > in the table based on peak bandwidth and to get the peak and average
-> > bandwidth for a given (or suspend) OPP entry.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/opp/core.c     | 301 +++++++++++++++++++++++++++++++++++------
-> >  include/linux/pm_opp.h |  43 ++++++
-> >  2 files changed, 305 insertions(+), 39 deletions(-)
-> >
-> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> > index c79bbfac7289..3ff33a08198e 100644
-> > --- a/drivers/opp/core.c
-> > +++ b/drivers/opp/core.c
-> > @@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
-> >
-> > +/**
-> > + * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
-> > + * @opp:     opp for which peak bandwidth has to be returned for
->
-> s/peak //
+> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org>
+> On Behalf Of Jia-Ju Bai
+> Sent: Wednesday, December 18, 2019 6:17 AM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; davem@davemloft.net
+> Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Jia-Ju Bai <baijiaju1990@gmail.com>
+> Subject: [PATCH] net: intel: e1000e: fix possible sleep-in-atomic-context bugs
+> in e1000e_get_hw_semaphore()
+> 
+> The driver may sleep while holding a spinlock.
+> The function call path (from bottom to top) in Linux 4.19 is:
+> 
+> drivers/net/ethernet/intel/e1000e/mac.c, 1366:
+> 	usleep_range in e1000e_get_hw_semaphore
+> drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
+> 	e1000e_get_hw_semaphore in
+> e1000_release_swfw_sync_80003es2lan
+> drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
+> 	e1000_release_swfw_sync_80003es2lan in
+> e1000_release_phy_80003es2lan
+> drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
+> 	(FUNC_PTR) e1000_release_phy_80003es2lan in
+> e1000e_update_phy_stats
+> drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
+> 	e1000e_update_phy_stats in e1000e_update_stats
+> drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
+> 	e1000e_update_stats in e1000e_get_stats64
+> drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
+> 	spin_lock in e1000e_get_stats64
+> 
+> drivers/net/ethernet/intel/e1000e/mac.c, 1384:
+> 	usleep_range in e1000e_get_hw_semaphore
+> drivers/net/ethernet/intel/e1000e/80003es2lan.c, 322:
+> 	e1000e_get_hw_semaphore in
+> e1000_release_swfw_sync_80003es2lan
+> drivers/net/ethernet/intel/e1000e/80003es2lan.c, 197:
+> 	e1000_release_swfw_sync_80003es2lan in
+> e1000_release_phy_80003es2lan
+> drivers/net/ethernet/intel/e1000e/netdev.c, 4883:
+> 	(FUNC_PTR) e1000_release_phy_80003es2lan in
+> e1000e_update_phy_stats
+> drivers/net/ethernet/intel/e1000e/netdev.c, 4917:
+> 	e1000e_update_phy_stats in e1000e_update_stats
+> drivers/net/ethernet/intel/e1000e/netdev.c, 5945:
+> 	e1000e_update_stats in e1000e_get_stats64
+> drivers/net/ethernet/intel/e1000e/netdev.c, 5944:
+> 	spin_lock in e1000e_get_stats64
+> 
+> (FUNC_PTR) means a function pointer is called.
+> 
+> To fix these bugs, usleep_range() is replaced with udelay().
+> 
+> These bugs are found by a static analysis tool STCheck written by myself.
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> ---
+>  drivers/net/ethernet/intel/e1000e/mac.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Ack
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
 
->
-> > + * @avg_bw:  Pointer where the corresponding average bandwidth is stored.
-> > + *           Can be NULL.
-> > + *
-> > + * Return: Peak bandwidth in kBps corresponding to the opp, else
-> > + * return 0
-> > + */
-> > +unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw)
-> > +{
-> > +     if (IS_ERR_OR_NULL(opp) || !opp->available) {
-> > +             pr_err("%s: Invalid parameters\n", __func__);
-> > +             return 0;
-> > +     }
-> > +
-> > +     if (avg_bw)
->
-> Do you see this being NULL in practice ? If no, then we can make it
-> mandatory for now ?
-
-Yes, very likely. A lot of OPP tables might not have avg bandwidth listed.
-
-> > +             *avg_bw = opp->avg_bw;
-> > +
-> > +     return opp->peak_bw;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
-> > +
-> >  /**
-> >   * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
-> >   * @opp:     opp for which level value has to be returned for
-> > @@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
-> >
-> > +/**
-> > + * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in kBps
->
-> Hmm, I wasn't expecting this. So the interconnects will also have a
-> suspend OPP ?
-
-Yes, device voting for interconnect paths might want to lower the
-bandwidth to a suspend bandwidth when they suspend.
-
-> > + * @dev:     device for which we do this operation
-> > + * @avg_bw:  Pointer where the corresponding average bandwidth is stored.
-> > + *           Can be NULL.
-> > + *
-> > + * Return: This function returns the peak bandwidth of the OPP marked as
-> > + * suspend_opp if one is available, else returns 0;
-> > + */
-> > +unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-> > +                                         unsigned long *avg_bw)
-> > +{
-> > +     struct opp_table *opp_table;
-> > +     unsigned long peak_bw = 0;
-> > +
-> > +     opp_table = _find_opp_table(dev);
-> > +     if (IS_ERR(opp_table))
-> > +             return 0;
-> > +
-> > +     if (opp_table->suspend_opp && opp_table->suspend_opp->available)
-> > +             peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
-> > +
-> > +     dev_pm_opp_put_opp_table(opp_table);
-> > +
-> > +     return peak_bw;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
-> > +
-> >  int _get_opp_count(struct opp_table *opp_table)
-> >  {
-> >       struct dev_pm_opp *opp;
-> > @@ -343,6 +394,40 @@ int dev_pm_opp_get_opp_count(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_count);
-> >
->
-> I think we should add function header here instead of the helpers
-> which get exact match for freq, bw or level. And then pass a enum
-> value to it, which tells what we are looking to compare. After that
-> rest of the routines will be just one liners, make them macros in
-> header file itself.
-
-Not sure I understand what you are saying here.
-
-
-> > +struct dev_pm_opp *dev_pm_opp_find_opp_exact(struct device *dev,
-> > +                                           struct dev_pm_opp *opp_key,
-> > +                                           bool available)
->
-
--Saravana
