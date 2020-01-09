@@ -2,168 +2,62 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4727C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66248C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89342072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:11:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DhUG7DVS"
+	by mail.kernel.org (Postfix) with ESMTP id 4147424672
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388747AbgAITLf (ORCPT
+        id S1728401AbgAITPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:11:35 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46760 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388682AbgAITLf (ORCPT
+        Thu, 9 Jan 2020 14:15:16 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:47143 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgAITPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:11:35 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so8523308wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:11:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VCnERlNOb8YhgeYQ/pqHHRSiRgRe3Wo0NvX3JaaKcS8=;
-        b=DhUG7DVSwPgwTWwTuQqa+9ac/15/zkq8KDq1LyXt9P2r/hB4jgPF/wdkpAwwitW1w/
-         Yw1ncdxhj1h1xmR3bnTVGYgx9vqeZ9TOp8Q5YfaeApe9I12PJZzgFMURzpY+OPgI15a4
-         Fexvw8F5wcZmKpTYiVdv+PZVy/+Kym+/wM6Mo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VCnERlNOb8YhgeYQ/pqHHRSiRgRe3Wo0NvX3JaaKcS8=;
-        b=PH9NgD2nQ70TiSnqj8FASn+yeJX7cHnozqF9iLG6TBweda5FC7g+a7nHECcRfhertd
-         9GLoxRIdCjYf2Bvy6xeHi16q+AbetJct4gdOtRg3U8rWcNLIFfOrColOrF34mZTpMtzU
-         hu1n7wH6u2x1n4maosUenMgncf3ciWqR9IcOZGdMH+dMIolPnMKYqOe9n/FaMs57KA0+
-         t4xZmzGSjz1ZWsW4n/7BBeRv2+uB+VEmDabU1pC7NC6ZbTkMkO+j4MA22eoXq5fNoMNk
-         PI0ReGJ5fasgVaYI6NRMEwfk4n5SwjzojThwalDMMwwIS5GmXhbPpwP5IraKDIsmhu0s
-         8PUg==
-X-Gm-Message-State: APjAAAVxoSA/uXCmlDPgynJ9QNgCIAzNhVZszc9jOxwPEU1RaR9Dtdrh
-        X1bq6cZvKopBX5PK4RAbltDp4Q==
-X-Google-Smtp-Source: APXvYqxxWo37fIJf5Xfz49p7PCsn9MSEishKBdsp6/eF79xvuIAU/pnDyQmSV2/kSQfLuhQi+KsjjQ==
-X-Received: by 2002:adf:f5cb:: with SMTP id k11mr11962302wrp.71.1578597092527;
-        Thu, 09 Jan 2020 11:11:32 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id q3sm3689862wmc.47.2020.01.09.11.11.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 11:11:31 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 9 Jan 2020 20:11:48 +0100
-To:     James Morris <jmorris@namei.org>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200109191148.GA1894@chromium.org>
-References: <20191220154208.15895-1-kpsingh@chromium.org>
- <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com>
- <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com>
- <201912301112.A1A63A4@keescook>
- <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
- <alpine.LRH.2.21.2001090551000.27794@namei.org>
- <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100437550.21515@namei.org>
+        Thu, 9 Jan 2020 14:15:15 -0500
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id DCB0E24000B;
+        Thu,  9 Jan 2020 19:15:12 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: mtd: rawnand: stm32_fmc2: avoid to lock the CPU bus
+Date:   Thu,  9 Jan 2020 20:15:10 +0100
+Message-Id: <20200109191510.10963-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1576486915-7517-1-git-send-email-christophe.kerello@st.com>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.2001100437550.21515@namei.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: 4114b17af41272e14939b000ce8f3ed7ba937e3c
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-Jan 05:11, James Morris wrote:
-> On Wed, 8 Jan 2020, Stephen Smalley wrote:
+On Mon, 2019-12-16 at 09:01:55 UTC, Christophe Kerello wrote:
+> We are currently using nand_soft_waitrdy to poll the status of the NAND
+> flash. FMC2 enables the wait feature bit (this feature is mandatory for
+> the sequencer mode). By enabling this feature, we can't poll the status
+> of the NAND flash, the read status command is stucked in FMC2 pipeline
+> until R/B# signal is high, and locks the CPU bus.
+> To avoid to lock the CPU bus, we poll FMC2 ISR register. This register
+> reports the status of the R/B# signal.
 > 
-> > The cover letter subject line and the Kconfig help text refer to it as a
-> > BPF-based "MAC and Audit policy".  It has an enforce config option that
-> > enables the bpf programs to deny access, providing access control. IIRC, in
-> > the earlier discussion threads, the BPF maintainers suggested that Smack and
-> > other LSMs could be entirely re-implemented via it in the future, and that
-> > such an implementation would be more optimal.
-> 
-> In this case, the eBPF code is similar to a kernel module, rather than a 
-> loadable policy file.  It's a loadable mechanism, rather than a policy, in 
-> my view.
-> 
-> This would be similar to the difference between iptables rules and 
-> loadable eBPF networking code.  I'd be interested to know how the 
-> eBPF networking scenarios are handled wrt kernel ABI.
-> 
-> 
-> > Again, not arguing for or against, but wondering if people fully understand
-> > the implications.  If it ends up being useful, people will build access
-> > control systems with it, and it directly exposes a lot of kernel internals to
-> > userspace.  There was a lot of concern originally about the LSM hook interface
-> > becoming a stable ABI and/or about it being misused.  Exposing that interface
-> > along with every kernel data structure exposed through it to userspace seems
-> > like a major leap.
-> 
-> Agreed this is a leap, although I'm not sure I'd characterize it as 
-> exposure to userspace -- it allows dynamic extension of the LSM API from 
-> userland, but the code is executed in the kernel.
-> 
-> KP: One thing I'd like to understand better is the attack surface 
-> introduced by this.  IIUC, the BTF fields are read only, so the eBPF code 
-> should not be able to modify any LSM parameters, correct?
-> 
+> Fixes: 2cd457f328c1 ("mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver")
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 
-That's correct, the verifier does not allow writes to BTF types:
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/fixes, thanks.
 
-from kernel/bpf/verifier.c:
-
-        case PTR_TO_BTF_ID:
-	if (type == BPF_WRITE) {
-	        verbose(env, "Writes through BTF pointers are not allowed\n");
-		return -EINVAL;
-	}
-
-We can also add additional checks on top of those added by the
-verifier using the verifier_ops that each BPF program type can define. 
-
-- KP
-
-> 
-> >  Even if the mainline kernel doesn't worry about any kind
-> > of stable interface guarantees for it, the distros might be forced to provide
-> > some kABI guarantees for it to appease ISVs and users...
-> 
-> How is this handled currently for other eBPF use-cases?
-> 
-> -- 
-> James Morris
-> <jmorris@namei.org>
-> 
+Miquel
