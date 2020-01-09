@@ -2,168 +2,79 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF48C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 531D0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D25206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PjAv93AN"
+	by mail.kernel.org (Postfix) with ESMTP id 25D41206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgAINWn (ORCPT
+        id S1731045AbgAINXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:22:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33544 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727861AbgAINWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:22:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578576161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dE4ryLd3fwXYcbBtXTnMIpC4ft/UG9Rj8eEUk0vFsRo=;
-        b=PjAv93ANWoJDOVfjvmoH/47u7ugV687I3ofvvnrffgMjJv0h/yYQhGOWYZqK1mMZOoAHLE
-        RvIM6JxBx6qn35iGdNDikIiCma2TbPcoA8VRxNl5qJ/8EnA9USe16mKbg8wOFIF0LfS6Ym
-        n9iqhRUfoHBFCi/gXSGltmX/VJ+wso0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-0vvOMYTwOpKc-AJibRDE-g-1; Thu, 09 Jan 2020 08:22:38 -0500
-X-MC-Unique: 0vvOMYTwOpKc-AJibRDE-g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB9DA10054E3;
-        Thu,  9 Jan 2020 13:22:36 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DA0AC1000322;
-        Thu,  9 Jan 2020 13:22:34 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 14:22:32 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] perf c2c: Fix sorting.
-Message-ID: <20200109132232.GA82989@krava>
-References: <20200109043030.233746-1-andres@anarazel.de>
- <alpine.LRH.2.20.2001091055430.4075@Diego>
- <20200109131834.GA4404@redhat.com>
+        Thu, 9 Jan 2020 08:23:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:58962 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727861AbgAINXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 08:23:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C00EE31B;
+        Thu,  9 Jan 2020 05:23:16 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DAA833F534;
+        Thu,  9 Jan 2020 05:23:15 -0800 (PST)
+Subject: Re: [PATCH] iommu/arm-smmu-v3: fix resource_size check
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20191226095056.30256-1-yamada.masahiro@socionext.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2cd8ed11-56df-b46b-aa21-5ecc0e2e3082@arm.com>
+Date:   Thu, 9 Jan 2020 13:23:14 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109131834.GA4404@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20191226095056.30256-1-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 10:18:34AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Jan 09, 2020 at 10:58:43AM +0100, Michael Petlan escreveu:
-> > On Wed, 8 Jan 2020, Andres Freund wrote:
-> > > Commit 722ddfde366f ("perf tools: Fix time sorting") changed -
-> > > correctly so - hist_entry__sort to return int64. Unfortunately several
-> > > of the builtin-c2c.c comparison routines only happened to work due the
-> > > cast caused by the wrong return type.
-> > > 
-> > > This causes meaningless ordering of both the cacheline list, and the
-> > > cacheline details page. E.g a simple
-> > >   perf c2c record -a sleep 3
-> > >   perf c2c report
-> > > will result in cacheline table like
-> > >   =================================================
-> > >              Shared Data Cache Line Table
-> > >   =================================================
-> > >   #
-> > >   #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----  ---- Store Reference ----  --- Load Dram ----      LLC    Total  ----- Core Load Hit -----  -- LLC Load Hit --
-> > >   # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt    Total    L1Hit   L1Miss       Lcl       Rmt  Ld Miss    Loads       FB       L1       L2       Llc       Rmt
-> > >   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  ........  ........  .......  .......  .......  .......  .......  ........  ........
-> > >   #
-> > >         0      0x7f0d27ffba00   N/A       0       52    0.12%       13        6        7       12       12        0         0         7       14       40        4       16        0         0         0
-> > >         1      0x7f0d27ff61c0   N/A       0     6353   14.04%     1475      801      674      779      779        0         0       718     1392     5574     1299     1967        0       115         0
-> > >         2      0x7f0d26d3ec80   N/A       0       71    0.15%       16        4       12       13       13        0         0        12       24       58        1       20        0         9         0
-> > >         3      0x7f0d26d3ec00   N/A       0       98    0.22%       23       17        6       19       19        0         0         6       12       79        0       40        0        10         0
-> > > i.e. with the list not being ordered by Total Hitm.
-> > > 
-> > > Fixes: 722ddfde366f ("perf tools: Fix time sorting")
-> > > Signed-off-by: Andres Freund <andres@anarazel.de>
-> > 
-> > Tested on top of Arnaldo's perf/core branch. After the patch, the rows
-> > are ordered by Tot Hitm.
-> > 
-> > Tested-by: Michael Petlan <mpetlan@redhat.com>
+On 26/12/2019 9:50 am, Masahiro Yamada wrote:
+> This is an off-by-one mistake.
 > 
-> Jiri, so you think we should use a different Fixes: cset? Or plain
-> remove it? I haven't checked it, just trying to figure out if you guys
-> came up with a conclusion so that I can review/apply.
+> resource_size() returns res->end - res->start + 1.
 
-waiting for Andres's answer.. making sure I understand the issue ;-)
+Heh, despite the optimism of "Avoid one-off errors by introducing a 
+resource_size() function", life finds a way...
 
-jirka
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 > 
-> - Arnaldo
->  
-> > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > Cc: Andi Kleen <ak@linux.intel.com>
-> > > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > Cc: Michael Petlan <mpetlan@redhat.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: stable@vger.kernel.org # v3.16+
-> > > ---
-> > >  tools/perf/builtin-c2c.c | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > > index e69f44941aad..f2e9d2b1b913 100644
-> > > --- a/tools/perf/builtin-c2c.c
-> > > +++ b/tools/perf/builtin-c2c.c
-> > > @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> > >  {
-> > >  	struct c2c_hist_entry *c2c_left;
-> > >  	struct c2c_hist_entry *c2c_right;
-> > > -	unsigned int tot_hitm_left;
-> > > -	unsigned int tot_hitm_right;
-> > > +	uint64_t tot_hitm_left;
-> > > +	uint64_t tot_hitm_right;
-> > >  
-> > >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
-> > >  	c2c_right = container_of(right, struct c2c_hist_entry, he);
-> > > @@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __maybe_unused,			\
-> > >  									\
-> > >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
-> > >  	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
-> > > -	return c2c_left->stats.__f - c2c_right->stats.__f;		\
-> > > +	return (uint64_t) c2c_left->stats.__f -				\
-> > > +	       (uint64_t) c2c_right->stats.__f;				\
-> > >  }
-> > >  
-> > >  #define STAT_FN(__f)		\
-> > > @@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> > >  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
-> > >  	c2c_right = container_of(right, struct c2c_hist_entry, he);
-> > >  
-> > > -	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
-> > > +	return (uint64_t) llc_miss(&c2c_left->stats) -
-> > > +	       (uint64_t) llc_miss(&c2c_right->stats);
-> > >  }
-> > >  
-> > >  static uint64_t total_records(struct c2c_stats *stats)
-> > > -- 
-> > > 2.25.0.rc1
-> > > 
-> > > 
-
+>   drivers/iommu/arm-smmu-v3.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d9e0d9c19b4f..b463599559d2 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -3599,7 +3599,7 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>   
+>   	/* Base address */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (resource_size(res) + 1 < arm_smmu_resource_size(smmu)) {
+> +	if (resource_size(res) < arm_smmu_resource_size(smmu)) {
+>   		dev_err(dev, "MMIO region too small (%pr)\n", res);
+>   		return -EINVAL;
+>   	}
+> 
