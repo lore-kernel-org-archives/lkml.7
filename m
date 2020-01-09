@@ -2,140 +2,86 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCE3C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E77C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D662072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0767B2084D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387643AbgAIQ21 (ORCPT
+        id S1731324AbgAIQ3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:28:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42116 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbgAIQ2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:28:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4E6F2AD1E;
-        Thu,  9 Jan 2020 16:28:23 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 16:28:21 +0000
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Ilya Dryomov <idryomov@gmail.com>, Sage Weil <sage@redhat.com>,
-        "Yan, Zheng" <zyan@redhat.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v4] ceph: use 'copy-from2' operation in
- copy_file_range
-Message-ID: <20200109162821.GA19915@brahms>
-References: <20200108100353.23770-1-lhenriques@suse.com>
- <913eb28e6bb698f27f1831f75ea5250497ee659c.camel@kernel.org>
- <20200109143011.GA14582@brahms>
- <CAOi1vP-YbPswsmk5TicVwnspBSkz9_8HreOWmpU=kZeTWWiV-A@mail.gmail.com>
- <0c8566e39221cc475840da0f93913aeaa77dc0e4.camel@kernel.org>
+        Thu, 9 Jan 2020 11:29:12 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:57768 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728840AbgAIQ3M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:29:12 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1ipagH-0005oH-AL; Thu, 09 Jan 2020 17:29:09 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 009GT7fs001705
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 9 Jan 2020 17:29:07 +0100
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Organization: five technologies GmbH
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org,
+        Markus Reichl <m.reichl@fivetechno.de>
+Subject: [Bug ?] usb :typec :tcpm :fusb302
+Message-ID: <0ac6bbe7-6395-526d-213c-ac58a19d8673@fivetechno.de>
+Date:   Thu, 9 Jan 2020 17:29:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0c8566e39221cc475840da0f93913aeaa77dc0e4.camel@kernel.org>
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578587352;76c283d7;
+X-HE-SMSGID: 1ipagH-0005oH-AL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 11:05:50AM -0500, Jeff Layton wrote:
-> On Thu, 2020-01-09 at 15:53 +0100, Ilya Dryomov wrote:
-> > On Thu, Jan 9, 2020 at 3:30 PM Luis Henriques <lhenriques@suse.com> wrote:
-> > > On Thu, Jan 09, 2020 at 08:06:17AM -0500, Jeff Layton wrote:
-> > > > On Wed, 2020-01-08 at 10:03 +0000, Luis Henriques wrote:
-> > > > > Instead of using the 'copy-from' operation, switch copy_file_range to the
-> > > > > new 'copy-from2' operation, which allows to send the truncate_seq and
-> > > > > truncate_size parameters.
-> > > > > 
-> > > > > If an OSD does not support the 'copy-from2' operation it will return
-> > > > > -EOPNOTSUPP.  In that case, the kernel client will stop trying to do
-> > > > > remote object copies for this fs client and will always use the generic
-> > > > > VFS copy_file_range.
-> > > > > 
-> > > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > > > > ---
-> > > > > Hi Jeff,
-> > > > > 
-> > > > > This is a follow-up to the discussion in [1].  Since PR [2] has been
-> > > > > merged, it's now time to change the kernel client to use the new
-> > > > > 'copy-from2'.  And that's what this patch does.
-> > > > > 
-> > > > > [1] https://lore.kernel.org/lkml/20191118120935.7013-1-lhenriques@suse.com/
-> > > > > [2] https://github.com/ceph/ceph/pull/31728
-> > > > > 
-> > > > >  fs/ceph/file.c                  | 13 ++++++++++++-
-> > > > >  fs/ceph/super.c                 |  1 +
-> > > > >  fs/ceph/super.h                 |  3 +++
-> > > > >  include/linux/ceph/osd_client.h |  1 +
-> > > > >  include/linux/ceph/rados.h      |  2 ++
-> > > > >  net/ceph/osd_client.c           | 18 ++++++++++++------
-> > > > >  6 files changed, 31 insertions(+), 7 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> > > > > index 11929d2bb594..1e6cdf2dfe90 100644
-> > > > > --- a/fs/ceph/file.c
-> > > > > +++ b/fs/ceph/file.c
-> > > > > @@ -1974,6 +1974,10 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > > > >     if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
-> > > > >             return -EOPNOTSUPP;
-> > > > > 
-> > > > > +   /* Do the OSDs support the 'copy-from2' operation? */
-> > > > > +   if (!src_fsc->have_copy_from2)
-> > > > > +           return -EOPNOTSUPP;
-> > > > > +
-> > > > >     /*
-> > > > >      * Striped file layouts require that we copy partial objects, but the
-> > > > >      * OSD copy-from operation only supports full-object copies.  Limit
-> > > > > @@ -2101,8 +2105,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > > > >                     CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
-> > > > >                     &dst_oid, &dst_oloc,
-> > > > >                     CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
-> > > > > -                   CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
-> > > > > +                   CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> > > > > +                   dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
-> > > > > +                   CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > > > >             if (err) {
-> > > > > +                   if (err == -EOPNOTSUPP) {
-> > > > > +                           src_fsc->have_copy_from2 = false;
-> > > > > +                           pr_notice("OSDs don't support 'copy-from2'; "
-> > > > > +                                     "disabling copy_file_range\n");
-> > > > > +                   }
-> > > > >                     dout("ceph_osdc_copy_from returned %d\n", err);
-> > > > >                     if (!ret)
-> > > > >                             ret = err;
-> > > > 
-> > > > The patch itself looks fine to me. I'll not merge yet, since you sent it
-> > > > as an RFC, but I don't have any objection to it at first glance.
-> > > 
-> > > I was going to drop the RFC, but then at the last minute decided to leave.
-> > > 
-> > > >                                                                    The
-> > > > only other comment I'd make is that you should probably split this into
-> > > > two patches -- one for the libceph changes and one for cephfs.
-> > > 
-> > > Hmm... TBH I didn't thought about that, but since the libceph patch would
-> > > be changing its API (ceph_osdc_copy_from would have 2 extra parameters), I
-> > > don't think that's a good idea.  Bisection would be broken between these 2
-> > > patches.
-> > 
-> 
-> In that case, I'll just go ahead and do some testing with this patch and
-> will plan to merge it as-is, assuming that goes ok.
+Hi,
 
-Awesome, thanks!
+I'm working with a ROC-RK3399-PC arm64 board from firefly, circuit sheet [1].
+The board is powered from an USB-C type connector via an FUSB302 PD controller.
+With measured 15W+ power consumption it should use higher voltage PD modes than
+the standard 5V USB-C mode.
 
-Cheers,
---
-Luís
+When I add the related connector node in DTS [2] the FUSB302 initializes
+the right PD mode (e.g. 15V/3A).
+
+But during initialisation the PD is switched off shortly and the board has a blackout.
+When I inject a backup supply voltage behind the FUSB302 (e.g. at SYS_12V line) during boot
+I can remove the backup after succesfull setting up the PD and the board will run fine.
+
+Is it possible to change the behaviour of the fusb302 driver to not power down the PD supply
+during init?
+
+In vendor kernel (4.4) this is done somehow but the sources are too different for me to find
+out how.
+
+GruÃŸ,
+-- 
+Markus Reichl
+
+[1]
+http://download.t-firefly.com/product/RK3399/Docs/Hardware/%E5%8E%9F%E7%90%86%E5%9B%BE%E5%92%8C%E8%B4%B4%E7%89%87%E5%9B%BE/ROC-RK3399-PC/ROC-3399-PC-V10-A-20180804_%E5%8E%9F%E7%90%86%E5%9B%BE.pdf
+
+[2]
+https://lkml.org/lkml/2019/12/10/517
