@@ -2,126 +2,210 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EB2C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EDEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4AA2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2A42067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="pbcP2qUh"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sbIXe/5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbgAIMyS (ORCPT
+        id S1729065AbgAIM43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:54:18 -0500
-Received: from mail-co1nam11on2042.outbound.protection.outlook.com ([40.107.220.42]:21793
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729398AbgAIMyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:54:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FOIKHl0fxExfvqtwwAt8OGlLuLGja/LQgDWzuEP026Brc/iph0FRUmlV5rVg/FwX/IszhXXxinKbTW3xKrNWWwwbibpVNiDsGAoF6hhXMGjrMHQAbirhe3K0/3dZddE1xVOZDDf/tLGKoW83zbI+G/uQ0cFVaozr9VOh/J1v1JfxVpU3ajValogPsrefRZ+b5b5Bz5KBbgYj8LiJowrjHIsVu+7LNmAhMcNkwMiEkyEUx6SCdOI3z+KpqnTsxV4mWd7RYwGb6zLgrIVHfz2MudD5TQP7vpUYUgV8pb9A4LV/4k+hLKAe5PPk7uxZA4pJAgoVE+TtX+hS6R7hN8JmvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sg97gArTgOc7dUrMMIfy6m1FxUr73enY54GrLZ9SeYw=;
- b=I9FURVoO+UQF44EXXDyWMbTXHn0W1GZKTBtzxwIt9ujPpgAt3nt+FCrLoQmax+RfYKSMguE7zFaIHf19HkPRF0WSlaJfLgfeyV2y+5sr5ewKO/O3WrSppAgty5ucB+L/mEBJrPPXxB4mGf8QOMZQSQc84a3uxbR5QG1i3oHuPRyr1qhjrN2psZn99r7FlN3QVMmU0qsZDf8/z/aThvw5OfbebjHZQGXBzj5HKXyWQ3PmJwWJHFDonRggINmGrlI40FvleA974yyZwZZXDSnXCQea0qlruHSISUdngb246pbS+MKywRMZiKhhJu7yf/gVuOujLTpdKxPQtvIgs9IUFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sg97gArTgOc7dUrMMIfy6m1FxUr73enY54GrLZ9SeYw=;
- b=pbcP2qUhyDBE9x35Uroa0kud8XPnDJyNQlav/eUDWIJ0is5H0vzpVNj3bbr1fgO82e4WsTQKf453emk7Igwtyid41V9qas/yQP2vUygbRhTvga+6A2awMirBQyoZk5veYwkynjsAM0QjWu/N2ZhrACPN3BTStBgHf7gP6rXCb68=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
- CY4PR12MB1783.namprd12.prod.outlook.com (10.175.62.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.13; Thu, 9 Jan 2020 12:54:10 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::9be:baba:170f:3e2]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::9be:baba:170f:3e2%3]) with mapi id 15.20.2602.018; Thu, 9 Jan 2020
- 12:54:10 +0000
-From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
-To:     Jens Wiklander <jens.wiklander@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Gary R Hook <gary.hook@amd.com>, tee-dev@lists.linaro.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5/5] tee: amdtee: remove redundant NULL check for pool
-Date:   Thu,  9 Jan 2020 18:23:22 +0530
-Message-Id: <abf8683e312983a0bc8b0405677fd43f27f6104b.1578572591.git.Rijo-john.Thomas@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1578572591.git.Rijo-john.Thomas@amd.com>
-References: <cover.1578572591.git.Rijo-john.Thomas@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR01CA0119.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:35::13) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
+        Thu, 9 Jan 2020 07:56:29 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53764 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727701AbgAIM43 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 07:56:29 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009Cr4dT031277;
+        Thu, 9 Jan 2020 13:56:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=2y1+dv3nA3YET9zOXNr+lo/MYiTPIWq79tj8sKOA3F8=;
+ b=sbIXe/5jUi27CnIYRMXm6JcfW3/WQkj8DcllHwy+LR+c3b8zV3LVq3LiYZrVJyMPFCj3
+ DUhW51atwpcQmQWIaS+64nhhztJehmjuMFsZVDmQKKabEhVq2yVh7N3RU+9G6zLhMwZu
+ rv4fUOrpzUSr56B6r4tNuUg5xlttT2mxC38v827WTNAnM8nfVDZRO24jdAB4A61OpPTZ
+ RVCd7WhUzPtTlbttM1PbyAD2/KP8xZkfZDkFJKEUj41MzsWi+oKNHcUdaCViYCtFpher
+ YHp2ojOTg+176+I/GtlRckbcTBNKG7M+Z83EFG6Uqfv/O+N7fDlDsNg8vdSujmCuexo+ Fw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2xdw8b2dya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 13:56:16 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DB47A10002A;
+        Thu,  9 Jan 2020 13:56:15 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CA77F2B3836;
+        Thu,  9 Jan 2020 13:56:15 +0100 (CET)
+Received: from [10.48.0.71] (10.75.127.44) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jan
+ 2020 13:56:15 +0100
+Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <jic23@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Olivier MOYSAN <olivier.moysan@st.com>
+References: <20200107114532.6697-1-peter.ujfalusi@ti.com>
+ <eade6657-8470-0d70-b3c1-fcdddf891c6c@st.com>
+ <4c0b7e3e-cd98-860a-e931-c216f1bc6e7a@ti.com>
+ <698d9dec-4486-f70a-b8e0-dfd6b4bb907f@st.com>
+ <45195b31-70fa-39c9-e109-eeb33d6a2663@ti.com>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <5328b668-2522-5d8d-83bb-f99bfe3086ed@st.com>
+Date:   Thu, 9 Jan 2020 13:56:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Received: from andbang5.amd.com (165.204.156.251) by MA1PR01CA0119.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10 via Frontend Transport; Thu, 9 Jan 2020 12:54:07 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6d3b74ab-24ae-43d0-20cd-08d795030518
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1783:|CY4PR12MB1783:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB17832379BB36147EAA0AEE61CF390@CY4PR12MB1783.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 02778BF158
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(136003)(39860400002)(376002)(199004)(189003)(478600001)(86362001)(7696005)(4326008)(52116002)(956004)(2616005)(8936002)(2906002)(81166006)(81156014)(8676002)(6486002)(16526019)(66946007)(66556008)(316002)(36756003)(54906003)(110136005)(186003)(4744005)(26005)(6666004)(5660300002)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1783;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ovc31xGf0wn77h2Gsn6VDLgSB7N1Dm2qqsRqq02E5CnWctVRjMERAgrzkj1Iy7RCjGEu8Fx6au1GPYnTO+sub36npAs2itfHMHlf8YiD4+vGI34xncEIRjJneDocsDca/5azKynnnPCACPtGMmi9YW/TjyzCRfMHOkWHJzkA4j6yf5SOycQb8I0YdtwibxTYXj9I+NgDbFiJoXVDSVxKJlCCMG36N+vAAwThvyaTeE4ZJD3HYhvCb+odAvBzeFHoiA+rHKlOSiKSz5zymbjMCYqjfEecAVsjyjhyXqBQsaknQWwJbewlw9RCNpWk93DgfjCEUyhtIV8hQ548vm1UVtlVi/E744a7jf3wtEqIJmNbaUfUI0iXjC83/LWoFnSayUsPq3PnyWLeAxMu/AGh7qcetdLVb37xxKLCr+ks+/jNUzlkjtDMjCYaH8Ic/4ag
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d3b74ab-24ae-43d0-20cd-08d795030518
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2020 12:54:10.3030
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ibViy1iNZ8ER1JhucIiEXqNdSxCt6nFqDQbehc2f+2igR8rcF8Bq8LX/hhthUaRC5eKj7I3VEVIAesmmaIhAAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1783
+In-Reply-To: <45195b31-70fa-39c9-e109-eeb33d6a2663@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_02:2020-01-09,2020-01-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove NULL check for pool variable, since in the current
-code path it is guaranteed to be non-NULL.
+On 1/9/20 12:40 PM, Peter Ujfalusi wrote:
+> 
+> 
+> On 09/01/2020 13.29, Fabrice Gasnier wrote:
+>> On 1/9/20 11:32 AM, Peter Ujfalusi wrote:
+>>>
+>>>
+>>> On 09/01/2020 11.13, Fabrice Gasnier wrote:
+>>>> On 1/7/20 12:45 PM, Peter Ujfalusi wrote:
+>>>>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>>>>> eating up the error code.
+>>>>>
+>>>>> By using dma_request_chan() directly the driver can support deferred
+>>>>> probing against DMA.
+>>>>>
+>>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>>>> ---
+>>>>> Hi,
+>>>>>
+>>>>> Changes since v1:
+>>>>> - Fall back to IRQ mode for ADC only in case of ENODEV
+>>>>
+>>>> Hi Peter,
+>>>>
+>>>> Thanks for the patch,
+>>>>
+>>>> Please find a minor comment here after. Apart from that, you can add my:
+>>>>
+>>>> Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>>
+>>>>
+>>>>>
+>>>>> Regards,
+>>>>> Peter
+>>>>>
+>>>>>  drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++++++++----
+>>>>>  1 file changed, 17 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+>>>>> index e493242c266e..74a2211bdff4 100644
+>>>>> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+>>>>> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+>>>>> @@ -1383,9 +1383,13 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
+>>>>>  {
+>>>>>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+>>>>>  
+>>>>> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+>>>>> -	if (!adc->dma_chan)
+>>>>> -		return -EINVAL;
+>>>>> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
+>>>>> +	if (IS_ERR(adc->dma_chan)) {
+>>>>> +		int ret = PTR_ERR(adc->dma_chan);
+>>>>> +
+>>>>> +		adc->dma_chan = NULL;
+>>>>> +		return ret;
+>>>>
+>>>> You may "return PTR_ERR(adc->dma_chan);" directly here.
+>>>
+>>> I don't make decision here on behalf of the adc path on to go forward w/
+>>> or w/o DMA support and if we go ahead the stm32_dfsdm_dma_release()
+>>> needs the dma_chan to be NULL in case we don't use DMA.
+>>>
+>>> It is much cleaner to set dma_chan to NULL here than doing it in other
+>>> paths.
+>>
+>> Hi Peter,
+> 
+> Hi Fabrice,
+> 
+>> Sorry I wasn't clear enough. I agree with you. I was suggesting only,
+>> talking about the 'ret' variable. It may be removed to spare a few lines
+>> :-).
+>> 	if (IS_ERR(adc->dma_chan)) {
+>> 		adc->dma_chan = NULL;
+>> 		return PTR_ERR(adc->dma_chan);
+>> 	}
+>> I'm okay both ways.
+> 
+> PTR_ERR(NULL); will return 0
+> I need to retrieve the actual error code before NULLing dma_chan.
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
----
- drivers/tee/amdtee/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Oh yes, so please forget this.
+Thanks,
+Fabrice
 
-diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
-index 45402844b669..be8937eb5d43 100644
---- a/drivers/tee/amdtee/core.c
-+++ b/drivers/tee/amdtee/core.c
-@@ -484,8 +484,7 @@ static int __init amdtee_driver_init(void)
- 	tee_device_unregister(amdtee->teedev);
- 
- err_free_pool:
--	if (pool)
--		tee_shm_pool_free(pool);
-+	tee_shm_pool_free(pool);
- 
- err_kfree_amdtee:
- 	kfree(amdtee);
--- 
-2.17.1
-
+> 
+>>
+>>>
+>>>>
+>>>> Best Regards,
+>>>> Fabrice
+>>>>
+>>>>> +	}
+>>>>>  
+>>>>>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
+>>>>>  					 DFSDM_DMA_BUFFER_SIZE,
+>>>>> @@ -1509,7 +1513,16 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
+>>>>>  	init_completion(&adc->completion);
+>>>>>  
+>>>>>  	/* Optionally request DMA */
+>>>>> -	if (stm32_dfsdm_dma_request(indio_dev)) {
+>>>>> +	ret = stm32_dfsdm_dma_request(indio_dev);
+>>>>> +	if (ret) {
+>>>>> +		if (ret != -ENODEV) {
+>>>>> +			if (ret != -EPROBE_DEFER)
+>>>>> +				dev_err(&indio_dev->dev,
+>>>>> +					"DMA channel request failed with %d\n",
+>>>>> +					ret);
+>>>>> +			return ret;
+>>>>> +		}
+>>>>> +
+>>>>>  		dev_dbg(&indio_dev->dev, "No DMA support\n");
+>>>>>  		return 0;
+>>>>>  	}
+>>>>>
+>>>
+>>> - Péter
+>>>
+>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>>
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
