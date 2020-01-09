@@ -2,91 +2,157 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF688C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7C4C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5942077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728BD20705
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ljvBMHd1"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qnsrqhVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgAIC2K (ORCPT
+        id S1727946AbgAICmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 21:28:10 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:17409 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726758AbgAIC2K (ORCPT
+        Wed, 8 Jan 2020 21:42:22 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:54332 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgAICmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 21:28:10 -0500
-X-UUID: 8efac21a52b6424690e94ac0a754df04-20200109
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=838Cc8+KqcxYDVnAL0XU6OJBKM3nfNiVLnoFblbQyZw=;
-        b=ljvBMHd1pKAcKBG1lWVx336Jjl2GJ+HSNn4bHAqZjzvEAtBA8fS687I9MTAn/dOT3eo5UttZinpAJXlWMHKeiEGLmf8JNvTt8bO5FYb6UX/MFiyEsx5vLgswg2xwG7s6J+DxVvqY/6dk5NfiQ2dZ4EtHa6iSOenNMAp19GJ2/Wk=;
-X-UUID: 8efac21a52b6424690e94ac0a754df04-20200109
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1912375700; Thu, 09 Jan 2020 10:27:57 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 9 Jan
- 2020 10:24:17 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 9 Jan 2020 10:28:13 +0800
-Message-ID: <1578536872.21256.25.camel@mhfsdcap03>
-Subject: Re: [PATCH] usb: common: usb-conn-gpio: Register charger
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <od@zcrc.me>,
-        <linux-usb@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Thu, 9 Jan 2020 10:27:52 +0800
-In-Reply-To: <1578504370.3.1@crapouillou.net>
-References: <20200107002901.940297-1-paul@crapouillou.net>
-         <20200108165323.GA2506374@kroah.com> <1578504370.3.1@crapouillou.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 40D221BFADE0B52CB83D97C4692C5266B11D679C287C449086D5AC23C5A64CFC2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 8 Jan 2020 21:42:21 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B3D0F2007684;
+        Wed,  8 Jan 2020 18:42:20 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B3D0F2007684
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1578537740;
+        bh=F5TjjjS3v9FQPMljQzjSkJQFnDWafj44gaYLenssX4c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qnsrqhVjZx0cM7BnGKN6imEO/1RXY8f+A//4cKMw9BNX9HlGw7UAbd0Ll6KGkhjol
+         nwQE++Eaz6+qkfqS7q+/DzVqqx+stDlDRQpq77GQi3Ty4hZaQ7Upz9pqp3ELfOJHY7
+         UYzF3RB8AY58dTl7UeBTETAPxty6iTog2ZLF922I=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     =zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     dhowells@redhat.com, arnd@arndb.de, matthewgarrett@google.com,
+        sashal@kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Subject: [PATCH v8 0/3] IMA: Deferred measurement of keys
+Date:   Wed,  8 Jan 2020 18:42:13 -0800
+Message-Id: <20200109024216.3350-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUGF1bCwNCg0KT24gV2VkLCAyMDIwLTAxLTA4IGF0IDE0OjI2IC0wMzAwLCBQYXVsIENlcmN1
-ZWlsIHdyb3RlOg0KPiBIaSBHcmVnLA0KPiANCj4gDQo+IExlIG1lci4sIGphbnYuIDgsIDIwMjAg
-YXQgMTc6NTMsIEdyZWcgS3JvYWgtSGFydG1hbiANCj4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24u
-b3JnPiBhIMOpY3JpdCA6DQo+ID4gT24gVHVlLCBKYW4gMDcsIDIwMjAgYXQgMDE6Mjk6MDFBTSAr
-MDEwMCwgUGF1bCBDZXJjdWVpbCB3cm90ZToNCj4gPj4gIFJlZ2lzdGVyIGEgcG93ZXIgc3VwcGx5
-IGNoYXJnZXIsIHdob3NlIG9ubGluZSBzdGF0ZSBkZXBlbmRzIG9uIA0KPiA+PiB3aGV0aGVyDQo+
-ID4+ICB0aGUgVVNCIHJvbGUgaXMgc2V0IHRvIGRldmljZSBvciBub3QuDQo+ID4gDQo+ID4gVGhh
-dCBzYXlzIF93aGF0XyB5b3UgYXJlIGRvaW5nLCBidXQgSSBoYXZlIG5vIGlkZWEgX3doeV8geW91
-IHdhbnQgdG8gDQo+ID4gZG8NCj4gPiB0aGlzLg0KPiA+IA0KPiA+IFdoYXQgaXMgdGhpcyBnb2lu
-ZyB0byBjYXVzZSB0byBoYXZlIGhhcHBlbj8gIFdoYXQgbmV3IHVzZXJzcGFjZSBhcGkgaXMNCj4g
-PiBnb2luZyB0byByZXN1bHQ/ICBXaGF0IHdpbGwgYSB1c2VyIGRvIHdpdGggdGhpcz8NCj4gDQo+
-IFRoaXMgaXMgdXNlZnVsIHdoZW4gdGhlIFVTQiByb2xlIGlzIHRoZSBvbmx5IHdheSB0byBrbm93
-IGlmIHRoZSBkZXZpY2UgDQo+IGlzIGNoYXJnaW5nIGZyb20gVVNCLg0KVGhlcmUgaXMgbm8gY2hh
-cmdlciBJQyBvbiB5b3VyIHBsYXRmb3JtPw0KDQo+IA0KPiBUaGUgQVBJIGlzIHRoZSBzdGFuZGFy
-ZCBwb3dlciBzdXBwbHkgY2hhcmdlciBBUEksIHlvdSBnZXQgYSANCj4gL3N5cy9jbGFzcy9wb3dl
-cl9zdXBwbHkveHh4L29ubGluZSBub2RlIHdoaWNoIHRlbGxzIHlvdSB0aGUgc3RhdGUgb2YgDQo+
-IHRoZSBjaGFyZ2VyLg0KPiANCj4gVGhlIHNvbGUgcHVycG9zZSBvZiB0aGlzIGlzIHRvIGdpdmUg
-dXNlcnNwYWNlIGFwcGxpY2F0aW9ucyBhIHdheSB0byANCj4ga25vdyB3aGV0aGVyIG9yIG5vdCB0
-aGUgY2hhcmdlciBpcyBwbHVnZ2VkLg0KPiANCj4gPiBJcyB0aGlzIGdvaW5nIHRvIGFsd2F5cyBz
-aG93IHVwLCBubyBtYXR0ZXIgaWYgdGhlIHJvbGUgaXMgbm90IGV2ZW4NCj4gPiByZWxldmFudCBm
-b3IgYSBwb3dlciBzdXBwbHk/DQo+IA0KPiBJIGd1ZXNzIGl0J2QgYWx3YXlzIHNob3cgdXAsIHll
-cy4gSW4gd2hpY2ggY2FzZSB3b3VsZCB0aGUgcm9sZSBub3QgYmUgDQo+IHJlbGV2YW50IGZvciBh
-IHBvd2VyIHN1cHBseT8gDQpEbyB5b3UgYWxzbyBuZWVkIGl0IGlmIHRoZSBwbGF0Zm9ybSBkb24n
-dCBoYXZlIGJhdHRlcnk/DQoNCg0KPiBJcyBncGlvLWItY29ubmVjdG9yIG5vdCBhbHdheXMgdXNl
-ZCBmb3IgDQo+IE9URyBjb25uZWN0b3JzPw0KSXQgYWxzbyBzdXBwb3J0cyBkZXZpY2Ugb25seSBt
-b2RlLCB1c3VhbGx5IHVzZXMgdkJ1cyBwaW4gdG8NCmVuYWJsZS9kaXNhYmxlIGNvbnRyb2xsZXIN
-Cg0KPiANCj4gQ2hlZXJzLA0KPiAtUGF1bA0KPiANCj4gDQo+ID4gWW91IG5lZWQgYSBsb3QgbW9y
-ZSB0ZXh0IGhlcmUgdG8gbWFrZSB0aGlzIG1lcmdhYmxlLg0KPiA+IA0KPiA+IHRoYW5rcywNCj4g
-PiANCj4gPiBncmVnIGstaA0KPiANCj4gDQoNCg==
+The IMA subsystem supports measuring asymmetric keys when the key is
+created or updated[1]. But keys created or updated before a custom
+IMA policy is loaded are currently not measured. This includes keys
+added, for instance, to either the .ima or .builtin_trusted_keys keyrings,
+which happens early in the boot process.
+
+Measuring the early boot keys, by design, requires loading
+a custom IMA policy. This change adds support for queuing keys
+created or updated before a custom IMA policy is loaded.
+The queued keys are processed when a custom policy is loaded.
+Keys created or updated after a custom policy is loaded are measured
+immediately (not queued). In the case when a custom policy is not loaded
+within 5 minutes of IMA initialization, the queued keys are freed.
+
+[1] https://lore.kernel.org/linux-integrity/20191211164707.4698-1-nramas@linux.microsoft.com/
+
+Testing performed:
+
+  * Ran kernel self-test following the instructions given in
+    https://www.kernel.org/doc/Documentation/kselftest.txt
+  * Ran the lkp-tests using the job script provided by
+    kernel test robot <rong.a.chen@intel.com>
+  * Booted the kernel with this change.
+  * Added .builtin_trusted_keys in "keyrings=" option in
+    the IMA policy and verified the keys added to this
+    keyring are measured.
+  * Specified only func=KEY_CHECK and not "keyrings=" option,
+    and verified the keys added to builtin_trusted_keys keyring
+    are processed.
+  * Added keys at runtime and verified they are measured
+    if the IMA policy permitted.
+      => For example, added keys to .ima keyring and verified.
+
+Changelog:
+
+  v8
+
+  => Rebased the changes to linux-next
+  => Need to apply the following patch first
+  https://lore.kernel.org/linux-integrity/20200108160508.5938-1-nramas@linux.microsoft.com/
+
+  v7
+
+  => Updated cover letter per Mimi's suggestions.
+  => Updated "Reported-by" tag to be specific about
+     the issues fixed in the patch.
+
+  v6
+
+  => Replaced mutex with a spinlock to sychronize access to
+     queued keys. This fixes the problem reported by
+     "kernel test robot <rong.a.chen@intel.com>"
+     https://lore.kernel.org/linux-integrity/2a831fe9-30e5-63b4-af10-a69f327f7fb7@linux.microsoft.com/T/#t
+  => Changed ima_queue_key() to a static function. This fixes
+     the issue reported by "kbuild test robot <lkp@intel.com>"
+     https://lore.kernel.org/linux-integrity/1577370464.4487.10.camel@linux.ibm.com/
+  => Added the patch to free the queued keys if a custom IMA policy
+     was not loaded to this patch set.
+
+  v5
+
+  => Removed temp keys list in ima_process_queued_keys()
+
+  v4
+
+  => Check and set ima_process_keys flag with mutex held.
+
+  v3
+
+  => Defined ima_process_keys flag to be static.
+  => Set ima_process_keys with ima_keys_mutex held.
+  => Added a comment in ima_process_queued_keys() function
+     to state the use of temporary list for keys.
+
+  v2
+
+  => Rebased the changes to v5.5-rc1
+  => Updated function names, variable names, and code comments
+     to be less verbose.
+
+  v1
+
+  => Code cleanup
+
+  v0
+
+  => Based changes on v5.4-rc8
+  => The following patchsets should be applied in that order
+     https://lore.kernel.org/linux-integrity/1572492694-6520-1-git-send-email-zohar@linux.ibm.com
+     https://lore.kernel.org/linux-integrity/20191204224131.3384-1-nramas@linux.microsoft.com/
+  => Added functions to queue and dequeue keys, and process
+     the queued keys when custom IMA policies are applied.
+
+Lakshmi Ramasubramanian (3):
+  IMA: Define workqueue for early boot key measurements
+  IMA: Call workqueue functions to measure queued keys
+  IMA: Defined timer to free queued keys
+
+ security/integrity/ima/ima.h                 |  17 ++
+ security/integrity/ima/ima_asymmetric_keys.c | 159 +++++++++++++++++++
+ security/integrity/ima/ima_init.c            |   8 +-
+ security/integrity/ima/ima_policy.c          |   3 +
+ 4 files changed, 186 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
 
