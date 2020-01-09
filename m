@@ -2,73 +2,72 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDC4C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03333C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532282080D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:32:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578555177;
-	bh=wcVi1/6fyTeRg/lzzRwOSNC1NG1kV7B6YyRNZoDe0nc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KG6fgHM59gASAqhVkFAZVBVonEc7Z+iPWBE2SKddYl17IrexPVi2wEq2C75cUSL4x
-	 RxrDbbUZR7Nv/d0ItBXFcLni56z4hjk2LUJKQIep+Z/K3bsVSB91CERYLM1mRaq3hY
-	 s+c1woSwRRydvcttWuf6mzxtoaeYFo/0LrXFxmds=
+	by mail.kernel.org (Postfix) with ESMTP id CC59D20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgAIHc4 (ORCPT
+        id S1728287AbgAIHdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:32:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728164AbgAIHc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:32:56 -0500
-Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C19520673;
-        Thu,  9 Jan 2020 07:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578555175;
-        bh=wcVi1/6fyTeRg/lzzRwOSNC1NG1kV7B6YyRNZoDe0nc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bzrZ4RRo+QNNAffwj8P7j2UYtUrUMs9uJ2x4R4MGnGXaAmcEZW2fl26C27PZ8naAl
-         YgsRYdF6GrlkGo+i0tKv+KtJEy91ym/SBqDBqwXz/1gaDYDJv84Nl/8/JPERl0JCpu
-         1vNs2lNWjYG8oY6fOcd7nsKXnq6GOSdLCmbRSA+k=
-Date:   Thu, 9 Jan 2020 15:32:46 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Kuldeep Singh <kuldeep.singh@nxp.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: ls208xa: Update qspi node properties for
- LS2088ARDB
-Message-ID: <20200109073244.GC4456@T480>
-References: <1576867954-17756-1-git-send-email-kuldeep.singh@nxp.com>
+        Thu, 9 Jan 2020 02:33:10 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42335 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbgAIHdK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 02:33:10 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ipSJX-0001FH-C0; Thu, 09 Jan 2020 08:33:07 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ipSJV-00065H-KM; Thu, 09 Jan 2020 08:33:05 +0100
+Date:   Thu, 9 Jan 2020 08:33:05 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Richard Genoud <richard.genoud@gmail.com>
+Cc:     Codrin.Ciubotariu@microchip.com, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, jslaby@suse.com
+Subject: Re: [PATCH] tty/serial: atmel: RS485 & ISO7816: wait for TXRDY
+ before sending data
+Message-ID: <20200109073305.yn5y6sgomjniwwj6@pengutronix.de>
+References: <20200107111656.26308-1-codrin.ciubotariu@microchip.com>
+ <b11e47c3-8b94-7915-ae5a-d9e8f5b02047@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1576867954-17756-1-git-send-email-kuldeep.singh@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b11e47c3-8b94-7915-ae5a-d9e8f5b02047@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 12:22:34AM +0530, Kuldeep Singh wrote:
-> LS2088ADB has one spansion flash s25fs512s of size 64M.
-> 
-> Add qspi dts entry for the board using compatibles as "jedec,spi-nor" to
-> probe flash successfully. Also, align properties with other board dts
-> properties.
-> 
-> Use dt-bindings constants in interrupts instead of using numbers.
-> 
-> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+Hello,
 
-Applied, thanks.
+On Wed, Jan 08, 2020 at 02:45:05PM +0100, Richard Genoud wrote:
+> NB: MS exchange has added some =3D and =20 here and there, but git am
+> doesn't seems to be bothered by them.
+
+Unless I missed something I cannot confirm. In mutt I don't see any =3D
+or =20.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
