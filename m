@@ -2,244 +2,125 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501F1C33CA3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5D8C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B22220705
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:18:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VORrxRgU"
+	by mail.kernel.org (Postfix) with ESMTP id 28BC620705
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgAIDSF (ORCPT
+        id S1727968AbgAIDSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 22:18:05 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39373 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgAIDSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 22:18:03 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a67so4676979oib.6;
-        Wed, 08 Jan 2020 19:18:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kMxWLP5AvH5IYgX1VCW6zdr/ftmh1hngWdvNnRgFFEo=;
-        b=VORrxRgUgexswE69vnqeV3cEteMR/wL4/MP/ugnNqwzaG8qb0/EYuGXD9dfy0ok58Q
-         szjzntt3xTayYNs2JivFfdo1bGiD74e1tJLw9EGPHRkbsSZR0KdeuuH/vFN/I99iQhoE
-         /AHdT3JZxfO1ktbSFwNfB9V6h1qxLc+m3tnho1LY6k+uCwcez4GWD/ZSHpsf59YPlkJa
-         rkI/I/WW+Ynurv98B8yetNiECHrpsuRp3kBTccow53UrxzD8M6bGnk9zsxGXMup8T7Ei
-         ZQm3qizDkrUC2Seuc4o51Iw0ObBc386cTUfRqgNg4xNbw7Ywr4r/Ca378xm/5D2bQRBR
-         SNeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kMxWLP5AvH5IYgX1VCW6zdr/ftmh1hngWdvNnRgFFEo=;
-        b=EW2nWBFcgEklz08gt9XiQOi1eoL77zNlVjp/mWqXh8ZKC6h0Yhge49WvIiL+WcZO5n
-         al1vJguCBpDg5APX86tZSJaeaZuyYaRXSfVvO6MQtBWLCM9PlNcwpNC9ttecVH8jmzc5
-         4Wuso+eo0z8p40dUc2vRJsPIty7fh8qak5NQPPwKnbZNx7meQl/k/giDCDMzlZG+YGmU
-         NIiWlizsz4lb0MT4p5v9rUw1mB4ktVug6KVxOt+bOAy33kU2Ba8eqPEpuR6+VCYTBmVj
-         SktIPS9AJSYZekhpG2VzjpHuqHl/vSiS6MTxAMDTV85q4OoCRFYM7gvzGws8sX//wvA+
-         hubg==
-X-Gm-Message-State: APjAAAXTOLx5x9z+T4GDG5hTgnU8pfCfFRz7NGGOey6xZOXBa1uC/GxB
-        O37+YxjSzz9P4HowiNlfC7OtiP7vhucMZWdudSCqSTua
-X-Google-Smtp-Source: APXvYqwdVp2OHdNEgJxcl5S2pNXZoxvcSAVzYDvDyacbeid2izqY0SHOzen+JhS83JzgsuXoF9HZSqLjnIC+rselkPY=
-X-Received: by 2002:aca:c3c4:: with SMTP id t187mr1533945oif.89.1578539883135;
- Wed, 08 Jan 2020 19:18:03 -0800 (PST)
+        Wed, 8 Jan 2020 22:18:23 -0500
+Received: from mga12.intel.com ([192.55.52.136]:33749 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727549AbgAIDSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 22:18:23 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 19:18:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
+   d="scan'208";a="421652315"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jan 2020 19:18:20 -0800
+Date:   Thu, 9 Jan 2020 11:18:21 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        yang.shi@linux.alibaba.com
+Subject: Re: [RFC PATCH] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200109031821.GA5206@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200103143407.1089-1-richardw.yang@linux.intel.com>
+ <20200106102345.GE12699@dhcp22.suse.cz>
+ <20200107012241.GA15341@richard>
+ <20200107083808.GC32178@dhcp22.suse.cz>
+ <20200108003543.GA13943@richard>
+ <20200108094041.GQ32178@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <CAHhAz+ijBTp55gZYAejWthnvdmR_qyQJpVV4r1gyQ-Kud6t9qg@mail.gmail.com>
- <20200108201511.GA195980@google.com>
-In-Reply-To: <20200108201511.GA195980@google.com>
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Thu, 9 Jan 2020 08:47:51 +0530
-Message-ID: <CAHhAz+iy9b8Cyc6O=tjzjjixUQqKpTchrQWc+Y4JicAxB_HY5A@mail.gmail.com>
-Subject: Re: pcie: xilinx: kernel hang - ISR readl()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108094041.GQ32178@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Wed, Jan 08, 2020 at 10:40:41AM +0100, Michal Hocko wrote:
+>On Wed 08-01-20 08:35:43, Wei Yang wrote:
+>> On Tue, Jan 07, 2020 at 09:38:08AM +0100, Michal Hocko wrote:
+>> >On Tue 07-01-20 09:22:41, Wei Yang wrote:
+>> >> On Mon, Jan 06, 2020 at 11:23:45AM +0100, Michal Hocko wrote:
+>> >> >On Fri 03-01-20 22:34:07, Wei Yang wrote:
+>> >> >> As all the other places, we grab the lock before manipulate the defer list.
+>> >> >> Current implementation may face a race condition.
+>> >> >
+>> >> >Please always make sure to describe the effect of the change. Why a racy
+>> >> >list_empty check matters?
+>> >> >
+>> >> 
+>> >> Hmm... access the list without proper lock leads to many bad behaviors.
+>> >
+>> >My point is that the changelog should describe that bad behavior.
+>> >
+>> >> For example, if we grab the lock after checking list_empty, the page may
+>> >> already be removed from list in split_huge_page_list. And then list_del_init
+>> >> would trigger bug.
+>> >
+>> >And how does list_empty check under the lock guarantee that the page is
+>> >on the deferred list?
+>> 
+>> Just one confusion, is this kind of description basic concept of concurrent
+>> programming? How detail level we need to describe the effect?
 >
-> On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
-> > Hi,
-> >
-> > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
-> > parallel I/O and interfaces them to the Host CPU via PCI Express bus.
-> > I see that my system freezes without capturing the crash dump for
-> > certain tests. I debugged this issue and it was tracked down to the
-> > below mentioned interrupt handler code.
-> >
-> >
-> > In ISR, first reads the Interrupt Status register using =E2=80=98readl(=
-)=E2=80=99 as
-> > given below.
-> >     status =3D readl(ctrl->reg + INT_STATUS);
-> >
-> >
-> > And then clears the pending interrupts using =E2=80=98writel()=E2=80=99=
- as given blow.
-> >         writel(status, ctrl->reg + INT_STATUS);
-> >
-> >
-> > I've noticed a kernel hang if INT_STATUS register read again after
-> > clearing the pending interrupts.
-> >
-> > Can someone clarify me why the kernel hangs without crash dump incase
-> > if I read the INT_STATUS register using readl() after clearing the
-> > pending bits?
-> >
-> > Can readl() block?
+>When I write changelogs for patches like this I usually describe, what
+>is the potential race - e.g.
+>	CPU1			CPU2
+>	path1			path2
+>	  check			  lock
+>	  			    operation2
+>				  unlock
+>	    lock
+>	    # check might not hold anymore
+>	    operation1
+>	    unlock
 >
-> readl() should not block in software.  Obviously at the hardware CPU
-> instruction level, the read instruction has to wait for the result of
-> the read.  Since that data is provided by the device, i.e., your FPGA,
-> it's possible there's a problem there.
+>and what is the effect of the race - e.g. a crash, data corruption,
+>pointless attempt for operation1 which fails with user visible effect
+>etc.
 
-Thank you very much for your reply.
-Where can I find the details about what is protocol for reading the
-=E2=80=98memory mapped IO=E2=80=99? Can you point me to any useful links..
-I tried locate the exact point of the kernel code where CPU waits for
-read instruction as given below.
-readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
-Do I need to check for the assembly instructions, here?
-
->
-> Can you tell whether the FPGA has received the Memory Read for
-> INT_STATUS and sent the completion?
-
-Is there a way to know this with the help of software debugging(either
-enabling dynamic debugging or adding new debug prints)? Can you please
-point some tools\hw needed to find this?
+Hi, Michal, here is my attempt for an example. Hope this one looks good to
+you.
 
 
->
-> On the architectures I'm familiar with, if a device doesn't respond,
-> something would eventually time out so the CPU doesn't wait forever.
-
-What is timeout here? I mean how long CPU waits for completion? Since
-this code runs from interrupt context, does it causes the system to
-freeze if timeout is more?
-
-lspci output:
-$ lspci
-00:00.0 Host bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
-Series SoC Transaction Register (rev 11)
-00:02.0 VGA compatible controller: Intel Corporation Atom Processor
-Z36xxx/Z37xxx Series Graphics & Display (rev 11)
-00:13.0 SATA controller: Intel Corporation Atom Processor E3800 Series
-SATA AHCI Controller (rev 11)
-00:14.0 USB controller: Intel Corporation Atom Processor
-Z36xxx/Z37xxx, Celeron N2000 Series USB xHCI (rev 11)
-00:1a.0 Encryption controller: Intel Corporation Atom Processor
-Z36xxx/Z37xxx Series Trusted Execution Engine (rev 11)
-00:1b.0 Audio device: Intel Corporation Atom Processor Z36xxx/Z37xxx
-Series High Definition Audio Controller (rev 11)
-00:1c.0 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-Express Root Port 1 (rev 11)
-00:1c.2 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-Express Root Port 3 (rev 11)
-00:1c.3 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
-Express Root Port 4 (rev 11)
-00:1d.0 USB controller: Intel Corporation Atom Processor Z36xxx/Z37xxx
-Series USB EHCI (rev 11)
-00:1f.0 ISA bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
-Series Power Control Unit (rev 11)
-00:1f.3 SMBus: Intel Corporation Atom Processor E3800 Series SMBus
-Controller (rev 11)
-01:00.0 RAM memory: PLDA Device 5555
-03:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network
-Connection (rev 03)
-
->
-> > Snippet of the ISR code is given blow:
-> >
-> > https://pastebin.com/WdnZJZF5
-> >
-> >
-> >
-> > static irqreturn_t pcie_isr(int irq, void *dev_id)
-> >
-> > {
-> >
-> >         struct test_device *ctrl =3D data;
-> >
-> >         u32 status;
-> >
-> > =E2=80=A6
-> >
-> >
-> >
-> >         status =3D readl(ctrl->reg + INT_STATUS);
-> >
-> >         /*
-> >
-> >          * Check to see if it was our interrupt
-> >
-> >          */
-> >
-> >         if (!(status & 0x000C))
-> >
-> >                 return IRQ_NONE;
-> >
-> >
-> >
-> >         /* Clear the interrupt */
-> >
-> >         writel(status, ctrl->reg + INT_STATUS);
-> >
-> >
-> >
-> >         if (status & 0x0004) {
-> >
-> >                 /*
-> >
-> >                  * Tx interrupt pending.
-> >
-> >                  */
-> >
-> >                  ....
-> >
-> >        }
-> >
-> >
-> >
-> >         if (status & 0x0008) {
-> >
-> >                 /* Rx interrupt Pending */
-> >
-> >                 /* The system freezes if I read again the INT_STATUS
-> > register as given below */
-> >
-> >                 status =3D readl(ctrl->reg + INT_STATUS);
-> >
-> >                 ....
-> >
-> >         }
-> >
-> > ..
-> >
-> >         return IRQ_HANDLED;
-> > }
-> >
-> >
-> >
-> > --
-> > Thanks,
-> > Sekhar
+    For example, the potential race would be:
+    
+        CPU1                      CPU2
+        mem_cgroup_move_account   split_huge_page_to_list
+          !list_empty
+                                    lock
+                                    !list_empty
+                                    list_del
+                                    unlock
+          lock
+          # !list_empty might not hold anymore
+          list_del_init
+          unlock
+    
+    When this sequence happens, the list_del_init() in
+    mem_cgroup_move_account() would crash since the page is already been
+    removed by list_del in split_huge_page_to_list().
 
 
-
---=20
-Thanks,
-Sekhar
+-- 
+Wei Yang
+Help you, Help me
