@@ -2,263 +2,168 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325F2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE35C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1AC62077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984712077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="THXwpFL7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x/5Ut+zw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgAIWnZ (ORCPT
+        id S1728653AbgAIWnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 9 Jan 2020 17:43:25 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:28297 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgAIWnZ (ORCPT
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39422 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgAIWnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 17:43:25 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200109224322epoutp02b48a4de702208ccdc0a18b9646b701f4~oWUB4xs0z2984529845epoutp029
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 22:43:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200109224322epoutp02b48a4de702208ccdc0a18b9646b701f4~oWUB4xs0z2984529845epoutp029
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578609802;
-        bh=gEVerhfmDcrpF2fBfxGX/Y87GU5rY5JiHRqAs9I1nNY=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=THXwpFL7g8pcCJW2vz6rD4d7fRT8DRHu5qDeHCza/TnALQzYACpyuw+fRQ0MjJ5iG
-         D/7JNn0NqOV84OkQI3F2qlu8qHuaOmvQ2E7FvdaftV9tHABe3IVRLR4k2h17AzNkuG
-         +GpXCBsgHFZ71Z3Yus+I42Ka7u5F5LiY/Q/Qbe9E=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200109224322epcas1p3731ce63dd73c57f9223a461b0062bc2a~oWUBSpT330671706717epcas1p3S;
-        Thu,  9 Jan 2020 22:43:22 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.164]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47v1Nn2GDrzMqYkV; Thu,  9 Jan
-        2020 22:43:21 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6C.AA.51241.98CA71E5; Fri, 10 Jan 2020 07:43:21 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200109224320epcas1p282e8caab4abc6b98a4f062bfc43a28c8~oWUAJM1Yt0443104431epcas1p2y;
-        Thu,  9 Jan 2020 22:43:20 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200109224320epsmtrp22060f7ed08d2cd0ae8910af511d2c975~oWUAIgy-i1043510435epsmtrp2i;
-        Thu,  9 Jan 2020 22:43:20 +0000 (GMT)
-X-AuditID: b6c32a39-163ff7000001c829-64-5e17ac89a097
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A6.F4.10238.88CA71E5; Fri, 10 Jan 2020 07:43:20 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200109224320epsmtip20c3f23d0cfb5b80732ff45debfef1118~oWT--DJmS1908619086epsmtip2C;
-        Thu,  9 Jan 2020 22:43:20 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Christoph Hellwig'" <hch@lst.de>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
-        <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>,
-        <pali.rohar@gmail.com>
-In-Reply-To: <20200108170840.GB13388@lst.de>
-Subject: RE: [PATCH v9 01/13] exfat: add in-memory and on-disk structures
- and headers
-Date:   Fri, 10 Jan 2020 07:43:20 +0900
-Message-ID: <001601d5c73e$316b19e0$94414da0$@samsung.com>
+        Thu, 9 Jan 2020 17:43:24 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 20so4619026wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 14:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t/bY2L+lT9cEkRxc3Db1rJxtgV2j+9NNeMib8nWiYgY=;
+        b=x/5Ut+zwliQPZPU0JkolFxzy6+AoWe05Plhn7Z3dukh72Nge04r0u+Bg6eLu7aFAEU
+         oTuK1GG6sMwH2F47qkYNE+ASM8tUaj3PABfjLd2jswr1E2Gdnh7LW02FmlUrjFh26g+J
+         I4FIU/ZZWksEvNmeDwUKXWIDprOuk05IWZirmIFWBDWpkYyM70q/ZxaNtMEphEF3Nidk
+         tbr4yWA5B+T5YoElG7CA1k3B2PGuSpSexbdZVMIlE5h/uNVWhb8aXH3XvzsgSsME92Cd
+         ciTKGlgY1rg9DT/WK/HCiwSGAJeVVD/TLFWcOfhIPzvC+/HHMvXIRtNIProNVvqFZ0lL
+         1DlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=t/bY2L+lT9cEkRxc3Db1rJxtgV2j+9NNeMib8nWiYgY=;
+        b=PHKzME0uuJIOmHhzRrDJP+k53baKwaxlVWntIJLaetmxkycoy2Wx1RqQIjT0d/40Vw
+         Dd2R+W97hqzgc5jZxG5sZNGoYFvTbU/f+gtpXkUmAnAn9sQ618jNipjLiEUxNFVM1jWb
+         kMo3JJeeMYcoMYaf7Gh5/Jn4PpMkWCmGPZbYxKYhWrE4l1POHfsEXsFEq3+o8tZrokyI
+         5ZcMtmLIYaX5DQTiqAn4M5L0j7+aYCytBWQdQhiSSk08T+oCypsNemnUA3m2KrKJVXU4
+         E+pgEgsLqZpPZp9o199K4O/2pOqVxnVHvZsH9uB00lA7rlFDQ8fy46bHWTY0RaKqCFtf
+         EiCg==
+X-Gm-Message-State: APjAAAWQ0ArmWhscJEROTAUFuImNvxRxilSEctMM/SEcT4o0mZgkSgh8
+        F34H3nXfHvxC7Y2w8zrRg465jQ==
+X-Google-Smtp-Source: APXvYqx1ZGuMxmqhMTPuffNDBAesqJDnzDxI5Ny+lKxkSUKU9am1NkfMRibRNBm1B//RMRNl46hKFg==
+X-Received: by 2002:a1c:3c8b:: with SMTP id j133mr261882wma.66.1578609802135;
+        Thu, 09 Jan 2020 14:43:22 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
+        by smtp.googlemail.com with ESMTPSA id j12sm9773419wrt.55.2020.01.09.14.43.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 14:43:21 -0800 (PST)
+Subject: Re: [PATCH 0/2] make generic-adc-thermal less noisy
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        jeff.dagenais@gmail.com, edubezval@gmail.com
+References: <20200107232044.889075-1-martin.blumenstingl@googlemail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <15378eed-d8d1-a37f-7f4c-88c112ecde0b@linaro.org>
+Date:   Thu, 9 Jan 2020 23:43:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwFfDCJbAb+UN2ABfmorMqbFXjag
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRTm3b27u0q3btPawb7WrYxF0805u5ZWkMkifwj9iAKdF71s0r7a
-        3aQPqVVkKmWN+lHTshKiLFiFtbLEUMu+KFL7UNCU9aXkR0WlFdq2a+S/55zznPM8530Picn9
-        RBxZaHPxThtnYYho/GazSqMuu6LI1byeoNgDNX6CvXT5voR93d2FsXcbHuFse30VwXqf/Jaw
-        deMtUrZteARfSxpu+7plhsbTV2SGO50ewlBRV4sM367PNzQFPhPZxFZLmpnnCninkrfl2wsK
-        baZ0ZuMm4zqjPkWjVWtT2RWM0sZZ+XQmIytbnVloCRlilEWcxR1KZXOCwCSuTnPa3S5eabYL
-        rnSGdxRYHFqNI0HgrILbZkrIt1tXajWaJH2ImWcx945vcPxgdlS+PIp70JG55SiKBDoZzvie
-        4eUompTTtxCM9AdlYvAVQWPFKCEGPxA8/PQY+9dyrrV2stCAwFPzXSIG/Qg+nLiJwiyCVsP4
-        n0YijGPpeHg6VhKZi9GPEUzc8EYKUfRyOH+yTRLGMfRm6HneEcnj9BLo7PkYkaPoVPC0+5GI
-        Z8KjU+/wMMboBRAYrJq0pISx9xekolgm1D70yEROLFSWlWBhYaAnCPBWjUrEhgxoGXqORBwD
-        A611MhHHwbehhpAJMoR3w5fGyfmlCD79TBexDjr9V6VhCkarwF+fKKYXwu3fp5EoOx2Gvh+W
-        ilMoKC2Ri5QlUNHWPGlgDpQfGpEdQ4xvymK+KYv5pizg+y92FuG1aDbvEKwmXtA69FM/+zqK
-        HOuy1FvowbOsJkSTiJlGmWMUuXIpVyTstDYhIDEmlrr/ZnaunCrgdu7inXaj023hhSakD727
-        F4ublW8Pnb7NZdTqk3Q6HZucsiJFr2MUFDn6IkdOmzgXv43nHbzzX5+EjIrzoDXXrhoPars6
-        tlwzmavfts5o3j9W104Nzu0q3twr9eRt/zXvxMdFxwZK6vtz+oJKyn9wcaClWJUQ3PMkCEuj
-        q+dE9xGmUm+OJevig9aAouzur5Z9ezPy3Hvv+eqLY+O54VcmfdH6ryeP9wqqPhU7nMApXr1c
-        1RG8HD+wUp0WqMQZXDBz2mWYU+D+Ao8n+U/CAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSvG7HGvE4g0v9ZhbNi9ezWaxcfZTJ
-        4vrdW8wWe/aeZLG4vGsOm8XE07+ZLLb8O8Jqcen9BxYHDo+ds+6ye+yfu4bdY/fNBjaPvi2r
-        GD0+b5LzOLT9DVsAWxSXTUpqTmZZapG+XQJXxoN/ngXflCpmX+1naWDsleli5OSQEDCRWHh8
-        FVsXIxeHkMBuRolnbWeYIRLSEsdOgNgcQLawxOHDxRA1zxklJl2/yQJSwyagK/Hvz342EFtE
-        QE3izM82dpAiZoFLjBITepuYITruM0p8vXWPHaSKU0BHYtGMS0wgtrBAqER3z21GEJtFQFXi
-        5r3nYJt5BSwlGi6vZ4SwBSVOznzCAnIFs4CeRNtGsDCzgLzE9rdzoA5VkPj5dBkrxBFuEqtO
-        NLBD1IhIzO5sY57AKDwLyaRZCJNmIZk0C0nHAkaWVYySqQXFuem5xYYFhnmp5XrFibnFpXnp
-        esn5uZsYwfGlpbmD8fKS+EOMAhyMSjy8GcLicUKsiWXFlbmHGCU4mJVEeI/eEIsT4k1JrKxK
-        LcqPLyrNSS0+xCjNwaIkzvs071ikkEB6YklqdmpqQWoRTJaJg1OqgZGjkslC4Unf1b2C09dm
-        fBOcWPP0KlfhhdbfU1b92P+/6CzjkrX2hcKbWe0THV7deDebT9bOL2LnFrbLcid3SLqdfdG7
-        5sCc0H0hP+ort34/tUCb+465gfRv77v7Lvnxlu/a/rx9lv8pe/U5ziem8ty9+iTwTrYRm0mg
-        dnjnv+uLDj1eHh60dWOlEktxRqKhFnNRcSIAWV+X1asCAAA=
-X-CMS-MailID: 20200109224320epcas1p282e8caab4abc6b98a4f062bfc43a28c8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200102082400epcas1p4cd0ad14967bd8d231fc0efcede8bd99c
-References: <20200102082036.29643-1-namjae.jeon@samsung.com>
-        <CGME20200102082400epcas1p4cd0ad14967bd8d231fc0efcede8bd99c@epcas1p4.samsung.com>
-        <20200102082036.29643-2-namjae.jeon@samsung.com>
-        <20200108170840.GB13388@lst.de>
+In-Reply-To: <20200107232044.889075-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, Jan 02, 2020 at 04:20:24PM +0800, Namjae Jeon wrote:
-> > This adds in-memory and on-disk structures and headers.
-> >
-> > Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> > Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+On 08/01/2020 00:20, Martin Blumenstingl wrote:
+> I want to use generic-adc-thermal on the 32-bit Amlogic SoCs in the
+> future. These have a thermal sensors which can be read through the
+> SAR ADC (for which we have an IIO driver) on those SoCs.
 > 
-> This looks good modulo a few cosmetic nitpicks below.
+> While testing I found the generic-adc-thermal driver to be a bit
+> noisy when operating in well supported environment:
+> - the SoC temperature sensor on the 32-bit Amlogic SoCs is typically
+>   loaded late because of it's dependencies (it needs data from the
+>   eFuse and a syscon to calibrate). Yet I still got a message stating
+>   there's no lookup table for the generic-adc-thermal defined (which
+>   is expected and perfectly valid on these Amlogic SoCs, as the IIO
+>   channel returns the temperature).
+> - the IIO channel is correctly defined with type IIO_TEMP, yet the
+>   generic-adc-thermal driver still prints a message which first lead
+>   me to believe that I passed an incorrect IIO channel (one that
+>   returns a voltage).
 > 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-Thanks!
+> 
+> Martin Blumenstingl (2):
+>   thermal: generic-adc: silence "no lookup table" on deferred probe
+>   thermal: generic-adc: silence info message for IIO_TEMP channels
+> 
+>  drivers/thermal/thermal-generic-adc.c | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
 
-> 
-> > --- /dev/null
-> > +++ b/fs/exfat/exfat_fs.h
-> > @@ -0,0 +1,569 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> > +/*
-> > + * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
-> > + */
-> > +
-> > +#ifndef _EXFAT_H
-> > +#define _EXFAT_H
-> 
-> This should probably be _EXFAT_FS_H to match the actual file name.
-Right, Will fix it on v10.
-> 
-> > +
-> > +#include <linux/fs.h>
-> > +#include <linux/ratelimit.h>
-> > +
-> > +#define EXFAT_SUPER_MAGIC       (0x2011BAB0UL)
-> 
-> No need for the braces.
-Yes.
+Applied, thanks
 
-> 
-> > +/*
-> > + * exfat common MACRO
-> > + */
-> 
-> Not sure this comment is all that helpful.
-Will remove it.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> 
-> > +#define CLUSTER_32(x)			((unsigned int)((x) &
-0xFFFFFFFFU))
-> 
-> This could just use lower_32_bits().
-Okay.
-> 
-> > +#define EXFAT_BAD_CLUSTER		(0xFFFFFFF7U)
-> > +#define EXFAT_FREE_CLUSTER		(0)
-> > +/* Cluster 0, 1 are reserved, the first cluster is 2 in the cluster
-> heap. */
-> > +#define EXFAT_RESERVED_CLUSTERS		(2)
-> > +#define EXFAT_FIRST_CLUSTER		(2)
-> 
-> No need for the braces.
-Okay.
-> 
-> > +/* type values */
-> > +#define TYPE_UNUSED		0x0000
-> > +#define TYPE_DELETED		0x0001
-> > +#define TYPE_INVALID		0x0002
-> > +#define TYPE_CRITICAL_PRI	0x0100
-> > +#define TYPE_BITMAP		0x0101
-> > +#define TYPE_UPCASE		0x0102
-> > +#define TYPE_VOLUME		0x0103
-> > +#define TYPE_DIR		0x0104
-> > +#define TYPE_FILE		0x011F
-> > +#define TYPE_CRITICAL_SEC	0x0200
-> > +#define TYPE_STREAM		0x0201
-> > +#define TYPE_EXTEND		0x0202
-> > +#define TYPE_ACL		0x0203
-> > +#define TYPE_BENIGN_PRI		0x0400
-> > +#define TYPE_GUID		0x0401
-> > +#define TYPE_PADDING		0x0402
-> > +#define TYPE_ACLTAB		0x0403
-> > +#define TYPE_BENIGN_SEC		0x0800
-> > +#define TYPE_ALL		0x0FFF
-> 
-> Shouldn't this go into exfat_raw.h?
-Yes, These are not.
-
-> Maybe check if a few other values should as well if they define an on-disk
-format.
-Right, I found a few values which should be move to exfat_raw.h.
-Will fix.
-
-> 
-> > +static inline sector_t exfat_cluster_to_sector(struct exfat_sb_info
-> *sbi,
-> > +		unsigned int clus)
-> > +{
-> > +	return ((clus - EXFAT_RESERVED_CLUSTERS) << sbi->sect_per_clus_bits)
-> > +		+ sbi->data_start_sector;
-> 
-> Nitpick: normally we put the operators at the of the previous line in
-> Linux code.
-Okay.
-> 
-> > +#define EXFAT_DELETE		~(0x80)
-> 
-> The braces would more useful outside the ~.
-Okay.
-> 
-> > +#define file_num_ext			dentry.file.num_ext
-> > +#define file_checksum			dentry.file.checksum
-> > +#define file_attr			dentry.file.attr
-> > +#define file_create_time		dentry.file.create_time
-> > +#define file_create_date		dentry.file.create_date
-> > +#define file_modify_time		dentry.file.modify_time
-> > +#define file_modify_date		dentry.file.modify_date
-> > +#define file_access_time		dentry.file.access_time
-> > +#define file_access_date		dentry.file.access_date
-> > +#define file_create_time_ms		dentry.file.create_time_ms
-> > +#define file_modify_time_ms		dentry.file.modify_time_ms
-> > +#define file_create_tz			dentry.file.create_tz
-> > +#define file_modify_tz			dentry.file.modify_tz
-> > +#define file_access_tz			dentry.file.access_tz
-> > +#define stream_flags			dentry.stream.flags
-> > +#define stream_name_len			dentry.stream.name_len
-> > +#define stream_name_hash		dentry.stream.name_hash
-> > +#define stream_start_clu		dentry.stream.start_clu
-> > +#define stream_valid_size		dentry.stream.valid_size
-> > +#define stream_size			dentry.stream.size
-> > +#define name_flags			dentry.name.flags
-> > +#define name_unicode			dentry.name.unicode_0_14
-> > +#define bitmap_flags			dentry.bitmap.flags
-> > +#define bitmap_start_clu		dentry.bitmap.start_clu
-> > +#define bitmap_size			dentry.bitmap.size
-> > +#define upcase_start_clu		dentry.upcase.start_clu
-> > +#define upcase_size			dentry.upcase.size
-> > +#define upcase_checksum			dentry.upcase.checksum
-> 
-> Personally I don't find these defines very helpful - directly seeing the
-> field name makes the code much easier to read.
-Okay, Will remove them.
-
-Thanks for your review!
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
