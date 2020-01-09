@@ -2,134 +2,133 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92DFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CA0C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C992072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2242072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:03:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="tavN+wgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgAIUCY (ORCPT
+        id S1728243AbgAIUDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 15:02:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55534 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgAIUCY (ORCPT
+        Thu, 9 Jan 2020 15:03:13 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44079 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgAIUDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 15:02:24 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ipe0b-0007HG-KY; Thu, 09 Jan 2020 21:02:21 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 20AA7105BCE; Thu,  9 Jan 2020 21:02:20 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>, Peter Xu <peterx@redhat.com>
-Cc:     Juri Lelli <juri.lelli@redhat.com>, Ming Lei <minlei@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Kernel-managed IRQ affinity (cont)
-In-Reply-To: <20191219161115.GA18672@ming.t460p>
-References: <20191216195712.GA161272@xz-x1> <20191219082819.GB15731@ming.t460p> <20191219143214.GA50561@xz-x1> <20191219161115.GA18672@ming.t460p>
-Date:   Thu, 09 Jan 2020 21:02:20 +0100
-Message-ID: <87eew8l7oz.fsf@nanos.tec.linutronix.de>
+        Thu, 9 Jan 2020 15:03:12 -0500
+Received: by mail-oi1-f195.google.com with SMTP id d62so6974900oia.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 12:03:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aEPP3QvZTscWYv3Miihx0fBYyJilXweNv6Guj9B9KD8=;
+        b=tavN+wgvdGNcOGcjKHqkAn5BjiXAReV94+OSH9Ri1PEiPT4LHVwg6b1hXbJyjtNOio
+         yt+3CISS4TMH86U9kKgU8YPArehaT0FusWvpSVefSqnA63GewXNc+iMnr6ZN89GHlxNa
+         I9xtBLZtZiieLaHNV/YWCS5IF2kdx6cBLmi6/YRneC/5UTcL8YKTe0qVGWfehSZnrWv9
+         YsnAn85tdplqslZaJiAyOUvkKc3WlQ6ZG+UvCzJ00JIQxKAKUKINJoyIUTQOONSw3QOj
+         1W72+PiwSitSGIes31XNdQt0P0T6DKzDvCP6YPxL/5GB664MG6OsTA5BfZF4LBGWHzr7
+         Jvig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aEPP3QvZTscWYv3Miihx0fBYyJilXweNv6Guj9B9KD8=;
+        b=hG2Py1k8v1gJPwyGkOlH0BOqNAou3gUZfkBLRkYr/FZEuMMoMISoTHuadigOd3+Jkk
+         TxPyjRMXvOkteIWKsqYj0bcUe81MjKswJeDOYmWYsUmav7+o3Q9TDn3b7kzk5FTiFqjH
+         XhcugbZXp967uoYaOM3zIyxi3y/37aYnuExtDdJJv1UHVWxfVXGLAMpnRjveaWmWA8T/
+         ZPQXuklsNIzi9MoZX0cX/+Njqr7NuuI6TqoDgLeAfoCtVSUkDaktm22pg+G+GwwPv4XV
+         dZqUG19+cq4q8i7iBjZ6nRaycZzoMOIS+9Us9VBQeRSPrQDdax85Ip6BRen6XnYND1oc
+         FziA==
+X-Gm-Message-State: APjAAAVOWrWHsYVkEuWvsyYsxc87RXl7NcRky3s+nkLErws1f5ifRpXX
+        ff99P7As6YmS058EM15AlphpvzYnAMNihU/uGBX1ag==
+X-Google-Smtp-Source: APXvYqy8zIIpMCxwYPaK1lH7NGY047llhJ6X2TGv4+wlxidYTW8JIfkG1ylN1wkgzWx+t/HR+ipJvvJ3iI320Zd/2yQ=
+X-Received: by 2002:a05:6808:a83:: with SMTP id q3mr4809955oij.0.1578600191907;
+ Thu, 09 Jan 2020 12:03:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
+ <20191216181014.GA30106@redhat.com> <20200107125159.GA15745@infradead.org>
+ <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
+ <20200107170731.GA472641@magnolia> <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
+ <20200107180101.GC15920@redhat.com> <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
+ <20200107183307.GD15920@redhat.com> <CAPcyv4ggoS4dWjq-1KbcuaDtroHKEi5Vu19ggJ-qgycs6w1eCA@mail.gmail.com>
+ <20200109112447.GG27035@quack2.suse.cz>
+In-Reply-To: <20200109112447.GG27035@quack2.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 9 Jan 2020 12:03:01 -0800
+Message-ID: <CAPcyv4j5Mra8qeLO3=+BYZMeXNAxFXv7Ex7tL9gra1TbhOgiqg@mail.gmail.com>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+To:     Jan Kara <jack@suse.cz>
+Cc:     Vivek Goyal <vgoyal@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming,
-
-Ming Lei <ming.lei@redhat.com> writes:
-
-> On Thu, Dec 19, 2019 at 09:32:14AM -0500, Peter Xu wrote:
->> ... this one seems to be more appealing at least to me.
+On Thu, Jan 9, 2020 at 3:27 AM Jan Kara <jack@suse.cz> wrote:
 >
-> OK, please try the following patch:
+> On Tue 07-01-20 10:49:55, Dan Williams wrote:
+> > On Tue, Jan 7, 2020 at 10:33 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+> > > W.r.t partitioning, bdev_dax_pgoff() seems to be the pain point where
+> > > dax code refers back to block device to figure out partition offset in
+> > > dax device. If we create a dax object corresponding to "struct block_device"
+> > > and store sector offset in that, then we could pass that object to dax
+> > > code and not worry about referring back to bdev. I have written some
+> > > proof of concept code and called that object "dax_handle". I can post
+> > > that code if there is interest.
+> >
+> > I don't think it's worth it in the end especially considering
+> > filesystems are looking to operate on /dev/dax devices directly and
+> > remove block entanglements entirely.
+> >
+> > > IMHO, it feels useful to be able to partition and use a dax capable
+> > > block device in same way as non-dax block device. It will be really
+> > > odd to think that if filesystem is on /dev/pmem0p1, then dax can't
+> > > be enabled but if filesystem is on /dev/mapper/pmem0p1, then dax
+> > > will work.
+> >
+> > That can already happen today. If you do not properly align the
+> > partition then dax operations will be disabled. This proposal just
+> > extends that existing failure domain to make all partitions fail to
+> > support dax.
 >
+> Well, I have some sympathy with the sysadmin that has /dev/pmem0 device,
+> decides to create partitions on it for whatever (possibly misguided)
+> reason and then ponders why the hell DAX is not working? And PAGE_SIZE
+> partition alignment is so obvious and widespread that I don't count it as a
+> realistic error case sysadmins would be pondering about currently.
 >
-> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
-> index 6c8512d3be88..0fbcbacd1b29 100644
-> --- a/include/linux/sched/isolation.h
-> +++ b/include/linux/sched/isolation.h
-> @@ -13,6 +13,7 @@ enum hk_flags {
->  	HK_FLAG_TICK		= (1 << 4),
->  	HK_FLAG_DOMAIN		= (1 << 5),
->  	HK_FLAG_WQ		= (1 << 6),
-> +	HK_FLAG_MANAGED_IRQ	= (1 << 7),
->  };
->  
->  #ifdef CONFIG_CPU_ISOLATION
-> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-> index 1753486b440c..0a75a09cc4e8 100644
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -20,6 +20,7 @@
->  #include <linux/sched/task.h>
->  #include <uapi/linux/sched/types.h>
->  #include <linux/task_work.h>
-> +#include <linux/sched/isolation.h>
->  
->  #include "internals.h"
->  
-> @@ -212,12 +213,33 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
->  {
->  	struct irq_desc *desc = irq_data_to_desc(data);
->  	struct irq_chip *chip = irq_data_get_irq_chip(data);
-> +	const struct cpumask *housekeeping_mask =
-> +		housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
->  	int ret;
-> +	cpumask_var_t tmp_mask;
->  
->  	if (!chip || !chip->irq_set_affinity)
->  		return -EINVAL;
->  
-> -	ret = chip->irq_set_affinity(data, mask, force);
-> +	if (!zalloc_cpumask_var(&tmp_mask, GFP_KERNEL))
-> +		return -EINVAL;
+> So I'd find two options reasonably consistent:
+> 1) Keep status quo where partitions are created and support DAX.
+> 2) Stop partition creation altogether, if anyones wants to split pmem
+> device further, he can use dm-linear for that (i.e., kpartx).
+>
+> But I'm not sure if the ship hasn't already sailed for option 2) to be
+> feasible without angry users and Linus reverting the change.
 
-That's wrong. This code is called with interrupts disabled, so
-GFP_KERNEL is wrong. And NO, we won't do a GFP_ATOMIC allocation here.
+Christoph? I feel myself leaning more and more to the "keep pmem
+partitions" camp.
 
-> +	/*
-> +	 * Userspace can't change managed irq's affinity, make sure
-> +	 * that isolated CPU won't be selected as the effective CPU
-> +	 * if this irq's affinity includes both isolated CPU and
-> +	 * housekeeping CPU.
-> +	 *
-> +	 * This way guarantees that isolated CPU won't be interrupted
-> +	 * by IO submitted from housekeeping CPU.
-> +	 */
-> +	if (irqd_affinity_is_managed(data) &&
-> +			cpumask_intersects(mask, housekeeping_mask))
-> +		cpumask_and(tmp_mask, mask, housekeeping_mask);
+I don't see "drop partition support" effort ending well given the long
+standing "ext4 fails to mount when dax is not available" precedent.
 
-This is duct tape engineering with absolutely no semantics. I can't even
-figure out the intent of this 'managed_irq' parameter.
-
-If the intent is to keep managed device interrupts away from isolated
-cores then you really want to do that when the interrupts are spread and
-not in the middle of the affinity setter code.
-
-But first you need to define how that mask should work:
-
- 1) Exclude CPUs from managed interrupt spreading completely
-
- 2) Exclude CPUs only when the resulting spreading contains
-    housekeeping CPUs
-
- 3) Whatever ...
-
-Thanks,
-
-        tglx
-
-
+I think the next least bad option is to have a dax_get_by_host()
+variant that passes an offset and length pair rather than requiring a
+later bdev_dax_pgoff() to recall the offset. This also prevents
+needing to add another dax-device object representation.
