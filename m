@@ -2,107 +2,79 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06823C33CA3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A5EC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC2A205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dXa2DBns"
+	by mail.kernel.org (Postfix) with ESMTP id 3C8712067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgAIC4u (ORCPT
+        id S1727803AbgAIDHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 21:56:50 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47680 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgAIC4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 21:56:50 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0092rQiN135926;
-        Thu, 9 Jan 2020 02:56:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=UkfHdTmJJlai2EOzhsw+ZznpGVVKFCSeoOTXtC0IOPY=;
- b=dXa2DBnsNjk7TL8YUymzrg0GLgz4XOHOBEsHqVaYnFj0G8xJSUGrlV6Pnh1YtZYzsagr
- 5TQPp9v4GaTyQQjqyCVG+7eAuMAkHsle1w0cXDAyjEDvWeakRY+n7biP/EFkWPvfxcan
- 5O8OkfB8ZttPwKvYtTLkGooVAZaJj7waJX9ZJw0WS+BjRrhcRkdScykeiCxzPbfhbF24
- 0erD6clfGKovzBZb7ialjqoBakh7iLq8nSmFd/yiPKS7518Y/XLtBvMUMSQu+9dehZ9w
- 0cPAyZ+7FhgaXoAyg5xx3P8++QdwJrrrx/OKmVSkzS/YgRdnK/NW2DpOWCGN3ewmDazv hg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xajnq7xjh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Jan 2020 02:56:34 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0092sTtD024251;
-        Thu, 9 Jan 2020 02:54:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2xdmrx6uyk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 Jan 2020 02:54:32 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0092rf3S005091;
-        Thu, 9 Jan 2020 02:53:42 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 08 Jan 2020 18:53:41 -0800
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        axboe@kernel.dk, ssomesh@amazon.com, jejb@linux.ibm.com,
-        mst@redhat.com, Chaitanya.Kulkarni@wdc.com
-Subject: Re: [resend v1 5/5] drivers/scsi/sd.c: Convert to use disk_set_capacity
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200102075315.22652-1-sblbir@amazon.com>
-        <20200102075315.22652-6-sblbir@amazon.com>
-        <yq1blrg2agh.fsf@oracle.com> <20200108150612.GD10975@lst.de>
-Date:   Wed, 08 Jan 2020 21:53:38 -0500
-In-Reply-To: <20200108150612.GD10975@lst.de> (Christoph Hellwig's message of
-        "Wed, 8 Jan 2020 16:06:12 +0100")
-Message-ID: <yq1muaxz6fh.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 8 Jan 2020 22:07:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:53016 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbgAIDHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 22:07:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F353131B;
+        Wed,  8 Jan 2020 19:07:45 -0800 (PST)
+Received: from [10.162.40.138] (p8cg001049571a15.blr.arm.com [10.162.40.138])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B53F93F534;
+        Wed,  8 Jan 2020 19:07:41 -0800 (PST)
+Subject: Re: [PATCH 0/1] arm/arm64: add support for folded p4d page tables
+To:     Mike Rapoport <rppt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <20191230082734.28954-1-rppt@kernel.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <19fc0640-2b7e-a06f-a4c8-2736d54dd565@arm.com>
+Date:   Thu, 9 Jan 2020 08:38:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=975
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001090026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9494 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001090026
+In-Reply-To: <20191230082734.28954-1-rppt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Christoph,
 
->> We already emit an SDEV_EVT_CAPACITY_CHANGE_REPORTED event if device
->> capacity changes. However, this event does not automatically cause
->> revalidation.
->
-> Who is looking at these sdev specific events?  (And who is looking
-> at the virtio/xenblk ones?)  It  makes a lot of sense to have one event
-> supported by all devices.  But don't ask me which one would be the best..
+On 12/30/2019 01:57 PM, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> Hi,
 
-Users typically have site-specific udev rules or similar. There is no
-standard entity handling these events. Sadly.
+Hello Mike,
 
-I'm all for standardizing on RESIZE=1. However, we can't really get rid
-of the emitting existing SDEV* event without breaking existing setups.
+> 
+> This is a part of clean up of the page table manipulation code that aims to
+> remove asm-generic/5level-fixup.h and asm-generic/pgtable-nop4d-hack.h
+> 
+> There is a single patch for both arm and arm64 because doing the conversion
+> separately would mean breaking the shared mmu bits in virt/kvm/arm.
+> 
+> The patch is build tested and boot tested on qemu-system-{arm,aarch64}.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+There are lots of code changes here for a single patch but as you have
+mentioned shared KVM bits would have prevented splitting arm and arm64
+changes into separate patches. Just curious, are you planning to respin
+this patch sooner after fixing the reported build problems caused by
+missing p4d_offset_kimg() and p4d_sect() definitions ?
+
+- Anshuman
