@@ -2,236 +2,101 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,WEIRD_PORT autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C09C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5B5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950D52072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47622080D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YNyqXjwH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e7tdu/FM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgAIKF1 (ORCPT
+        id S1729986AbgAIKKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:05:27 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:32958 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729894AbgAIKF1 (ORCPT
+        Thu, 9 Jan 2020 05:10:53 -0500
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:41207 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729909AbgAIKKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:05:27 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d71so5468280qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:05:26 -0800 (PST)
+        Thu, 9 Jan 2020 05:10:52 -0500
+Received: by mail-pf1-f178.google.com with SMTP id w62so3146689pfw.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:10:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9oFbavNk6ckwJ4kQaBf73rEdRqoPbEcedxAQSe8iuZU=;
-        b=YNyqXjwHfTSpstNsoEKcG5BVg1naN2t5KWZLWby9VqAZ1r+UPRyeIxujwRnZp/CHcp
-         wp/it0Fnxf0b+vp69LyI50TmpLDQ0iZagq/bZm1wNbm3hgNiL9rdYvV7Lu5yJ9KzBHzD
-         SDX3wlRpPi788iigQuv+dZOhOkkDTympU6KC5LblzcaSHAG02m1sw9xl/TF6CVTFTzoH
-         UOC8v5qJSnbSwibUtRZQtidynDyBqkDE1KQAZtGC6ncXO8LRKpudaSGzm0+PPm60eI6n
-         PzFLqlDx1mYk/h2faql6+WtAtN/a/KJPPYmWH+aF1G89LAZ7vPUXyx06XhaNmgyqrayQ
-         tAQA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oYLObm1EH6YdnVAuxH4HhWVzCuwo//V40I0Zoh1cRWA=;
+        b=e7tdu/FMMGGPPVjoNEmiQCT1rQIRQsa/DcyBNt3Kcufdm6iA+2yEHtlK700c7XSip5
+         29foJIQjO1Ux894Sx6t0T47Q++Fb59S2z9PWL0iPs5xFkNi6dt0Nz2HifhwCl5N6cPLo
+         pjodAHyNp6UXTwVz31UGyLFgqRpjy0RIlSYPc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9oFbavNk6ckwJ4kQaBf73rEdRqoPbEcedxAQSe8iuZU=;
-        b=QCZY6wqlREVtw1k+IHM0XKwXWQeC4BZWlYTO6e3LBxfbsZxFOgWLs9mORE0JgqPdG7
-         3h/erkiYPJkELlGmU5+zPxJKxCBVQiCrLEOmBEMPZ9tux22ScjNFEWmVMUNyyg7A/ZrD
-         LDYDjKUVjLHzdn5XxTInS3isr71O8KmGqB3y4z6h7OgK9vkdgteX+e29Ok8sB+wLlloV
-         vny0+Y11UPjBWEtTm2koExQYBv1KdJkfI1SO9n4bpXFNZKfcZhFlF9nbRVKOWBqvYYb/
-         WxlSz2mGwnXaxjCRUzLBjTB7zxbd5U1giAhW6mhHeequnYb0AxWi7ZXHFuB4nBYg0yRE
-         hWJQ==
-X-Gm-Message-State: APjAAAVELaZVh+I3RY6eUFff0dkFYtc0CVwgPUVlo/X2KQBEnkOgWCob
-        oPWp/wtdMR15uVjGcL72KxOSzDxuwCPLJw4Omy3caQ==
-X-Google-Smtp-Source: APXvYqx4oygMx5SmNtK1KvcCOEVrHv8xvKif00Kn+aZJNMMrzu8mssFb/KHXBs2q4afD2dXnkMVJXNWl6PGo0zBQibk=
-X-Received: by 2002:a37:5841:: with SMTP id m62mr8530872qkb.256.1578564325780;
- Thu, 09 Jan 2020 02:05:25 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oYLObm1EH6YdnVAuxH4HhWVzCuwo//V40I0Zoh1cRWA=;
+        b=GowX3Dri7JFYAxQU3TEda+2lfcUSfoUM7/DFp6RS0885fVRwc/xsnCZ4QV5Xy6v1Zb
+         Ffxp82OQkuUMjBWXLI1Wr2bWOHZ05b+BZJBszNu77ntQK7BahNRXs2ZGM4PxfPnd5FZj
+         JwcxhELHtK6budtZq9EoDWQR37hfsVOEu+69FDR9FxmqmgEW7DqRLRc7wwwf4t4dqiJn
+         HpqYA1qMS6/k4SBpF0mzhSA745UaUhIyfeTeJbR0T4DGa+81LMK2Wmthdmv7NcZA5a49
+         6hwUgUb4MDydOhg448J7riX3Xw9M5hIS98Xs4S4mMmpqCTUQpPbTxkgBPXp0F3jdwOMl
+         UtbA==
+X-Gm-Message-State: APjAAAWCfuRlyeAdr1c6QHATZ2014Oav7XwUJY1MEBsnUwmDDfdeYgRK
+        hFUJfCTAFanpS95LShuXslbJfQ==
+X-Google-Smtp-Source: APXvYqwebhIZMzghd1qDG5V69TQUhXnikGS2NCAn7B1nL1eqOptwbKauGF29YAc5NlySDTXQg5M0/w==
+X-Received: by 2002:a63:358a:: with SMTP id c132mr10552106pga.286.1578564651804;
+        Thu, 09 Jan 2020 02:10:51 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id s11sm6518713pgp.1.2020.01.09.02.10.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 02:10:51 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Subject: [PATCH 0/2] Add mt8173 elm and hana board
+Date:   Thu,  9 Jan 2020 18:10:40 +0800
+Message-Id: <20200109101042.201500-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 MIME-Version: 1.0
-References: <00000000000036decf0598c8762e@google.com> <CACT4Y+YVMUxeLcFMray9n0+cXbVibj5X347LZr8YgvjN5nC8pw@mail.gmail.com>
- <CACT4Y+asdED7tYv462Ui2OhQVKXVUnC+=fumXR3qM1A4d6AvOQ@mail.gmail.com>
- <f7758e0a-a157-56a2-287e-3d4452d72e00@schaufler-ca.com> <87a787ekd0.fsf@dja-thinkpad.axtens.net>
- <87h81zax74.fsf@dja-thinkpad.axtens.net> <CACT4Y+b+Vx1FeCmhMAYq-g3ObHdMPOsWxouyXXUr7S5OjNiVGQ@mail.gmail.com>
- <0b60c93e-a967-ecac-07e7-67aea1a0208e@I-love.SAKURA.ne.jp>
- <6d009462-74d9-96e9-ab3f-396842a58011@schaufler-ca.com> <CACT4Y+bURugCpLm5TG37-7voFEeEoXo_Gb=3sy75_RELZotXHw@mail.gmail.com>
- <CACT4Y+avizeUd=nY2w1B_LbEC1cP5prBfpnANYaxhgS_fcL6ag@mail.gmail.com> <CACT4Y+Z3GCncV3G1=36NmDRX_XOZsdoRJ3UshZoornbSRSN28w@mail.gmail.com>
-In-Reply-To: <CACT4Y+Z3GCncV3G1=36NmDRX_XOZsdoRJ3UshZoornbSRSN28w@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Jan 2020 11:05:13 +0100
-Message-ID: <CACT4Y+ZyVi=ow+VXA9PaWEVE8qKj8_AKzeFsNdsmiSR9iL3FOw@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in sys_kill
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Alexander Potapenko <glider@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+de8d933e7d153aa0c1bb@syzkaller.appspotmail.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 10:29 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > >
-> > > > On 1/8/2020 2:25 AM, Tetsuo Handa wrote:
-> > > > > On 2020/01/08 15:20, Dmitry Vyukov wrote:
-> > > > >> I temporarily re-enabled smack instance and it produced another 50
-> > > > >> stalls all over the kernel, and now keeps spewing a dozen every hour.
-> > > >
-> > > > Do I have to be using clang to test this? I'm setting up to work on this,
-> > > > and don't want to waste time using my current tool chain if the problem
-> > > > is clang specific.
-> > >
-> > > Humm, interesting. Initially I was going to say that most likely it's
-> > > not clang-related. Bug smack instance is actually the only one that
-> > > uses clang as well (except for KMSAN of course). So maybe it's indeed
-> > > clang-related rather than smack-related. Let me try to build a kernel
-> > > with clang.
-> >
-> > +clang-built-linux, glider
-> >
-> > [clang-built linux is severe broken since early Dec]
-> >
-> > Building kernel with clang I can immediately reproduce this locally:
-> >
-> > $ syz-manager
-> > 2020/01/09 09:27:15 loading corpus...
-> > 2020/01/09 09:27:17 serving http on http://0.0.0.0:50001
-> > 2020/01/09 09:27:17 serving rpc on tcp://[::]:45851
-> > 2020/01/09 09:27:17 booting test machines...
-> > 2020/01/09 09:27:17 wait for the connection from test machine...
-> > 2020/01/09 09:29:23 machine check:
-> > 2020/01/09 09:29:23 syscalls                : 2961/3195
-> > 2020/01/09 09:29:23 code coverage           : enabled
-> > 2020/01/09 09:29:23 comparison tracing      : enabled
-> > 2020/01/09 09:29:23 extra coverage          : enabled
-> > 2020/01/09 09:29:23 setuid sandbox          : enabled
-> > 2020/01/09 09:29:23 namespace sandbox       : enabled
-> > 2020/01/09 09:29:23 Android sandbox         : /sys/fs/selinux/policy
-> > does not exist
-> > 2020/01/09 09:29:23 fault injection         : enabled
-> > 2020/01/09 09:29:23 leak checking           : CONFIG_DEBUG_KMEMLEAK is
-> > not enabled
-> > 2020/01/09 09:29:23 net packet injection    : enabled
-> > 2020/01/09 09:29:23 net device setup        : enabled
-> > 2020/01/09 09:29:23 concurrency sanitizer   : /sys/kernel/debug/kcsan
-> > does not exist
-> > 2020/01/09 09:29:23 devlink PCI setup       : PCI device 0000:00:10.0
-> > is not available
-> > 2020/01/09 09:29:27 corpus                  : 50226 (0 deleted)
-> > 2020/01/09 09:29:27 VMs 20, executed 0, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:29:37 VMs 20, executed 45, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:29:47 VMs 20, executed 74, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:29:57 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:30:07 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:30:17 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:30:27 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:30:37 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:30:47 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:30:57 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:31:07 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:31:17 VMs 20, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:31:26 vm-10: crash: INFO: rcu detected stall in do_idle
-> > 2020/01/09 09:31:27 VMs 13, executed 80, cover 0, crashes 0, repro 0
-> > 2020/01/09 09:31:28 vm-1: crash: INFO: rcu detected stall in sys_futex
-> > 2020/01/09 09:31:29 vm-4: crash: INFO: rcu detected stall in sys_futex
-> > 2020/01/09 09:31:31 vm-0: crash: INFO: rcu detected stall in sys_getsockopt
-> > 2020/01/09 09:31:33 vm-18: crash: INFO: rcu detected stall in sys_clone3
-> > 2020/01/09 09:31:35 vm-3: crash: INFO: rcu detected stall in sys_futex
-> > 2020/01/09 09:31:36 vm-8: crash: INFO: rcu detected stall in do_idle
-> > 2020/01/09 09:31:37 VMs 7, executed 80, cover 0, crashes 6, repro 0
-> > 2020/01/09 09:31:38 vm-19: crash: INFO: rcu detected stall in schedule_tail
-> > 2020/01/09 09:31:40 vm-6: crash: INFO: rcu detected stall in schedule_tail
-> > 2020/01/09 09:31:42 vm-2: crash: INFO: rcu detected stall in schedule_tail
-> > 2020/01/09 09:31:44 vm-12: crash: INFO: rcu detected stall in sys_futex
-> > 2020/01/09 09:31:46 vm-15: crash: INFO: rcu detected stall in sys_nanosleep
-> > 2020/01/09 09:31:47 VMs 1, executed 80, cover 0, crashes 11, repro 0
-> > 2020/01/09 09:31:48 vm-16: crash: INFO: rcu detected stall in sys_futex
-> > 2020/01/09 09:31:50 vm-9: crash: INFO: rcu detected stall in schedule
-> > 2020/01/09 09:31:52 vm-13: crash: INFO: rcu detected stall in schedule_tail
-> > 2020/01/09 09:31:54 vm-11: crash: INFO: rcu detected stall in schedule_tail
-> > 2020/01/09 09:31:56 vm-17: crash: INFO: rcu detected stall in sys_futex
-> > 2020/01/09 09:31:57 VMs 0, executed 80, cover 0, crashes 16, repro 0
-> > 2020/01/09 09:31:58 vm-7: crash: INFO: rcu detected stall in sys_futex
-> > 2020/01/09 09:32:00 vm-5: crash: INFO: rcu detected stall in dput
-> > 2020/01/09 09:32:02 vm-14: crash: INFO: rcu detected stall in sys_nanosleep
-> >
-> >
-> > Then I switched LSM to selinux and I _still_ can reproduce this. So,
-> > Casey, you may relax, this is not smack-specific :)
-> >
-> > Then I disabled CONFIG_KASAN_VMALLOC and CONFIG_VMAP_STACK and it
-> > started working normally.
-> >
-> > So this is somehow related to both clang and KASAN/VMAP_STACK.
-> >
-> > The clang I used is:
-> > https://storage.googleapis.com/syzkaller/clang-kmsan-362913.tar.gz
-> > (the one we use on syzbot).
->
->
-> Clustering hangs, they all happen within very limited section of the code:
->
->       1  free_thread_stack+0x124/0x590 kernel/fork.c:284
->       5  free_thread_stack+0x12e/0x590 kernel/fork.c:280
->      39  free_thread_stack+0x12e/0x590 kernel/fork.c:284
->       6  free_thread_stack+0x133/0x590 kernel/fork.c:280
->       5  free_thread_stack+0x13d/0x590 kernel/fork.c:280
->       2  free_thread_stack+0x141/0x590 kernel/fork.c:280
->       6  free_thread_stack+0x14c/0x590 kernel/fork.c:280
->       9  free_thread_stack+0x151/0x590 kernel/fork.c:280
->       3  free_thread_stack+0x15b/0x590 kernel/fork.c:280
->      67  free_thread_stack+0x168/0x590 kernel/fork.c:280
->       6  free_thread_stack+0x16d/0x590 kernel/fork.c:284
->       2  free_thread_stack+0x177/0x590 kernel/fork.c:284
->       1  free_thread_stack+0x182/0x590 kernel/fork.c:284
->       1  free_thread_stack+0x186/0x590 kernel/fork.c:284
->      16  free_thread_stack+0x18b/0x590 kernel/fork.c:284
->       4  free_thread_stack+0x195/0x590 kernel/fork.c:284
->
-> Here is disass of the function:
-> https://gist.githubusercontent.com/dvyukov/a283d1aaf2ef7874001d56525279ccbd/raw/ac2478bff6472bc473f57f91a75f827cd72bb6bf/gistfile1.txt
->
-> But if I am not mistaken, the function only ever jumps down. So how
-> can it loop?...
+This series adds devicetree and binding document for Acer Chromebook R13 (elm)
+and Lenovo Chromebook (hana), which are using mt8173 as SoC.
 
 
-This is a miscompilation related to static branches.
+Hsin-Yi Wang (2):
+  dt-bindings: arm64: dts: mediatek: Add mt8173 elm and hana
+  arm64: dts: mediatek: add mt8173 elm and hana board
 
-objdump shows:
+ .../devicetree/bindings/arm/mediatek.yaml     |   18 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    3 +
+ .../dts/mediatek/mt8173-elm-hana-rev7.dts     |   27 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dts     |   16 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dtsi    |   53 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dts   |   15 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  | 1069 +++++++++++++++++
+ 7 files changed, 1201 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
 
-ffffffff814878f8: 0f 1f 44 00 00        nopl   0x0(%rax,%rax,1)
- ./arch/x86/include/asm/jump_label.h:25
-asm_volatile_goto("1:"
+-- 
+2.25.0.rc1.283.g88dfdc4193-goog
 
-However, the actual instruction in memory at the time is:
-
-   0xffffffff814878f8 <+408>: jmpq   0xffffffff8148787f <free_thread_stack+287>
-
-Which jumps to a wrong location in free_thread_stack and makes it loop.
-
-The static branch is this:
-
-static inline bool memcg_kmem_enabled(void)
-{
-  return static_branch_unlikely(&memcg_kmem_enabled_key);
-}
-
-static inline void memcg_kmem_uncharge(struct page *page, int order)
-{
-  if (memcg_kmem_enabled())
-    __memcg_kmem_uncharge(page, order);
-}
-
-I suspect it may have something to do with loop unrolling. It may jump
-to the right location, but in the wrong unrolled iteration.
