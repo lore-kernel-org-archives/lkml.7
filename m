@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEACC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF16C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAA22072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E8BF2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbgAIMeq (ORCPT
+        id S1731076AbgAIMep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:34:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38034 "EHLO mx2.suse.de"
+        Thu, 9 Jan 2020 07:34:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38026 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730972AbgAIMeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730964AbgAIMeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jan 2020 07:34:10 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 03312B2213;
-        Thu,  9 Jan 2020 12:34:07 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id F1884B220E;
+        Thu,  9 Jan 2020 12:34:05 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Paul Burton <paulburton@kernel.org>
 Cc:     Ralf Baechle <ralf@linux-mips.org>,
         James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/14] MIPS: SGI-IP27: Only reserve interrupts used in Linux
-Date:   Thu,  9 Jan 2020 13:33:49 +0100
-Message-Id: <20200109123353.5656-13-tbogendoerfer@suse.de>
+Subject: [PATCH 08/14] MIPS: SGI-IP27: Use union instead of typedef
+Date:   Thu,  9 Jan 2020 13:33:45 +0100
+Message-Id: <20200109123353.5656-9-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200109123353.5656-1-tbogendoerfer@suse.de>
 References: <20200109123353.5656-1-tbogendoerfer@suse.de>
@@ -41,67 +41,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduce number of reserved interrupts by removing bits copied from IRIX
-and not used by Linux.
+The upcoming header files for SGI-IP35 shouldn't add new typedef. To
+be able to share ip27-hubio.c we need to access register layouts no
+longer via a typedef.
 
 Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- arch/mips/include/asm/sn/intr.h | 17 -----------------
- arch/mips/sgi-ip27/ip27-irq.c   |  4 +---
- 2 files changed, 1 insertion(+), 20 deletions(-)
+ arch/mips/sgi-ip27/ip27-hubio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/sn/intr.h b/arch/mips/include/asm/sn/intr.h
-index fc1348193957..3d6954d370dc 100644
---- a/arch/mips/include/asm/sn/intr.h
-+++ b/arch/mips/include/asm/sn/intr.h
-@@ -8,15 +8,6 @@
- #ifndef __ASM_SN_INTR_H
- #define __ASM_SN_INTR_H
- 
--/* Number of interrupt levels associated with each interrupt register. */
--#define N_INTPEND_BITS		64
--
--#define INT_PEND0_BASELVL	0
--#define INT_PEND1_BASELVL	64
--
--#define N_INTPENDJUNK_BITS	8
--#define INTPENDJUNK_CLRBIT	0x80
--
- /*
-  * Macros to manipulate the interrupt register on the calling hub chip.
+diff --git a/arch/mips/sgi-ip27/ip27-hubio.c b/arch/mips/sgi-ip27/ip27-hubio.c
+index 298cfdf8b44e..8352eb6403b4 100644
+--- a/arch/mips/sgi-ip27/ip27-hubio.c
++++ b/arch/mips/sgi-ip27/ip27-hubio.c
+@@ -84,7 +84,7 @@ unsigned long hub_pio_map(nasid_t nasid, xwidgetnum_t widget,
   */
-@@ -84,14 +75,6 @@ do {								\
- #define CPU_RESCHED_B_IRQ	 8
- #define CPU_CALL_A_IRQ		 9
- #define CPU_CALL_B_IRQ		10
--#define MSC_MESG_INTR		11
--#define BASE_PCI_IRQ		12
--
--/*
-- * INT_PEND0 again, bits determined by hardware / hardcoded:
-- */
--#define SDISK_INTR		63	/* SABLE name */
--#define IP_PEND0_6_63		63	/* What is this bit? */
+ static void hub_setup_prb(nasid_t nasid, int prbnum, int credits)
+ {
+-	iprb_t prb;
++	union iprb_u prb;
+ 	int prb_offset;
  
- /*
-  * INT_PEND1 hard-coded bits:
-diff --git a/arch/mips/sgi-ip27/ip27-irq.c b/arch/mips/sgi-ip27/ip27-irq.c
-index 5a4a782ceae5..42df9fafa943 100644
---- a/arch/mips/sgi-ip27/ip27-irq.c
-+++ b/arch/mips/sgi-ip27/ip27-irq.c
-@@ -287,11 +287,9 @@ void __init arch_init_irq(void)
- 	 * Mark these as reserved right away so they won't be used accidentally
- 	 * later.
- 	 */
--	for (i = 0; i <= BASE_PCI_IRQ; i++)
-+	for (i = 0; i <= CPU_CALL_B_IRQ; i++)
- 		set_bit(i, hub_irq_map);
+ 	/*
+@@ -137,7 +137,7 @@ static void hub_setup_prb(nasid_t nasid, int prbnum, int credits)
+ static void hub_set_piomode(nasid_t nasid)
+ {
+ 	u64 ii_iowa;
+-	hubii_wcr_t ii_wcr;
++	union hubii_wcr_u ii_wcr;
+ 	unsigned i;
  
--	set_bit(IP_PEND0_6_63, hub_irq_map);
--
- 	for (i = NI_BRDCAST_ERR_A; i <= MSC_PANIC_INTR; i++)
- 		set_bit(i, hub_irq_map);
- 
+ 	ii_iowa = REMOTE_HUB_L(nasid, IIO_OUTWIDGET_ACCESS);
 -- 
 2.24.1
 
