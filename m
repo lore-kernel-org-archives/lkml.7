@@ -2,154 +2,152 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65789C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55DCC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B8E2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:36:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QcRNSbd1"
+	by mail.kernel.org (Postfix) with ESMTP id A5ADA2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730269AbgAIKgK (ORCPT
+        id S1730300AbgAIKgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:36:10 -0500
-Received: from mout.web.de ([212.227.15.3]:58671 "EHLO mout.web.de"
+        Thu, 9 Jan 2020 05:36:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55516 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730251AbgAIKgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:36:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1578566143;
-        bh=EAK3sIZQqu0iFAcyFsqjs/RIgac6F6FxW7c+AFFkbbY=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=QcRNSbd14ZnDuspkGxFkcxGd6Ny4Uop1ENm8rpKaezOtoPVBku46Vp4Nnls2YC3Bc
-         AbAh4Y+TMCL/qnKf8ACiSbXbsP7guddSCsiYlU3s66ScmPGzN0RFJL5IPxVgygjY/U
-         xq/RFci2pddE9uP8L8M+yOHrdE+LwI6hhdvpZT88=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.1.10]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MRlJB-1jHw2A2MwL-00SuIO; Thu, 09
- Jan 2020 11:35:43 +0100
-Cc:     linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
+        id S1729326AbgAIKgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 05:36:05 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 079C46A057;
+        Thu,  9 Jan 2020 10:34:45 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        =?UTF-8?Q?Matthias_M=c3=a4nnich?= <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200107170240.47207-1-wenyang@linux.alibaba.com>
-Subject: Re: [PATCH v2] coccinelle: semantic patch to check for inappropriate
- do_div() calls
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Wen Yang <wenyang@linux.alibaba.com>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org
-Message-ID: <9a2b7d00-442e-0c1b-73cc-aed2bbecd13a@web.de>
-Date:   Thu, 9 Jan 2020 11:35:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [PATCH v12 0/3] Use MFD framework for SGI IOC3 drivers
+Date:   Thu,  9 Jan 2020 11:34:26 +0100
+Message-Id: <20200109103430.12057-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200107170240.47207-1-wenyang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WQTsQgK7Zxi8JJdexL2nh4QMQONYnADY/CTwBZ2MvoDHSOQrVVS
- lZdmgm+fK2ihMAKLvebw6ESBMCPdzCJBrqOklZ1C/I3wpA+H5Jc9MWSSWzVqEZDYsoeIhYq
- dwo6qIlYMHa0VCsAyPdhtgaqys1AxYwvTyDC10qChNRWIy/pQuvsRpjD8IMbNoEN/dZ9RL5
- 8qvlMaeabtN/g2Ta1BlZg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VO4QRwtOxv0=:oqDN8u7+OElC/+vpzLIEb4
- SgTI/1kROQ9CqxJZY7SIaagjeCD89JOs8wetst2J8AiOaUsUYEceaxrVKspqAzqkkzkGrt5Cy
- PrQc3rWC+/jqnmpGi2U6FVhKORbfEOMNnvz3nl9FopASjjVDwKXASZsKaoG5M586z3ncOHWZ8
- 8Q8F4jzTbgRrLjUg+wQB8KnOPY4NDZTS/fIfR06HOGoQaRNiu9/AAuW/eThpiO0LWcOG8q/uV
- joK3esSfIdAFnxayXHBCvaVYCShMlCdzB1uP8r4BJ+Q0I48u8FMS9DWBiKulWiddWLGYdey/G
- EvmIDio79cGdi6zgfgVqAC/hGhtQsQp1yIMtZFeSZk2IV269+wcj97TG7sf00wsAgk1QoHcty
- 1kJkW2e+sfh11BO9/+6qupYpeva3qxL0TZkJeVawFqSNHeHI4tDRiIPYfSgrv/CnOeGLI7Dz4
- zc9DfcA/JVYPtxXxQ80NDUN7NNM40oMfENM5x2kga9e8eH+v1BDY8V465WhxVJC7VCW1X5g5n
- 6MjDs6+YC6ZDoBw/39zs2Ke9ao+O6MEdQ99+Fwl0dZzXFQBBfsxPaEBoSRZtyG+8uoHfQACWu
- 7F80PMV+dt6GsnfPWyQs8vP4rUABIn/06HbJCEdlVnts/diY09KDZrQLcz6zTOUEfCU/SQxVt
- SM4Mo+7MImiePx4SwOFLbQc+UAf17JL9nyvxT81bMOvwoQqTKBTw/q9f4dfc6Gvfh6+Wqvs9g
- 9ANL6qb6761u4LQWJ7hUxqOR1gskCkDJab/9Jwm5upPfdw5xmYn4lTFmfuiKTH135eCySjgMc
- e88LHj4AjBXVdOFfAiRR8Zoar/13HUaO2Ycjw/rp7if76psbHr33jrivbYXs5hnRuEAA6khlz
- 7qwQs8B7UWed3K07X0S9ahA1D7k1A09g16QjcW+3EQrIqW+iQ3itgytgtSDKcxoPGGyijPPQH
- 40qFxNroj2SdJBJ6LkBfq5XwmqA6E2EU8glIuJDcZCOwl0VGD7Vbtfw17NtY5Mf0lo3moau9+
- qSTiVDu4twvsZenO46AIxvuIFncsFbjoZQuazRRoXd5hKx4OrAWelVIj4KxxC7lulu8HU0cit
- m+vHVWXlGwwJCD219HgyI/rr98BUpdpINwxmiuIyFDibOt/W8ZYqFzNIh2sTI/4BL74IvQm1z
- zYaWv/ab5Ud5hwYqTFyJmmII8wgbQL5L03Ngev1HvUnJSj6/iUxvhn+POPpPmONXDA/0SVZcA
- pi7zjAAdiLkMvDN2x3vKXRFIaFDJRmfX4/437j0YGlNGG59tODLYBZF9nWZc=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> - fix 'WARNING:' twice in each case.
+SGI IOC3 ASIC includes support for ethernet, PS2 keyboard/mouse,
+NIC (number in a can), GPIO and a byte  bus. By attaching a
+SuperIO chip to it, it also supports serial lines and a parallel
+port. The chip is used on a variety of SGI systems with different
+configurations. This patchset moves code out of the network driver,
+which doesn't belong there, into its new place a MFD driver and
+specific platform drivers for the different subfunctions.
 
-A duplicate text was removed.
+Changes in v12:
+ - added support for mapping all PCI interrupts as ioc3 uses INTB,
+   if both ethernet and superio is used
 
+Changes in v11:
+ - dropped accepted patches out of the series
+ - moved byte swapping patch first in series
+ - added ip30 system board support
 
-> +@script:python depends on org@
-> +p << r.p;
-> +ul << r.ul;
+Changes in v10:
+ - generation of fake subdevice ID had vendor and device ID swapped
 
-I interpret this variable assignment in the way that it will work only
-if the corresponding branch of the SmPL disjunction was actually matched
-by the referenced SmPL rule.
-Thus I suggest now to split the source code search pattern into
-four separate rules.
+Changes in v9:
+ - remove generated MFD devices, when driver is removed or in case
+   of a mfd device setup error
+ - remove irq domain, if setup of mfd devices failed
+ - pci_iounmap on exit/error cases
+ - added irq domain unmap function
 
+Changes in v8:
+ - Re-worked comments in drivers/mfd/ioc3.c
+ - Added select CRC16 to ioc3-eth.c
+ - Patches 1 and 2 are already taken to mips-next, but
+   for completeness of the series they are still included.
+   What's missing to get the remaining 3 patches via the MIPS
+   tree is an ack from a network maintainer
 
-> +warnings =3D construct_warnings(ul, "div64_ul")
+Changes in v7:
+ - added patch to enable ethernet phy for Origin 200 systems
+ - depend on 64bit for ioc3 mfd driver
 
-* Can two identifiers be nicer without an =E2=80=9Cs=E2=80=9D?
+Changes in v6:
+ - dropped patches accepted for v5.4-rc1
+ - moved serio patch to ip30 patch series
+ - adapted nvmem patch
 
-* Would it be sufficient to pass a shorter identification
-  (without the prefix =E2=80=9Cdiv64_=E2=80=9D)?
+Changes in v5:
+ - requested by Jakub I've splited ioc3 ethernet driver changes into
+   more steps to make the transition more visible; on the way there 
+   I've "checkpatched" the driver and reduced code reorderings
+ - dropped all uint16_t and uint32_t
+ - added nvmem API extension to the documenation file
+ - changed to use request_irq/free_irq in serio driver
+ - removed wrong kfree() in serio error path
 
-Regards,
-Markus
+Changes in v4:
+ - added w1 drivers to the series after merge in 5.3 failed because
+   of no response from maintainer and other parts of this series
+   won't work without that drivers
+ - moved ip30 systemboard support to the ip30 series, which will
+   deal with rtc oddity Lee found
+ - converted to use devm_platform_ioremap_resource
+ - use PLATFORM_DEVID_AUTO for serial, ethernet and serio in mfd driver
+ - fixed reverse christmas order in ioc3-eth.c
+ - formating issue found by Lee
+ - re-worked irq request/free in serio driver to avoid crashes during
+   probe/remove
+
+Changes in v3:
+ - use 1-wire subsystem for handling proms
+ - pci-xtalk driver uses prom information to create PCI subsystem
+   ids for use in MFD driver
+ - changed MFD driver to only use static declared mfd_cells
+ - added IP30 system board setup to MFD driver
+ - mac address is now read from ioc3-eth driver with nvmem framework
+
+Changes in v2:
+ - fixed issue in ioc3kbd.c reported by Dmitry Torokhov
+ - merged IP27 RTC removal and 8250 serial driver addition into
+   main MFD patch to keep patches bisectable
+
+Thomas Bogendoerfer (3):
+  MIPS: PCI: Support mapping of INTB/C/D for pci-xtalk-bridge
+  MIPS: SGI-IP27: fix readb/writeb addressing
+  mfd: ioc3: Add driver for SGI IOC3 chip
+
+ arch/mips/include/asm/mach-ip27/mangle-port.h |   4 +-
+ arch/mips/include/asm/pci/bridge.h            |   3 +-
+ arch/mips/include/asm/sn/ioc3.h               |  38 +-
+ arch/mips/pci/pci-xtalk-bridge.c              |  28 +-
+ arch/mips/sgi-ip27/ip27-timer.c               |  20 -
+ drivers/mfd/Kconfig                           |  13 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/ioc3.c                            | 669 ++++++++++++++++++
+ drivers/net/ethernet/sgi/Kconfig              |   5 +-
+ drivers/net/ethernet/sgi/ioc3-eth.c           | 544 +++-----------
+ drivers/rtc/rtc-m48t35.c                      |  11 +
+ drivers/tty/serial/8250/8250_ioc3.c           |  98 +++
+ drivers/tty/serial/8250/Kconfig               |  11 +
+ drivers/tty/serial/8250/Makefile              |   1 +
+ 14 files changed, 951 insertions(+), 495 deletions(-)
+ create mode 100644 drivers/mfd/ioc3.c
+ create mode 100644 drivers/tty/serial/8250/8250_ioc3.c
+
+-- 
+2.24.1
+
