@@ -2,210 +2,112 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EDEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2262AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2A42067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43882067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sbIXe/5j"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="xqx3KGA2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgAIM43 (ORCPT
+        id S1729272AbgAIM4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:56:29 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:53764 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727701AbgAIM43 (ORCPT
+        Thu, 9 Jan 2020 07:56:31 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44907 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbgAIM4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:56:29 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009Cr4dT031277;
-        Thu, 9 Jan 2020 13:56:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=2y1+dv3nA3YET9zOXNr+lo/MYiTPIWq79tj8sKOA3F8=;
- b=sbIXe/5jUi27CnIYRMXm6JcfW3/WQkj8DcllHwy+LR+c3b8zV3LVq3LiYZrVJyMPFCj3
- DUhW51atwpcQmQWIaS+64nhhztJehmjuMFsZVDmQKKabEhVq2yVh7N3RU+9G6zLhMwZu
- rv4fUOrpzUSr56B6r4tNuUg5xlttT2mxC38v827WTNAnM8nfVDZRO24jdAB4A61OpPTZ
- RVCd7WhUzPtTlbttM1PbyAD2/KP8xZkfZDkFJKEUj41MzsWi+oKNHcUdaCViYCtFpher
- YHp2ojOTg+176+I/GtlRckbcTBNKG7M+Z83EFG6Uqfv/O+N7fDlDsNg8vdSujmCuexo+ Fw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2xdw8b2dya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 13:56:16 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DB47A10002A;
-        Thu,  9 Jan 2020 13:56:15 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CA77F2B3836;
-        Thu,  9 Jan 2020 13:56:15 +0100 (CET)
-Received: from [10.48.0.71] (10.75.127.44) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jan
- 2020 13:56:15 +0100
-Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <jic23@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Olivier MOYSAN <olivier.moysan@st.com>
-References: <20200107114532.6697-1-peter.ujfalusi@ti.com>
- <eade6657-8470-0d70-b3c1-fcdddf891c6c@st.com>
- <4c0b7e3e-cd98-860a-e931-c216f1bc6e7a@ti.com>
- <698d9dec-4486-f70a-b8e0-dfd6b4bb907f@st.com>
- <45195b31-70fa-39c9-e109-eeb33d6a2663@ti.com>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <5328b668-2522-5d8d-83bb-f99bfe3086ed@st.com>
-Date:   Thu, 9 Jan 2020 13:56:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 9 Jan 2020 07:56:30 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so7250778wrm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 04:56:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ouFtmfEELWvJ13DB/hJHUscdWjOjJrZEj66Pak4s1Y=;
+        b=xqx3KGA2++yS7R7TG0QaX013kZuCurED29C3mgaK4YpOHQgMXTh3VzeqcYiZZP8Rib
+         NEHA0voQO6ezOb/WhLv5Sj32sc7JLUVaC4S33L6R3aJLCX8nI/GHgJ9X7t74o4LJxNTc
+         R1wYVKvmF+xykpBEnXE01+nf30lNxgY9Hs+3jQrE6g9aAMd4o/QbSAbpeFRTxi9w3Ozu
+         grHcFTufOto7YoQ0Uptj+Wlz4AU/462tVJ3PsyguagKTdQPzWH8wMGRh93Zgcd38Whne
+         Xk9KEOOUoIn75OGZtFnLRLo64y+OKD9efik9MkCtTSTVA3QfqpYT5zmvpQu9rVBjLQQ+
+         LfLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ouFtmfEELWvJ13DB/hJHUscdWjOjJrZEj66Pak4s1Y=;
+        b=TSxUv0+spsazVm/2cD7/vY7GhdMsyjIxk1fyHNjxWBlDDE2eaeZIcbOURlOBhoSKQK
+         GGfpY5JHsxQsYdmA8PJ+dGhPdby+Sg7tKdP7eKQrUFJF/xpD+PhjgfC5UB6TeyW4AB7F
+         PD+SHYy8XDixun4A58YC9uykKDnLo+h9ywzUhMp/NTrXBF986JBMWLoRGdgC2tUotM03
+         K0vxeSe/lT7xu9G6jqBA8IW+OLo7L++5AbOPaleaciFSAdVOr9V8GQNV63TFeE9aMOaY
+         We0jnjT+8+v66tXWi+xew58Z8crL//vXcXoHh0vHhWEzogIZAhzqCryNzwW3jLKChYEZ
+         ZY4A==
+X-Gm-Message-State: APjAAAX6KtTf6Nqzo7UowNCQyn6xeVzt+U+woNrt9dWj8kUFw/JNubul
+        ToSoQzagfq0EIaQXwH5Dj4G3AA==
+X-Google-Smtp-Source: APXvYqyidWpQLwOtKY0+Wld9OKT8eLhNt7m1m0B1gGsx5ougaUpJZEQwCZEQtepaBG9XX3KOxu4f/A==
+X-Received: by 2002:a5d:6a52:: with SMTP id t18mr10371786wrw.391.1578574589653;
+        Thu, 09 Jan 2020 04:56:29 -0800 (PST)
+Received: from debian-brgl.home (amontpellier-652-1-53-230.w109-210.abo.wanadoo.fr. [109.210.44.230])
+        by smtp.gmail.com with ESMTPSA id f207sm3163471wme.9.2020.01.09.04.56.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 04:56:29 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] kconfig: fix an "implicit declaration of function" warning
+Date:   Thu,  9 Jan 2020 13:56:27 +0100
+Message-Id: <20200109125627.24654-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <45195b31-70fa-39c9-e109-eeb33d6a2663@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_02:2020-01-09,2020-01-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 12:40 PM, Peter Ujfalusi wrote:
-> 
-> 
-> On 09/01/2020 13.29, Fabrice Gasnier wrote:
->> On 1/9/20 11:32 AM, Peter Ujfalusi wrote:
->>>
->>>
->>> On 09/01/2020 11.13, Fabrice Gasnier wrote:
->>>> On 1/7/20 12:45 PM, Peter Ujfalusi wrote:
->>>>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->>>>> eating up the error code.
->>>>>
->>>>> By using dma_request_chan() directly the driver can support deferred
->>>>> probing against DMA.
->>>>>
->>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>>> ---
->>>>> Hi,
->>>>>
->>>>> Changes since v1:
->>>>> - Fall back to IRQ mode for ADC only in case of ENODEV
->>>>
->>>> Hi Peter,
->>>>
->>>> Thanks for the patch,
->>>>
->>>> Please find a minor comment here after. Apart from that, you can add my:
->>>>
->>>> Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>>>
->>>>
->>>>>
->>>>> Regards,
->>>>> Peter
->>>>>
->>>>>  drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++++++++----
->>>>>  1 file changed, 17 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
->>>>> index e493242c266e..74a2211bdff4 100644
->>>>> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
->>>>> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
->>>>> @@ -1383,9 +1383,13 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
->>>>>  {
->>>>>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
->>>>>  
->>>>> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
->>>>> -	if (!adc->dma_chan)
->>>>> -		return -EINVAL;
->>>>> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
->>>>> +	if (IS_ERR(adc->dma_chan)) {
->>>>> +		int ret = PTR_ERR(adc->dma_chan);
->>>>> +
->>>>> +		adc->dma_chan = NULL;
->>>>> +		return ret;
->>>>
->>>> You may "return PTR_ERR(adc->dma_chan);" directly here.
->>>
->>> I don't make decision here on behalf of the adc path on to go forward w/
->>> or w/o DMA support and if we go ahead the stm32_dfsdm_dma_release()
->>> needs the dma_chan to be NULL in case we don't use DMA.
->>>
->>> It is much cleaner to set dma_chan to NULL here than doing it in other
->>> paths.
->>
->> Hi Peter,
-> 
-> Hi Fabrice,
-> 
->> Sorry I wasn't clear enough. I agree with you. I was suggesting only,
->> talking about the 'ret' variable. It may be removed to spare a few lines
->> :-).
->> 	if (IS_ERR(adc->dma_chan)) {
->> 		adc->dma_chan = NULL;
->> 		return PTR_ERR(adc->dma_chan);
->> 	}
->> I'm okay both ways.
-> 
-> PTR_ERR(NULL); will return 0
-> I need to retrieve the actual error code before NULLing dma_chan.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Oh yes, so please forget this.
-Thanks,
-Fabrice
+strncasecmp() & strcasecmp() functions are declared in strings.h, not
+string.h. On most environments the former is implicitly included by
+the latter but on some setups, building menuconfig results in the
+following warning:
 
-> 
->>
->>>
->>>>
->>>> Best Regards,
->>>> Fabrice
->>>>
->>>>> +	}
->>>>>  
->>>>>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
->>>>>  					 DFSDM_DMA_BUFFER_SIZE,
->>>>> @@ -1509,7 +1513,16 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
->>>>>  	init_completion(&adc->completion);
->>>>>  
->>>>>  	/* Optionally request DMA */
->>>>> -	if (stm32_dfsdm_dma_request(indio_dev)) {
->>>>> +	ret = stm32_dfsdm_dma_request(indio_dev);
->>>>> +	if (ret) {
->>>>> +		if (ret != -ENODEV) {
->>>>> +			if (ret != -EPROBE_DEFER)
->>>>> +				dev_err(&indio_dev->dev,
->>>>> +					"DMA channel request failed with %d\n",
->>>>> +					ret);
->>>>> +			return ret;
->>>>> +		}
->>>>> +
->>>>>  		dev_dbg(&indio_dev->dev, "No DMA support\n");
->>>>>  		return 0;
->>>>>  	}
->>>>>
->>>
->>> - Péter
->>>
->>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>>
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+  HOSTCC  scripts/kconfig/mconf.o
+scripts/kconfig/mconf.c: In function ‘search_conf’:
+scripts/kconfig/mconf.c:423:6: warning: implicit declaration of function ‘strncasecmp’ [-Wimplicit-function-declaration]
+  if (strncasecmp(dialog_input_result, CONFIG_, strlen(CONFIG_)) == 0)
+      ^~~~~~~~~~~
+scripts/kconfig/mconf.c: In function ‘main’:
+scripts/kconfig/mconf.c:1021:8: warning: implicit declaration of function ‘strcasecmp’ [-Wimplicit-function-declaration]
+   if (!strcasecmp(mode, "single_menu"))
+        ^~~~~~~~~~
+
+Fix it by explicitly including strings.h.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ scripts/kconfig/mconf.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/kconfig/mconf.c b/scripts/kconfig/mconf.c
+index 49c26ea9dd98..4063dbc1b927 100644
+--- a/scripts/kconfig/mconf.c
++++ b/scripts/kconfig/mconf.c
+@@ -15,6 +15,7 @@
+ #include <stdarg.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <strings.h>
+ #include <signal.h>
+ #include <unistd.h>
+ 
+-- 
+2.23.0
+
