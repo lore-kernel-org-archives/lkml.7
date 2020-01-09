@@ -2,113 +2,93 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEC2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA44C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0EC20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:03:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZJ6DV7q4"
+	by mail.kernel.org (Postfix) with ESMTP id 602B62067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387953AbgAIRDw (ORCPT
+        id S2387967AbgAIRHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:03:52 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37958 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387821AbgAIRDv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:03:51 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l9so6471703oii.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 09:03:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bMx6vW+NjpB+ZzfdSbqjjcW3Neq3wFHEeHMe7FuFhBA=;
-        b=ZJ6DV7q423gDjoUKdWM66o5EZrOhvSX8oOMpMmT+dLghf3n7rzhh+vOP32D1eEbaVa
-         FiYDULBwfXGcRDVApzeNu9cMg0lfapFl6Nc8UtuPs7XS8QrBJPHqo3inUA6UjdTU3/bs
-         KZszkXMdHRa35yZR2l8ZbeANUnzSVaM4SGcHjLFMHRd++8DM54Bm1reCZff+sA4HJUFn
-         p1wg8+YMkwEO+BBTRG6lAUbhhIIhy+UlqSPTympsM9GULVhyFLohm3YoXdEj0Ido8eao
-         KPHscMdOTLSUSS2oorJACsr3i2ExrD4FxY3PU7uGX+l4CLZp4yQk6esay5Yng+P3TaJj
-         M/kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bMx6vW+NjpB+ZzfdSbqjjcW3Neq3wFHEeHMe7FuFhBA=;
-        b=O2DfKzPRapahfJxRFBkX7u9e3lqv06Mle5bBFCUIWJz9UKNLqgpq3dM7AfSEENiJpj
-         HYyj68hm/oAXQglLxM5cel8pV1/Kr/E5EN85cKLfosmmj7gYGVONCDy5N4WDb1XWIwwy
-         5dKHhybUKO/2+tt+odgBA0VieUuIELQ9Zpjy3DxfCuslkTx+9WER40PPI0zoP0WytlJG
-         C9rYmRg6rTRiWKc6ak/uASrWZmMoWVMACpijM8tpwA6hrCtclMx+mZ+/gfJwDbj6Dl8P
-         AbBimPqBNfRJuS1yM9vo20ID+ymV8qOG5fztjghITWxCP3f8Q3buvwz5VdcSPwx1sGHv
-         PLeQ==
-X-Gm-Message-State: APjAAAXnNpyS60lp4vhOQJW+EiiYxfoWUVDzQS+4rI58kaaONmam84In
-        cn4MryehazywDbRZ0kgPp/mqCXdpEJE8m6FEegHVZg==
-X-Google-Smtp-Source: APXvYqyFE4T3xhLKLwqwclKWaKNgQE4HgnkiPzxpoEpcdhDJKNeue00EFINCnoe8AXO4FyU2wAGpr1fJXb/cZ5NOSRo=
-X-Received: by 2002:aca:d4c1:: with SMTP id l184mr4065405oig.172.1578589430440;
- Thu, 09 Jan 2020 09:03:50 -0800 (PST)
+        Thu, 9 Jan 2020 12:07:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49716 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731444AbgAIRHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 12:07:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 56469AE03;
+        Thu,  9 Jan 2020 17:07:47 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 1454DE008B; Thu,  9 Jan 2020 18:07:46 +0100 (CET)
+Date:   Thu, 9 Jan 2020 18:07:46 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Firo Yang <firo.yang@suse.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        rcu@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Subject: Re: [PATCH AUTOSEL 4.19 46/84] tcp/dccp: fix possible race
+ __inet_lookup_established()
+Message-ID: <20200109170746.GO22387@unicorn.suse.cz>
+References: <20191227174352.6264-1-sashal@kernel.org>
+ <20191227174352.6264-46-sashal@kernel.org>
+ <CA+G9fYv8o4he83kqpxB9asT7eUMAeODyX3MBbmwsCdgqLcXPWw@mail.gmail.com>
+ <20200109153226.GG1706@sasha-vm>
 MIME-Version: 1.0
-References: <20200109152322.104466-1-elver@google.com> <20200109162739.GS13449@paulmck-ThinkPad-P72>
-In-Reply-To: <20200109162739.GS13449@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 9 Jan 2020 18:03:39 +0100
-Message-ID: <CANpmjNOR4oT+yuGsjajMjWduKjQOGg9Ybd97L2jwY2ZJN8hgqg@mail.gmail.com>
-Subject: Re: [PATCH -rcu 0/2] kcsan: Improvements to reporting
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109153226.GG1706@sasha-vm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jan 2020 at 17:27, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Thu, Jan 09, 2020 at 04:23:20PM +0100, Marco Elver wrote:
-> > Improvements to KCSAN data race reporting:
-> > 1. Show if access is marked (*_ONCE, atomic, etc.).
-> > 2. Rate limit reporting to avoid spamming console.
-> >
-> > Marco Elver (2):
-> >   kcsan: Show full access type in report
-> >   kcsan: Rate-limit reporting per data races
->
-> Queued and pushed, thank you!  I edited the commit logs a bit, so could
-> you please check to make sure that I didn't mess anything up?
+On Thu, Jan 09, 2020 at 10:32:26AM -0500, Sasha Levin wrote:
+> On Thu, Jan 02, 2020 at 01:31:22PM +0530, Naresh Kamboju wrote:
+> > On Fri, 27 Dec 2019 at 23:17, Sasha Levin <sashal@kernel.org> wrote:
+> > > 
+> > > From: Eric Dumazet <edumazet@google.com>
+> > > 
+> > > [ Upstream commit 8dbd76e79a16b45b2ccb01d2f2e08dbf64e71e40 ]
+> > > 
+> > > Michal Kubecek and Firo Yang did a very nice analysis of crashes
+> > > happening in __inet_lookup_established().
+> > > 
+> > > Since a TCP socket can go from TCP_ESTABLISH to TCP_LISTEN
+> > > (via a close()/socket()/listen() cycle) without a RCU grace period,
+> > > I should not have changed listeners linkage in their hash table.
+> > > 
+> > > They must use the nulls protocol (Documentation/RCU/rculist_nulls.txt),
+> > > so that a lookup can detect a socket in a hash list was moved in
+> > > another one.
+> > > 
+> > > Since we added code in commit d296ba60d8e2 ("soreuseport: Resolve
+> > > merge conflict for v4/v6 ordering fix"), we have to add
+> > > hlist_nulls_add_tail_rcu() helper.
+> > 
+> > The kernel panic reported on all devices,
+> > While running LTP syscalls accept* test cases on stable-rc-4.19 branch kernel.
+> > This report log extracted from qemu_x86_64.
+> > 
+> > Reverting this patch re-solved kernel crash.
+> 
+> I'll drop it until we can look into what's happening here, thanks!
 
-Looks good to me, thank you.
+It was already discussed here:
 
-> At some point, boot-time-allocated per-CPU arrays might be needed to
-> avoid contention on large systems, but one step at a time.  ;-)
+  http://lkml.kernel.org/r/CA+G9fYv3=oJSFodFp4wwF7G7_g5FWYRYbc4F0AMU6jyfLT689A@mail.gmail.com
 
-I certainly hope the rate of fixing/avoiding data races will not be
-eclipsed by the rate at which new ones are introduced. :-)
+and fixed version should be in 4.19, 4.14 and 4.9 stable branches now.
 
-Thanks,
--- Marco
-
->                                                         Thanx, Paul
->
-> >  kernel/kcsan/core.c   |  15 +++--
-> >  kernel/kcsan/kcsan.h  |   2 +-
-> >  kernel/kcsan/report.c | 153 +++++++++++++++++++++++++++++++++++-------
-> >  lib/Kconfig.kcsan     |  10 +++
-> >  4 files changed, 148 insertions(+), 32 deletions(-)
-> >
-> > --
-> > 2.25.0.rc1.283.g88dfdc4193-goog
-> >
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200109162739.GS13449%40paulmck-ThinkPad-P72.
+Michal Kubecek
