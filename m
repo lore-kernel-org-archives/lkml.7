@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5407CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796BDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2838A2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 510392082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="nx5UGTtM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="YdplVJrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731341AbgAINwb (ORCPT
+        id S1731361AbgAINwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:52:31 -0500
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:35720 "EHLO
+        Thu, 9 Jan 2020 08:52:34 -0500
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:50441 "EHLO
         mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729476AbgAINw3 (ORCPT
+        with ESMTP id S1731336AbgAINwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:52:29 -0500
-Received: by mail-wm1-f42.google.com with SMTP id p17so2941784wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:52:27 -0800 (PST)
+        Thu, 9 Jan 2020 08:52:32 -0500
+Received: by mail-wm1-f42.google.com with SMTP id a5so3025354wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:52:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=K7qiBD3jGRUcHWoFC2hnyMKPOIBb13dj8QhjT8ONsas=;
-        b=nx5UGTtM+N44G5BfUdc3Hoj00fE93TiIJ0OTpxjq1JPUPs+YTEFkJU0EPhmhKSMdpY
-         GhJPWXpNjCPzvGUsDdKGOMZb7xZudXYtkF9UGyP7wfllFAkothn8FMz2JKvyrki5FBtK
-         j4P3Al8Q/wbAEZKPJaZrYxYLsZzBWAAhd/YahAfiFt67OxwmathgPog0CaEqdrFV5ICq
-         RLI96sdHUMdQ+iHC8RUksj+lNrSj/JCEJNJCgb9Vu01X4/xqYlKVDx0Iofd5LSZvfzjL
-         OAGDqmj8E6JTBqaxg1CHGV26yg+tAkvZO0t15qLBamNWhW3SusJbLgs7L66kcwsDA5qz
-         pPJg==
+        bh=bhaw+vfeaLxVOzoOOCbTv5V0pf4zVwEkBpFfiGVWyVQ=;
+        b=YdplVJrxQA+rY2BfRpe9YrdFu32Wj2CXIK6O7oNhJ+sbeu9+jnKJ3HEUaf2V5BJX74
+         3AekydIO2Yw+kCgrfAF0Y3oC3xirkpj9HLmcqKTdo3bz8tDU4aMdmkumzs0V8Nxk19kt
+         Q2E9oE6+Nb4PWtpQm827ovygGXqEcqChiIATgpbQBEmmP+jmbYxyAeyGAV8u1UMQbtam
+         6gh7ljgTzc5DM9whVfY5mHeSzvqarUTJMKcUeCV6OjYj2YbCqj1NvCL9W9Geg1ns7MEw
+         imqehgrg7yjWqGxNBlSjUsj1UV/WNccYv7+dVk4uSCs/MGn88OEGkdUbBZ8PInncF8lZ
+         qqKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=K7qiBD3jGRUcHWoFC2hnyMKPOIBb13dj8QhjT8ONsas=;
-        b=tAjdOt6xNW8MEKlvZkALpx7lYPXq5GZrjkuJ+W6bSfxAV6OPonmPhG2mJqNYzJefS1
-         dnaR7f0OMYH3Cswz0SJPFkbcHY/flqb9aItV4NCqH/o2dUs1yRn5Gk9ARD3r9gFjh1XX
-         hB63nkDTx6Ub5uLVHy2be9INPtDwFZ9qh3CJ7UgtF34pO2gFLqE166k8NwpA9IgAfmZu
-         glB42QbwNxEkKeZ3M+5V443OdM75eCYvtAye/ejTfARp+QVIYBYoXTIRvMntyDPf3oSm
-         awszGYGycJLPqriU6TrCN7NvSskWnWPlh8r1ROyz0pWoVh+LRRgzq2ylDHGA/tziUMGF
-         AZQQ==
-X-Gm-Message-State: APjAAAXbWwiJR4rp6f3mSRSrdajj1u0S1F5kUAqtMPMY4z4fC1HZ+qjh
-        BQ8TnhWeKgKC7u8mPIZietQyyQ==
-X-Google-Smtp-Source: APXvYqza39AuRdSj+WTPtS0AXsMxw2OjmXIO7LOV133rsNOr259smnP3qqSflId6/fIhXVciJNR8Eg==
-X-Received: by 2002:a1c:7205:: with SMTP id n5mr5243604wmc.9.1578577947211;
-        Thu, 09 Jan 2020 05:52:27 -0800 (PST)
+        bh=bhaw+vfeaLxVOzoOOCbTv5V0pf4zVwEkBpFfiGVWyVQ=;
+        b=aPbeEPcDl7B+ToYbEyHqYQSzwXmL8GDtRuou1eIKLf7A2HzvtLRumQ9LS8L7uu1cn6
+         4u0bCcjsQyCiAxbxiR1lKEOuTRZAN73jZroScLZAQHq/ewJkKFDb1A8NgRBzFN5vq97x
+         aeK8Z6rNHxd6NEk/RY6r9FQNjyt5HO5UUdpLVMFA5rSBJWWpFpqU4hWZd9lcIg5N0R4j
+         CAFfA4gb9TtYLdprVX0zeVExYsGuUn0tDuucBQdTzkZzCeNj/Ke/PfsxFKBDyAynKh1/
+         sj8hvTGFun4M2rdxAe3FmyFDVS5CqCE8YSqtGs+kbHaI07xzc+aqDk55OhvHWjg2nTks
+         FbSQ==
+X-Gm-Message-State: APjAAAXJlUKBGG6Ho78nO1NKN93ei03TbCp1Yc0YmcINyN8wAm9VCFcb
+        /O71iZtQ/6QnXfYwm4kfATewAQ==
+X-Google-Smtp-Source: APXvYqyy61xoMPBUlxiAZV5k/2Bht20Qx7hWrsTdyE+yPuJ53LS+84ZZ7DetqZNUKlSdQG0ZOVFNiA==
+X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr5478709wmk.42.1578577950336;
+        Thu, 09 Jan 2020 05:52:30 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id v17sm7903169wrt.91.2020.01.09.05.52.26
+        by smtp.gmail.com with ESMTPSA id v14sm8100554wrm.28.2020.01.09.05.52.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:52:26 -0800 (PST)
+        Thu, 09 Jan 2020 05:52:29 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
@@ -64,9 +64,9 @@ Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
         Rajan Vaja <rajan.vaja@xilinx.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/8] arm64: zynqmp: Remove addition number in node name
-Date:   Thu,  9 Jan 2020 14:52:16 +0100
-Message-Id: <34e9e2001a874428b3e3fb3c73799589783a6278.1578577931.git.michal.simek@xilinx.com>
+Subject: [PATCH v2 4/8] arm64: zynqmp: Turn comment to gpio-line-names
+Date:   Thu,  9 Jan 2020 14:52:18 +0100
+Message-Id: <daa153e9b77184e29a4064efebd759cfb999de7a.1578577931.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1578577931.git.michal.simek@xilinx.com>
 References: <cover.1578577931.git.michal.simek@xilinx.com>
@@ -77,40 +77,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change is coming from mainline review that's why this patch is
-sync.
+Label gpio lines properly.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
-Changes in v2:
-- Add missing patch
+Changes in v2: None
 
- arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    | 43 ++++---------------
+ 1 file changed, 9 insertions(+), 34 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-index b75235ae7d30..4a86efa32d68 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-@@ -123,7 +123,7 @@ &spi0 {
- 	status = "okay";
- 	num-cs = <1>;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+index 7c6b538490f8..c96e8416fa7e 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+@@ -125,21 +125,11 @@ &i2c0 {
+ 	tca6416_u97: gpio@20 {
+ 		compatible = "ti,tca6416";
+ 		reg = <0x20>;
+-		gpio-controller;
++		gpio-controller; /* IRQ not connected */
+ 		#gpio-cells = <2>;
+-		/*
+-		 * IRQ not connected
+-		 * Lines:
+-		 * 0 - PS_GTR_LAN_SEL0
+-		 * 1 - PS_GTR_LAN_SEL1
+-		 * 2 - PS_GTR_LAN_SEL2
+-		 * 3 - PS_GTR_LAN_SEL3
+-		 * 4 - PCI_CLK_DIR_SEL
+-		 * 5 - IIC_MUX_RESET_B
+-		 * 6 - GEM3_EXP_RESET_B
+-		 * 7, 10 - 17 - not connected
+-		 */
+-
++		gpio-line-names = "PS_GTR_LAN_SEL0", "PS_GTR_LAN_SEL1", "PS_GTR_LAN_SEL2", "PS_GTR_LAN_SEL3",
++				"PCI_CLK_DIR_SEL", "IIC_MUX_RESET_B", "GEM3_EXP_RESET_B",
++				"", "", "", "", "", "", "", "", "";
+ 		gtr-sel0 {
+ 			gpio-hog;
+ 			gpios = <0 0>;
+@@ -169,27 +159,12 @@ gtr-sel3 {
+ 	tca6416_u61: gpio@21 {
+ 		compatible = "ti,tca6416";
+ 		reg = <0x21>;
+-		gpio-controller;
++		gpio-controller; /* IRQ not connected */
+ 		#gpio-cells = <2>;
+-		/*
+-		 * IRQ not connected
+-		 * Lines:
+-		 * 0 - VCCPSPLL_EN
+-		 * 1 - MGTRAVCC_EN
+-		 * 2 - MGTRAVTT_EN
+-		 * 3 - VCCPSDDRPLL_EN
+-		 * 4 - MIO26_PMU_INPUT_LS
+-		 * 5 - PL_PMBUS_ALERT
+-		 * 6 - PS_PMBUS_ALERT
+-		 * 7 - MAXIM_PMBUS_ALERT
+-		 * 10 - PL_DDR4_VTERM_EN
+-		 * 11 - PL_DDR4_VPP_2V5_EN
+-		 * 12 - PS_DIMM_VDDQ_TO_PSVCCO_ON
+-		 * 13 - PS_DIMM_SUSPEND_EN
+-		 * 14 - PS_DDR4_VTERM_EN
+-		 * 15 - PS_DDR4_VPP_2V5_EN
+-		 * 16 - 17 - not connected
+-		 */
++		gpio-line-names = "VCCPSPLL_EN", "MGTRAVCC_EN", "MGTRAVTT_EN", "VCCPSDDRPLL_EN", "MIO26_PMU_INPUT_LS",
++				"PL_PMBUS_ALERT", "PS_PMBUS_ALERT", "MAXIM_PMBUS_ALERT", "PL_DDR4_VTERM_EN",
++				"PL_DDR4_VPP_2V5_EN", "PS_DIMM_VDDQ_TO_PSVCCO_ON", "PS_DIMM_SUSPEND_EN",
++				"PS_DDR4_VTERM_EN", "PS_DDR4_VPP_2V5_EN", "", "";
+ 	};
  
--	spi0_flash0: flash0@0 {
-+	spi0_flash0: flash@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "sst,sst25wf080", "jedec,spi-nor";
-@@ -141,7 +141,7 @@ &spi1 {
- 	status = "okay";
- 	num-cs = <1>;
- 
--	spi1_flash0: flash0@0 {
-+	spi1_flash0: flash@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "atmel,at45db041e", "atmel,at45", "atmel,dataflash";
+ 	i2c-mux@75 { /* u60 */
 -- 
 2.24.0
 
