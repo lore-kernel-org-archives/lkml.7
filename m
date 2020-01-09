@@ -2,176 +2,92 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B931C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE62C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C772072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bdS1CzfY"
+	by mail.kernel.org (Postfix) with ESMTP id 5CBF02072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730928AbgAIMYx (ORCPT
+        id S1730933AbgAIM2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:24:53 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38719 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729159AbgAIMYx (ORCPT
+        Thu, 9 Jan 2020 07:28:34 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54142 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730392AbgAIM2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:24:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578572691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZN4kV3eMEjG7v2k1/FQbd0hSQzrkbIOTygf9JUjBaPk=;
-        b=bdS1CzfY2s9cwOKN+/gNKC3e43HmY3NIl/8aLnc0Gilu3nRpTWbufbU9DmY64GXXmv3cA6
-        sVloC9Zgy4+7v9UqjJCVW1aFQGLPKZFi5tEHAgcYqonG4Dkk8nlPBCrDYTMdSs64mwY39T
-        5iK5JHWLdPbcfmHR7lLh9pgfOhHdu8c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-mbnEw2e7OJOIBON_ZTkJIg-1; Thu, 09 Jan 2020 07:24:49 -0500
-X-MC-Unique: mbnEw2e7OJOIBON_ZTkJIg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED33E801E7B;
-        Thu,  9 Jan 2020 12:24:47 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F11F28060C;
-        Thu,  9 Jan 2020 12:24:45 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 13:24:43 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: "perf ftrace" segfault because ->cpus!=NULL but ->all_cpus==NULL
-Message-ID: <20200109122443.GF52936@krava>
-References: <CAG48ez0eULP6pH26H9ac-YYa88_RSGt6v_hDhsrZ92iZoRdsoQ@mail.gmail.com>
+        Thu, 9 Jan 2020 07:28:34 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ipWvN-0001Is-RW; Thu, 09 Jan 2020 13:28:29 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7196A1C2CDA;
+        Thu,  9 Jan 2020 13:28:29 +0100 (CET)
+Date:   Thu, 09 Jan 2020 12:28:29 -0000
+From:   "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/urgent] futex: Fix kernel-doc notation warning
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <223be78c-f3c8-52df-836d-c5fb8e7907e9@infradead.org>
+References: <223be78c-f3c8-52df-836d-c5fb8e7907e9@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0eULP6pH26H9ac-YYa88_RSGt6v_hDhsrZ92iZoRdsoQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Message-ID: <157857290920.30329.4383548737653158496.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 12:37:14PM +0100, Jann Horn wrote:
-> I was clumsily trying to use "perf ftrace" from git master (I might
-> very well be using it wrong), and it's falling over with a NULL deref.
-> I don't really understand the perf code, but it looks to me like it
-> might be related to Andi Kleen's refactoring that introduced
-> evlist->all_cpus?
-> 
-> I think the problem is that evlist_close() assumes that ->cpus!=NULL
-> implies ->all_cpus!=NULL, but perf_evlist__propagate_maps() doesn't
-> set ->all_cpus if the evlist is empty.
-> 
-> Here's the crash I encountered:
-> 
-> root@vm:~# /linux-llvm/tools/perf/perf ftrace -a -T kmem_cache_alloc
-> failed to reset ftrace
-> Segmentation fault (core dumped)
-> root@vm:~# gdb /linux-llvm/tools/perf/perf core
-> [...]
-> Core was generated by `/linux-llvm/tools/perf/perf ftrace -a -T
-> kmem_cache_alloc'.
-> Program terminated with signal SIGSEGV, Segmentation fault.
-> #0  perf_cpu_map__cpu (cpus=0x0, idx=idx@entry=0) at cpumap.c:250
-> [...]
-> (gdb) list
-> 245 return cpus;
-> 246 }
-> 247
-> 248 int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
-> 249 {
-> 250 if (idx < cpus->nr)
-> 251 return cpus->map[idx];
-> 252
-> 253 return -1;
-> 254 }
-> (gdb) print cpus
-> $1 = (const struct perf_cpu_map *) 0x0
-> (gdb) bt
-> #0  perf_cpu_map__cpu (cpus=0x0, idx=idx@entry=0) at cpumap.c:250
-> #1  0x00005579cbf38731 in evlist__close
-> (evlist=evlist@entry=0x5579cd1c22c0) at util/evlist.c:1222
-> #2  0x00005579cbf388f6 in evlist__delete (evlist=0x5579cd1c22c0) at
-> util/evlist.c:152
-> #3  0x00005579cbf389c1 in evlist__delete (evlist=<optimized out>) at
-> util/evlist.c:148
-> #4  0x00005579cbe9e3b5 in cmd_ftrace (argc=0, argv=0x7ffe818a16e0) at
-> builtin-ftrace.c:520
-> #5  0x00005579cbf2287d in run_builtin (p=0x5579cc2a9740
-> <commands+672>, argc=4, argv=0x7ffe818a16e0) at perf.c:312
-> #6  0x00005579cbe96baa in handle_internal_command
-> (argv=0x7ffe818a16e0, argc=4) at perf.c:364
-> #7  run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:408
-> #8  main (argc=4, argv=0x7ffe818a16e0) at perf.c:538
-> (gdb) frame 1
-> #1  0x00005579cbf38731 in evlist__close
-> (evlist=evlist@entry=0x5579cd1c22c0) at util/evlist.c:1222
-> 1222 evlist__for_each_cpu(evlist, i, cpu) {
-> (gdb) print evlist
-> $2 = (struct evlist *) 0x5579cd1c22c0
-> (gdb) print *evlist
-> $3 = {core = {entries = {next = 0x5579cd1c22c0, prev =
-> 0x5579cd1c22c0}, nr_entries = 0, has_user_cpus = false, cpus =
-> 0x5579cd1b8fe0, all_cpus = 0x0, threads = 0x5579cd1c2d60,
->     nr_mmaps = 0, mmap_len = 0, pollfd = {nr = 0, nr_alloc = 0,
-> nr_autogrow = 64, entries = 0x0, priv = 0x0}, heads = {{first = 0x0}
-> <repeats 256 times>}, mmap = 0x0, mmap_ovw = 0x0,
->     mmap_first = 0x0, mmap_ovw_first = 0x0}, nr_groups = 0, enabled =
-> false, id_pos = 0, is_pos = 0, combined_sample_type = 0,
-> bkw_mmap_state = BKW_MMAP_NOTREADY, workload = {cork_fd = 0,
->     pid = -1}, mmap = 0x0, overwrite_mmap = 0x0, selected = 0x0, stats
-> = {total_period = 0, total_non_filtered_period = 0, total_lost = 0,
-> total_lost_samples = 0, total_aux_lost = 0,
->     total_aux_partial = 0, total_invalid_chains = 0, nr_events = {0
-> <repeats 82 times>}, nr_non_filtered_samples = 0, nr_lost_warned = 0,
-> nr_unknown_events = 0, nr_invalid_chains = 0,
->     nr_unknown_id = 0, nr_unprocessable_samples = 0,
-> nr_auxtrace_errors = {0, 0}, nr_proc_map_timeout = 0}, env = 0x0,
-> trace_event_sample_raw = 0x0, first_sample_time = 0,
->   last_sample_time = 0, thread = {th = 0, done = 0}}
-> (gdb)
+The following commit has been merged into the locking/urgent branch of tip:
 
-oops, ftrace is using evlist without event ;-) so all_cpus
-will not get initialized..
+Commit-ID:     51bfb1d11d6daf095addf9fe8471c20992caae0b
+Gitweb:        https://git.kernel.org/tip/51bfb1d11d6daf095addf9fe8471c20992caae0b
+Author:        Randy Dunlap <rdunlap@infradead.org>
+AuthorDate:    Sun, 08 Dec 2019 20:26:55 -08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 09 Jan 2020 13:23:40 +01:00
 
-Andi, should we initialize evlist::all_cpus with the first
-cpus we get, like in the patch below?
+futex: Fix kernel-doc notation warning
 
+Fix a kernel-doc warning in kernel/futex.c by adding notation
+for @ret.
 
-thanks,
-jirka
+../kernel/futex.c:1187: warning: Function parameter or member 'ret' not described in 'wait_for_owner_exiting'
 
+Fixes: 3ef240eaff36 ("futex: Prevent exit livelock")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/223be78c-f3c8-52df-836d-c5fb8e7907e9@infradead.org
 
 ---
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index ae9e65aa2491..5b9f2ca50591 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -164,6 +164,9 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
- 		evlist->threads = perf_thread_map__get(threads);
- 	}
- 
-+	if (!evlist->all_cpus && cpus)
-+		evlist->all_cpus = perf_cpu_map__get(cpus);
-+
- 	perf_evlist__propagate_maps(evlist);
- }
- 
+ kernel/futex.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/kernel/futex.c b/kernel/futex.c
+index 03c518e..0cf84c8 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -1178,6 +1178,7 @@ out_error:
+ 
+ /**
+  * wait_for_owner_exiting - Block until the owner has exited
++ * @ret: owner's current futex lock status
+  * @exiting:	Pointer to the exiting task
+  *
+  * Caller must hold a refcount on @exiting.
