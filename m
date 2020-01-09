@@ -2,155 +2,177 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51778C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA8EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24811206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iPWeoA+W"
+	by mail.kernel.org (Postfix) with ESMTP id 0701920661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387498AbgAIQKR (ORCPT
+        id S2387506AbgAIQKT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:10:17 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40186 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387485AbgAIQKQ (ORCPT
+        Thu, 9 Jan 2020 11:10:19 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:39659 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387494AbgAIQKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:10:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578586215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZnSP0pZ70yH/YNEnLlm1kliMX25WmuqwN7ivPVxI2v0=;
-        b=iPWeoA+WxBrHmuZ/iOBu748x5nQNDWBsbBhnBZNmlk9NcSypiROSZoUQ2/3IIHc7RRmKhG
-        IDYVb9xulHArURe9hSWchqy7G8qpBJnZe4YI7R6rxzi5TbNOCJOxDkhzkT4hiTCbZT070O
-        S6pBR3gfKRLn+7mfpnqst/Ky57VgJw4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-H7VIe-VDMLylRbExWbAbtg-1; Thu, 09 Jan 2020 11:10:14 -0500
-X-MC-Unique: H7VIe-VDMLylRbExWbAbtg-1
-Received: by mail-wm1-f71.google.com with SMTP id t16so1104411wmt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:10:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZnSP0pZ70yH/YNEnLlm1kliMX25WmuqwN7ivPVxI2v0=;
-        b=R74Yz3t8j+zOBnnvAf1ucFvszl121ezPx+V82sOunrFMjUEnwo3xk4PyXCCyqzC+k4
-         HfwQq/dC5/hXO8oIae5Yy3MVT9B88usiZbw06XZDlwbJS+lzupAqPNLPTPPMvKK2kA5t
-         QNf3iKQyacOkvjQPq/1pPsDgFaJ38jhGS5tDBKXPXdLbt4yVmFf92qNyYgikj2f6IYUs
-         qoE+cJlUWQh167KM5zl7J462/93kePPiwHKIr/3ZVt30wT9S9Ux+LPOEkHYf13iKe9oi
-         iydqUU3dE+ArPcE6Ncmvm69Xqtj2ukNWUKGlN7V8yNdR0v4jr/E/x9rfLrr585uNlo8N
-         mv2w==
-X-Gm-Message-State: APjAAAUlqS61ALIQPk1bA9x+Clw3pQj6UAQdYyr3qRrsMkSC/Tq+3y3r
-        idryHf55wB3FG9kWTF9D4fMFNidOjtEzw7Py0rQ9P6qGkJdavW2CW4zrOCpr+5GAyNdqb379q+h
-        ktXU8j4+u2KYZaMgQbM+Z+IJY
-X-Received: by 2002:a05:600c:108a:: with SMTP id e10mr5542129wmd.38.1578586212973;
-        Thu, 09 Jan 2020 08:10:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxZtD+rP6Em4mTjnCX/pV4lGl7JJYz5/HOrqpOas0kvGyMcAfBoXa6ico6Rve7JUKRHzsZgbw==
-X-Received: by 2002:a05:600c:108a:: with SMTP id e10mr5542098wmd.38.1578586212717;
-        Thu, 09 Jan 2020 08:10:12 -0800 (PST)
-Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id y17sm2820948wma.36.2020.01.09.08.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:10:12 -0800 (PST)
-From:   Julien Thierry <jthierry@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        Julien Thierry <jthierry@redhat.com>
-Subject: [RFC v5 57/57] arm64: crypto: Remove redundant branch
-Date:   Thu,  9 Jan 2020 16:03:00 +0000
-Message-Id: <20200109160300.26150-58-jthierry@redhat.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
-References: <20200109160300.26150-1-jthierry@redhat.com>
+        Thu, 9 Jan 2020 11:10:17 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 3A6C620017;
+        Thu,  9 Jan 2020 16:10:15 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 17:10:14 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH 3/3] mtd: rawnand: brcmnand: Add support for flash-edu
+ for dma transfers
+Message-ID: <20200109171014.527e6d5d@xps13>
+In-Reply-To: <20191120182153.29732-3-kdasu.kdev@gmail.com>
+References: <20191120182153.29732-1-kdasu.kdev@gmail.com>
+        <20191120182153.29732-3-kdasu.kdev@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Having a unconditional branch between the macros do_cond_yield_neon and
-endif_yeild_neon causes the endif_yeild_neon to be unreachable. It so
-happens that endif_yeild_neon expands to a branch and already allows to
-provide the label to jump to after the yeild.
+Hi Kamal,
 
-Get rid of the redundant branch instruction.
+Kamal Dasu <kdasu.kdev@gmail.com> wrote on Wed, 20 Nov 2019 13:20:59
+-0500:
 
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
----
- arch/arm64/crypto/sha1-ce-core.S   | 3 +--
- arch/arm64/crypto/sha2-ce-core.S   | 3 +--
- arch/arm64/crypto/sha3-ce-core.S   | 3 +--
- arch/arm64/crypto/sha512-ce-core.S | 3 +--
- 4 files changed, 4 insertions(+), 8 deletions(-)
+> Legacy mips soc platforms that have controller v5.0 and 6.0 use
+> flash-edu block for dma transfers. This change adds support for
+> nand dma transfers using the EDU block.
+> 
+> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 
-diff --git a/arch/arm64/crypto/sha1-ce-core.S b/arch/arm64/crypto/sha1-ce-core.S
-index c2ce1f820706..50ca9d11a61f 100644
---- a/arch/arm64/crypto/sha1-ce-core.S
-+++ b/arch/arm64/crypto/sha1-ce-core.S
-@@ -132,8 +132,7 @@ CPU_LE(	rev32		v11.16b, v11.16b	)
- 	st1		{dgav.4s}, [x19]
- 	str		dgb, [x19, #16]
- 	do_cond_yield_neon
--	b		0b
--	endif_yield_neon
-+	endif_yield_neon 0b
- 
- 	b		1b
- 
-diff --git a/arch/arm64/crypto/sha2-ce-core.S b/arch/arm64/crypto/sha2-ce-core.S
-index 6f728a419009..c64716f5de19 100644
---- a/arch/arm64/crypto/sha2-ce-core.S
-+++ b/arch/arm64/crypto/sha2-ce-core.S
-@@ -139,8 +139,7 @@ CPU_LE(	rev32		v19.16b, v19.16b	)
- 	if_will_cond_yield_neon
- 	st1		{dgav.4s, dgbv.4s}, [x19]
- 	do_cond_yield_neon
--	b		0b
--	endif_yield_neon
-+	endif_yield_neon 0b
- 
- 	b		1b
- 
-diff --git a/arch/arm64/crypto/sha3-ce-core.S b/arch/arm64/crypto/sha3-ce-core.S
-index a7d587fa54f6..2448d8dec0de 100644
---- a/arch/arm64/crypto/sha3-ce-core.S
-+++ b/arch/arm64/crypto/sha3-ce-core.S
-@@ -203,8 +203,7 @@ ENTRY(sha3_ce_transform)
- 	st1	{v20.1d-v23.1d}, [x8], #32
- 	st1	{v24.1d}, [x8]
- 	do_cond_yield_neon
--	b		0b
--	endif_yield_neon
-+	endif_yield_neon 0b
- 
- 	b	1b
- 
-diff --git a/arch/arm64/crypto/sha512-ce-core.S b/arch/arm64/crypto/sha512-ce-core.S
-index ce65e3abe4f2..703724703f8f 100644
---- a/arch/arm64/crypto/sha512-ce-core.S
-+++ b/arch/arm64/crypto/sha512-ce-core.S
-@@ -207,8 +207,7 @@ CPU_LE(	rev64		v19.16b, v19.16b	)
- 	if_will_cond_yield_neon
- 	st1		{v8.2d-v11.2d}, [x19]
- 	do_cond_yield_neon
--	b		0b
--	endif_yield_neon
-+	endif_yield_neon 0b
- 
- 	b		1b
- 
--- 
-2.21.0
+I don't have the patch 2/3 in my mailbox :-/ Can you please resend with
+the right numbering or Cc myself on the 2nd?
 
+Otherwise, minor comments below :)
+
+> ---
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 269 ++++++++++++++++++++++-
+>  1 file changed, 263 insertions(+), 6 deletions(-)
+
+[...]
+
+> +/* edu irq */
+> +static irqreturn_t brcmnand_edu_irq(int irq, void *data)
+> +{
+> +	struct brcmnand_controller *ctrl = data;
+> +
+> +	if (ctrl->edu_count) {
+> +		ctrl->edu_count--;
+> +		while (!edu_readl(ctrl, EDU_DONE))
+> +			udelay(1);
+> +		edu_writel(ctrl, EDU_DONE, 0);
+> +		(void)edu_readl(ctrl, EDU_DONE);
+
+Why this cast? (and all the others)
+
+> +	}
+> +
+> +	if (ctrl->edu_count) {
+> +		ctrl->edu_dram_addr += FC_BYTES;
+> +		ctrl->edu_ext_addr += FC_BYTES;
+> +
+> +		edu_writel(ctrl, EDU_DRAM_ADDR, (u32)ctrl->edu_dram_addr);
+> +		(void)edu_readl(ctrl, EDU_DRAM_ADDR);
+> +		edu_writel(ctrl, EDU_EXT_ADDR, ctrl->edu_ext_addr);
+> +		(void)edu_readl(ctrl, EDU_EXT_ADDR);
+
+[...]
+
+>  
+> @@ -2561,6 +2767,7 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  
+>  	init_completion(&ctrl->done);
+>  	init_completion(&ctrl->dma_done);
+> +	init_completion(&ctrl->edu_done);
+>  	nand_controller_init(&ctrl->controller);
+>  	ctrl->controller.ops = &brcmnand_controller_ops;
+>  	INIT_LIST_HEAD(&ctrl->host_list);
+> @@ -2650,6 +2857,56 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  		dev_info(dev, "enabling FLASH_DMA\n");
+>  	}
+>  
+> +	/* use EDU DMA only no FLASH_DMA present */
+> +	if (has_flash_dma(ctrl))
+> +		res = 0;
+> +	else
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   "flash-edu");
+
+Can we simplify this block?
+
+> +
+> +	if (res) {
+
+What about a dedicated helper to do the EDU configuration only?
+
+> +		ctrl->edu_base = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(ctrl->edu_base))
+> +			return PTR_ERR(ctrl->edu_base);
+> +
+> +		ctrl->edu_offsets = edu_regs;
+> +
+> +		edu_writel(ctrl, EDU_CONFIG, EDU_CONFIG_MODE_NAND |
+> +			   EDU_CONFIG_SWAP_CFG);
+> +		(void)edu_readl(ctrl, EDU_CONFIG);
+> +
+> +		/* initialize edu */
+> +		edu_writel(ctrl, EDU_ERR_STATUS, 0);
+> +		edu_writel(ctrl, EDU_DONE, 0);
+> +		(void)edu_readl(ctrl, EDU_DONE);
+> +
+> +		ctrl->edu_irq = platform_get_irq(pdev, 1);
+> +		if ((int)ctrl->edu_irq < 0) {
+> +			dev_warn(dev,
+> +				 "FLASH EDU enabled, using ctlrdy irq\n");
+> +		} else {
+> +			ret = devm_request_irq(dev, ctrl->edu_irq,
+> +					       brcmnand_edu_irq, 0,
+> +					       "brcmnand-edu", ctrl);
+> +			if (ret < 0) {
+> +				dev_err(dev, "can't allocate IRQ %d: error %d\n",
+> +					ctrl->edu_irq, ret);
+> +				return ret;
+> +			}
+> +
+> +			dev_info(dev, "FLASH EDU enabled using irq %u\n",
+> +				 ctrl->edu_irq);
+> +		}
+> +	}
+> +
+> +	/* set the appropriate dma transfer function to call */
+> +	if (has_flash_dma(ctrl))
+> +		ctrl->dma_trans = brcmnand_dma_trans;
+> +	else if (has_edu(ctrl))
+> +		ctrl->dma_trans = brcmnand_edu_trans;
+> +	else
+> +		ctrl->dma_trans = NULL;
+> +
+>  	/* Disable automatic device ID config, direct addressing */
+>  	brcmnand_rmw_reg(ctrl, BRCMNAND_CS_SELECT,
+>  			 CS_SELECT_AUTO_DEVICE_ID_CFG | 0xff, 0, 0);
+
+Thanks,
+Miquèl
