@@ -2,289 +2,155 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62415C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9BCC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3982077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733DF2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578605421;
-	bh=e0TltHaxY5qwZ235nyJbGXeMfpJO87KKMsKlVA2GmvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rEzLoXFZfbHegKbRdK83MgkE0QVSH4ee0a/oV83Wor8z4gQ8w577UQ6yPzSSn4lpM
-	 il/tnjHKzN/baC/nEUhZK8zzuvOaBJkYZHL6K9pWFrdCM5LLqSb8IG83uBCxnLFW11
-	 VY11tBqG2SKtRaAijQvY2mU0raTuySavqnAflrdM=
+	s=default; t=1578605454;
+	bh=PX15MbqhT10gAifl146uTTLfhZqMSp6HWqwXM340tQk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=QOfVw25mf7m1HcrC0nr3GiAp7/362sQhqJFn3QM9+sFPVCAZ9yyMo8eDJQ5CbO/5F
+	 WvMc929uJZegfIdnu0Qa4dMbcV+kIkDyz2wV98uFZcj15Xg/dGC4FeQb30LOc5HXI8
+	 dCX2Yq3qkE3lJQOhtlWie5bh9FAvFzz6wRzH8oBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAIVaU (ORCPT
+        id S1728729AbgAIVax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:30:20 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55843 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgAIVaT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:30:19 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so4571385wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 13:30:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=opP4AiEbQ4+4R4cSYrpmUsBuH43MT66L8dsex+GXkto=;
-        b=g3b2fGrdLv98XLy856tuVrC80p2O+CeSkHkd3SJbOtSuMWZ/A/JC14I9TZLynfk1bB
-         MHCkfwmirSILwCwSaeJvHq6DpNIOpZ7VmUPn/DogRqt4hq7tifK14s/Mm0WQwXa2ftgj
-         uSQizjwu+z8vsVa/ppq9D6Yt0px1Nil+VFq46IL4KHcdrJ6JQ4yaTMyQQFGRtmVYdwIk
-         KJDMHFaQ7VmwU5zKgH3oq7L8ZoO0WlEAtC5mTOibWcnGS2gRC8gDiATAifKylNU8Tfz8
-         yfbYpcwsJECwbq/qM7TZSagabVKqPvQ2nyEuY3t3sksLylDgpOdvqu2EwYeAgQRSP0qG
-         YvVw==
-X-Gm-Message-State: APjAAAX4Ei8BH9Lo9bOi0Ff+5j3Fb/BHEQ1QPrcspJH/M6CuGe3zzlFa
-        DmrDd8cxDQieNiOuUS4zZAA=
-X-Google-Smtp-Source: APXvYqwGxQeljwiZyxUtA/sXImY0oZrP8pcF16NC6nURdZGcgcRjjf/gopu5oja5ec5TIc0eAiGCtw==
-X-Received: by 2002:a7b:cb91:: with SMTP id m17mr24303wmi.146.1578605417524;
-        Thu, 09 Jan 2020 13:30:17 -0800 (PST)
-Received: from localhost (ip-37-188-146-105.eurotel.cz. [37.188.146.105])
-        by smtp.gmail.com with ESMTPSA id p18sm4272660wmb.8.2020.01.09.13.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 13:30:16 -0800 (PST)
-Date:   Thu, 9 Jan 2020 22:30:14 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Scott Cheloha <cheloha@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
-        Scott Cheloha <cheloha@linux.ibm.com>
-Subject: Re: [PATCH] drivers/base/memory.c: cache blocks in radix tree to
- accelerate lookup
-Message-ID: <20200109213014.GC23620@dhcp22.suse.cz>
-References: <20191217193238-1-cheloha@linux.vnet.ibm.com>
- <20200109211952.12747-1-cheloha@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109211952.12747-1-cheloha@linux.vnet.ibm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Thu, 9 Jan 2020 16:30:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:37040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbgAIVax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 16:30:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0B8F31B;
+        Thu,  9 Jan 2020 13:30:52 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6897C3F534;
+        Thu,  9 Jan 2020 13:30:52 -0800 (PST)
+Date:   Thu, 09 Jan 2020 21:30:50 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     broonie@kernel.org, jonathanh@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regmap: add iopoll-like atomic polling macro" to the regmap tree
+In-Reply-To: <1578546590-24737-1-git-send-email-spujar@nvidia.com>
+Message-Id: <applied-1578546590-24737-1-git-send-email-spujar@nvidia.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 09-01-20 15:19:52, Scott Cheloha wrote:
-> Searching for a particular memory block by id is an O(n) operation
-> because each memory block's underlying device is kept in an unsorted
-> linked list on the subsystem bus.
-> 
-> We can cut the lookup cost to O(log n) if we cache the memory blocks in
-> a radix tree.  With a radix tree cache in place both memory subsystem
-> initialization and memory hotplug run palpably faster on systems with a
-> large number of memory blocks.
-> 
-> Signed-off-by: Scott Cheloha <cheloha@linux.ibm.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> ---
-> v2 incorporates suggestions from David Hildenbrand.
-> 
-> v3 changes:
->   - Rebase atop "drivers/base/memory.c: drop the mem_sysfs_mutex"
-> 
->   - Be conservative: don't use radix_tree_for_each_slot() in
->     walk_memory_blocks() yet.  It introduces RCU which could
->     change behavior.  Walking the tree "by hand" with
->     find_memory_block_by_id() is slower but keeps the patch
->     simple.
-> 
-> v4 changes:
->   - Rewrite commit message to explicitly note the time
->     complexity improvements.
-> 
->   - Provide anecdotal accounts of time-savings in the changelog
->     (see below).
-> 
-> mhocko@suse.com has asked for additional details on time
-> savings, so here are some results I've collected when measuring
-> memory_dev_init() with/without the patch.
+The patch
 
-This data should be part of the changelog. Thanks!
+   regmap: add iopoll-like atomic polling macro
 
-> 1. A 32GB POWER9 VM with 16MB memblocks has 2048 blocks:
-> 
-> # Unpatched
-> [    0.005121] adding memory block 0... ok
-> [...]
-> [    0.095230] adding memory block 1024... ok
-> [...]
-> [    0.304248] adding memory block 2047... ok
-> [    0.304508] added all memory blocks
-> 
-> # Patched
-> [    0.004701] adding memory block 0... ok
-> [...]
-> [    0.033383] adding memory block 1024... ok
-> [...]
-> [    0.061387] adding memory block 2047... ok
-> [    0.061414] added all memory blocks
-> 
->    Unpatched, memory_dev_init() runs in about 0.299 seconds.  Patched,
->    it runs in about 0.057 seconds.  Savings of .242 seconds, or nearly
->    a quarter of a second.
-> 
-> 2. A 32TB POWER9 LPAR with 256MB memblocks has 131072 blocks:
-> 
-> # Unpatched
-> [   13.703907] memory_dev_init: adding blocks
-> [   13.703931] memory_dev_init: added block 0
-> [   13.762678] memory_dev_init: added block 1024
-> [   13.910359] memory_dev_init: added block 2048
-> [   14.146941] memory_dev_init: added block 3072
-> [...]
-> [  218.516235] memory_dev_init: added block 57344
-> [  229.310467] memory_dev_init: added block 58368
-> [  240.590857] memory_dev_init: added block 59392
-> [  252.351665] memory_dev_init: added block 60416
-> [...]
-> [ 2152.023248] memory_dev_init: added block 128000
-> [ 2196.464430] memory_dev_init: added block 129024
-> [ 2241.746515] memory_dev_init: added block 130048
-> [ 2287.406099] memory_dev_init: added all blocks
-> 
-> # Patched
-> [   13.696898] memory_dev_init: adding blocks
-> [   13.696920] memory_dev_init: added block 0
-> [   13.710966] memory_dev_init: added block 1024
-> [   13.724865] memory_dev_init: added block 2048
-> [   13.738802] memory_dev_init: added block 3072
-> [...]
-> [   14.520999] memory_dev_init: added block 57344
-> [   14.536355] memory_dev_init: added block 58368
-> [   14.551747] memory_dev_init: added block 59392
-> [   14.567128] memory_dev_init: added block 60416
-> [...]
-> [   15.595638] memory_dev_init: added block 126976
-> [   15.611761] memory_dev_init: added block 128000
-> [   15.627889] memory_dev_init: added block 129024
-> [   15.644048] memory_dev_init: added block 130048
-> [   15.660035] memory_dev_init: added all blocks
-> 
->    Unpatched, memory_dev_init() runs in about 2275 seconds,
->    or ~37 minutes.  Patched, memory_dev_init() runs in about
->    1.97 seconds.  Savings of ~37 minutes.
-> 
->    I did not actually measure walk_memory_blocks(), but during
->    boot on this machine without the patch I got the following
->    (abbreviated) traces:
-> 
-> [ 2347.494986] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 2527.625378] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 2707.761977] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 2887.899975] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 3068.028318] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 3248.158764] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 3428.287296] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 3608.425357] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 3788.554572] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 3968.695071] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> [ 4148.823970] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-> 
->    Those traces disappeared with the patch, so I'm pretty sure
->    this patch shaves ~30 minutes off of walk_memory_blocks()
->    at boot.
-> 
-> Given the above results I think it is safe to say that this patch will
-> dramatically improve boot times on large POWER systems.
-> 
->  drivers/base/memory.c | 36 +++++++++++++++++++++++-------------
->  1 file changed, 23 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 799b43191dea..8902930d5ef2 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -19,6 +19,7 @@
->  #include <linux/memory.h>
->  #include <linux/memory_hotplug.h>
->  #include <linux/mm.h>
-> +#include <linux/radix-tree.h>
->  #include <linux/stat.h>
->  #include <linux/slab.h>
->  
-> @@ -56,6 +57,13 @@ static struct bus_type memory_subsys = {
->  	.offline = memory_subsys_offline,
->  };
->  
-> +/*
-> + * Memory blocks are cached in a local radix tree to avoid
-> + * a costly linear search for the corresponding device on
-> + * the subsystem bus.
-> + */
-> +static RADIX_TREE(memory_blocks, GFP_KERNEL);
-> +
->  static BLOCKING_NOTIFIER_HEAD(memory_chain);
->  
->  int register_memory_notifier(struct notifier_block *nb)
-> @@ -572,20 +580,14 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
->  /* A reference for the returned memory block device is acquired. */
->  static struct memory_block *find_memory_block_by_id(unsigned long block_id)
->  {
-> -	struct device *dev;
-> +	struct memory_block *mem;
->  
-> -	dev = subsys_find_device_by_id(&memory_subsys, block_id, NULL);
-> -	return dev ? to_memory_block(dev) : NULL;
-> +	mem = radix_tree_lookup(&memory_blocks, block_id);
-> +	if (mem)
-> +		get_device(&mem->dev);
-> +	return mem;
->  }
->  
-> -/*
-> - * For now, we have a linear search to go find the appropriate
-> - * memory_block corresponding to a particular phys_index. If
-> - * this gets to be a real problem, we can always use a radix
-> - * tree or something here.
-> - *
-> - * This could be made generic for all device subsystems.
-> - */
->  struct memory_block *find_memory_block(struct mem_section *section)
->  {
->  	unsigned long block_id = base_memory_block_id(__section_nr(section));
-> @@ -628,9 +630,15 @@ int register_memory(struct memory_block *memory)
->  	memory->dev.offline = memory->state == MEM_OFFLINE;
->  
->  	ret = device_register(&memory->dev);
-> -	if (ret)
-> +	if (ret) {
->  		put_device(&memory->dev);
-> -
-> +		return ret;
-> +	}
-> +	ret = radix_tree_insert(&memory_blocks, memory->dev.id, memory);
-> +	if (ret) {
-> +		put_device(&memory->dev);
-> +		device_unregister(&memory->dev);
-> +	}
->  	return ret;
->  }
->  
-> @@ -688,6 +696,8 @@ static void unregister_memory(struct memory_block *memory)
->  	if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
->  		return;
->  
-> +	WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) == NULL);
-> +
->  	/* drop the ref. we got via find_memory_block() */
->  	put_device(&memory->dev);
->  	device_unregister(&memory->dev);
-> -- 
-> 2.24.1
+has been applied to the regmap tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-5.6
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 50816a4c39263913d8cfd1ee32f90102679606c6 Mon Sep 17 00:00:00 2001
+From: Sameer Pujar <spujar@nvidia.com>
+Date: Thu, 9 Jan 2020 10:39:50 +0530
+Subject: [PATCH] regmap: add iopoll-like atomic polling macro
+
+This patch adds a macro 'regmap_read_poll_timeout_atomic' that works
+similar to 'readx_poll_timeout_atomic' defined in linux/iopoll.h; This
+is atomic version of already available 'regmap_read_poll_timeout' macro.
+
+It should be noted that above atomic macro cannot be used by all regmaps.
+If the regmap is set up for atomic use (flat or no cache and MMIO) then
+only it can use.
+
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Link: https://lore.kernel.org/r/1578546590-24737-1-git-send-email-spujar@nvidia.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ include/linux/regmap.h | 45 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index dfe493ac692d..f0a092a1a96d 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -144,6 +144,51 @@ struct reg_sequence {
+ 	__ret ?: ((cond) ? 0 : -ETIMEDOUT); \
+ })
+ 
++/**
++ * regmap_read_poll_timeout_atomic - Poll until a condition is met or a timeout occurs
++ *
++ * @map: Regmap to read from
++ * @addr: Address to poll
++ * @val: Unsigned integer variable to read the value into
++ * @cond: Break condition (usually involving @val)
++ * @delay_us: Time to udelay between reads in us (0 tight-loops).
++ *            Should be less than ~10us since udelay is used
++ *            (see Documentation/timers/timers-howto.rst).
++ * @timeout_us: Timeout in us, 0 means never timeout
++ *
++ * Returns 0 on success and -ETIMEDOUT upon a timeout or the regmap_read
++ * error return value in case of a error read. In the two former cases,
++ * the last read value at @addr is stored in @val.
++ *
++ * This is modelled after the readx_poll_timeout_atomic macros in linux/iopoll.h.
++ *
++ * Note: In general regmap cannot be used in atomic context. If you want to use
++ * this macro then first setup your regmap for atomic use (flat or no cache
++ * and MMIO regmap).
++ */
++#define regmap_read_poll_timeout_atomic(map, addr, val, cond, delay_us, timeout_us) \
++({ \
++	u64 __timeout_us = (timeout_us); \
++	unsigned long __delay_us = (delay_us); \
++	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
++	int __ret; \
++	for (;;) { \
++		__ret = regmap_read((map), (addr), &(val)); \
++		if (__ret) \
++			break; \
++		if (cond) \
++			break; \
++		if ((__timeout_us) && \
++		    ktime_compare(ktime_get(), __timeout) > 0) { \
++			__ret = regmap_read((map), (addr), &(val)); \
++			break; \
++		} \
++		if (__delay_us) \
++			udelay(__delay_us); \
++	} \
++	__ret ?: ((cond) ? 0 : -ETIMEDOUT); \
++})
++
+ /**
+  * regmap_field_read_poll_timeout - Poll until a condition is met or timeout
+  *
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
