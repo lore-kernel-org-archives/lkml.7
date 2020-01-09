@@ -2,136 +2,89 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AC8C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828CAC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A002067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AFE2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LrbCWyCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732622AbgAIPpV (ORCPT
+        id S1732638AbgAIPr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:45:21 -0500
-Received: from mga18.intel.com ([134.134.136.126]:35711 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbgAIPpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:45:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:45:07 -0800
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="303904700"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:45:05 -0800
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 14ABE207DD;
-        Thu,  9 Jan 2020 17:44:33 +0200 (EET)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1ipa01-000555-Ck; Thu, 09 Jan 2020 17:45:29 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v3 1/5] i2c: Allow driver to manage the device's power state during probe
-Date:   Thu,  9 Jan 2020 17:45:25 +0200
-Message-Id: <20200109154529.19484-2-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
-References: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
+        Thu, 9 Jan 2020 10:47:26 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33104 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731177AbgAIPr0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:47:26 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d139so2345561wmd.0;
+        Thu, 09 Jan 2020 07:47:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=CSAMl7EJyJdjDOiZuTQVDV1QpeNUTxwttHREdqKFpyc=;
+        b=LrbCWyCE0Gmdqj0Qh+r8b7I8gCmbR1dcVglZTbkyYaKZ8iH1OY23+R1ls3qZEALJR1
+         6m2vf8yTUu2/MwLVf74OhYJdJozzURDnW3jBtH3DwZw4ijGgIVDcPkg4n5KLNAu1kVvb
+         W2kLATfHltArjqdUWgTNkbdiGb+BHWFMy7jDJ/6/aX8iFeY+0ez39HpRTnRBShWopW8a
+         VNG6Ya2CyQaKXXxY9cIgMARBIz9nvN7I3lvMZnBwal+ytNy9oqf1dFNVsNClSR6PsN7U
+         sErFKs3PvtnWMJWttPdVbGcVZL/E7ouhKjUbECYse/OVcE02VLac2ihRfSYUUOcYyYiR
+         GKbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=CSAMl7EJyJdjDOiZuTQVDV1QpeNUTxwttHREdqKFpyc=;
+        b=Z3Cc1YC0R/DuOYl/PF/nQBKT9EntluBq5Mt3xS4sfDo0T7fPmU8SpEByjWWbZjo5FT
+         dl54NG1QSu0t8WWTDolRBGYRcjqeTyzzm2Y+N/KYh+rBQuMBvnROsKW3ZDzI7p36SNRH
+         zgQNKjMAGYky9WvuTlE6oWKPBck9qAsRC/CEsi9OKnfZ/r+6brcYK9v3GvV+rClJgcq8
+         yTUuixVLjaskfRaO4gZAAKLl2BY7QiyvjkBmNh1tQUdTPVenBquhubmIDjBsYrnNP4jr
+         Gw4DOh0RO4gIwz+fvKgu0ls7C4Qe0YbbGT+rCCrDx0N4av/DKFU95rQgAN4ia2Zoxywc
+         E7ww==
+X-Gm-Message-State: APjAAAXt3iLxieqyHhlma9b25F/e1oN6UlJnaE8pEHoSZgIgh+/UolKD
+        73kDX0DvZWSXM22/i71NfkkfPp04lS8=
+X-Google-Smtp-Source: APXvYqwlxttXlwPbdfYUVkStfQe5gJvHYsAJdjYHSKIuR7oonq+gT9OLezsdvJLbNudRSmjtk7/nqQ==
+X-Received: by 2002:a1c:1b41:: with SMTP id b62mr5530422wmb.53.1578584844152;
+        Thu, 09 Jan 2020 07:47:24 -0800 (PST)
+Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
+        by smtp.gmail.com with ESMTPSA id i5sm8570367wrv.34.2020.01.09.07.47.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 07:47:22 -0800 (PST)
+Date:   Thu, 9 Jan 2020 16:47:21 +0100
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ganapathi Bhat <gbhat@marvell.com>, ganapathi.bhat@nxp.com,
+        linux-wireless@vger.kernel.org
+Subject: MAINTAINERS: Marvell adresses might need update
+Message-ID: <20200109154721.GA282857@eldamar.local>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable drivers to tell ACPI that there's no need to power on a device for
-probe. Drivers should still perform this by themselves if there's a need
-to. In some cases powering on the device during probe is undesirable, and
-this change enables a driver to choose what fits best for it.
+Hi
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/i2c/i2c-core-base.c | 15 ++++++++++++---
- include/linux/i2c.h         |  3 +++
- 2 files changed, 15 insertions(+), 3 deletions(-)
+While replying to patch review request for 3.16.81-rc1 in
+https://lore.kernel.org/lkml/20200109121117.GB1270@lorien.valinor.li/
+including Ganapathi Bhat, I got a notification that NXP has acquired
+Marvell’s Wireless business unit and Ganapathi can be reached under
+ganapathi.bhat@nxp.com .
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 9f8dcd3f83850..7bf1699c9044d 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -303,6 +303,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
- 	return irq > 0 ? irq : -ENXIO;
- }
- 
-+static bool probe_low_power(struct device *dev)
-+{
-+	struct i2c_driver *driver = to_i2c_driver(dev->driver);
-+
-+	return driver->probe_low_power &&
-+		device_property_present(dev, "probe-low-power");
-+}
-+
- static int i2c_device_probe(struct device *dev)
- {
- 	struct i2c_client	*client = i2c_verify_client(dev);
-@@ -375,7 +383,8 @@ static int i2c_device_probe(struct device *dev)
- 	if (status < 0)
- 		goto err_clear_wakeup_irq;
- 
--	status = dev_pm_domain_attach(&client->dev, true);
-+	status = dev_pm_domain_attach(&client->dev,
-+				      !probe_low_power(&client->dev));
- 	if (status)
- 		goto err_clear_wakeup_irq;
- 
-@@ -397,7 +406,7 @@ static int i2c_device_probe(struct device *dev)
- 	return 0;
- 
- err_detach_pm_domain:
--	dev_pm_domain_detach(&client->dev, true);
-+	dev_pm_domain_detach(&client->dev, !probe_low_power(&client->dev));
- err_clear_wakeup_irq:
- 	dev_pm_clear_wake_irq(&client->dev);
- 	device_init_wakeup(&client->dev, false);
-@@ -419,7 +428,7 @@ static int i2c_device_remove(struct device *dev)
- 		status = driver->remove(client);
- 	}
- 
--	dev_pm_domain_detach(&client->dev, true);
-+	dev_pm_domain_detach(&client->dev, !probe_low_power(&client->dev));
- 
- 	dev_pm_clear_wake_irq(&client->dev);
- 	device_init_wakeup(&client->dev, false);
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 582ef05ec07ed..6d0d6af393c56 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -229,6 +229,8 @@ enum i2c_alert_protocol {
-  * @address_list: The I2C addresses to probe (for detect)
-  * @clients: List of detected clients we created (for i2c-core use only)
-  * @disable_i2c_core_irq_mapping: Tell the i2c-core to not do irq-mapping
-+ * @probe_low_power: Let the driver manage the device's power state
-+ *		     during probe and remove.
-  *
-  * The driver.owner field should be set to the module owner of this driver.
-  * The driver.name field should be set to the name of this driver.
-@@ -289,6 +291,7 @@ struct i2c_driver {
- 	struct list_head clients;
- 
- 	bool disable_i2c_core_irq_mapping;
-+	bool probe_low_power;
- };
- #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
- 
--- 
-2.20.1
+This probably means that at least the entry for Ganapathi Bhat in the
+MAINTAINERS file needs an update and the .mailcap file.
 
+This is as well the address as used in
+https://lore.kernel.org/lkml/DB7PR04MB5242BEB1F917B1FDB21DF3DF8F3F0@DB7PR04MB5242.eurprd04.prod.outlook.com/
+.
+
+Regards,
+Salvatore
