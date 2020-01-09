@@ -2,168 +2,103 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E73C33CA3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABBAC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69C5120678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8472A2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kqfAtqYy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G9gDyHJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgAIKbp (ORCPT
+        id S1730149AbgAIKcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:31:45 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35114 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728614AbgAIKbp (ORCPT
+        Thu, 9 Jan 2020 05:32:05 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39983 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728614AbgAIKcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:31:45 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 009AVYNC091024;
-        Thu, 9 Jan 2020 04:31:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578565894;
-        bh=vRdA7ZpngQM+5zB53J/t9D79iFD6d3CN4ckUSA2NKZU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kqfAtqYyVFSJwV7sAQM96ZsH51Cc8Qfcgjh49mQJZW+5wcv9MqpoyEgdaP2YFpDcb
-         +2PxadaY9hVlfjIC/8oPqSWQkfi/UFY2Ko2xjxTcHFUwar0CUx/N7aNr3jborunuex
-         KcLERc0GHTymkwpkF6fTlikayArqWYj+LJOBXOeg=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 009AVYmK079645
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Jan 2020 04:31:34 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
- 2020 04:31:32 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 9 Jan 2020 04:31:32 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 009AVU9e033718;
-        Thu, 9 Jan 2020 04:31:30 -0600
-Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>, <jic23@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Olivier MOYSAN <olivier.moysan@st.com>
-References: <20200107114532.6697-1-peter.ujfalusi@ti.com>
- <eade6657-8470-0d70-b3c1-fcdddf891c6c@st.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <4c0b7e3e-cd98-860a-e931-c216f1bc6e7a@ti.com>
-Date:   Thu, 9 Jan 2020 12:32:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 9 Jan 2020 05:32:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so6795767wrn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:32:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gKOjXoXUmMkVLHPqpRRdxvzHegVqL9k6dIgoFzOzfdA=;
+        b=G9gDyHJflfuiDJk23URo02ck7jlHsQ9ueEmJxO6KzNTwxjznlQk1OShugDNSSpOufM
+         7IsSuPZqf6u8KEq1WfsvkS6q/zJpnrTP1kKggBjAYZ/BjtYKEmtYZvJ2gq7ADI1PrU7s
+         V+FkHLsqI0D3xNEc+qQ0SHEfPKGSAbqnILEyMGYH+1gn6RJlp9WL/4iU6F7V4/APxUrP
+         jP48GQQUmuFXlb/zG7e/1znyVaqVjar73l2Jl45c3uFuvYUKq1LC5e9oyCJudkAmW3lf
+         QlCOZKALQIxEXWkt5pL1V9jFbMei25/5C0EvcUILvN0O45NzuhjECcV6bBBjM2N5YDxG
+         ejlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gKOjXoXUmMkVLHPqpRRdxvzHegVqL9k6dIgoFzOzfdA=;
+        b=eOFXljPpwc4QpVehQFrb1H+p7LSh0xWHZM+fOIL9guFftepY1NEEbwS6LjPDCMRMDS
+         KyhhXGRX5r9iN3VbIO4uTrAOgd2xVecgBW8bin9cXW9wQrZkkmhmKo7LRRO3Fh0CI3Cf
+         FsEtJ+bJwoy740ka9zgYoP1Kt/YuWqkRNLnTHt1TNnWdGVWo2/OUCzf3dLlyeB1sqz1N
+         4cSDH4dgkNqfTf0l2ISdR8KsBlkuJAG5k9wMlqFGuHtdoN1pVqyVy4TDGXj1TKa+Z74d
+         N68M+xhVDHqw1wiZ4VcpdrofV01H7tXdwu9zhUSSJ765koxNYQlMTiMQWoOQh7XtBN+X
+         ZQ5w==
+X-Gm-Message-State: APjAAAXkx08M0pCbWyJwZSQ1JpYRrNp5g1VnIwSGGNo8kcQdiqtH1C2Y
+        R9pr7iaFDW7H89Qk4LDWr4jtvg==
+X-Google-Smtp-Source: APXvYqxLOl8XWBWGvHRCBJ13HtAncHNohxPiZ2zPtSJsHz9hTbzjLukruLfFJBbz4BLj4CPF80Wa5A==
+X-Received: by 2002:a5d:5708:: with SMTP id a8mr10665392wrv.79.1578565923314;
+        Thu, 09 Jan 2020 02:32:03 -0800 (PST)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id z83sm2473830wmg.2.2020.01.09.02.32.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 02:32:02 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/4] slimbus: patches for 5.6
+Date:   Thu,  9 Jan 2020 10:31:44 +0000
+Message-Id: <20200109103148.5612-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <eade6657-8470-0d70-b3c1-fcdddf891c6c@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
+
+Here are some trival SLIMBus fixes + a new bindings for 5.6.
+
+Can you please queue them up for 5.6.
+
+thanks,
+Srini
 
 
-On 09/01/2020 11.13, Fabrice Gasnier wrote:
-> On 1/7/20 12:45 PM, Peter Ujfalusi wrote:
->> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->> eating up the error code.
->>
->> By using dma_request_chan() directly the driver can support deferred
->> probing against DMA.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->> Hi,
->>
->> Changes since v1:
->> - Fall back to IRQ mode for ADC only in case of ENODEV
-> 
-> Hi Peter,
-> 
-> Thanks for the patch,
-> 
-> Please find a minor comment here after. Apart from that, you can add my:
-> 
-> Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> 
-> 
->>
->> Regards,
->> Peter
->>
->>  drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++++++++----
->>  1 file changed, 17 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
->> index e493242c266e..74a2211bdff4 100644
->> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
->> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
->> @@ -1383,9 +1383,13 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
->>  {
->>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
->>  
->> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
->> -	if (!adc->dma_chan)
->> -		return -EINVAL;
->> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
->> +	if (IS_ERR(adc->dma_chan)) {
->> +		int ret = PTR_ERR(adc->dma_chan);
->> +
->> +		adc->dma_chan = NULL;
->> +		return ret;
-> 
-> You may "return PTR_ERR(adc->dma_chan);" directly here.
+Chuhong Yuan (1):
+  slimbus: qcom: add missed clk_disable_unprepare in remove
 
-I don't make decision here on behalf of the adc path on to go forward w/
-or w/o DMA support and if we go ahead the stm32_dfsdm_dma_release()
-needs the dma_chan to be NULL in case we don't use DMA.
+Nishad Kamdar (1):
+  slimbus: Use the correct style for SPDX License Identifier
 
-It is much cleaner to set dma_chan to NULL here than doing it in other
-paths.
+Peter Ujfalusi (1):
+  slimbus: qcom-ngd-ctrl: Use dma_request_chan() instead
+    dma_request_slave_channel()
 
-> 
-> Best Regards,
-> Fabrice
-> 
->> +	}
->>  
->>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
->>  					 DFSDM_DMA_BUFFER_SIZE,
->> @@ -1509,7 +1513,16 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
->>  	init_completion(&adc->completion);
->>  
->>  	/* Optionally request DMA */
->> -	if (stm32_dfsdm_dma_request(indio_dev)) {
->> +	ret = stm32_dfsdm_dma_request(indio_dev);
->> +	if (ret) {
->> +		if (ret != -ENODEV) {
->> +			if (ret != -EPROBE_DEFER)
->> +				dev_err(&indio_dev->dev,
->> +					"DMA channel request failed with %d\n",
->> +					ret);
->> +			return ret;
->> +		}
->> +
->>  		dev_dbg(&indio_dev->dev, "No DMA support\n");
->>  		return 0;
->>  	}
->>
+Srinivas Kandagatla (1):
+  dt-bindings: SLIMBus: add slim devices optional properties
 
-- Péter
+ .../devicetree/bindings/slimbus/bus.txt       | 10 ++++++++++
+ drivers/slimbus/qcom-ctrl.c                   |  2 ++
+ drivers/slimbus/qcom-ngd-ctrl.c               | 20 +++++++++++--------
+ drivers/slimbus/slimbus.h                     |  2 +-
+ 4 files changed, 25 insertions(+), 9 deletions(-)
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+2.21.0
+
