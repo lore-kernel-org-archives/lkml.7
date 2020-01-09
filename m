@@ -2,127 +2,145 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45AAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D767C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756F52067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578531358;
-	bh=w9USJk+7Qk5Du2zdTArHSElniMN2WqgEdkR2rhkBSY8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iAhCOCeHEPA3wW0T6kY2VcVvxkds9tfx+PMMKVScgBB3BGwcIIqAq2DSNgSynNokq
-	 p873XtDHi83XbILMwOMnEMsssqRO/V7hFmjRBBZtcZV0CgtaDyuprxkbi7AopnT2Cr
-	 8v4QVwfEUsLAauzhx/AKGOJJMhOjVMq0EClINLIk=
+	by mail.kernel.org (Postfix) with ESMTP id 173002067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbgAIAz5 (ORCPT
+        id S1727741AbgAIA46 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:55:57 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37561 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgAIAz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:55:57 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so949476wmf.2;
-        Wed, 08 Jan 2020 16:55:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vwmPUpdkmkbY45E77W6s4PYrOpulotGxAFwkwIHXaXE=;
-        b=sQlT5/koy4u2v2bd8kmJ3FLjQfE7BPAJIp/Ww8hJG6Z7QfYk8Gf+bVWIxK8LblWXjA
-         jLBCWGiOiNKfC+n4ihUNzq8Y9Nz+m1Ka1Ra3E6LQKbr4cgPG2oqBk4RM14mKMZ+ge+UT
-         FOqjlBUFRmbvDhu5+bAdXevBbmkjz4y3pBGCtHXkR3r4a018RvAejcJGUa5/C3TKI18x
-         iBEUfEkyC3UNB/v4YDXUcOJwAJ246Bb/0edtZKLO0BL0MyHQkl4YfnBW11q8kNP9r0jV
-         3tBpBfymmZlhAMA/aYqGzg/rrI+SrpI7ZUMlPN3z/Dq7lhkpoR3nmAUOZcHtSekve8lg
-         Pcvg==
-X-Gm-Message-State: APjAAAUEVGv6mVMqbrfgHG8KEr48mMR0j1s3hMGNnSp+xc8Dq0hjKQwN
-        VTSry4M49mecKQBC+X62pzEo7UIPTeaZFUpD7aQ=
-X-Google-Smtp-Source: APXvYqxVzTs3QW/mlRe9LXP6BOGJ4u2UbulF62s04l7mN2PMMvA1ytPlfXe0r5tvxv6MHPG46pGPVJwG5ro16QApBww=
-X-Received: by 2002:a7b:c389:: with SMTP id s9mr1403894wmj.7.1578531355113;
- Wed, 08 Jan 2020 16:55:55 -0800 (PST)
+        Wed, 8 Jan 2020 19:56:58 -0500
+Received: from mga07.intel.com ([134.134.136.100]:45603 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgAIA45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 19:56:57 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 16:56:56 -0800
+X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
+   d="scan'208";a="218221687"
+Received: from aguedesl-mac01.jf.intel.com (HELO localhost) ([10.24.12.236])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 16:56:55 -0800
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200107133501.327117-1-namhyung@kernel.org> <20200107133501.327117-5-namhyung@kernel.org>
- <20200108220103.GB12995@krava>
-In-Reply-To: <20200108220103.GB12995@krava>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 9 Jan 2020 09:55:44 +0900
-Message-ID: <CAM9d7cjwGB766NU75SCQnrHamMkCxz5nkgM_H8L-tysxVXaHJg@mail.gmail.com>
-Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <87eex43pzm.fsf@linux.intel.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com> <157603276975.18462.4638422874481955289@pipeline> <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com> <87eex43pzm.fsf@linux.intel.com>
+Subject: RE: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
+From:   Andre Guedes <andre.guedes@linux.intel.com>
+Cc:     "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+To:     "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Po Liu <po.liu@nxp.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Message-ID: <157853141533.36295.15469390811167798190@aguedesl-mac01.jf.intel.com>
+User-Agent: alot/0.8.1
+Date:   Wed, 08 Jan 2020 16:56:55 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 7:01 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Tue, Jan 07, 2020 at 10:34:56PM +0900, Namhyung Kim wrote:
->
-> SNIP
->
-> > +     while (*p != NULL) {
-> > +             parent = *p;
-> > +             cgrp = rb_entry(parent, struct cgroup, node);
-> > +
-> > +             if (cgrp->id == id)
-> > +                     return cgrp;
-> > +
-> > +             if (cgrp->id < id)
-> > +                     p = &(*p)->rb_left;
-> > +             else
-> > +                     p = &(*p)->rb_right;
-> > +     }
-> > +
-> > +     cgrp = malloc(sizeof(*cgrp));
-> > +     if (cgrp == NULL)
-> > +             return NULL;
-> > +
-> > +     cgrp->name = strdup(path);
-> > +     if (cgrp->name == NULL) {
-> > +             free(cgrp);
-> > +             return NULL;
-> > +     }
-> > +
-> > +     cgrp->fd = -1;
-> > +     cgrp->id = id;
-> > +     refcount_set(&cgrp->refcnt, 1);
-> > +
-> > +     rb_link_node(&cgrp->node, parent, p);
-> > +     rb_insert_color(&cgrp->node, &cgroup_tree);
-> > +
-> > +     return cgrp;
-> > +}
-> > +
-> > +struct cgroup *cgroup__find_by_path(const char *path)
-> > +{
-> > +     struct rb_node *node;
-> > +
-> > +     node = rb_first(&cgroup_tree);
-> > +     while (node) {
-> > +             struct cgroup *cgrp = rb_entry(node, struct cgroup, node);
-> > +
-> > +             if (!strcmp(cgrp->name, path))
-> > +                     return cgrp;
->
-> you have it sorted on ids, but only search by path,
-> why don't we sort it on path right away?
+Hi,
 
-No, actually it only used cgroup__findnew() not __find_by_path().
-I don't remember why I added this - will remove..
+Quoting Vinicius Costa Gomes (2019-12-16 13:44:13)
+> >> Quoting Po Liu (2019-11-27 01:59:18)
+> >> > User can check the feature 'tx-preemption' by command 'ethtool -k
+> >> > devname'. If hareware set preemption feature. The property would be a
+> >> > fixed value 'on' if hardware support the frame preemption.
+> >> > Feature would show a fixed value 'off' if hardware don't support the
+> >> > frame preemption.
+> 
+> Having some knobs in ethtool to enable when/how Frame Preemption is
+> advertised on the wire makes sense. I also agree that it should be "on"
+> by default.
 
-Thanks
-Namhyung
+Agreed. If Frame Preemption is supported by hardware and it can be
+enabled/disabled, I think we should allow the user to configure it, instead of
+having it fixed in 'on'.
+
+> >> In an early RFC series [1], we proposed a way to support frame preemption. I'm
+> >> not sure if you have considered it before implementing this other proposal
+> >> based on ethtool interface so I thought it would be a good idea to bring that up
+> >> to your attention, just in case.
+> >  
+> > Sorry, I didn't notice the RFC proposal. Using ethtool set the
+> > preemption just thinking about 8021Qbu as standalone. And not limit to
+> > the taprio if user won't set 802.1Qbv.
+> 
+> I see your point of using frame-preemption "standalone", I have two
+> ideas:
+> 
+>  1. add support in taprio to be configured without any schedule in the
+>  "full offload" mode. In practice, allowing taprio to work somewhat
+>  similar to (mqprio + frame-preemption), changes in the code should de
+>  fairly small;
+> 
+>  2. extend mqprio to support frame-preemption;
+
+I'm not sure 2) is a good way to support frame preemption "standalone"
+functionality since mpqrio already looks overloaded. Besides its original goal
+(map traffic flows to hardware queues), it also supports different modes and
+traffic shaping. I rather not add another functionality to it.
+
+> > As some feedback  also want to set the MAC merge minimal fragment size
+> > and get some more information of 802.3br.
+> 
+> The minimal fragment size, I guess, also makes sense to be kept in
+> ethtool. That is we have a sane default, and allow the user to change
+> this setting for special cases.
+
+Yes, the mim fragment size is another configuration knob we should have, and it
+should probably live at the same place we land the enable/disable knob.
+
+> >> It also aligns with the gate control operations Set-And-Hold-MAC and Set-And-
+> >> Release-MAC that can be set via 'sched-entry' (see Table 8.7 from
+> >> 802.1Q-2018 for further details.
+> >  
+> > I am curious about Set-And-Hold-Mac via 'sched-entry'. Actually, it
+> > could be understand as guardband by hardware preemption. MAC should
+> > auto calculate the nano seconds before  express entry slot start to
+> > break to two fragments. Set-And-Hold-MAC should minimal larger than
+> > the fragment-size oct times.
+> 
+> Another interesting point. My first idea is that when the schedule is
+> offloaded to the driver and the driver detects that the "entry" width is
+> smaller than the fragment side, the driver could reject that schedule
+> with a nice error message.
+
+My understanding is that, if HOLD operation is supported, the hardware issues
+an MM_CTL.request(HOLD) at 'holdAdvance' nsecs in advance to the point where
+the 'sched-entry' with Set-And-Hold-MAC starts. This comes from the description
+in Table 8-7 from 802.1Q-2018.
+
+Best regards,
+
+Andre
