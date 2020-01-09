@@ -2,91 +2,114 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4318CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87B2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA4B20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B962120842
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578608880;
+	bh=TxbIGR36dvOlKfNVHdzDzkWYnXZTHkmv3nkio2YU/DY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NMDMiwBCww2oz4erLsswxZjgdJVczxf+wy7vph3cM8osMUiW9vHe0MaB6DLyOv5T/
+	 V6TT0op2Zo7wFI5sbXKZsmMB169UMmB4y/qRylBD8VIL2xP+3ba92WrscvJl4YpE5B
+	 /hClBq6kGkIdSqzH/YzBajEv3K2AVuAGL0x/xUH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgAIWZL convert rfc822-to-8bit (ORCPT
+        id S1728109AbgAIW2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 17:25:11 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55923 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgAIWZK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 17:25:10 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ipgEU-00015w-Bl; Thu, 09 Jan 2020 23:24:50 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id ABF59105BCE; Thu,  9 Jan 2020 23:24:49 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Edwin Zimmerman <edwin@211mainstreet.net>,
-        "edwin\@211mainstreet.net" <edwin@211mainstreet.net>,
-        x86@kernel.org, Matthew Garrett <mjg59@google.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Josh Boyer <jwboyer@redhat.com>
-Subject: Re: [PATCH] x86/boot: fix cast to pointer compiler warning
-In-Reply-To: <a392a0e5-e9f5-7795-d5a6-14a114056f2e@211mainstreet.net>
-References: <a392a0e5-e9f5-7795-d5a6-14a114056f2e@211mainstreet.net>
-Date:   Thu, 09 Jan 2020 23:24:49 +0100
-Message-ID: <87v9pk9sjy.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 9 Jan 2020 17:28:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbgAIW17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 17:27:59 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB2CF20721;
+        Thu,  9 Jan 2020 22:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578608879;
+        bh=TxbIGR36dvOlKfNVHdzDzkWYnXZTHkmv3nkio2YU/DY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=z1/mxcQb8o1oxfKd+2AaQ24Z6XwN7xjdpxSzkptPtP70tSOu7PxwfSjyepRoSAvMS
+         mnAeT1A9zkE9kFL8wv5+4rag7hw+aj534gCLcsUTtP+xUGe8VShhMKUBOiK0E3aEGQ
+         6lsp0pVZeMXjMw5WDIYr0jDETmazl6LYTDXr4fAA=
+Date:   Thu, 9 Jan 2020 14:27:58 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Scott Cheloha <cheloha@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
+        mhocko@suse.com, Scott Cheloha <cheloha@linux.ibm.com>
+Subject: Re: [PATCH v4] drivers/base/memory.c: cache blocks in radix tree to
+ accelerate lookup
+Message-Id: <20200109142758.659c1545cb8df2d05f299a4a@linux-foundation.org>
+In-Reply-To: <A7C7E3ED-3A02-43C7-B739-53A7756822D4@redhat.com>
+References: <20200109140004.d5e6dc581b62d6e078dcca4c@linux-foundation.org>
+        <A7C7E3ED-3A02-43C7-B739-53A7756822D4@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Edwin Zimmerman <edwin@211mainstreet.net> writes:
+On Thu, 9 Jan 2020 23:17:09 +0100 David Hildenbrand <david@redhat.com> wrote:
 
-> Fix cast-to-pointer compiler warning
->
-> arch/x86/boot/compressed/acpi.c: In function 'get_acpi_srat_table':
-> arch/x86/boot/compressed/acpi.c:316:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-> rsdp = (struct acpi_table_rsdp *)get_cmdline_acpi_rsdp();
->                  ^
->
-> Fixes: 41fa1ee9c6d6 ("acpi: Ignore acpi_rsdp kernel param when the kernel has been locked down")
-> Signed-off-by: Edwin Zimmerman <edwin@211mainstreet.net>
-> ---
->  arch/x86/boot/compressed/acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> index 25019d42ae93..5d2568066d58 100644
-> --- a/arch/x86/boot/compressed/acpi.c
-> +++ b/arch/x86/boot/compressed/acpi.c
-> @@ -313,7 +313,7 @@ static unsigned long get_acpi_srat_table(void)
->       * stash this in boot params because the kernel itself may have
->       * different ideas about whether to trust a command-line parameter.
->       */
-> -    rsdp = (struct acpi_table_rsdp *)get_cmdline_acpi_rsdp();
-> +    rsdp = (struct acpi_table_rsdp *)(long)get_cmdline_acpi_rsdp();
->  
->      if (!rsdp)
->          rsdp = (struct acpi_table_rsdp *)(long)
+> 
+> 
+> > Am 09.01.2020 um 23:00 schrieb Andrew Morton <akpm@linux-foundation.org>:
+> > 
+> > ﻿On Thu,  9 Jan 2020 15:25:16 -0600 Scott Cheloha <cheloha@linux.vnet.ibm.com> wrote:
+> > 
+> >> Searching for a particular memory block by id is an O(n) operation
+> >> because each memory block's underlying device is kept in an unsorted
+> >> linked list on the subsystem bus.
+> >> 
+> >> We can cut the lookup cost to O(log n) if we cache the memory blocks in
+> >> a radix tree.  With a radix tree cache in place both memory subsystem
+> >> initialization and memory hotplug run palpably faster on systems with a
+> >> large number of memory blocks.
+> >> 
+> >> ...
+> >> 
+> >> @@ -56,6 +57,13 @@ static struct bus_type memory_subsys = {
+> >>    .offline = memory_subsys_offline,
+> >> };
+> >> 
+> >> +/*
+> >> + * Memory blocks are cached in a local radix tree to avoid
+> >> + * a costly linear search for the corresponding device on
+> >> + * the subsystem bus.
+> >> + */
+> >> +static RADIX_TREE(memory_blocks, GFP_KERNEL);
+> > 
+> > What protects this tree from racy accesses?
+> 
+> I think the device hotplug lock currently (except during boot where no races can happen).
+> 
 
-  ^^^^^^^^
+So this?
 
-This is whitespace damaged, please fix your mail setup. Try to send the
-patch to yourself and check whether it applies.
+--- a/drivers/base/memory.c~drivers-base-memoryc-cache-blocks-in-radix-tree-to-accelerate-lookup-fix
++++ a/drivers/base/memory.c
+@@ -61,6 +61,9 @@ static struct bus_type memory_subsys = {
+  * Memory blocks are cached in a local radix tree to avoid
+  * a costly linear search for the corresponding device on
+  * the subsystem bus.
++ *
++ * Protected by mem_hotplug_lock in mem_hotplug_begin(), and by the guaranteed
++ * single-threadness at boot time.
+  */
+ static RADIX_TREE(memory_blocks, GFP_KERNEL);
+ 
 
-Thanks,
-
-        tglx
+But are we sure this is all true?
