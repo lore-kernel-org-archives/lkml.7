@@ -2,221 +2,177 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8F3C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046D3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07D521569
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:06:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OIEU8+qh"
+	by mail.kernel.org (Postfix) with ESMTP id D4535206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732171AbgAIPGf (ORCPT
+        id S1732186AbgAIPJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:06:35 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38971 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgAIPGe (ORCPT
+        Thu, 9 Jan 2020 10:09:23 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:3059 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729054AbgAIPJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:06:34 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200109150632euoutp02fdc4858f1e4ce35d7721a16d225a2e71~oQFJyTTxz0556705567euoutp026
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 15:06:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200109150632euoutp02fdc4858f1e4ce35d7721a16d225a2e71~oQFJyTTxz0556705567euoutp026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578582392;
-        bh=jFFqGCtRGF5oe2+nOUE3OLodOmKRa6ErUN0sBN0Fe5A=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=OIEU8+qhTuG+83QCDGQPQ3kCbGZnreq0hXj7Hfh3EKiauQ+TZ9SxFPnNoReT1ZDTp
-         1wTBNx158bu4d5IUg2hqYMfKmPdt1d4QHuXWkp05IF6LExaqqL8rGEK42fpX8ESwy6
-         D5bROMcG0MTCoHRb0vftelLxUvDGxJ36T5skQukU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200109150631eucas1p29b2f829c4f6ac90a8482e5cfdcf21dca~oQFJZ0S9g2365923659eucas1p2N;
-        Thu,  9 Jan 2020 15:06:31 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 53.D6.60698.771471E5; Thu,  9
-        Jan 2020 15:06:31 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200109150631eucas1p2d7a50f633e2b9902c767e2e68780a3aa~oQFI-O0rP2362123621eucas1p2b;
-        Thu,  9 Jan 2020 15:06:31 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200109150631eusmtrp10b4928fccadf07c9d0873acf96cf83ad~oQFI_cIHT0581005810eusmtrp1x;
-        Thu,  9 Jan 2020 15:06:31 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-9d-5e1741777841
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 5B.7C.07950.771471E5; Thu,  9
-        Jan 2020 15:06:31 +0000 (GMT)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200109150630eusmtip19f4b73203012fee7fd24310de73eb51b~oQFIQ1hEU2388923889eusmtip1D;
-        Thu,  9 Jan 2020 15:06:30 +0000 (GMT)
-Subject: Re: [PATCH 0/2] PM / devfreq: Add debugfs support
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
-        hl@rock-chips.com, digetx@gmail.com, bjorn.andersson@linaro.org,
-        jcrouse@codeaurora.org, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-Message-ID: <fb1e88a2-8a5d-3dc6-e36d-523c556e67b1@samsung.com>
-Date:   Thu, 9 Jan 2020 16:06:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Thu, 9 Jan 2020 10:09:22 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: nM/GDVUI9M/QJqpveaGTobj09Tc5FBpJ9fB6v/xLNkQ/vmVLUMI1+4tAoy0VyU/uUN7ul/0yj4
+ MpK1MT0vIGAmlTGcVPaZXxcMXql78AJ+55Amn1bEqsZ/Uv7lMOgurZsBDzOEcFmuJfE5VCXVbM
+ b8WOPLdywmOBDqFrRRup7fp79yMTpoXpuzmO+M/av2zvmTIhwtmbjyOteR+mzIkEGdB/O3NkdO
+ RtOj0of/HXvFW9fGcX7GqQam4c81J3lhuFNfxA0+LzMFqcGNVoRmfw/X3uFltL1w2mIEzja7UJ
+ oZ4=
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="61363790"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jan 2020 08:09:21 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 9 Jan 2020 08:09:18 -0700
+Received: from soft-dev3.microsemi.net (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Thu, 9 Jan 2020 08:09:16 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>
+CC:     <davem@davemloft.net>, <roopa@cumulusnetworks.com>,
+        <nikolay@cumulusnetworks.com>, <jakub.kicinski@netronome.com>,
+        <vivien.didelot@gmail.com>, <andrew@lunn.ch>,
+        <jeffrey.t.kirsher@intel.com>, <olteanv@gmail.com>,
+        <anirudh.venkataramanan@intel.com>, <dsahern@gmail.com>,
+        <jiri@mellanox.com>, <UNGLinuxDriver@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media Redundancy Protocol(MRP)
+Date:   Thu, 9 Jan 2020 16:06:37 +0100
+Message-ID: <20200109150640.532-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200107090519.3231-1-cw00.choi@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SW0wTQRSGM91tuzQUhwXtAQxg1QdRwIoPGzBGEsV90MQnMUbQRdfSQAtp
-        QYQnRRStSLgEoRURikFSUYEgFDQiiBdA8BptRCJGhHoBqYABoqLtYuTtm/P/Z875J0MRtEPs
-        T2l0abxexyUrJTKy+cFsf2hGtCJ+fVORinlXcRIxve3jJFNof0kyr6dGxcxV5wfE1A10Imam
-        vodgGiqTmL7sr1KmdtApZl60lUuYyXNdiKnKzpEy17oGpczA8VrJliVsXUUdYl/knxOxtsHL
-        iG01D0rZRusZCfv21W0J2zBuE7G/zO0km99kRexkY+Au2V7ZpkN8suYIrw/ffECW2HGvkEh1
-        Rhyd/PkGHUOvg43IgwK8EZwDFSIjklE0rkVgKbxICIcpBJ+fFS0okwgmHOeREVHulpEzoa5u
-        Gl9BUDYdI3jGEMz226UuwQdHgmOqnnSxL06AC7ab7osIXCOC7hG7W5DgcOjo63azHG+GuewZ
-        wjWAxKvglCXBhUvxHuid5gSHN3Sbht1uj7/XT3355h5FYAW8Gb4kEjgIWsbK3QEAF1Jgei+Y
-        AG+F75ZSQmAf+PywaaG+HHqL80iBM+BjVb5UaM5BMJTrXBCi4G3/nMS1EIHXwI22cKEcDcMd
-        ZrHwJl5gH/MWdvCCouZSQijL4fQpWnCvhtGePJHAAWCcvy4uQErzomTmRWnMi9KY/8+tRKQV
-        Kfh0g1bNGyJ0fEaYgdMa0nXqsIMp2kb09//1/n44bUN3fiZ0Ikwhpac80UcRT4u5I4ZMbScC
-        ilD6yu/bl8XT8kNcZhavT9mvT0/mDZ0ogCKVCnmE5VMcjdVcGp/E86m8/p8qojz8jyFRT/Vy
-        7WNWsbsvhr4aOTFe7Vh793CqI/LEhlpr7NlR9Y7xErEqxrYlJLI1V7PNT4VqAr13agKfllh/
-        a+YDHmWZGoPELZ7JAXSZKc2hKr5DT5vmA5/R6FZflV/cSl0BV5KyMkruK1dvj7XuXvcjLG/F
-        0Pp1jth9wUbO/PzJAFaShkROFULoDdwf5SysRXsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsVy+t/xu7rljuJxBi8+C1vcn9fKaHF6/zsW
-        i4k3rrBYXP/ynNVi9cfHjBZrbh9itPix4RSzxcYF2RZnm96wW6y4+5HV4vKuOWwWn3uPMFos
-        bGpht1h75C67xe3GFWwO/B5r5q1h9Ljc18vksePuEkaPnbPusntsWtXJ5nHn2h42j43vdjB5
-        /J21n8Wjb8sqRo/Pm+QCuKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTt
-        bFJSczLLUov07RL0Mg4enshc8NG44vOfW4wNjNcVuhg5OCQETCSedep2MXJxCAksZZQ4Pa+Z
-        tYuREyguLdF4ejUThC0s8edaFxtE0WtGicnt79lBEsICVhIvvmxgAbFFBJIkdkxpYgYpYhZY
-        xiRx4kkbM0RHL6PE4bfrwDrYBPQlDp49CdbBK2An8avpBzPIGSwCKhJti5JAwqICERLPt99g
-        hCgRlDg58wlYOSfQsi+vIRYzC6hL/Jl3iRnCFpe49WQ+E4QtL7H97RzmCYxCs5C0z0LSMgtJ
-        yywkLQsYWVYxiqSWFuem5xYb6RUn5haX5qXrJefnbmIERv22Yz+37GDsehd8iFGAg1GJhzdD
-        WDxOiDWxrLgy9xCjBAezkgjv0RticUK8KYmVValF+fFFpTmpxYcYTYF+m8gsJZqcD0xIeSXx
-        hqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGENm/chpMHgSk6Ad27u7
-        /iHj8Zx9c5/ys3971N59v35Shuy7y7vDPeVrZbwSpqa265xdqcY392hzycmQYqNrlyrmPNwU
-        kT0nPbtuxVeBrJtqSc8PcgnL9eoKihge5VLszpNZsl9QU72l9/qF5AUZMk5Xu9pv/os0lDqb
-        Xuzkz2aQ+aFzIucfJZbijERDLeai4kQA9SG7DRADAAA=
-X-CMS-MailID: 20200109150631eucas1p2d7a50f633e2b9902c767e2e68780a3aa
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200107085812epcas1p4eb4f51c2ade10db700fbfd62ab4779fb
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200107085812epcas1p4eb4f51c2ade10db700fbfd62ab4779fb
-References: <CGME20200107085812epcas1p4eb4f51c2ade10db700fbfd62ab4779fb@epcas1p4.samsung.com>
-        <20200107090519.3231-1-cw00.choi@samsung.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Media Redundancy Protocol is a data network protocol standardized by
+International Electrotechnical Commission as IEC 62439-2. It allows rings of
+Ethernet switches to overcome any single failure with recovery time faster than
+STP. It is primarily used in Industrial Ethernet applications.
 
-On 07.01.2020 10:05, Chanwoo Choi wrote:
-> Add debugfs interface to provide debugging information of devfreq device.
-> It contains 'devfreq_summary' and 'debug_transitions' debugfs file
-> in order to provide the simple profiling to user via debugfs
-> without any specific profiling tool.
-> 
-> [Added debugfs file]
-> - "/sys/kernel/debug/devfreq/devfreq_summary"
->   : Show the summary of the registered devfreq devices.
-> - "/sys/kernel/debug/devfreq/devfreq_transitions"
->   : Show the frequency transition of the registered devfreq devices.
-> 
-> Recommend the each patch to check the detailed description
-> of each fields of both devfreq_summary and devfreq_transitions.
-> 
-> This series contains the patch[1] and add the patch2 for 'devfreq_transitions'
-> [1] https://patchwork.kernel.org/patch/11320265/
-> - [v3] PM / devfreq: Add debugfs support with devfreq_summary file
-> 
-> 
-> For example on Exynos5422-based Odroid-XU3 board,
-> - In order to show the multiple governors on devfreq_summay result,
-> change the governor of devfreq0 from simple_ondemand to userspace.
-> 
-> $ cat /sys/kernel/debug/devfreq/devfreq_summary
-> dev_name                       dev        parent_dev governor        polling_ms cur_freq_hz  min_freq_hz  max_freq_hz
+This is the first proposal of implementing a subset of the standard. It supports
+only 2 roles of an MRP node. It supports only Media Redundancy Manager(MRM) and
+Media Redundancy Client(MRC). In a MRP ring, each node needs to support MRP and
+in a ring can be only one MRM and multiple MRC. It is possible to have multiple
+instances of MRP on a single node. But a port can be part of only one MRP
+instance.
 
-Imho either drop "_hz" or change it to "_Hz".
+The MRM is responsible for detecting when there is a loop in the ring. It is
+sending the frame MRP_Test to detect the loops. It would send MRP_Test on both
+ports in the ring and if the frame is received at the other end, then the ring
+is closed. Meaning that there is a loop. In this case it sets the port state to
+BLOCKED, not allowing traffic to pass through except MRP frames. In case it
+stops receiving MRP_Test frames from itself then the MRM will detect that the
+ring is open, therefor it would notify the other nodes of this change and will
+set the state of the port to be FORWARDING.
 
-> ------------------------------ ---------- ---------- --------------- ---------- ------------ ------------ ------------
-> 10c20000.memory-controller     devfreq0              userspace       0          206000000    165000000    825000000
-> soc:bus_wcore                  devfreq1              simple_ondemand 50         532000000    88700000     532000000
-> soc:bus_noc                    devfreq2   devfreq1   passive         0          111000000    66600000     111000000
-> soc:bus_fsys_apb               devfreq3   devfreq1   passive         0          222000000    111000000    222000000
-> soc:bus_fsys                   devfreq4   devfreq1   passive         0          200000000    75000000     200000000
-> soc:bus_fsys2                  devfreq5   devfreq1   passive         0          200000000    75000000     200000000
-> soc:bus_mfc                    devfreq6   devfreq1   passive         0          333000000    83250000     333000000
-> soc:bus_gen                    devfreq7   devfreq1   passive         0          266000000    88700000     266000000
-> soc:bus_peri                   devfreq8   devfreq1   passive         0          66600000     66600000     66600000
-> soc:bus_g2d                    devfreq9   devfreq1   passive         0          0            83250000     333000000
+The MRC is responsible for forwarding MRP_Test frames between the ring ports
+(and not to flood on other ports) and to listen when there is a change in the
+network to clear the FDB.
 
-Imho it better looks with freq aligned to right, eg.:
+Similar with STP, MRP is implemented on top of the bridge and they can't be
+enable at the same time. While STP runs on all ports of the bridge, MRP needs to
+run only on 2 ports.
 
-soc:bus_gen                    devfreq7   devfreq1   passive         0          266000000     88700000     266000000
-soc:bus_peri                   devfreq8   devfreq1   passive         0           66600000     66600000      66600000
-soc:bus_g2d                    devfreq9   devfreq1   passive         0                  0     83250000     333000000
+The bridge needs to:
+- notify when the link of one of the ports goes down or up, because MRP instance
+  needs to react to link changes by sending MRP_LinkChange frames.
+- notify when one of the ports are removed from the bridge or when the bridge
+  is destroyed, because if the port is part of the MRP ring then MRP state
+  machine should be stopped.
+- add a handler to allow MRP instance to process MRP frames, if MRP is enabled.
+  This is similar with STP design.
+- add logic for MRP frames inside the bridge. The bridge will just detect MRP
+  frames and it would forward them to the upper layer to allow to process it.
+- update the logic to update non-MRP frames. If MRP is enabled, then look also
+  at the state of the port to decide to forward or not.
 
-> soc:bus_g2d_acp                devfreq10  devfreq1   passive         0          0            66500000     266000000
-> soc:bus_jpeg                   devfreq11  devfreq1   passive         0          0            75000000     300000000
-> soc:bus_jpeg_apb               devfreq12  devfreq1   passive         0          0            83250000     166500000
-> soc:bus_disp1_fimd             devfreq13  devfreq1   passive         0          0            120000000    200000000
-> soc:bus_disp1                  devfreq14  devfreq1   passive         0          0            120000000    300000000
-> soc:bus_gscl_scaler            devfreq15  devfreq1   passive         0          0            150000000    300000000
-> soc:bus_mscl                   devfreq16  devfreq1   passive         0          0            84000000     666000000
-> 
-> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
-> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
-> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
-> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
-> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
-> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
-> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
-> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
-> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
-> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
-> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
-> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
-> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
-> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
-> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
-> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
-> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
-> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
-> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
-> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
-> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
-> [snip]
-> 
-> 
-> Depends on:
-> It depends on patch[2] for preventing the merge conflic.
-> [2] https://patchwork.kernel.org/patch/11320257/
-> - PM / devfreq: Add missing function description and rename static functions
-> 
-> Chanwoo Choi (2):
->   PM / devfreq: Add debugfs support with devfreq_summary file
->   PM / devfreq: Add devfreq_transitions debugfs file
-> 
->  drivers/devfreq/Kconfig            |  13 ++
->  drivers/devfreq/devfreq.c          | 206 +++++++++++++++++++++++++++++
->  drivers/devfreq/governor.h         |   3 +
->  drivers/devfreq/governor_passive.c |   2 +
->  include/linux/devfreq.h            |   1 +
->  5 files changed, 225 insertions(+)
-> 
+To create a MRP instance on the bridge:
+$ bridge mrp add dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1
+
+Where:
+p_port, s_port: can be any port under the bridge
+ring_role: can have the value 1(MRC - Media Redundancy Client) or
+           2(MRM - Media Redundancy Manager). In a ring can be only one MRM.
+ring_id: unique id for each MRP instance.
+
+It is possible to create multiple instances. Each instance has to have it's own
+ring_id and a port can't be part of multiple instances:
+$ bridge mrp add dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2
+
+To see current MRP instances and their status:
+$ bridge mrp show
+dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2 ring_state 3
+dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1 ring_state 4
+
+If this patch series is well received, the in the future it could be extended
+with the following:
+- add support for Media Redundancy Automanager. This role allows a node to
+  detect if needs to behave as a MRM or MRC. The advantage of this role is that
+  the user doesn't need to configure the nodes each time they are added/removed
+  from a ring and it adds redundancy to the manager.
+- add support for Interconnect rings. This allow to connect multiple rings.
+- add HW offloading. The standard defines 4 recovery times (500, 200, 30 and 10
+  ms). To be able to achieve 30 and 10 it is required by the HW to generate the
+  MRP_Test frames and detect when the ring is open/closed.
+
+Horatiu Vultur (3):
+  net: bridge: mrp: Add support for Media Redundancy Protocol
+  net: bridge: mrp: Integrate MRP into the bridge
+  net: bridge: mrp: Add netlink support to configure MRP
+
+ include/uapi/linux/if_bridge.h |   27 +
+ include/uapi/linux/if_ether.h  |    1 +
+ include/uapi/linux/rtnetlink.h |    7 +
+ net/bridge/Kconfig             |   12 +
+ net/bridge/Makefile            |    2 +
+ net/bridge/br.c                |   19 +
+ net/bridge/br_device.c         |    3 +
+ net/bridge/br_forward.c        |    1 +
+ net/bridge/br_if.c             |   10 +
+ net/bridge/br_input.c          |   22 +
+ net/bridge/br_mrp.c            | 1517 ++++++++++++++++++++++++++++++++
+ net/bridge/br_mrp_timer.c      |  227 +++++
+ net/bridge/br_netlink.c        |    9 +
+ net/bridge/br_private.h        |   30 +
+ net/bridge/br_private_mrp.h    |  208 +++++
+ security/selinux/nlmsgtab.c    |    5 +-
+ 16 files changed, 2099 insertions(+), 1 deletion(-)
+ create mode 100644 net/bridge/br_mrp.c
+ create mode 100644 net/bridge/br_mrp_timer.c
+ create mode 100644 net/bridge/br_private_mrp.h
 
 -- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+2.17.1
 
