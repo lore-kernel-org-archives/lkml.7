@@ -2,94 +2,130 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5C2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE549C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA5A20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B14520661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbgAINbL (ORCPT
+        id S1731160AbgAINb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:31:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:59102 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729114AbgAINbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:31:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77B9431B;
-        Thu,  9 Jan 2020 05:31:10 -0800 (PST)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 432493F534;
-        Thu,  9 Jan 2020 05:31:09 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH] drm/panfrost: Remove core stack power management
-Date:   Thu,  9 Jan 2020 13:31:04 +0000
-Message-Id: <20200109133104.11661-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 9 Jan 2020 08:31:58 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:44213 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730471AbgAINb6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 08:31:58 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TnFa0Xr_1578576712;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnFa0Xr_1578576712)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 09 Jan 2020 21:31:52 +0800
+Subject: Re: [PATCH 2/3] sched/cputime: code cleanup in
+ irqtime_account_process_tick
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Wanpeng Li <wanpeng.li@hotmail.com>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+References: <1577959674-255537-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1577959674-255537-2-git-send-email-alex.shi@linux.alibaba.com>
+ <20200106155350.GB26097@lenoir>
+ <20200107091315.GS2844@hirez.programming.kicks-ass.net>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <835fd412-544a-1bdd-e75f-f557e299a50a@linux.alibaba.com>
+Date:   Thu, 9 Jan 2020 21:30:40 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107091315.GS2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explict management of the GPU's core stacks is only necessary in the
-case of a broken integration with the PDC. Since there are no known
-platforms which have such a broken integration let's remove the explict
-control from the driver since this apparently causes problems on other
-platforms and will have a small performance penality.
 
-The out of tree mali_kbase driver contains this text regarding
-controlling the core stack (CONFIGMALI_CORESTACK):
+>> I fear we can't really play the exact same game as account_process_tick() here.
+>> Since this is irqtime precise accounting, we have already computed the
+>> irqtime delta in account_other_time() (or we will at some point in the future)
+>> and substracted it from the ticks to account. This means that the remaining cputime
+>> to account has to be either utime/stime/gtime/idle-time but not interrupt time, or
+>> we may account interrupt time twice. And account_system_time() tries to account
+>> irq time, for example if we interrupt a softirq.
+> 
+> OK, I've dropped 2 and 3. Thanks Frederic!
+> 
 
-  Enabling this feature on supported GPUs will let the driver powering
-  on/off the GPU core stack independently without involving the Power
-  Domain Controller. This should only be enabled on platforms which
-  integration of the PDC to the Mali GPU is known to be problematic.
-  This feature is currently only supported on t-Six and t-HEx GPUs.
+Hi Frederic & Peter,
 
-  If unsure, say N.
+Thanks a lot for the comments and review! 
+It's my fault to mess up the account_system_time details. And seems there is no easy way to replace irqtime_account_process_tick or account_process_tick with each other.
 
-Signed-off-by: Steven Price <steven.price@arm.com>
+but on the other side, the account_idle_ticks could be replaced by irqtime_account_process_tick, or at least to remove irqtime_account_idle_ticks function. Any comments?
+
+Thanks
+Alex
+
 ---
- drivers/gpu/drm/panfrost/panfrost_gpu.c | 5 -----
- 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-index 8822ec13a0d6..460fc190de6e 100644
---- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-@@ -309,10 +309,6 @@ void panfrost_gpu_power_on(struct panfrost_device *pfdev)
- 	ret = readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
- 		val, val == pfdev->features.l2_present, 100, 1000);
- 
--	gpu_write(pfdev, STACK_PWRON_LO, pfdev->features.stack_present);
--	ret |= readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
--		val, val == pfdev->features.stack_present, 100, 1000);
--
- 	gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
- 	ret |= readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
- 		val, val == pfdev->features.shader_present, 100, 1000);
-@@ -329,7 +325,6 @@ void panfrost_gpu_power_off(struct panfrost_device *pfdev)
- {
- 	gpu_write(pfdev, TILER_PWROFF_LO, 0);
- 	gpu_write(pfdev, SHADER_PWROFF_LO, 0);
--	gpu_write(pfdev, STACK_PWROFF_LO, 0);
- 	gpu_write(pfdev, L2_PWROFF_LO, 0);
+From 7073e60babc3b42a987b4e89f380956887734233 Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Thu, 9 Jan 2020 20:32:55 +0800
+Subject: [PATCH] sched/cputime: remove irqtime_account_idle_ticks
+
+irqtime_account_idle_ticks and irqtime_account_process_tick use in same
+condition. We don't bother to name and use a irqtime_account_idle_ticks
+for only one calling. Remove the function to simply code and reduce a
+bit object size of kernel.
+
+And further more, we could replace account_idle_ticks by
+irqtime_account_process_tick too. But feed and check 'current' looks weird.
+So this is ok.
+
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com> 
+Cc: Peter Zijlstra <peterz@infradead.org> 
+Cc: linux-kernel@vger.kernel.org 
+---
+ kernel/sched/cputime.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index cff3e656566d..17640d145e44 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -390,12 +390,7 @@ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+ 	}
  }
  
+-static void irqtime_account_idle_ticks(int ticks)
+-{
+-	irqtime_account_process_tick(current, 0, ticks);
+-}
+ #else /* CONFIG_IRQ_TIME_ACCOUNTING */
+-static inline void irqtime_account_idle_ticks(int ticks) { }
+ static inline void irqtime_account_process_tick(struct task_struct *p, int user_tick,
+ 						int nr_ticks) { }
+ #endif /* CONFIG_IRQ_TIME_ACCOUNTING */
+@@ -505,7 +500,7 @@ void account_idle_ticks(unsigned long ticks)
+ 	u64 cputime, steal;
+ 
+ 	if (sched_clock_irqtime) {
+-		irqtime_account_idle_ticks(ticks);
++		irqtime_account_process_tick(current, 0, ticks);
+ 		return;
+ 	}
+ 
 -- 
-2.20.1
+1.8.3.1
 
