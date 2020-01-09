@@ -2,82 +2,122 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5053CC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2C2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17ADB206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDEF20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DFTve4Dq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="I8FfagaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387740AbgAIQiQ (ORCPT
+        id S2387751AbgAIQiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:38:16 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:39062 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbgAIQiP (ORCPT
+        Thu, 9 Jan 2020 11:38:18 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:39988 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbgAIQiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:38:15 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id F2CAF2007684;
-        Thu,  9 Jan 2020 08:38:14 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F2CAF2007684
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1578587895;
-        bh=tLUd4VK7GfUjhPceZ2DEioxJk5pIIIxabfHz0xCY7KA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DFTve4DqG+WRFl5jxDn11pDsh+qB2yu/lMwI7WyqHieA5FllIu/xbZkU0MaAkifBc
-         NyYW0i2hCHFPcRkMmbopmX8hrd/1BGS0PH44ZSZoF/hTwFh7ybOr3SNGZPDZiJq9u/
-         IIwnrGFXQ0vyBXacypwUIPAb26ZY2iUdu+ccNldc=
-Subject: Re: [PATCH v1] IMA: fix measuring asymmetric keys Kconfig
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        James.Bottomley@HansenPartnership.com, arnd@arndb.de,
-        linux-integrity@vger.kernel.org
-Cc:     dhowells@redhat.com, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-References: <20200108160508.5938-1-nramas@linux.microsoft.com>
- <1578545543.5147.32.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <5411bc3d-74eb-6868-5768-bba3726a661a@linux.microsoft.com>
-Date:   Thu, 9 Jan 2020 08:38:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 11:38:16 -0500
+Received: by mail-qv1-f67.google.com with SMTP id dp13so3208700qvb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:38:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OPe/HMKwKhkEkwTPCWJjEeUhExBLeIT5A1xBW+xeUQc=;
+        b=I8FfagaFavLXeHzK0DjgVqVFYUEzD9hocHdxthK9XOcJV/lh39/jEvN9Av39u85cbI
+         3gpWldaYdt7d4zJrFGoctpLemS9PcOgnygUpKm9eemVR+f4ug9dZuk6yDOaUyJE5O7+d
+         maxMZZOwR7yqLpPas3F7sk3Y9g4ruKh3ZRmF7wJsusqRmHOUMf13VI8lfzKMIwy4A+tj
+         C0HeW37MBIVe7l4fGiOZeY6G37WnvPQuKOrVeS21N0WMwo1cr/UfFJSVZ89la2dnpaxF
+         DvRiPNm1KVnNo+TonZhyIvRMiukJEon6259cqy/BpFf9JWP/szXLozoDXSAcn7pfMXdk
+         NB4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OPe/HMKwKhkEkwTPCWJjEeUhExBLeIT5A1xBW+xeUQc=;
+        b=c0KAbIGO3pdtX7nC/ImPjShUXKVOaxZkgWcNxsbxdNxMXjIU8kF1M1K51FJKf1kimv
+         jG8QFOdYw3Iq5WL+F5YQsj6c4MInLCTbiB3j+RNM5JX9+zK0YkNyieSDyJvroWAd54Yn
+         fG775OROagUVPX42gu3O5qwNaYxDg77VEAWKRfAuSa4qOGf8K/C0mdLHcc2MbalW7mJX
+         qTVgLGKugC71dOGsZUmsuTrRbQ8zQthmwJxaJ1VpYGvLHDLRr9BW1mZFo/U4CCW6CQfV
+         KRImnfiQwBzEIlqL/sMrNFv3l0gd0aPxr4T8DX75IGpVnGSLOB4oV6Fmuzjs1nizXN9T
+         bBdg==
+X-Gm-Message-State: APjAAAUwNMLxRgQiNLdb/02WHmvov4UNnuy7mVr3e7jiA+5/pIX9PZ8U
+        Gj6ziMIklKqu5XMjJnDTdkFh5bOWuTsC1h2lETJXXg==
+X-Google-Smtp-Source: APXvYqygL86jZcsVrFwXhHQh9P+5HKhCz0Qq7ukOPdDluEQzw+d0pUENMTdTqOgXckbNuc8LW9siLvyMErzw9iPXr88=
+X-Received: by 2002:a0c:d60e:: with SMTP id c14mr9507784qvj.76.1578587895785;
+ Thu, 09 Jan 2020 08:38:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1578545543.5147.32.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200109161724.9546-1-brgl@bgdev.pl> <CAK7LNAQQcGLq46QOhqHArQvQG8DP2uQDtpn8XoUthNhwu8Aiyg@mail.gmail.com>
+In-Reply-To: <CAK7LNAQQcGLq46QOhqHArQvQG8DP2uQDtpn8XoUthNhwu8Aiyg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 9 Jan 2020 17:38:03 +0100
+Message-ID: <CAMpxmJUp_sEzf7sO1m=A+16eAhMJtu2Z_O2cZk7XCQeSjNj9+A@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: ignore temporary generated files
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/8/20 8:52 PM, Mimi Zohar wrote:
+czw., 9 sty 2020 o 17:36 Masahiro Yamada <masahiroy@kernel.org> napisa=C5=
+=82(a):
+>
+> On Fri, Jan 10, 2020 at 1:17 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > If building gconfig fails, a temporary gtk config file is left in the
+> > kconfig directory and is not ignored by git. Add an appropriate pattern
+> > to .gitignore.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  scripts/kconfig/.gitignore | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/scripts/kconfig/.gitignore b/scripts/kconfig/.gitignore
+> > index b5bf92f66d11..d22e6753397d 100644
+> > --- a/scripts/kconfig/.gitignore
+> > +++ b/scripts/kconfig/.gitignore
+> > @@ -3,6 +3,7 @@
+> >  #
+> >  *.moc
+> >  *conf-cfg
+> > +*conf-cfg.tmp
+>
+> I have no idea in which situation this pattern is left.
+>
+> Could you tell me the way to reproduce it?
 
-> 
-> For the time being, I've pushed out this patch with the existing patch
-> description to next-integrity-testing, but the patch description
-> should be rewritten clearer.  For example,
-> 
-> As a result of the asymmetric public keys subtype being defined as a
-> tristate, with the existing IMA Makefile, ima_asymmetric_keys.c could
-> be built as a kernel module.  To prevent this from happening, this
-> patch defines and uses an intermediate Kconfig boolean option named
-> IMA_MEASURE_ASYMMETRIC_KEYS.
-> 
-> Please let me know if you're ok with this wording.
-> 
-> thanks,
-> 
-> Mimi
-> 
+Sure:
 
-That sounds perfect. Thanks for your help Mimi.
+1. Don't have gtk+ development files installed.
+2. Run `make gconfig`.
+3. Watch it fail with the following error message:
 
-  -lakshmi
+---
+$ make gconfig
+*
+* Unable to find the GTK+ installation. Please make sure that
+* the GTK+ 2.0 development package is correctly installed.
+* You need gtk+-2.0 gmodule-2.0 libglade-2.0
+*
+make[1]: *** [scripts/kconfig/Makefile:212: scripts/kconfig/gconf-cfg] Erro=
+r 1
+make: *** [Makefile:568: gconfig] Error 2
+---
+
+4. See the file `gconf-cfg.tmp` under scripts/kconfig.
+
+Bart
