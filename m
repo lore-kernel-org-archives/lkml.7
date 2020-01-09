@@ -2,178 +2,157 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3943C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C9BC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA9020656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CB020656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:13:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730535AbgAILMo (ORCPT
+        id S1730546AbgAILNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:12:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:57190 "EHLO foss.arm.com"
+        Thu, 9 Jan 2020 06:13:23 -0500
+Received: from mga18.intel.com ([134.134.136.126]:16395 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728918AbgAILMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:12:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7703C31B;
-        Thu,  9 Jan 2020 03:12:40 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EEF63F703;
-        Thu,  9 Jan 2020 03:12:38 -0800 (PST)
-Date:   Thu, 9 Jan 2020 11:12:36 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Quentin Perret <qperret@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-Message-ID: <20200109111235.auslgkuqkfsaohcd@e107158-lin.cambridge.arm.com>
-References: <20191220164838.31619-1-qais.yousef@arm.com>
- <20200107134234.GA158998@google.com>
+        id S1728918AbgAILNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 06:13:21 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 03:13:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
+   d="scan'208";a="396059012"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 09 Jan 2020 03:13:19 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ipVke-0007KJ-9v; Thu, 09 Jan 2020 13:13:20 +0200
+Date:   Thu, 9 Jan 2020 13:13:20 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] pinctrl: intel: Add GPIO <-> pin mapping ranges via
+ callback
+Message-ID: <20200109111320.GM32742@smile.fi.intel.com>
+References: <20200109075329.398347-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107134234.GA158998@google.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200109075329.398347-1-linus.walleij@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Quentin
-
-On 01/07/20 13:42, Quentin Perret wrote:
-> Hi Qais,
+On Thu, Jan 09, 2020 at 08:53:28AM +0100, Linus Walleij wrote:
+> When IRQ chip is instantiated via GPIO library flow, the few functions,
+> in particular the ACPI event registration mechanism, on some of ACPI based
+> platforms expect that the pin ranges are initialized to that point.
 > 
-> On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
-> > +/*
-> > + * By default RT tasks run at the maximum performance point/capacity of the
-> > + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
-> > + * SCHED_CAPACITY_SCALE.
-> > + *
-> > + * This knob allows admins to change the default behavior when uclamp is being
-> > + * used. In battery powered devices particularly running at the maximum
-> > + * capacity will increase energy consumption and shorten the battery life.
-> > + *
-> > + * This knob only affects the default value RT uses when a new RT task is
-> > + * forked or has just changed policy to RT and no uclamp user settings were
-> > + * applied (ie: the task didn't modify the default value to a new value.
-> > + *
-> > + * This knob will not override the system default values defined above.
-> > + */
+> Add GPIO <-> pin mapping ranges via callback in the GPIO library flow.
 > 
-> I suppose this comment could go in the sysctl doc file instead ?
 
-Sure. Does it hurt to keep the comment here too though?
+Pushed to my review and testing queue, thanks!
 
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Please apply this to the Intel pinctrl tree when you're pleased
+> with it!
+> ---
+>  drivers/pinctrl/intel/pinctrl-intel.c | 35 +++++++++++++++++----------
+>  1 file changed, 22 insertions(+), 13 deletions(-)
 > 
-> > +unsigned int sysctl_sched_rt_uclamp_util_min = SCHED_CAPACITY_SCALE;
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index 4860bc9a4e48..b479bcf1e246 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -1160,8 +1160,8 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
+>  	return ret;
+>  }
+>  
+> -static int intel_gpio_add_pin_ranges(struct intel_pinctrl *pctrl,
+> -				     const struct intel_community *community)
+> +static int intel_gpio_add_community_ranges(struct intel_pinctrl *pctrl,
+> +				const struct intel_community *community)
+>  {
+>  	int ret = 0, i;
+>  
+> @@ -1181,6 +1181,24 @@ static int intel_gpio_add_pin_ranges(struct intel_pinctrl *pctrl,
+>  	return ret;
+>  }
+>  
+> +static int intel_gpio_add_pin_ranges(struct gpio_chip *gc)
+> +{
+> +	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
+> +	int ret, i;
+> +
+> +	for (i = 0; i < pctrl->ncommunities; i++) {
+> +		struct intel_community *community = &pctrl->communities[i];
+> +
+> +		ret = intel_gpio_add_community_ranges(pctrl, community);
+> +		if (ret) {
+> +			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
+>  {
+>  	const struct intel_community *community;
+> @@ -1205,7 +1223,7 @@ static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
+>  
+>  static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
+>  {
+> -	int ret, i;
+> +	int ret;
+>  
+>  	pctrl->chip = intel_gpio_chip;
+>  
+> @@ -1214,6 +1232,7 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
+>  	pctrl->chip.label = dev_name(pctrl->dev);
+>  	pctrl->chip.parent = pctrl->dev;
+>  	pctrl->chip.base = -1;
+> +	pctrl->chip.add_pin_ranges = intel_gpio_add_pin_ranges;
+>  	pctrl->irq = irq;
+>  
+>  	/* Setup IRQ chip */
+> @@ -1231,16 +1250,6 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
+>  		return ret;
+>  	}
+>  
+> -	for (i = 0; i < pctrl->ncommunities; i++) {
+> -		struct intel_community *community = &pctrl->communities[i];
+> -
+> -		ret = intel_gpio_add_pin_ranges(pctrl, community);
+> -		if (ret) {
+> -			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
+> -			return ret;
+> -		}
+> -	}
+> -
+>  	/*
+>  	 * We need to request the interrupt here (instead of providing chip
+>  	 * to the irq directly) because on some platforms several GPIO
+> -- 
+> 2.23.0
 > 
-> I would suggest renaming the knob as 'sysctl_sched_rt_default_uclamp_min'
-> or something along those lines to make it clear it's a default value.
 
-+1
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> 
-> And for consistency with the existing code, perhaps set the default to
-> uclamp_none(UCLAMP_MAX) instead of an explicit SCHED_CAPACITY_SCALE?
 
-Can do. But this means you need to move the initialization to sched_init() to
-do a function call. Using SCHED_CAPACITY_SCALE is consistent with other uclamp
-sysctl definition - there's no big advantage to this code shuffling to achieve
-the same thing?
-
-[...]
-
-> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> > index e591d40fd645..19572dfc175b 100644
-> > --- a/kernel/sched/rt.c
-> > +++ b/kernel/sched/rt.c
-> > @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
-> >   */
-> >  static void task_woken_rt(struct rq *rq, struct task_struct *p)
-> >  {
-> > +	/*
-> > +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
-> > +	 * we apply any new value on the next wakeup, which is here.
-> > +	 */
-> > +	uclamp_rt_sync_default_util_min(p);
-> 
-> The task has already been enqueued and sugov has been called by then I
-> think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
-
-Yeah that might be a better place - I'm not sure why I didn't consider it. I'll
-try it out.
-
-> 
-> > +
-> >  	if (!task_running(rq, p) &&
-> >  	    !test_tsk_need_resched(rq->curr) &&
-> >  	    p->nr_cpus_allowed > 1 &&
-> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> > index 280a3c735935..337bf17b1a9d 100644
-> > --- a/kernel/sched/sched.h
-> > +++ b/kernel/sched/sched.h
-> > @@ -2300,6 +2300,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
-> >  #endif /* CONFIG_CPU_FREQ */
-> >  
-> >  #ifdef CONFIG_UCLAMP_TASK
-> > +void uclamp_rt_sync_default_util_min(struct task_struct *p);
-> > +
-> >  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
-> >  
-> >  static __always_inline
-> > @@ -2330,6 +2332,8 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
-> >  	return uclamp_util_with(rq, util, NULL);
-> >  }
-> >  #else /* CONFIG_UCLAMP_TASK */
-> > +void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
-> > +
-> >  static inline unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
-> >  					    struct task_struct *p)
-> >  {
-> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > index 70665934d53e..06183762daac 100644
-> > --- a/kernel/sysctl.c
-> > +++ b/kernel/sysctl.c
-> > @@ -465,6 +465,13 @@ static struct ctl_table kern_table[] = {
-> >  		.mode		= 0644,
-> >  		.proc_handler	= sysctl_sched_uclamp_handler,
-> >  	},
-> > +	{
-> > +		.procname	= "sched_rt_util_clamp_min",
-> > +		.data		= &sysctl_sched_rt_uclamp_util_min,
-> > +		.maxlen		= sizeof(unsigned int),
-> > +		.mode		= 0644,
-> > +		.proc_handler	= sysctl_sched_uclamp_handler,
-> > +	},
-> >  #endif
-> >  #ifdef CONFIG_SCHED_AUTOGROUP
-> >  	{
-> > -- 
-> > 2.17.1
-> > 
-> 
-> Apart from the small things above, this seems like a sensible idea and
-> would indeed be useful, so thanks for the patch!
-
-Thanks for having a look!
-
---
-Qais Yousef
