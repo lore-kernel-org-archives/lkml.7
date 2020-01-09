@@ -2,164 +2,89 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798CFC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FDDC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5702C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C872072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578583084;
+	bh=wwTkulcWNrf8/WnDIcLNGlEiuiK3aNjEJ0Ao6P3jLx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NjdOHDJBTAb/Vi6/BB88kHi/fHQ4wm3XWR+OzJud3K56ha2tUoQFVzdY7pR9EpZtE
+	 uc5knqEMq4vpAJcWTrZBraeRDdDXjeFWO8Oam6n5UBAIrvvpEszLCBcoTfHsnWXi3b
+	 16cS2IwBlw5zX9raEXNInwOQJC+OdXYqmabs5fWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732253AbgAIPRi (ORCPT
+        id S1732263AbgAIPSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:17:38 -0500
-Received: from mailoutvs35.siol.net ([185.57.226.226]:42845 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727945AbgAIPRi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:17:38 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 36512522197;
-        Thu,  9 Jan 2020 16:17:34 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id YnHQAfJSkglZ; Thu,  9 Jan 2020 16:17:33 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id C701F5221AA;
-        Thu,  9 Jan 2020 16:17:33 +0100 (CET)
-Received: from jernej-laptop.localnet (unknown [194.6.237.34])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 1B75F522197;
-        Thu,  9 Jan 2020 16:17:32 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     mripard@kernel.org, hverkuil@xs4all.nl, gregkh@linuxfoundation.org,
-        wens@csie.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] media: uapi: hevc: Add scaling matrix control
-Date:   Thu, 09 Jan 2020 16:17:31 +0100
-Message-ID: <3030664.44csPzL39Z@jernej-laptop>
-In-Reply-To: <20200108144336.GB229960@aptenodytes>
-References: <20191213160428.54303-1-jernej.skrabec@siol.net> <20200108151157.17cf9774@kernel.org> <20200108144336.GB229960@aptenodytes>
+        Thu, 9 Jan 2020 10:18:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727945AbgAIPSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:18:03 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418E4206ED;
+        Thu,  9 Jan 2020 15:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578583082;
+        bh=wwTkulcWNrf8/WnDIcLNGlEiuiK3aNjEJ0Ao6P3jLx8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V6tQ2nfhWozNQ3WNBxLm/6dfX9TD28B9GdBZdjeTZQ6hOapDoVOaApZajf9G8DOWE
+         +eISC137+7dtioAZSNt3iRl/UVkOQKuB/W8iThl/6EcKMphY/hp2e6LQc+anmIdiEh
+         Ijd6kQgGCuGIeuG2Y5cPSqWBV0qUYoPUkn7Y/UTs=
+Date:   Thu, 9 Jan 2020 15:17:57 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Srinivas Ramana <sramana@codeaurora.org>, maz@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] arm64: Set SSBS for user threads while creation
+Message-ID: <20200109151756.GG12236@willie-the-truck>
+References: <1577106146-8999-1-git-send-email-sramana@codeaurora.org>
+ <20200102180145.GE27940@arrakis.emea.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102180145.GE27940@arrakis.emea.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-Dne sreda, 08. januar 2020 ob 15:43:36 CET je Paul Kocialkowski napisal(a):
-> Hi Mauro,
+On Thu, Jan 02, 2020 at 06:01:45PM +0000, Catalin Marinas wrote:
+> On Mon, Dec 23, 2019 at 06:32:26PM +0530, Srinivas Ramana wrote:
+> > Current SSBS implementation takes care of setting the
+> > SSBS bit in start_thread() for user threads. While this works
+> > for tasks launched with fork/clone followed by execve, for cases
+> > where userspace would just call fork (eg, Java applications) this
+> > leaves the SSBS bit unset. This results in performance
+> > regression for such tasks.
+> > 
+> > It is understood that commit cbdf8a189a66 ("arm64: Force SSBS
+> > on context switch") masks this issue, but that was done for a
+> > different reason where heterogeneous CPUs(both SSBS supported
+> > and unsupported) are present. It is appropriate to take care
+> > of the SSBS bit for all threads while creation itself.
+> > 
+> > Fixes: 8f04e8e6e29c ("arm64: ssbd: Add support for PSTATE.SSBS rather than trapping to EL3")
+> > Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
 > 
-> On Wed 08 Jan 20, 15:11, Mauro Carvalho Chehab wrote:
-> > Em Fri, 13 Dec 2019 17:04:25 +0100
-> > 
-> > Jernej Skrabec <jernej.skrabec@siol.net> escreveu:
-> > > HEVC has a scaling matrix concept. Add support for it.
-> > > 
-> > > +struct v4l2_ctrl_hevc_scaling_matrix {
-> > > +	__u8	scaling_list_4x4[6][16];
-> > > +	__u8	scaling_list_8x8[6][64];
-> > > +	__u8	scaling_list_16x16[6][64];
-> > > +	__u8	scaling_list_32x32[2][64];
-> > > +	__u8	scaling_list_dc_coef_16x16[6];
-> > > +	__u8	scaling_list_dc_coef_32x32[2];
-> > > +};
-> > 
-> > I never looked at HEVC spec, but the above seems really weird.
-> > 
-> > Please correct me if I am wrong, but each of the above matrixes
-> > is independent, and the driver will use just one of the above on
-> > any specific time (for a given video output node), right?
-> 
-> I am not too sure about what the specification really entails, but it is my
-> understanding that HEVC allows simultaneous block sizes between 4x4 and
-> 32x32 to exist within the same coding tree and slice. That suggests that it
-> makes sense to have specific coefficients for each case.
+> I suppose the parent process cleared SSBS explicitly. Isn't the child
+> after fork() supposed to be nearly identical to the parent? If we did as
+> you suggest, someone else might complain that SSBS has been set in the
+> child after fork().
 
-Specs ITU-T REC. H.265 (06/2019), chapter 7.3.4 shows that multiple different 
-matrices can be present at the same time. If they are not, default values 
-should be used instead. But in general, more than one can be needed at the 
-same time.
+Right, I'd expect the parent SSBS to be inherited when we copy the pstate
+field along with the other regs, and I think this is the correct behaviour.
 
-Only real question is if default values should be also provided by userspace 
-or by kernel. Since place has to be reserved for all different scaling lists 
-anyway, we won't save any space by providing default values in kernel. Cedrus 
-VPU has only bit switch for using default values for all matrices at the same 
-time or all custom.
+Is that broken somehow?
 
-Note that this control contains slightly processed data. Frame has stored 
-these matrices in form of deltas. But because this is the only driver that use 
-this structure I have no idea what is the most proper form of this data (raw 
-values or deltas). That's why this will stay in staging using private headers 
-until we figure this out.
-
-Best regards,
-Jernej
-
-> 
-> Note that the hardware also has distinct registers for each scaling list.
-> 
-> Cheers,
-> 
-> Paul
-> 
-> > If so, why would userspace be forced to update lots of matrixes, if would
-> > likely use just one at a given time?
-> > 
-> > IMO, the proper way would be, instead, to use an uAPI like:
-> > 
-> > /*
-> > 
-> >  * Actually, as this is uAPI, we will use a fixed size integer type, like
-> >  *  unsigned int
-> >  */
-> > 
-> > enum hevc_scaling_matrix_type {
-> > 
-> > 	HEVC_SCALING_MATRIX_4x4,
-> > 	HEVC_SCALING_MATRIX_8x8,
-> > 
-> > ...
-> > 
-> > 	HEVC_SCALING_MATRIX_DC_COEF_32x32,
-> > 
-> > };
-> > 
-> > struct v4l2_ctrl_hevc_scaling_matrix {
-> > 
-> > 	__u32	scaling_type 		/* as defined by enum 
-hevc_scaling_matrix_type */
-> > 	
-> > 	union {
-> > 	
-> > 		__u8	scaling_list_4x4[6][16];
-> > 		__u8	scaling_list_8x8[6][64];
-> > 		__u8	scaling_list_16x16[6][64];
-> > 		__u8	scaling_list_32x32[2][64];
-> > 		__u8	scaling_list_dc_coef_16x16[6];
-> > 		__u8	scaling_list_dc_coef_32x32[2];
-> > 	
-> > 	};
-> > 
-> > };
-> > 
-> > And let the core use a default for each scaling matrix, if userspace
-> > doesn't set it.
-> > 
-> > 
-> > 
-> > Cheers,
-> > Mauro
-
-
-
-
+Will
