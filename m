@@ -2,155 +2,191 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9444EC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B16AC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6147A2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478BF205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Y4QFUcdA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p/1AR8Sj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZ7Hn4jC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgAIEnm (ORCPT
+        id S1727927AbgAIEuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 23:43:42 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42869 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726913AbgAIEnm (ORCPT
+        Wed, 8 Jan 2020 23:50:46 -0500
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:34538 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbgAIEup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 23:43:42 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 347CE21FC3;
-        Wed,  8 Jan 2020 23:43:41 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 08 Jan 2020 23:43:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=taiDRc8Qpn+ljKa3v+JJ2VH/VhF+HU9
-        gTcCq/CXJk/Q=; b=Y4QFUcdAPhs5F1NtsVAMZJ2NWEOAQ3L/WrrnMLss4MSII0p
-        QiI5kEHAFxW5H2fKyD3JX3qWjq6ym8typst52yTTaPLyv3JTY4gzC3EnnQ6TyFOG
-        IjC2tY1dbW25noiZcxj219g6P+yxs86qmtmv7BGORj2SFjOXHqOCUdH+XhxSxuyt
-        nCqGAcuObjKawHVOUdItpRGZhHI87J/S4gJiUyYncjJubrZ/aoTW1UGaDqvwmOtp
-        MZvpF9gg2MqV/6Meq0UIryB7hRoG6fCpwdh2gAxEnfXYuKGKlh7+BHT2Q0Y+zqgC
-        wSNaoJV1lL+d0Mh79GhT9Is8bNZQ6OU/WXqMX/A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=taiDRc
-        8Qpn+ljKa3v+JJ2VH/VhF+HU9gTcCq/CXJk/Q=; b=p/1AR8Sj4FRNX27JOUsn4p
-        aUcnnvRcxVuKz/3S3MYDjDCNh0iw2uCKc+uwND2IOU/NZJbdVkTR8PyNS8l7n+6g
-        CY1lj5cUJ/AKcZ/gi/DnoQIJlTL5PBS96s/oda4UbS6wlBTIUaF0ZIQVuRs2c7zO
-        fjWkosezJSirHrGyvMJMqgllF1OeX0YiT1QrjJYLdSDqWqWVlXjAxB9Ttr8BkaKE
-        J/2kDa53QU8wNXl4bWBw0kDH/YUd4A5ghjgF3bTwAcRhsRs92KpLYrOyiYvYBA8i
-        DDG0Bl69O8JBjl43BQQd3E4fzwqp0c0uaAudGHizyDmXTbPbzl1j6gC4j7+6i1xw
-        ==
-X-ME-Sender: <xms:e68WXtp7DRwcGksY0anL9lWdG07_eQplFUzX1X8U6c0lX63E1mv0xg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdehledgieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:e68WXkiLTErI05O4GuCxW-TaO8gGcLJexpQ3xM5oxeB1_NfEjZahVw>
-    <xmx:e68WXnwORpaCJmSfvwt4kT0n3K9dtJhAEua37HFmM9qO3QdTFpSfag>
-    <xmx:e68WXq9iyttuAOaajY1Xx-_jTjrBeCFxBDx8JIpPac5GhwP-qhWIpg>
-    <xmx:fa8WXiCG33PCe2CDF5pZawSJe8ZqQxsu0hb66VbLIG8wUmp62xBwWA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AC54CE00A2; Wed,  8 Jan 2020 23:43:39 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-740-g7d9d84e-fmstable-20200109v1
-Mime-Version: 1.0
-Message-Id: <3cc1006c-c107-4864-b652-118e84060c38@www.fastmail.com>
-In-Reply-To: <1577993276-2184-6-git-send-email-eajames@linux.ibm.com>
-References: <1577993276-2184-1-git-send-email-eajames@linux.ibm.com>
- <1577993276-2184-6-git-send-email-eajames@linux.ibm.com>
-Date:   Thu, 09 Jan 2020 15:15:38 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>,
-        linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, "Jason Cooper" <jason@lakedaemon.net>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
-        "Joel Stanley" <joel@jms.id.au>
-Subject: Re: [PATCH v4 05/12] dt-bindings: soc: Add Aspeed XDMA Engine
-Content-Type: text/plain
+        Wed, 8 Jan 2020 23:50:45 -0500
+Received: by mail-ot1-f54.google.com with SMTP id a15so6020850otf.1;
+        Wed, 08 Jan 2020 20:50:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=W3O5nIcFKxaFgkWc12HCywMQWOvEI9x36sCRsT6hEps=;
+        b=WZ7Hn4jCSv4LSKuxn2A2iFb4MOyxGmne6T1uqasQOIZVxyfKwN4Fs5qMOoE++eUH6h
+         R5e8XAJNLObNlPeng7tp93kXMeZ3R8W9iyn9viszqTZKPQTDXcZ+M+7F3rm4/QlCpYh4
+         YXeilGKcqFyZzzE32Q6mVVqMcA3hPcTg0UscliaT8gkltPBQazbvsD0xY9zluh3dd8uo
+         sVqePtBnasfwkVBTUtJJzUc4f1TS7hleoIHumGQsqrUoNb+wIMSBCl++YuvqTV2CYV/1
+         hod+oPDr+winwMnBtzzLhYPDe3d7nULUivX9yKkP6rM2iglX7tJp8H+jyjlShbRaxZ49
+         rAbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W3O5nIcFKxaFgkWc12HCywMQWOvEI9x36sCRsT6hEps=;
+        b=O4KypuyJZ/iMltvqyvz24WH8RbZcyuVB7+s4L2WmZIiWpbI09r8uncFTz4My7yfYaD
+         UEkoOsoP+ZxW1Bqy36XhI7fDcm0GXXbwIxnq8KSk5PgBZGDbCtACKZQGIElq8wruouQb
+         vhydj7T21oAD0gwC30T+nSOkoYiQ2u2K6aglNE3lnY4J9gs0XE9V3b2H1vyV8LgpPwWz
+         2OsDz+VdGqw4Z4P4kzsC9B9/1zCRiYv2erNXVu3vRDYgJQzt2K6PM8bHZD3KjXSFY5vy
+         iCPor+qvUpIhtvazshqVXCuVAaqdGKT8xOCrH2h33nQCtcy05aKxqRAyoZPmjNVVHYdW
+         7j0Q==
+X-Gm-Message-State: APjAAAXPbZXayBQHMpNy84Rahr8AoqxCcaIvM7seFBn5iI0ZoKDyevPw
+        WOL4gOC/rwfe5YbOK6bllQk2SFFpO0rpCEwXIZsX4EOd
+X-Google-Smtp-Source: APXvYqzTftxnnmGHL9Y3nqnlGfdsAAbMXG7jnFOss/mF59XGZtYjw9VRPTfE6HjAPG7OXfPFJu2ZlsZp6CH4sLs1WBg=
+X-Received: by 2002:a9d:754a:: with SMTP id b10mr7114902otl.273.1578545444736;
+ Wed, 08 Jan 2020 20:50:44 -0800 (PST)
+MIME-Version: 1.0
+References: <CAHhAz+iy9b8Cyc6O=tjzjjixUQqKpTchrQWc+Y4JicAxB_HY5A@mail.gmail.com>
+ <20200109043505.GA223446@google.com>
+In-Reply-To: <20200109043505.GA223446@google.com>
+From:   Muni Sekhar <munisekharrms@gmail.com>
+Date:   Thu, 9 Jan 2020 10:20:32 +0530
+Message-ID: <CAHhAz+h4_nenXjUb9Up2Djx3e_d1J3zPmiCENjSbyJmxPJTb8g@mail.gmail.com>
+Subject: Re: pcie: xilinx: kernel hang - ISR readl()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 9, 2020 at 10:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
+> > On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote=
+:
+> > > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
+> > > > Hi,
+> > > >
+> > > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+> > > > parallel I/O and interfaces them to the Host CPU via PCI Express bu=
+s.
+> > > > I see that my system freezes without capturing the crash dump for
+> > > > certain tests. I debugged this issue and it was tracked down to the
+> > > > below mentioned interrupt handler code.
+> > > >
+> > > >
+> > > > In ISR, first reads the Interrupt Status register using =E2=80=98re=
+adl()=E2=80=99 as
+> > > > given below.
+> > > >     status =3D readl(ctrl->reg + INT_STATUS);
+> > > >
+> > > >
+> > > > And then clears the pending interrupts using =E2=80=98writel()=E2=
+=80=99 as given blow.
+> > > >         writel(status, ctrl->reg + INT_STATUS);
+> > > >
+> > > >
+> > > > I've noticed a kernel hang if INT_STATUS register read again after
+> > > > clearing the pending interrupts.
+> > > >
+> > > > Can someone clarify me why the kernel hangs without crash dump inca=
+se
+> > > > if I read the INT_STATUS register using readl() after clearing the
+> > > > pending bits?
+> > > >
+> > > > Can readl() block?
+> > >
+> > > readl() should not block in software.  Obviously at the hardware CPU
+> > > instruction level, the read instruction has to wait for the result of
+> > > the read.  Since that data is provided by the device, i.e., your FPGA=
+,
+> > > it's possible there's a problem there.
+> >
+> > Thank you very much for your reply.
+> > Where can I find the details about what is protocol for reading the
+> > =E2=80=98memory mapped IO=E2=80=99? Can you point me to any useful link=
+s..
+> > I tried locate the exact point of the kernel code where CPU waits for
+> > read instruction as given below.
+> > readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
+> > Do I need to check for the assembly instructions, here?
+>
+> The C pointer dereference, e.g., "*address", will be some sort of a
+> "load" instruction in assembly.  The CPU wait isn't explicit; it's
+> just that when you load a value, the CPU waits for the value.
+>
+> > > Can you tell whether the FPGA has received the Memory Read for
+> > > INT_STATUS and sent the completion?
+> >
+> > Is there a way to know this with the help of software debugging(either
+> > enabling dynamic debugging or adding new debug prints)? Can you please
+> > point some tools\hw needed to find this?
+>
+> You could learn this either via a PCIe analyzer (expensive piece of
+> hardware) or possibly some logic in the FPGA that would log PCIe
+> transactions in a buffer and make them accessible via some other
+> interface (you mentioned it had parallel and other interfaces).
+>
+> > > On the architectures I'm familiar with, if a device doesn't respond,
+> > > something would eventually time out so the CPU doesn't wait forever.
+> >
+> > What is timeout here? I mean how long CPU waits for completion? Since
+> > this code runs from interrupt context, does it causes the system to
+> > freeze if timeout is more?
+>
+> The Root Port should have a Completion Timeout.  This is required by
+> the PCIe spec.  The *reporting* of the timeout is somewhat
+> implementation-specific since the reporting is outside the PCIe
+> domain.  I don't know the duration of the timeout, but it certainly
+> shouldn't be long enough to look like a "system freeze".
+>
+> > lspci output:
+> > $ lspci
+> > 00:00.0 Host bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
+> > Series SoC Transaction Register (rev 11)
+> > 00:02.0 VGA compatible controller: Intel Corporation Atom Processor
+> > Z36xxx/Z37xxx Series Graphics & Display (rev 11)
+> > 00:13.0 SATA controller: Intel Corporation Atom Processor E3800 Series
+> > SATA AHCI Controller (rev 11)
+> > 00:14.0 USB controller: Intel Corporation Atom Processor
+> > Z36xxx/Z37xxx, Celeron N2000 Series USB xHCI (rev 11)
+> > 00:1a.0 Encryption controller: Intel Corporation Atom Processor
+> > Z36xxx/Z37xxx Series Trusted Execution Engine (rev 11)
+> > 00:1b.0 Audio device: Intel Corporation Atom Processor Z36xxx/Z37xxx
+> > Series High Definition Audio Controller (rev 11)
+> > 00:1c.0 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+> > Express Root Port 1 (rev 11)
+> > 00:1c.2 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+> > Express Root Port 3 (rev 11)
+> > 00:1c.3 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+> > Express Root Port 4 (rev 11)
+> > 00:1d.0 USB controller: Intel Corporation Atom Processor Z36xxx/Z37xxx
+> > Series USB EHCI (rev 11)
+> > 00:1f.0 ISA bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
+> > Series Power Control Unit (rev 11)
+> > 00:1f.3 SMBus: Intel Corporation Atom Processor E3800 Series SMBus
+> > Controller (rev 11)
+> > 01:00.0 RAM memory: PLDA Device 5555
+>
+> Is this 01:00.0 device the FPGA?
+Yes you are correct. 01:00.0 RAM memory: PLDA Device 5555
+
+>
+> > 03:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network
+> > Connection (rev 03)
 
 
-On Fri, 3 Jan 2020, at 05:57, Eddie James wrote:
-> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since v3:
->  - Switch "scu" property to "aspeed,scu"
-> 
->  .../devicetree/bindings/soc/aspeed/xdma.txt   | 40 +++++++++++++++++++
->  MAINTAINERS                                   |  6 +++
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt 
-> b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-> new file mode 100644
-> index 000000000000..e0740ccfa910
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-> @@ -0,0 +1,40 @@
-> +Aspeed AST25XX and AST26XX XDMA Engine
-> +
-> +The XDMA Engine embedded in the AST2500 and AST2600 SOCs can perform 
-> automatic
-> +DMA operations over PCI between the SOC (acting as a BMC) and a host 
-> processor.
-> +
-> +Required properties:
-> + - compatible		: must be "aspeed,ast2500-xdma" or
-> +			  "aspeed,ast2600-xdma"
-> + - reg			: contains the address and size of the memory region
-> +			  associated with the XDMA engine registers
-> + - clocks		: clock specifier for the clock associated with the
-> +			  XDMA engine
-> + - resets		: reset specifier for the syscon reset associated with
-> +			  the XDMA engine
-> + - interrupts-extended	: two interrupt cells; the first specifies the 
-> global
-> +			  interrupt for the XDMA engine and the second
-> +			  specifies the PCI-E reset or PERST interrupt.
-> + - aspeed,scu		: a phandle to the syscon node for the system control
-> +			  unit of the SOC
-> + - memory		: contains the address and size of the memory area to
-> +			  be used by the XDMA engine for DMA operations
-> +
-> +Optional properties:
-> + - pcie-device		: should be either "bmc" or "vga", corresponding to
-> +			  which device should be used by the XDMA engine for
-> +			  DMA operations. If this property is not set, the XDMA
-> +			  engine will use the BMC PCI-E device.
-> +
-> +Example:
-> +
-> +    xdma@1e6e7000 {
-> +        compatible = "aspeed,ast2500-xdma";
-> +        reg = <0x1e6e7000 0x100>;
-> +        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-> +        resets = <&syscon ASPEED_RESET_XDMA>;
-> +        interrupts-extended = <&vic 6>, <&scu_ic 
-> ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI>;
-> +        scu = <&syscon>;
 
-You missed fixing the example :)
-
-Andrew
+--=20
+Thanks,
+Sekhar
