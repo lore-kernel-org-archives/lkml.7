@@ -2,91 +2,112 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BE4C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0A9C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDCF20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:10:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="i+vIrFkV"
+	by mail.kernel.org (Postfix) with ESMTP id 80A4F206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388424AbgAISKm (ORCPT
+        id S2388428AbgAISMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:10:42 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34013 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388414AbgAISKm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:10:42 -0500
-Received: by mail-qt1-f194.google.com with SMTP id 5so6654218qtz.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 10:10:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0QYZyDBxeJN3VU/Z0akCtNQf4HyHME9Tnn6OBKwEbI8=;
-        b=i+vIrFkVhNXBZMoERSSUvS2Qk0BqcHa21Sqlcrehd20FjlnCaUYvrWqLyr0T3ZLKiD
-         FjO30OzpcIMZJW0L7yWFmrtZAXgfcl82RWRqLuMMBDnTGOZ5UqaXOWQzkFSOv8mQwJvs
-         bop+05Eoa3AiB6Y/kXaZ58r72mZyBYJclJEloK7dx7uueawHcM35DzGOi+KbKn25HZ2D
-         b5vI59/tV03t9naGFs+K3CdsLj7nuVygGBHHZwekdhBOHAkjhG03xxvqo6POkvtr58AY
-         38aZIt4fZfNjF2R6ZEhhkdK0zU+kRl/kvuPJZwgZv1NcuhYt+vp13Semad83a4xueGWN
-         CTfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0QYZyDBxeJN3VU/Z0akCtNQf4HyHME9Tnn6OBKwEbI8=;
-        b=pqyS6ygbvmXCWj7SOJT91LB+MkyCTwCQhJvRfLV8GRi2oGLFG+o9jexxARxB1F1pPa
-         8D5ihYZzZnswaX92Ae4VGz8xoFz+NaaHGBAhTz6HwLSeZAUG2huDECUC6bJS1Jsvbnf4
-         ANn5a9x8G9V5Q7f2t9jpRbps+jYzgQEHpQoZjgV2nEZJh6rcoyL+bMvMW7p8OaZCBnwZ
-         seQtKJcWvQaPlwusgwGfEUUqsh8+GgVhiWxLmLPOBHkQi7qY3n1a8jPf+/9pOsmAWnj4
-         TDwZWkTAXqaMgQzqRErcbyccvSfcWlkCTxpYECB1b416uA4Tu1jTEqamSLIm8yilqfUf
-         tWog==
-X-Gm-Message-State: APjAAAX0TxYztdJ2XfVvM28HcIrqX+rOrgdtc/3WhbkgeERY+HcT91Be
-        Zo4FBlVnig9Je1poPSEMd+tYdA==
-X-Google-Smtp-Source: APXvYqwDDMBGM6inrZQKFmQK40divx6D3kYVrebZh7EmlkxFsfLJxK36AvJD/AON7sxFauHvMR6DNw==
-X-Received: by 2002:ac8:53cb:: with SMTP id c11mr8971667qtq.14.1578593439653;
-        Thu, 09 Jan 2020 10:10:39 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 206sm3367074qkf.132.2020.01.09.10.10.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 10:10:39 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1ipcGU-00019D-Hs; Thu, 09 Jan 2020 14:10:38 -0400
-Date:   Thu, 9 Jan 2020 14:10:38 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     dennis.dalessandro@intel.com, mike.marciniszyn@intel.com,
-        dledford@redhat.com, paulmck@kernel.org, rcu@vger.kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
- checking
-Message-ID: <20200109181038.GA24939@ziepe.ca>
-References: <20200107192912.22691-1-madhuparnabhowmik04@gmail.com>
- <20200107203354.GD26174@ziepe.ca>
+        Thu, 9 Jan 2020 13:12:53 -0500
+Received: from namei.org ([65.99.196.166]:56486 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730353AbgAISMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 13:12:53 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 009IBcbB024844;
+        Thu, 9 Jan 2020 18:11:38 GMT
+Date:   Fri, 10 Jan 2020 05:11:38 +1100 (AEDT)
+From:   James Morris <jmorris@namei.org>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+cc:     Kees Cook <keescook@chromium.org>, KP Singh <kpsingh@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
+        Paul Moore <paul@paul-moore.com>
+Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF
+ (KRSI)
+In-Reply-To: <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
+Message-ID: <alpine.LRH.2.21.2001100437550.21515@namei.org>
+References: <20191220154208.15895-1-kpsingh@chromium.org> <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com> <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com> <201912301112.A1A63A4@keescook> <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
+ <alpine.LRH.2.21.2001090551000.27794@namei.org> <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107203354.GD26174@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 01:38:50PM +0530, madhuparnabhowmik04@gmail.com wrote:
+On Wed, 8 Jan 2020, Stephen Smalley wrote:
 
-> Alternatively, it can be lockdep_is_held(ibp->rvp.lock).
-> Please refer to the macro(link below) and let me know if the usage of lock_is_held()
-> in the patch is correct.
+> The cover letter subject line and the Kconfig help text refer to it as a
+> BPF-based "MAC and Audit policy".  It has an enforce config option that
+> enables the bpf programs to deny access, providing access control. IIRC, in
+> the earlier discussion threads, the BPF maintainers suggested that Smack and
+> other LSMs could be entirely re-implemented via it in the future, and that
+> such an implementation would be more optimal.
 
-lock_is_held is the normal way to write this
+In this case, the eBPF code is similar to a kernel module, rather than a 
+loadable policy file.  It's a loadable mechanism, rather than a policy, in 
+my view.
 
-Jason
+This would be similar to the difference between iptables rules and 
+loadable eBPF networking code.  I'd be interested to know how the 
+eBPF networking scenarios are handled wrt kernel ABI.
+
+
+> Again, not arguing for or against, but wondering if people fully understand
+> the implications.  If it ends up being useful, people will build access
+> control systems with it, and it directly exposes a lot of kernel internals to
+> userspace.  There was a lot of concern originally about the LSM hook interface
+> becoming a stable ABI and/or about it being misused.  Exposing that interface
+> along with every kernel data structure exposed through it to userspace seems
+> like a major leap.
+
+Agreed this is a leap, although I'm not sure I'd characterize it as 
+exposure to userspace -- it allows dynamic extension of the LSM API from 
+userland, but the code is executed in the kernel.
+
+KP: One thing I'd like to understand better is the attack surface 
+introduced by this.  IIUC, the BTF fields are read only, so the eBPF code 
+should not be able to modify any LSM parameters, correct?
+
+
+>  Even if the mainline kernel doesn't worry about any kind
+> of stable interface guarantees for it, the distros might be forced to provide
+> some kABI guarantees for it to appease ISVs and users...
+
+How is this handled currently for other eBPF use-cases?
+
+-- 
+James Morris
+<jmorris@namei.org>
+
