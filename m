@@ -2,251 +2,224 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4897C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C611C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB29206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0584206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyJZFdTE"
+	dkim=pass (1024-bit key) header.d=teoenmingcorp.onmicrosoft.com header.i=@teoenmingcorp.onmicrosoft.com header.b="Jod6AUYX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732298AbgAIPT7 (ORCPT
+        id S1732304AbgAIPUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:19:59 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45034 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgAIPT6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:19:58 -0500
-Received: by mail-pl1-f193.google.com with SMTP id az3so2678698plb.11;
-        Thu, 09 Jan 2020 07:19:57 -0800 (PST)
+        Thu, 9 Jan 2020 10:20:25 -0500
+Received: from mail-eopbgr1310048.outbound.protection.outlook.com ([40.107.131.48]:10976
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727945AbgAIPUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:20:24 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sh9/0ywScZIXfx0IIfP1DapTSDkdCUdQw5WnlXsyypb9C4O6KYSgfv6AG5eqDKESLkcKrj3sDkWJTDNfIH/Py6fP3N21JIKmBtx4ABYt1ddiKBquvGQMvaETCjPWNSlBuGiXgbgIGjFzQ0a3Zc/uWerMHo3gqBdPv0RrAeIp5LzW5eYY5LhUyJGpVkolkmmy8BmvqTkouj55DEXdelUBWe3gZu2p4YXkW8aGgOknZ4JV+jo53zvTqw5JjObWnOC7nTKkXaWsxpaVVIQpura2F+JHsDhA7jzO1R3IZ+fuy3MX8fea0i/BdXEXa4JmnJjeuun2zH8SqkVqlJhAimAPHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZzyTqtbOfq3Ig0yXTX1EWjydOU+uAenurCB81rAkFjg=;
+ b=lW287cyde/2MrM9xZzpt4YMREY/YE3K1fd9pVFyFZJ/flCPJl0i8R9u7jOevE8yu45M7OQdDQYQfmjdOdZCI8+8m6zz9m3QqchyB5NOKbR3/QMeCsDgaE7BSA9AzbyOlLuD3/HMkqM7Jeo570vXu97gKXXfQ62aL8lXpq2qdyIOhph8DoBn9mrWnI9oWf08Ont/GmmlaY7tfKFMAHUeg99t/T6/IJvyGP/EiekjIgJqsfjqI6N2pSvDiF7bDs377z005oXvm8kfJdNveISVZhVDLqb+ahvR03JT3y6+F/qwgfTa46otXsLicZsA7G6RPWKt0MyklHd32u5TYMKErMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=teo-en-ming-corp.com; dmarc=pass action=none
+ header.from=teo-en-ming-corp.com; dkim=pass header.d=teo-en-ming-corp.com;
+ arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kaoDmnIv7fq2bK3Pw8FgyMWXUExVVooadbufCm0vA28=;
-        b=lyJZFdTEmsR9yvYDQNZzfGSP/2DugXvk4aOPsCFKrQT9EZ/FM87d4Iyefb8hCBmCYY
-         BxBESnnvF2jCUGboub4ZrzhLzxkGFInZn0UxfZ/rL0ncnEVhSkeAswDKaZkYNi21b2rv
-         G+v8QpvJrB14eRmtbcprQi0mr2IwaQ2GiG8MTj7dSBSukpdNHX5Wd0b7dwwKFfPJffsL
-         8CnBoNXjca8eQ88Mi++1dqJ3Fjh7q+UYjDTQRxxwpY+x3JbyMeq2VmeGEOJdN9QVCwo8
-         H0Ge/orqiM8/imsKOvVVKiOjz4/yL0moBTrorDHigUsxOnFAEBOJWZbCQOTcKS0AN4vW
-         XzrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kaoDmnIv7fq2bK3Pw8FgyMWXUExVVooadbufCm0vA28=;
-        b=IqYeraTib9ykZLx30PH+fMomL3rpK8e9Pi8Y9EE8gxtKofM38M8E1Hmlq5NA/mWPoS
-         I8qliRgJvZ7BL7XD+ZAn+p/D0ROcAqKm35WB264HwhAbgsb7GSjDukgbDaXlZ8vlMTT4
-         xpuf0mk1NAjXQG++KOfz2LJuHdce/iDv8cZTjWa0vjlrUQo/pMhBAE6s/P7VPSnBFJFn
-         IS4ResM/1E1/tkHIa5+dRoTbA1Bi5HSmUNMxPvbIrS7akvWWtss+GCGNnnWiL/I3ATZ0
-         /GPYKqD7+RW+hpB9DiiSG2n2NdjcO3fiP1vMY35SjH7BYv+i33wZunGNTKViBwMfAAcj
-         3uNA==
-X-Gm-Message-State: APjAAAWARmleGdKzyPBCq9OxiBGyvF/f38Wx+kZODtjQc3A0UwJ/ApgT
-        Ce1bYA+P6dm5XAyWxPxFdLiQK5TpXcCR6VOhBVs=
-X-Google-Smtp-Source: APXvYqxhuE5QNaRo6ld2eSQ3WmfothXr4TxMa54D/0je9favVr1ekS9+70FUrtMomTf69mLcXfdQV46lBGB7QucFG+w=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr6005030pjq.132.1578583197418;
- Thu, 09 Jan 2020 07:19:57 -0800 (PST)
+ d=teoenmingcorp.onmicrosoft.com; s=selector2-teoenmingcorp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZzyTqtbOfq3Ig0yXTX1EWjydOU+uAenurCB81rAkFjg=;
+ b=Jod6AUYXL8h7VZCrGNmVmZ4hOLQF57yP4zzDA3dS01siuzuYT5kcIAZIVz43CBxnWNjjqy8fngbR+iauFpHNpJRQ9ylhWh61ZXGOxKFLypAtj1Fdi4deI2HdPBieQroabrYhvqaGAtl89g8ptwv5r7bCAQQBOoA8OBEDiPDZazM=
+Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com (10.170.143.19) by
+ SG2PR01MB2345.apcprd01.prod.exchangelabs.com (20.177.84.144) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.14; Thu, 9 Jan 2020 15:20:19 +0000
+Received: from SG2PR01MB2141.apcprd01.prod.exchangelabs.com
+ ([fe80::81e9:67b1:74eb:2853]) by SG2PR01MB2141.apcprd01.prod.exchangelabs.com
+ ([fe80::81e9:67b1:74eb:2853%3]) with mapi id 15.20.2623.010; Thu, 9 Jan 2020
+ 15:20:19 +0000
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+Subject: Singapore Citizen Mr. Teo En Ming's Refugee Seeking Attempts as at 9
+ Jan 2020 Thursday
+Thread-Topic: Singapore Citizen Mr. Teo En Ming's Refugee Seeking Attempts as
+ at 9 Jan 2020 Thursday
+Thread-Index: AdXHACaCEPYkDr+RQSml98jQTrZoTw==
+Date:   Thu, 9 Jan 2020 15:20:19 +0000
+Message-ID: <SG2PR01MB21413100A5DAA2A7AE950DBD87390@SG2PR01MB2141.apcprd01.prod.exchangelabs.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ceo@teo-en-ming-corp.com; 
+x-originating-ip: [2401:7400:c802:de67:f1ab:6fde:d925:5c0c]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b01e3bdd-6bc8-4a86-0d07-08d795177038
+x-ms-traffictypediagnostic: SG2PR01MB2345:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SG2PR01MB234565D33571D387D308117987390@SG2PR01MB2345.apcprd01.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 02778BF158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(39830400003)(366004)(376002)(199004)(189003)(4000180100002)(6916009)(4326008)(86362001)(9686003)(107886003)(2906002)(55016002)(33656002)(6506007)(5660300002)(966005)(81166006)(52536014)(71200400001)(316002)(64756008)(186003)(81156014)(7696005)(8936002)(76116006)(66946007)(8676002)(66476007)(66446008)(508600001)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR01MB2345;H:SG2PR01MB2141.apcprd01.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: teo-en-ming-corp.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6f2EgxWlS6O34Uu+j2RMzlXTiX1zfEdzMt8B3rgUjD0WbDTNEKoLyszBXd73w7Ou23Ps79Kcvne97G8jZVZMFQx/vIBowUiJITziyN5tzBcEDiSYWgaMUxjTLjy4Psc2fY9T36zUjMX/sj2Qs99pYYp2HxNX2m7s3ODkN8AdegWjrY5xanyCRLTy8N8ddsUkVUIHYGVm3iSLOygf5GWub+jtw+xHAtKcw0JSZxX3nthzrYbYxjl3lsqpyJsC0Al+lNlcRp1eve30BZHRkDUEljBPmo9Cr8ey+drMu2H4E6CKiGMlN/e9fh39/GWeCKE6CLKi5SlYw/g+Zn+D7badQepNdHYt0iUWNcmRdq4ivOpLtb14LNG+TDv1tyfG9dp187rviYJsK5tMxBF2XiYUqtK8M24RaJU51I6SozAbBmYzJm88kXUsDV8TFNpgNUxvdvFPRd1RxraOTdq07mO8nVPhd29GQaSRQX2Bm+l4CP1yGEfl3viRNNMahWW+mgEjQaU5PZphNinN3SXYDayzkg==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191231102917.24181-1-vadimp@mellanox.com> <20191231102917.24181-6-vadimp@mellanox.com>
-In-Reply-To: <20191231102917.24181-6-vadimp@mellanox.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jan 2020 17:19:48 +0200
-Message-ID: <CAHp75VfYzy9jq3c2YjszJpCb33EWYh-fvuZv_vAenfKLGDEY0A@mail.gmail.com>
-Subject: Re: [PATCH platform-next v1 5/9] platform/x86: mlx-platform: Set
- system mux configuration based on system type
-To:     Vadim Pasternak <vadimp@mellanox.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: teo-en-ming-corp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b01e3bdd-6bc8-4a86-0d07-08d795177038
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 15:20:19.4083
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 23b3f6ae-c453-4b93-aec9-f17508e5885c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fDjNJOyfMI/9pdQ1pFSDLHzUWekp3UkwzmsDpWzNXKakK12TE/R8yOs4nGZSd39kchgtkJff1NXLYpQuGq6eggX5+eLwK0/i5l5a+U5/8+U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB2345
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 12:29 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
->
-> Separate assignment for systems mux configuration based on system type,
-> instead of setting the same configuration for the all.
-> The motivation is to allow introduction of new systems types with the
-> different mux topology.
->
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> ---
->  drivers/platform/x86/mlx-platform.c | 46 ++++++++++++++++++++++++++-----------
->  1 file changed, 33 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-> index 7e92dc52071f..0a41668b1587 100644
-> --- a/drivers/platform/x86/mlx-platform.c
-> +++ b/drivers/platform/x86/mlx-platform.c
-> @@ -219,7 +219,7 @@ static const int mlxplat_default_channels[][MLXPLAT_CPLD_GRP_CHNL_NUM] = {
->  static const int mlxplat_msn21xx_channels[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
->
->  /* Platform mux data */
-> -static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
-> +static struct i2c_mux_reg_platform_data mlxplat_default_mux_data[] = {
->         {
->                 .parent = 1,
->                 .base_nr = MLXPLAT_CPLD_CH1,
-> @@ -239,6 +239,11 @@ static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
->
->  };
->
-> +/* Platform mux configuration variables */
-> +static int mlxplat_max_adap_num;
-> +static int mlxplat_mux_num;
-> +static struct i2c_mux_reg_platform_data *mlxplat_mux_data;
-> +
->  /* Platform hotplug devices */
->  static struct i2c_board_info mlxplat_mlxcpld_psu[] = {
->         {
-> @@ -1905,7 +1910,10 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_default_channels[i];
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_default_channels[i]);
-> @@ -1924,7 +1932,10 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
-> @@ -1943,7 +1954,10 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
-> @@ -1962,7 +1976,10 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
-> @@ -1981,7 +1998,10 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
-> @@ -1998,7 +2018,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
->         mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
->
->         return 1;
-> -}
-> +};
+SUBJECT: Singapore Citizen Mr. Teo En Ming's Refugee Seeking Attempts as at=
+ 9 Jan 2020 Thursday
 
-And this, how does it happen?
+In reverse chronological order:
 
->
->  static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
->         {
-> @@ -2127,7 +2147,7 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
->         /* Scan adapters from expected id to verify it is free. */
->         *nr = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR;
->         for (i = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR; i <
+[1] Application for Offshore Refugee/Humanitarian Visa to Australia, 25 Dec=
+ 2019 (Christmas) to 9 Jan 2020
 
-> -            MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM; i++) {
-> +            mlxplat_max_adap_num; i++) {
+Photo #1: Page 1 of Form 842 Application for an Offshore Humanitarian visa,=
+ Refugee and Humanitarian (Class XB) visa
 
-I'm wondering why 'i <; is left on previous line, or, otherwise, the
-limit is on next one.
+Photo #2: Front of DHL Express plastic envelope (yellow)
 
->                 search_adap = i2c_get_adapter(i);
->                 if (search_adap) {
->                         i2c_put_adapter(search_adap);
-> @@ -2141,12 +2161,12 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
->         }
->
->         /* Return with error if free id for adapter is not found. */
-> -       if (i == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM)
-> +       if (i == mlxplat_max_adap_num)
->                 return -ENODEV;
->
->         /* Shift adapter ids, since expected parent adapter is not free. */
->         *nr = i;
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 shift = *nr - mlxplat_mux_data[i].parent;
->                 mlxplat_mux_data[i].parent = *nr;
->                 mlxplat_mux_data[i].base_nr += shift;
-> @@ -2202,7 +2222,7 @@ static int __init mlxplat_init(void)
->         if (nr < 0)
->                 goto fail_alloc;
->
-> -       nr = (nr == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM) ? -1 : nr;
-> +       nr = (nr == mlxplat_max_adap_num) ? -1 : nr;
->         if (mlxplat_i2c)
->                 mlxplat_i2c->regmap = priv->regmap;
->         priv->pdev_i2c = platform_device_register_resndata(
-> @@ -2215,7 +2235,7 @@ static int __init mlxplat_init(void)
->                 goto fail_alloc;
->         }
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 priv->pdev_mux[i] = platform_device_register_resndata(
->                                                 &priv->pdev_i2c->dev,
->                                                 "i2c-mux-reg", i, NULL,
-> @@ -2349,7 +2369,7 @@ static void __exit mlxplat_exit(void)
->         platform_device_unregister(priv->pdev_led);
->         platform_device_unregister(priv->pdev_hotplug);
->
-> -       for (i = ARRAY_SIZE(mlxplat_mux_data) - 1; i >= 0 ; i--)
+Photo #3: Back of DHL Express plastic envelope (white)
 
-> +       for (i = mlxplat_mux_num - 1; i >= 0 ; i--)
+Photo #4: DHL Express Shipment Waybill
 
-It is basically
-  while (i--)
+Photo #5: DHL Express Shipment Tracking Online Page, showing that my applic=
+ation for offshore refugee visa to Australia=20
+was picked up at 1619 hours on 25 Dec 2019 in Singapore and delivered to Ca=
+nberra - Braddon - Australia
+on 30 Dec 2019 at 11:10 AM Braddon, Australian Capital Territory (ACT) Time
 
->                 platform_device_unregister(priv->pdev_mux[i]);
->
->         platform_device_unregister(priv->pdev_i2c);
-> --
-> 2.11.0
->
+Photo #6: DHL Express Electronic Proof of Delivery, showing that my applica=
+tion for offshore refugee visa to Australia=20
+was received and signed by staff Mohsin Mahmood at the Special Humanitarian=
+ Processing Center,=20
+3 Lonsdale Street, Braddon, Australian Capital Territory (ACT) 2612, Canber=
+ra, Australia.
+
+Photo #7: Page 5 of Form 842 Application for an Offshore Humanitarian visa,=
+ Refugee and Humanitarian (Class XB) visa, bearing the=20
+official stamp of the Australian Government Department of Home Affairs at N=
+ew South Wales (NSW):=20
+"COURIER RECEIVED; HOME AFFAIRS; NSW; 27 DEC 2019" and=20
+"HOME AFFAIRS; NSW; 27 DEC 2019" at the bottom.
+
+References:
+
+For the above-mentioned seven photos, please refer to my RAID 1 mirroring r=
+edundant Blogger and Wordpress blogs at
+
+https://tdtemcerts.blogspot.sg/
+
+https://tdtemcerts.wordpress.com/
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+[2] Petition to the Government of Taiwan for Refugee Status, 5th
+August 2019 Monday
+
+Photo #1: At the building of the National Immigration Agency, Ministry
+of the Interior, Taipei, Taiwan, 5th August 2019
+
+Photo #2: Queue ticket no. 515 at the National Immigration Agency,
+Ministry of the Interior, Taipei, Taiwan, 5th August 2019
+
+Photo #3: Submission of documents/petition to the National Immigration
+Agency, Ministry of the Interior, Taipei, Taiwan, 5th August 2019
+
+Photos #4 and #5: Acknowledgement of Receipt (no. 03142) for the
+submission of documents/petition from the National Immigration Agency,
+Ministry of the Interior, Taipei, Taiwan, 5th August 2019, 10:00 AM
+
+References:
+
+(a) Petition to the Government of Taiwan for Refugee Status, 5th
+August 2019 Monday (Blogger blog)
+
+Link: https://tdtemcerts.blogspot.sg/2019/08/petition-to-government-of-taiw=
+an-for.html
+
+(b) Petition to the Government of Taiwan for Refugee Status, 5th
+August 2019 Monday (Wordpress blog)
+
+Link: https://tdtemcerts.wordpress.com/2019/08/23/petition-to-the-governmen=
+t-of-taiwan-for-refugee-status/
+
+
+
+[3] Application for Refugee Status at the United Nations High Commissioner =
+for Refugees (UNHCR),=20
+Bangkok, Thailand, 21st March 2017 Tuesday
+
+References:
+
+(a) [YOUTUBE] Vlog: The Road to Application for Refugee Status at the
+United Nations High Commissioner for Refugees (UNHCR), Bangkok
+
+Link: https://www.youtube.com/watch?v=3DutpuAa1eUNI
+
+YouTube video Published on March 22nd, 2017
+
+Views as at 9 Jan 2020: 659
+
+YouTube Channel: Turritopsis Dohrnii Teo En Ming
+Subscribers as at 9 Jan 2020: 3.14K
+Link: https://www.youtube.com/channel/UC__F2hzlqNEEGx-IXxQi3hA
+
+
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link:=A0https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microw=
+ave.html
+
+***************************************************************************=
+*****************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the
+United Nations Refugee Agency Bangkok (21 Mar 2017) and in Taiwan (5
+Aug 2019):
+
+[1]=A0https://tdtemcerts.wordpress.com/
+
+[2]=A0https://tdtemcerts.blogspot.sg/
+
+[3]=A0https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
+
