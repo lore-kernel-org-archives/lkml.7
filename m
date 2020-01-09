@@ -2,84 +2,97 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B517C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C5FC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F7B2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C212067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:17:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjvHnzbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbgAIMRq (ORCPT
+        id S1730874AbgAIMRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:17:46 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:45037 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730218AbgAIMRq (ORCPT
+        Thu, 9 Jan 2020 07:17:50 -0500
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:43837 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728974AbgAIMRt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:17:46 -0500
-X-IronPort-AV: E=Sophos;i="5.69,413,1571695200"; 
-   d="scan'208";a="430610150"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 13:17:44 +0100
-Date:   Thu, 9 Jan 2020 13:17:44 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: julia@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Wen Yang <wenyang@linux.alibaba.com>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        =?ISO-8859-15?Q?Matthias_M=E4nnich?= <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [v2] coccinelle: semantic patch to check for inappropriate
- do_div() calls
-In-Reply-To: <d0d7eda5-6f4b-8501-624c-1f25b481520a@web.de>
-Message-ID: <alpine.DEB.2.21.2001091315560.10786@hadrien>
-References: <20200107170240.47207-1-wenyang@linux.alibaba.com> <9a2b7d00-442e-0c1b-73cc-aed2bbecd13a@web.de> <alpine.DEB.2.21.2001091140380.10786@hadrien> <e479c5c7-2556-eb77-9e9c-8833fb883a39@web.de> <alpine.DEB.2.21.2001091304310.10786@hadrien>
- <d0d7eda5-6f4b-8501-624c-1f25b481520a@web.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 9 Jan 2020 07:17:49 -0500
+Received: by mail-lj1-f169.google.com with SMTP id a13so6962841ljm.10;
+        Thu, 09 Jan 2020 04:17:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kJr9DdZZf2/ANld+Ul9RudgAsohen5RqZzNVnbAqTsg=;
+        b=mjvHnzbEaIbsQ0NrLtzCJRIhUTVzBGpQVrz43beSCllrFgzbAODIdEWPM6fiwSkcIu
+         xD/gC+72yKJXiV0m/oD9K9IyhwgwpCMl2rrp0ynPOetXgn3z4+wy5Frbb36/2PqTqZHn
+         HcHBVnCKltDcjjTRy+NsKATYq8umfzgbRbIroF1FYyTOLdBhKJsARpLUQ/uDGdqqtnRj
+         x6IL2kwuJCygf3xZtI5IguBxcK4MlZjaYTVcrO9+PrG2dTV90SlbpjXZByf6qskfTMDL
+         OqSqTQJLRYLbZkRDtN7X6jbLlHh+aBwkl7O0axkckjmj46m89yeyNbKH73C2Pohga2Pk
+         CpfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kJr9DdZZf2/ANld+Ul9RudgAsohen5RqZzNVnbAqTsg=;
+        b=mmnLCRenYuIpPcCYNIcskTbby5qXek840Tuo5PVMhsabt/6hLGMiFda6f0AtuoWMOv
+         4tgklh8KVwQerUkA9xC54GCqeOHfxSqiMjxF3ky46RV/9x9rkBJePy6zGAvSn3Wo2NcP
+         uK6MZaaayT2g70Ol0SErzZKaIs8C1WxxAzj87AuIJM9J2Jjd0C595kCwwzaBL3cjl+Uj
+         qIAbfHvIzYWtEXtO6SQDSXssZ6O+vZqNNjQ8lDjAurxIeOiG47DDj0FFAbFh+DgMLPG4
+         OLkRG6iFzaX9oYn+VzNxeP80kk2QiGzTn7zy7JLxdU5jf9BJUbplX69fe9w/c2Jq7gyH
+         +dOw==
+X-Gm-Message-State: APjAAAWsOdZ/DKgQL8pGsPnLn6IdT/t3ACzHPs4IDw6bdsFSPcdHohcX
+        J7ttc8iXIwwhS8LTPTu4PRCuF/IP6UIVthhCeQE=
+X-Google-Smtp-Source: APXvYqwTcIlvIE0lUCJi3FRLOlS1u3VgGMOmgYWiU57KWCLBT1IzZv7XrENayxwaVo2Wm+OfP7BbhpaMMuEa7apsGDA=
+X-Received: by 2002:a2e:943:: with SMTP id 64mr6356480ljj.17.1578572266871;
+ Thu, 09 Jan 2020 04:17:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-695649286-1578572264=:10786"
+References: <08794fde-cdd0-287c-62bf-e2e3b8c80686@gmail.com>
+ <20191203101509.wte47aad5k4mqu2y@pengutronix.de> <CAOMZO5Cn993y9VeFN6hPO3-cfNnUKiuFd_rqAZ8htz=dO6t6ig@mail.gmail.com>
+ <CAOMZO5BniszDhWKkoWY=P62kv9cY160r9P=pjpbSOZasxJvdBA@mail.gmail.com> <77fff313-3f40-6b5e-fe30-5a65a189bdff@gmail.com>
+In-Reply-To: <77fff313-3f40-6b5e-fe30-5a65a189bdff@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 9 Jan 2020 09:17:35 -0300
+Message-ID: <CAOMZO5DyJ_niuoBX62B1NLkKRpYQQtKUiX06L62TmA6PNMKO5A@mail.gmail.com>
+Subject: Re: Issue with imx_get_temp()
+To:     Igor Plyatov <plyatov@gmail.com>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Igor,
 
---8323329-695649286-1578572264=:10786
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-
-
-On Thu, 9 Jan 2020, Markus Elfring wrote:
-
-> >> Does the Coccinelle software ensure that a variable like “r.ul” contains
-> >> really useful data even if the expected branch of the SmPL disjunction
-> >> was occasionally not matched?
-> >
-> > The python code will only be executed if it does.
+On Tue, Dec 3, 2019 at 11:36 AM Igor Plyatov <plyatov@gmail.com> wrote:
 >
-> The Python scripts will be executed if the SmPL rule “r” found something.
-> I suggest to take a closer look at the involved data types for
-> really safe case distinctions.
-> Does the dependency management around the application of SmPL disjunctions
-> need any further clarification?
+> Dear Fabio,
+>
+> > Does the following patch help?
+> > http://code.bulix.org/l3rz2e-982595
+>
+> Thank you!
+>
+> Patch applied and will be tested.
+>
+> I will inform you about results.
 
-I already clarified it.  The python code will only be executed if the
-variables that it references have values.  The criterion is not just
-whether the rule r was matched.
-
-To see that this is the case, all or you have to do is try it.  Or read
-the Coccinelle source code.
-
-julia
---8323329-695649286-1578572264=:10786--
+Have you had a chance to test the patch?
