@@ -2,247 +2,173 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D5DC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9C9C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95463206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3B020882
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:56:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="dXIbX2R6"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LPntQaPS";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hoBQ6Ori"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732816AbgAITyj (ORCPT
+        id S1732876AbgAIT4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:54:39 -0500
-Received: from UPDC19PA22.eemsg.mail.mil ([214.24.27.197]:55026 "EHLO
-        UPDC19PA22.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730498AbgAITyi (ORCPT
+        Thu, 9 Jan 2020 14:56:24 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:32146 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732624AbgAIT4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:54:38 -0500
-X-Greylist: delayed 434 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 14:54:37 EST
-X-EEMSG-check-017: 44059245|UPDC19PA22_ESA_OUT04.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.69,414,1571702400"; 
-   d="scan'208";a="44059245"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by UPDC19PA22.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 09 Jan 2020 19:47:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1578599242; x=1610135242;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=gmC0lVd264gHhXWaSirdq88iKOynkxANSorQkJtiK9M=;
-  b=dXIbX2R6WgieEzaQmbrf6S9zmbQ3ZZt633hSrI6ThDEytssAcqj/XA+P
-   ifuJdQsv8Wpmd2fouLGDw6P+trpYx+6JnZv09B3KtPZfCnhqwIAiYmF5i
-   NoQzgt8Qovl9ykqb4yZZtLPJIevbzFMr1RzxFzqI1/v+XhrHUBdBPDfOS
-   WOnCL0Xe5Ha+71ZCT71QUdcstuT0trFFlcjNwBVAhlxL3h2CZjntXh6Ot
-   WOne3wkSoaCwHWxtoDQy39MANzlGXHdHMgxYg/zhRZHfSOspE/rvIfsl8
-   iDXhLX+mdtvyw3mRSfLblmcmfKvnvOteRKGhT+h/2xesACvApiFL/0dGL
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.69,414,1571702400"; 
-   d="scan'208";a="31787047"
-IronPort-PHdr: =?us-ascii?q?9a23=3AQVcK9xP2A09fC9jUNvUl6mtUPXoX/o7sNwtQ0K?=
- =?us-ascii?q?IMzox0KPnyr8bcNUDSrc9gkEXOFd2Cra4d0KyM7fmrCDZIyK3CmUhKSIZLWR?=
- =?us-ascii?q?4BhJdetC0bK+nBN3fGKuX3ZTcxBsVIWQwt1Xi6NU9IBJS2PAWK8TW94jEIBx?=
- =?us-ascii?q?rwKxd+KPjrFY7OlcS30P2594HObwlSizexfL1/IA+ooQjQq8Uajo9vJrgswR?=
- =?us-ascii?q?bVv3VEfPhby3l1LlyJhRb84cmw/J9n8ytOvv8q6tBNX6bncakmVLJUFDspPX?=
- =?us-ascii?q?w7683trhnDUBCA5mAAXWUMkxpHGBbK4RfnVZrsqCT6t+592C6HPc3qSL0/RD?=
- =?us-ascii?q?qv47t3RBLulSwKLCAy/n3JhcNsjaJbuBOhqAJ5w47Ie4GeKf5ycrrAcd8GWW?=
- =?us-ascii?q?ZNW8BcWCJbAoO4coABEewPM+hFpIX5vlcCsx+zCQyqCejyyDFHm2X20LUn3e?=
- =?us-ascii?q?o/HwHI3A8uEdwAv3vbrtr6KKgcXPupzKTK1zjPc+9a1Dn/5YXObxsvoeuMXb?=
- =?us-ascii?q?V1ccfJ1EcvCx3Kjk2QqYP7OTOey/kDs22B4OpkUeKglW4moBx2rzi028gskZ?=
- =?us-ascii?q?LEhp4Vy1/Y9SV5x5w5JdujSEFhe9KkH5xQtz+DOoZwX8gsTWZouCMgxb0Hv5?=
- =?us-ascii?q?62ZCcKyJU7xx7fdvyIaJKE7Q7kVOaUJzpzmXFreKqnihqv/kWtxffwW8mp3F?=
- =?us-ascii?q?pQsCZIncfAumoQ2xHV98OJUOFy/l271jaKzw3T7+ZELl0qmqfDMJ4hx6Iwlo?=
- =?us-ascii?q?IUsUTeAi/6gEX2g7GSdkUj4uWo9/7oYq/npp+BLI94kAD+MqIgmsy4GuQ3LB?=
- =?us-ascii?q?QBU3KH+eW8yLLj/Ur5TK9MjvIqianWrIrWJcEapq69GwNV04Aj5AijDzq+zd?=
- =?us-ascii?q?gVknYKIEhFdR6alYTlJV7DLO7iAfuim1islS1kx/HCPr3vGJXNKX3Dna/6fb?=
- =?us-ascii?q?lg8E5R0xYzzNBD6JJUDbENOvTzWlTru9DCAR85NBK0z/79CNphzoMeRX6PAq?=
- =?us-ascii?q?iBPaPRqV+I/eMvI++DZI8VozvyN/gl5+TpjX88mF8dYKyp0YEQaHCiEfRsO1?=
- =?us-ascii?q?+Zbmb0gtcdDWcKuRIzTO7viF2FSz5TfXeyX7kn6zE9Eo2mCJnMRoG3jLyGxi?=
- =?us-ascii?q?e7EYVcZnpaBVCUDXfoa4KEVu8PaC2MPMBhiSALVb+mS48izhyhqA/6y6BgLu?=
- =?us-ascii?q?rR+y0YqJfj2MJy5+3JmhE47SZ0ANiF02GRU2F0mXsFSCMs06Bkv0N8ykyO0b?=
- =?us-ascii?q?NkjPxYD9NT+v1JUgMkOp7G1uB1F8r9VhjdcdeOTVasWs+mDi0pTtIt398OZF?=
- =?us-ascii?q?5wG9GjjhDFwiqrDKYZl7+VC5wu9KLTwXzxKt1jy3bJyqYhlUMqQshROm28gK?=
- =?us-ascii?q?5w6QzTC5TOk0WDmKagbb4c0zLV9Gef0WqOu1lVXxVoUaXLRn0feETWosrj5k?=
- =?us-ascii?q?/YTL+hF64nMg1fxs6GMKdKbcfpjVpeTvf5JNvee36xm3u3BRuQwrOMbYzqe3?=
- =?us-ascii?q?gS3SnEE0gLjRwc/WucNQg/Giego3vSDDlpFV3yfkPs9fdxpWilTk870Q6KdV?=
- =?us-ascii?q?dt17mr9R4Pg/yTVfcT0qgDuCc7pDV+BEy90M7OC9qcuwphe71Rbskm4Fdbzm?=
- =?us-ascii?q?/ZtBJyPoamL698gl4SaQN3v1nh1x9vEIVPjdAqrG82zAp1Ma+XzUlOdzWZ3Z?=
- =?us-ascii?q?/uPr3aMWjy/Bega6HIwF7eys2Z+qAA6fgirVXsoh2pHFI483p7y9lVz2ec5p?=
- =?us-ascii?q?LSAQoOUZLxXVw49wJ8p7HbfCYw/J/b1X12Mamztz/C2s8pBO4/xhanZddfP7?=
- =?us-ascii?q?uOFBXuHM0CG8iuNOsqlkCsbhIEJu9S8LI7P9mhd/qIw6OrM+FgnDWpjWRD/o?=
- =?us-ascii?q?9xyF6D9y15SuTQxZYK3+mY3hebVzf7lFqhqsL3mZxfaDEdGWq/zifkBIpPaa?=
- =?us-ascii?q?FoYYkLDmKuKdWtxtpin57tR2JY9Fm7Clwdws+mZxySYEHn0g1Wz0gYvGarmS?=
- =?us-ascii?q?SizzNqnDEpobGS3CPLw+v4dRoHPnRHS3VljVfpOYK0lcwVXFC0bwg1kxuo/U?=
- =?us-ascii?q?T6yLJdpKR5L2neWkhIfy/xL2FtVqu/qKCObNJI6JMtqS9XSvizYUiGSr7hpB?=
- =?us-ascii?q?sXyybjH2lRxD07czynoZr5nxt9iGKSKHZ8smDVdt13xRfa/NbcX+Je3iIaRC?=
- =?us-ascii?q?lkjjnaHkSzP9mz/dWVjJfDruG+WHinVpBIaibr15mPtDa95WJ0Gx2zhfGzmt?=
- =?us-ascii?q?r/GwggzSD7z8VqVTnPrBvkZ4nr1ri1PPl6cUlpC1/86sl6GoZjnYcqgpEfx2?=
- =?us-ascii?q?QajI2P/XUbiWfzLclb2aXmYXoXWzEL3cDa4BP52EB4Mn2Jx5j5VnKYwstget?=
- =?us-ascii?q?m6Z3ka2iUn78BFEK2U9qBLnTNpolqkqgLcefp9kS0Bxvst7X4VmecJtxE2wy?=
- =?us-ascii?q?qBArASB05YPSntlxSV6tCytqJXZHygcbKozkpxgcihDK2eogFbQHv5eY0tHS?=
- =?us-ascii?q?Fq4cV+K1/M3mb85pv4d9nXaNIZrgeUnAvYj+hJNJIxkeIHhTFgOWL7sn0lz+?=
- =?us-ascii?q?87jQF10pGgpoeHNWRt/KS2AhNDOD36fNkf9S3qjaZbhsyWxZygHo19GjUXW5?=
- =?us-ascii?q?vlVfKpEDIJtfn8OQaBCycwpWucGbraBQWf8ltpr2rTE5C3MHGaPGIZwst4RB?=
- =?us-ascii?q?mSOkNSmwAUUy8+np49FgGqwtbtf1t+5jAU/lT4sAdDyvp0NxnjVWfSvAKoZS?=
- =?us-ascii?q?s0SJeBLBpZ9BpN60DOMcOE6+JzBDxY/puurAGWKWyUeR5IDWcXVUyAHVzjOa?=
- =?us-ascii?q?Ou5dbY+eiCGuW+N+fOYamJqeFGSviH34yv3ZVj/zuXK8qAJGdiAOM+2kpHWn?=
- =?us-ascii?q?B5FdjZly8JSyMJiyLHd9Sbqwuk+i1rssC/9+zmWA315YSRBLtSMtVv9guyga?=
- =?us-ascii?q?eCMe6QmSl4KThf1pMRw3/H1aIQ3EITiyFpcTmhC7MAtTTCTKjIgK9YEwYbaz?=
- =?us-ascii?q?9vNMtP96882AhNNtLcitPxzLF4leQ5C1lbWlz7gMGme9cHI2S8NFzbHkaLM6?=
- =?us-ascii?q?iJJT3Kw8Hve6+zVbpQjOBMvR2qpTmbC1PjPiiElzTxTBCgLO9MgTqUPBxZv4?=
- =?us-ascii?q?G9fRJtBnb5QN36bR27Ncd9jScqzr0smnPKKWkcPCBlc0NQsLKQ6z9YgvR5G2?=
- =?us-ascii?q?Bb63plKu+EmyCH4OnEMZsWt+VkAjhul+Jd5nQ6zL5V4z9eSPNpnyvSq8Zko0?=
- =?us-ascii?q?u6nemX1jpnTB1Opy5RhI2Wu0VtI77U9pdbVnre4B0N6mCQAQwQp9R5Et3vp7?=
- =?us-ascii?q?xQyt/XmaLxLzdN7cnZ/MUGCMjSNc2LKnwhPgT1GDLOCgsETCahNXvDiExFjP?=
- =?us-ascii?q?GS6nqVo4Aiqpf2hZoOTqRWVEQvGfMHDkRpBdkCIJBwXjM+j7GXltIH5X27rE?=
- =?us-ascii?q?qZeMIPnaiPbfOUDvWnfDWBlrhCaBsgyrPiKoESK4i93FZtPB0yvo3PFlGYeN?=
- =?us-ascii?q?dXuCx6Jls2pUJX6nllZms63k/kLAS37ylAO+Szm0sNlgZmYekrvAzp6lMzK0?=
- =?us-ascii?q?uC8DA8i2EtiN7lhnaXaze3I6CuC9IFQxHovlQ8Z8uoCz1+ahe/yAk9bmbJ?=
-X-IPAS-Result: =?us-ascii?q?A2B3CgBJghde/wHyM5AZAUscAQEBAQEHAQERAQQEAQGBe?=
- =?us-ascii?q?wKBe4EYVAEgEiqECYkDhmIBAQEBAQEGgRIliW6RSAkBAQEBAQEBAQEtCgEBh?=
- =?us-ascii?q?EACghM4EwIQAQEBBAEBAQEBBQMBAWyFCwgkDII7KQGCegEFIxVBEAsYAgImA?=
- =?us-ascii?q?gJXBgEMBgIBAYJjPwGCViUPjUieHIEyhUmDQ4E3BoEOKAGMMnmBB4ERJwwDg?=
- =?us-ascii?q?l0+gksZAoRzgl4EjU+CO4cVRpdHgkCCRYRzjmkGG4JHjEGLXI5YiFeUJiKBW?=
- =?us-ascii?q?CsIAhgIIQ+DJ1AYDYEUj3GKcSMDMAyRCQEB?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 09 Jan 2020 19:47:19 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 009Jkf6t017383;
-        Thu, 9 Jan 2020 14:46:41 -0500
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-To:     KP Singh <kpsingh@chromium.org>, James Morris <jmorris@namei.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        Paul Moore <paul@paul-moore.com>
-References: <20191220154208.15895-1-kpsingh@chromium.org>
- <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com>
- <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com>
- <201912301112.A1A63A4@keescook>
- <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
- <alpine.LRH.2.21.2001090551000.27794@namei.org>
- <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100437550.21515@namei.org>
- <e90e03e3-b92f-6e1a-132f-1b648d9d2139@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100558550.31925@namei.org>
- <20200109194302.GA85350@google.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <8e035f4d-5120-de6a-7ac8-a35841a92b8a@tycho.nsa.gov>
-Date:   Thu, 9 Jan 2020 14:47:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200109194302.GA85350@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 9 Jan 2020 14:56:24 -0500
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009Jr1OJ030801;
+        Thu, 9 Jan 2020 11:56:16 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=9xXQCq0WNobGal8MQ2BuyB5wSU+ljkwNBjUvA2dLFcw=;
+ b=LPntQaPSVkWTIZqS3VkllBd4s3ayKxndMD3c+PRuXFVqBkjLcOkcnjSs8djlQZ1yzSnS
+ 9K5vuVVGTWMSe9lADA5GokFIq/zUU7qFZeB0MUWx5RmOnamvdhVQScqZbIKdOSwJEUvp
+ JhBNUYzFt6C72H0r1OLrhy2qpJ3ujdIS3E4= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xd3epbgq0-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 11:56:16 -0800
+Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
+ prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 9 Jan 2020 11:56:06 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 9 Jan 2020 11:56:06 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PL2G6vFQD1UyaUuJ1X88L8qlCY3Ayt4TI4PT2GPCUrgXzIELUCCg9yWQCpzYGcIunuOy4l4V95WDvAhCwo5GULzi3H3xXtDiU7wFPXcFg8QxOfC6IXAk+/jG2JLvEChj/VBHhnqMWJhVolAF5ZbOn80tdyi/9TyZaUpGAflXL5BXHmg1846XjXbOo+/+jqzzW1O3cZdu1Y2vPDoKEiCV3TOUDSrlGZPbWgAO7dvYO4FE0e02nDnTxFuPx+WPfjtQYJ3d/+In69D5VrlxE57nYqhSX+C4OI1DFkgViDnzdC46I+9ziSuUOE7dCeaqqubq67fKI8WeA2m4Ab3Pv/DAyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9xXQCq0WNobGal8MQ2BuyB5wSU+ljkwNBjUvA2dLFcw=;
+ b=SHf5uOjW2k7caPOlCbXrVg3FmJvHUZVHsolgnCY5PaTewQYYxmoLjYAECP3ZZTfyc+RafZx7VVVnqTshwM6R565ZsflhJvDQdC3pannY8fIcfNIKn7tRP+SC1adSOeWtcLYLwYwLd/n7Xq+SY8svppZOd00GernB2tVLqzSBemjpa3Zlg1tYSPA3Y6IKcKPfS1n4ueZ6zJvM+5VxByOsJY3X8SiTg/qbVLHH1skLe/kT5OdOwJRtjGk6/qvP4UbbFi1TmDdiAdlqMgVDqo3C26g4OOLcsPS7mUjRHx9BpsUHRcY/ySGdZxmaYGUeFHa3c5n85mBaatk+zvkmBMpB8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9xXQCq0WNobGal8MQ2BuyB5wSU+ljkwNBjUvA2dLFcw=;
+ b=hoBQ6OriltzUOcEx/0xVBO7qN6Krlo00dbn8BOR5XgGMCTKubaOYo69CdXreTjgnpqQZ7F2Rsl9N5/U3E2zJfkJ1ge2bTlrLUF0djrDYrK1JIqKkJMmYbhIhwK6TOMDTQbfiBRNWYGMVl0PSvzrsgNppa+ECEzxCSnjBHmlxj6k=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
+ BYAPR15MB2197.namprd15.prod.outlook.com (52.135.199.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.15; Thu, 9 Jan 2020 19:56:05 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2623.008; Thu, 9 Jan 2020
+ 19:56:05 +0000
+Received: from tower.DHCP.thefacebook.com (2620:10d:c090:200::2:73c3) by CO2PR18CA0061.namprd18.prod.outlook.com (2603:10b6:104:2::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8 via Frontend Transport; Thu, 9 Jan 2020 19:56:04 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH 1/7] mm: kmem: remove duplicate definitions of
+ __memcg_kmem_(un)charge()
+Thread-Topic: [PATCH 1/7] mm: kmem: remove duplicate definitions of
+ __memcg_kmem_(un)charge()
+Thread-Index: AQHVxxIzuWDiGhRsl0GfN8+3jhJSoKfiu0WAgAAENwA=
+Date:   Thu, 9 Jan 2020 19:56:04 +0000
+Message-ID: <20200109195600.GA14884@tower.DHCP.thefacebook.com>
+References: <20200109172745.285585-1-guro@fb.com>
+ <20200109172745.285585-2-guro@fb.com>
+ <20200109114055.67bda2b70d92b07ef13e3047@linux-foundation.org>
+In-Reply-To: <20200109114055.67bda2b70d92b07ef13e3047@linux-foundation.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR18CA0061.namprd18.prod.outlook.com
+ (2603:10b6:104:2::29) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:150::19)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:73c3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9450c77e-54ef-48a2-7eb8-08d7953df5fc
+x-ms-traffictypediagnostic: BYAPR15MB2197:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB2197BA901272085BB4B4E122BE390@BYAPR15MB2197.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:459;
+x-forefront-prvs: 02778BF158
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(136003)(396003)(366004)(376002)(199004)(189003)(4326008)(1076003)(316002)(7696005)(52116002)(8936002)(66446008)(66946007)(66556008)(8676002)(64756008)(81156014)(66476007)(4744005)(81166006)(478600001)(6916009)(16526019)(186003)(71200400001)(54906003)(86362001)(6506007)(33656002)(5660300002)(9686003)(55016002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2197;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TuO/z6nWv66heFeHkorJS6+CHj3cG2wyntznOnRVKeKc/P6XM1YLFZOF4WRb43wnaCzSjYPXUGRvu3tRCmRJ7TvUZBSFggoW0DO7E3pDY1oLefj71sCL9MFIuuW8MTLsZR4mSMdmI1IsDhO8jt8fDHUePlvZkkFdqog0L4Y45WPk3oFTX31Ec8SNNVodpp8lFXK3qLYaaNO2oOcBt1WrcB77SIl9K8LI/qyCtigB7SP0s0nA5wIWcpsyE5UBPDcL0GYu30lUG4//J/m5A2sOffjpcwyE99otbNZOlbejZ3XEXzPfN7Ghq7Bh6/8E+ZjcO/xkd/sou3bWVq7GBmT3afz4FmBNkV0/6kUsTbwr3KoZqMHmDHFF9ss2YUnyIYAGh+0racua6c18i1KVRP62kHw9/Xym357hnCXid3ZrdazVJzI2Cxz57QSZqHyImEIo
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E9901715D6E19A44AD039511FEBA6AFB@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9450c77e-54ef-48a2-7eb8-08d7953df5fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 19:56:04.9942
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3YHgI27l3StxgzaC7xqQ12nf445VxwqBbz0J4xq4tSfa2kzosCHwuyAv8CGzoJrW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2197
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_04:2020-01-09,2020-01-09 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ mlxlogscore=688 phishscore=0 clxscore=1015 impostorscore=0 mlxscore=0
+ adultscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001090163
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 2:43 PM, KP Singh wrote:
-> On 10-Jan 06:07, James Morris wrote:
->> On Thu, 9 Jan 2020, Stephen Smalley wrote:
->>
->>> On 1/9/20 1:11 PM, James Morris wrote:
->>>> On Wed, 8 Jan 2020, Stephen Smalley wrote:
->>>>
->>>>> The cover letter subject line and the Kconfig help text refer to it as a
->>>>> BPF-based "MAC and Audit policy".  It has an enforce config option that
->>>>> enables the bpf programs to deny access, providing access control. IIRC,
->>>>> in
->>>>> the earlier discussion threads, the BPF maintainers suggested that Smack
->>>>> and
->>>>> other LSMs could be entirely re-implemented via it in the future, and that
->>>>> such an implementation would be more optimal.
->>>>
->>>> In this case, the eBPF code is similar to a kernel module, rather than a
->>>> loadable policy file.  It's a loadable mechanism, rather than a policy, in
->>>> my view.
->>>
->>> I thought you frowned on dynamically loadable LSMs for both security and
->>> correctness reasons?
-> 
-> Based on the feedback from the lists we've updated the design for v2.
-> 
-> In v2, LSM hook callbacks are allocated dynamically using BPF
-> trampolines, appended to a separate security_hook_heads and run
-> only after the statically allocated hooks.
-> 
-> The security_hook_heads for all the other LSMs (SELinux, AppArmor etc)
-> still remains __lsm_ro_after_init and cannot be modified. We are still
-> working on v2 (not ready for review yet) but the general idea can be
-> seen here:
-> 
->    https://github.com/sinkap/linux-krsi/blob/patch/v1/trampoline_prototype/security/bpf/lsm.c
-> 
->>
->> Evaluating the security impact of this is the next step. My understanding
->> is that eBPF via BTF is constrained to read only access to hook
->> parameters, and that its behavior would be entirely restrictive.
->>
->> I'd like to understand the security impact more fully, though.  Can the
->> eBPF code make arbitrary writes to the kernel, or read anything other than
->> the correctly bounded LSM hook parameters?
->>
-> 
-> As mentioned, the BPF verifier does not allow writes to BTF types.
-> 
->>> And a traditional security module would necessarily fall
->>> under GPL; is the eBPF code required to be likewise?  If not, KRSI is a
->>> gateway for proprietary LSMs...
->>
->> Right, we do not want this to be a GPL bypass.
-> 
-> This is not intended to be a GPL bypass and the BPF verifier checks
-> for license compatibility of the loaded program with GPL.
+On Thu, Jan 09, 2020 at 11:40:55AM -0800, Andrew Morton wrote:
+> On Thu, 9 Jan 2020 09:27:39 -0800 Roman Gushchin <guro@fb.com> wrote:
+>=20
+> > For some reason these inline functions are defined twice. Remove
+> > the second identical copy.
+>=20
+> Don't think so - that wouldn't have compiled.
+>=20
+> > --- a/include/linux/memcontrol.h
+> > +++ b/include/linux/memcontrol.h
+> > @@ -1438,15 +1438,6 @@ static inline void memcg_kmem_uncharge(struct pa=
+ge *page, int order)
+> >  {
+> >  }
+> > =20
+> > -static inline int __memcg_kmem_charge(struct page *page, gfp_t gfp, in=
+t order)
+> > -{
+> > -	return 0;
+> > -}
+> > -
+> > -static inline void __memcg_kmem_uncharge(struct page *page, int order)
+> > -{
+> > -}
+> > -
+> >  #define for_each_memcg_cache_index(_idx)	\
+> >  	for (; NULL; )
+> > =20
+>=20
+> Maybe you confused these with memcg_kmem_charge() and
+> memcg_kmem_uncharge()?
 
-IIUC, it checks that the program is GPL compatible if it uses a function 
-marked GPL-only.  But what specifically is marked GPL-only that is 
-required for eBPF programs using KRSI?
+You're right, I'm blind. Let me drop this patch and resend the series.
 
-> 
-> - KP
-> 
->>
->> If these issues can be resolved, this may be a "safe" way to support
->> loadable LSM applications.
->>
->> Again, I'd be interested in knowing how this is is handled in the
->> networking stack (keeping in mind that LSM is a much more invasive API,
->> and may not be directly comparable).
->>
->> -- 
->> James Morris
->> <jmorris@namei.org>
->>
-
+Thanks!
