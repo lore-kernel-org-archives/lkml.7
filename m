@@ -2,122 +2,117 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D86C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C51C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57A832077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578576552;
-	bh=iHdDym7OR79CQ1t/GpbEMYCujRuSnN4psVqgGjqi+CI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TUXcYZvRAXQmBtdjCRbMzbViHLv2Pkn6tzoNXKn0cZg39QsIqqOeIMF58XXIEMah0
-	 SHY+2kRvHJXWJFgmsFH3j2erCEKrIfoGQAHk0VZXtkJA8na7AgFPIhYAQYSxTJ7JVs
-	 pmSBq/dGbr8L56l9Nthtgb1XhT2JH/Q2EVgjmp8I=
+	by mail.kernel.org (Postfix) with ESMTP id AE16B20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="v9fnq5/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbgAIN3L (ORCPT
+        id S1731129AbgAIN3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:29:11 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45595 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbgAIN3K (ORCPT
+        Thu, 9 Jan 2020 08:29:18 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42741 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727861AbgAIN3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:29:10 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j26so7192039ljc.12;
-        Thu, 09 Jan 2020 05:29:08 -0800 (PST)
+        Thu, 9 Jan 2020 08:29:18 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so7366657wro.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 05:29:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LeCOJsegsX9ulDaZM7NL+WaD4FSb3jvx0nwI6fIifdA=;
+        b=v9fnq5/HPFByZxwI00WPY6zovNS68zvnGe5jz1jhFyLuC6buzKp49JUO/3A/2f41Jl
+         sY03l79BGy+DC+sySd1oRvRkBxwwIj8Hg+x20jeisHL6cvGZKhHBPP1Mn4+MiEzNndHD
+         Jrbmi47ghqNCHQvkaAXXVN8UfCOFGS863mDbb3N2Bb+PjT6Qd25wvwkwHB3PoTaq+st0
+         EsYbGZIQaRDZYDmXAzFCwdjdBAh5PZiUO4Vg4hBeAEtMrzcSW3ZqSvBw+XDHkTW5Vf9c
+         s3U+LWrGIKjnCBsU23UEheg4jtu0cWZmQjLDi3ENrTD678ECxGzE42cvjz5xb+igJtoh
+         IxeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ErcL1N2fmNI636PPVQLs5GTMAwUgd2f5seuvakUioCs=;
-        b=QcitNdlnK1P8XDsxpOgCJEwk8BBeULze+HvJMfvdQLstUAogkO0HRDXMxt23Xq8ZEq
-         omkD9d+73f49SLK0dpWF2+fyJogSQb2sKjnkQBllazj9K6sfP8TeYqHSq99dZoJRfxeP
-         Tz6FdqVBlVBOSt/NlFQ4up89rRSZDcpstAKFUNs6Y1MbzVpWcxo35CoafZdsFoA1rrYg
-         THdYG47CGQWjWNMDbwQwTjtmQJqV2rYRVIvXvSqMTpkpGebkIaKBhL9jXhOI8VY+6pBg
-         k4sa6qDKRscAFBfZAaYInptVWWKwfQwbgFVEeUd6tjLB5dji3vmnIOLzZJeyXGnUQ8Gn
-         h4dA==
-X-Gm-Message-State: APjAAAX78+2GfWTcxOvQaXm0qmiM0y/RFuy8LSFbHhNHA+chhijaJxmg
-        IH7YTBYrvbYPecAnFjVQoLU=
-X-Google-Smtp-Source: APXvYqw1hcidTUPsXmbfZ5E6ekSaUosd6Z+QbgYKjFwaIPR65Yk0gkHBGblfoIvMFxRv4YpPXS00DQ==
-X-Received: by 2002:a2e:84d0:: with SMTP id q16mr6321120ljh.138.1578576547878;
-        Thu, 09 Jan 2020 05:29:07 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id y25sm3094435lfy.59.2020.01.09.05.29.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 05:29:07 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ipXsD-0004Te-LT; Thu, 09 Jan 2020 14:29:17 +0100
-Date:   Thu, 9 Jan 2020 14:29:17 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     guillaume La Roque <glaroque@baylibre.com>
-Cc:     Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
-        khilman@baylibre.com
-Subject: Re: [PATCH v6 1/2] dt-bindings: net: bluetooth: add interrupts
- properties
-Message-ID: <20200109132917.GM30908@localhost>
-References: <20200109104257.6942-1-glaroque@baylibre.com>
- <20200109104257.6942-2-glaroque@baylibre.com>
- <20200109105305.GL30908@localhost>
- <a33f9c30-03a8-ea12-e9d3-5e050e41318e@baylibre.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=LeCOJsegsX9ulDaZM7NL+WaD4FSb3jvx0nwI6fIifdA=;
+        b=XE10pHlF2k61isGIfjAwqjTvTmqN1qZYTFl+ppk2j+24tJFyTHWQPRQ+uL5LAKVu+Y
+         8jQ7ylbPwrMwDYE4rjBedltryN9M+qOohJhBqN8LRI2oDVaA++vcS2+mOWHQxcAVWjCQ
+         AKHFaVTBuJTE40gr2/oZsMQjt8PQBMlZsvi7pw1WPactNCpLjJdo8n0Tx++8TMjok/EL
+         OmizH5OkBhIwghfVTcLG0FfONz77fN4AbeghYx13JtXKpW1sZlWbm0gUgi1PpNNamZgb
+         7bwvPjjnnln4oXc6fDo6xfsa9raPEfnvILh1xfADN0DqBqGFJcORdjnSbpp+X7viG1L6
+         XCVA==
+X-Gm-Message-State: APjAAAXLc+S80e5Qtk3wuPCfD1F++cMYqb+d/XMOtTCnIkYu9DCmYjpq
+        cHqMKLnFWzSojoAd4U8GGHfIdVg/f6J9eg==
+X-Google-Smtp-Source: APXvYqzcczVY04puWu5OvRFstw0G3xfRrB0/WUNp7quD+IeVGyJBmzWBCYjvUh0N0h5BMN9JZDqzGw==
+X-Received: by 2002:a5d:5044:: with SMTP id h4mr10727999wrt.4.1578576555877;
+        Thu, 09 Jan 2020 05:29:15 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id t8sm8425532wrp.69.2020.01.09.05.29.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Jan 2020 05:29:15 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Manish Narani <manish.narani@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>
+Subject: [PATCH] microblaze: defconfig: Disable EXT2 driver and Enable EXT3 & EXT4 drivers
+Date:   Thu,  9 Jan 2020 14:29:06 +0100
+Message-Id: <f9bbfa27026d0f596dbc0a9c2e1253575d6cc82e.1578576542.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a33f9c30-03a8-ea12-e9d3-5e050e41318e@baylibre.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:13:23PM +0100, guillaume La Roque wrote:
-> 
-> On 1/9/20 11:53 AM, Johan Hovold wrote:
-> > On Thu, Jan 09, 2020 at 11:42:56AM +0100, Guillaume La Roque wrote:
-> >> add interrupts and interrupt-names as optional properties
-> >> to support host-wakeup by interrupt properties instead of
-> >> host-wakeup-gpios.
-> >>
-> >> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
-> >>  1 file changed, 3 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> >> index c44a30dbe43d..d33bbc998687 100644
-> >> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> >> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> >> @@ -37,7 +37,9 @@ Optional properties:
-> >>      - pcm-frame-type: short, long
-> >>      - pcm-sync-mode: slave, master
-> >>      - pcm-clock-mode: slave, master
-> >> -
-> >> + - interrupts: must be one, used to wakeup the host processor if
-> >> +   gpiod_to_irq function not supported
-> >> + - interrupt-names: must be "host-wakeup"
-> > Looks like you forgot to address Rob's comment. If I understood him
-> > correctly you either need to stick with "host-wakeup-gpios" (and fix
-> > your platform) or deprecate it in favour of "interrupts":
-> >
-> > 	https://lkml.kernel.org/r/20191218203818.GA8009@bogus
-> 
-> not forgot marcel ask me a v6
+From: Manish Narani <manish.narani@xilinx.com>
 
-Not much point in sending v6 before addressing feedback on v5.
-Especially as Marcel asked for a v6 with acks. ;)
+As EXT4 filesystem driver is used for handling EXT2 file systems as
+well. There is no need to enable EXT2 driver. This patch disables EXT2
+and enables EXT3/EXT4 drivers.
 
-> for rob comment ok but it's not possible to support gpiod_to_irq on my
-> platform.
-> 
-> if i deprecated it i need to update all DT with good interrupt number
-> right?
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-Not sure. Perhaps just updating the binding is enough. Rob?
+ arch/microblaze/configs/mmu_defconfig   | 2 +-
+ arch/microblaze/configs/nommu_defconfig | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Johan
+diff --git a/arch/microblaze/configs/mmu_defconfig b/arch/microblaze/configs/mmu_defconfig
+index b3b433db89d8..0e2f5e1fd1ef 100644
+--- a/arch/microblaze/configs/mmu_defconfig
++++ b/arch/microblaze/configs/mmu_defconfig
+@@ -73,7 +73,7 @@ CONFIG_FB_XILINX=y
+ CONFIG_UIO=y
+ CONFIG_UIO_PDRV_GENIRQ=y
+ CONFIG_UIO_DMEM_GENIRQ=y
+-CONFIG_EXT2_FS=y
++CONFIG_EXT3_FS=y
+ # CONFIG_DNOTIFY is not set
+ CONFIG_TMPFS=y
+ CONFIG_CRAMFS=y
+diff --git a/arch/microblaze/configs/nommu_defconfig b/arch/microblaze/configs/nommu_defconfig
+index 377de39ccb8c..8c420782d6e4 100644
+--- a/arch/microblaze/configs/nommu_defconfig
++++ b/arch/microblaze/configs/nommu_defconfig
+@@ -70,7 +70,7 @@ CONFIG_XILINX_WATCHDOG=y
+ CONFIG_FB=y
+ CONFIG_FB_XILINX=y
+ # CONFIG_USB_SUPPORT is not set
+-CONFIG_EXT2_FS=y
++CONFIG_EXT3_FS=y
+ # CONFIG_DNOTIFY is not set
+ CONFIG_CRAMFS=y
+ CONFIG_ROMFS_FS=y
+-- 
+2.24.0
+
