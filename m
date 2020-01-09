@@ -2,421 +2,132 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE72C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBF6C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532532053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578552547;
-	bh=4G6sGg1ys6863QTyMXDlbv/klXCy1xEPVyUXXUkjE7Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SzSxAcO3mGAWfmlSXM1QlYvfCmD5GvffLJxdC5lgfDEzKUP/+NlaE9Th5oCJA/Bux
-	 YLv7nLaDUCH1VBIDG342h6a1V/K09BL4ZLl8h4GRHSZsP+t/fDdcOc5Y4Biw7CKsLY
-	 iuNQ8+dKOVx5td7gLGoB7b6cJYEf4T3fCzPu6CkU=
+	by mail.kernel.org (Postfix) with ESMTP id 8E2BF2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 06:51:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="e5YTgzrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgAIGsw (ORCPT
+        id S1728175AbgAIGvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 01:48:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 01:51:41 -0500
+Received: from mout.gmx.net ([212.227.17.22]:36415 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgAIGsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 01:48:51 -0500
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB5EB20848
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 06:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578552531;
-        bh=4G6sGg1ys6863QTyMXDlbv/klXCy1xEPVyUXXUkjE7Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kOY80DL1qlxLw6g2tmV9oG1JqdRsKYAo/o1nAbGbD94j9TWbNFQDDdwqyDI214ewP
-         IHMQjbM76iAe37nVcOdi/1liZ6skFvpErivfjwd+clE63tHQGnnWEDSMm7p7wanWCS
-         2RwzfXIDVQPdoqDjCSkgwsy4/iysZ6t4EGuxXAGw=
-Received: by mail-wm1-f49.google.com with SMTP id 20so1506125wmj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 22:48:50 -0800 (PST)
-X-Gm-Message-State: APjAAAWD391ieBCfVPqyfXnmNGwB/sN86aANvk2V0kIqS0BpYUSSR+Sl
-        yBFYGRhWP1qnFWuszQe9XE2NiJLBGRAK00nj1ud9Ew==
-X-Google-Smtp-Source: APXvYqyu2uEHRdxJf6p3zKNVC4Uj54r9l5PCzKrRkteNu0epyaxUny9t2ULKRiWQTcAQ0YFdhP+dJU5xyln2IRrrO04=
-X-Received: by 2002:a1c:7d8b:: with SMTP id y133mr2657460wmc.165.1578552528899;
- Wed, 08 Jan 2020 22:48:48 -0800 (PST)
+        id S1726541AbgAIGvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 01:51:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1578552660;
+        bh=50wkIf2j3bSuVaQbjQeyQqMF794GvhIKb6N4Rwk/e4s=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=e5YTgzrxZm+19ZdKErqtSww/XWMfAO7zj98Nv72wyuE9wI375uEEYimzFzW0CNLTh
+         hjmdnfBnwJ9yiAW2UqLGktrqoSPUfIjJSVLVG6Utyh+wVeUEsAGQyvekII8/sFBqYO
+         VuEFoCbM+AqNXC5RWnxZ9rolxcYtLI2TJPkTT2G0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.133.168]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MIx3C-1j8cP829HO-00KOD5; Thu, 09
+ Jan 2020 07:51:00 +0100
+Date:   Thu, 9 Jan 2020 07:50:55 +0100
+From:   Helge Deller <deller@gmx.de>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Meelis Roos <mroos@linux.ee>, Jeroen Roovers <jer@gentoo.org>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: Re: [PATCH] parisc: fix map_pages() to actually populate upper
+ directory
+Message-ID: <20200109065055.GA13038@ls3530.fritz.box>
+References: <20200108125852.19823-1-rppt@kernel.org>
 MIME-Version: 1.0
-References: <21bf6bb46544eab79e792980f82520f8fbdae9b5.camel@intel.com>
- <DB882EE8-20B2-4631-A808-E5C968B24CEB@amacapital.net> <cdd157ef011efda92c9434f76141fc3aef174d85.camel@intel.com>
- <CALCETrV_tGk=B3Hw0h9viW45wMqB_W+rwWzx6LnC3-vSATOUOA@mail.gmail.com> <400be86aab208d0e50a237cdbd3195763396e3ed.camel@intel.com>
-In-Reply-To: <400be86aab208d0e50a237cdbd3195763396e3ed.camel@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 8 Jan 2020 22:48:36 -0800
-X-Gmail-Original-Message-ID: <CALCETrXXJhkNXmjTX_8VEO39+uE4XECtm=QNTDh1DpncXKhKhw@mail.gmail.com>
-Message-ID: <CALCETrXXJhkNXmjTX_8VEO39+uE4XECtm=QNTDh1DpncXKhKhw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
-To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "jeyu@kernel.org" <jeyu@kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "mjg59@google.com" <mjg59@google.com>,
-        "thgarnie@chromium.org" <thgarnie@chromium.org>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "revest@chromium.org" <revest@chromium.org>,
-        "jannh@google.com" <jannh@google.com>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "jackmanb@chromium.org" <jackmanb@chromium.org>,
-        "kafai@fb.com" <kafai@fb.com>, "yhs@fb.com" <yhs@fb.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "mhalcrow@google.com" <mhalcrow@google.com>,
-        "andriin@fb.com" <andriin@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108125852.19823-1-rppt@kernel.org>
+X-Provags-ID: V03:K1:RouwXvLm/K7tK2RObMV4/68vrcf/1lzoB40AEaqMH5Y/eLZ76Hg
+ nQIErEWeY/eFEMvl+BRVbbt6dASKI1jrlXD/MJv1z6tfpEvxwwdkcC7iYy8M+TVNw8JC337
+ meKLX46dY9WOdS6IpIz/QoKbfir2TELCK7MYnbWGxyqLzvMUK1eF4bkUR9ygXOLNPCXTSM2
+ 0Lci4c1NrIeNMyrWuTbIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IC4pifuUL9o=:r2pFbZznz8vqxtAJfEkvce
+ fD+SEwDkBJlStI07upp7kN9XuOTdPma0OhzBmH0F9+LPerKMFNTbNkvYeW8F5VWPVw4S/kWoU
+ WEym63MKHf5/bvh8+95tQFsuJuvgaKMYWXpJQJPCUw5ueAKjwssZcuTSKd4TCMkw5A6XpwU4/
+ f+BmQrRNBtCuvow8iNuP4XlmTAVkiaSxWPu35NyDHlPLfxc7KCltfv9u51BaDJ5X789mWGp3b
+ zdIrrKmEOcym67e6aaD+yH79wIAK7T9f3UGLN4AU7196sEnR27pvFdhRMgTpd9B6u+71xQUp6
+ 9CNXOazzmIbrpNX+Ynd1U0dJYAPUzHiUGU5nH3dKvPWa5n4Ua2VjucoDusUAEXbd//R7f7izt
+ ine/wMuSxJajnmhwdCSKrjmGRUomCpFIW/AUfSY4oZO5QIHjoeV1pxrp2Y6cZ1KBhruBh7J32
+ WK1lhjzYE5CaFXftGk2Co5abzhCVcUU0jyWwznZOF8tfuLpuNGlK3uz61U3o5WAVzH4exdRYc
+ 3BtyxZiOwFGnTmF27M1GYxFe46k725lQN4NbtzDqg+SL1MjFcpnd1KGMr+BmfZu50D9hcnyAn
+ Xuks3fH6T4VWLQouoJYb+/VZ7Vd9P7h1v3kJ+whYYTrbEO/0uOzdf0ZLmPv7G1ktTQlZartfu
+ ijkUEMx2TNPVW4SthOgAW563W2PThZUs3X1mZfQZYQZ7YtCUzanDmFlL8BWNFzjOdv1K3eZHj
+ RfJ/9alo2Omrv/XHGcmPzEt3qBbkPVQ5Yxcw7q3SkZAeAeivT+9piScMiceMbLEt+kqYGT2oU
+ EVbQI2wmByfSlAwQ7Z5nRTp3iejBXlWhZXsDygFAfQfsHYDwIWdCdZHuBqFgaukbwkOxzNSzk
+ L0YGZBdCg7EuIE58WA1rXevFIuZd6RPyNu3xPPDk9ODqyLFaSCGhd/KMyHm8zdYcx72e3mqBQ
+ xNrYi33+0VYBsJg5N8biJlQiFt8IgYmv2/RZbW6qQz4ySx7nOjpRaldPPA0+im++fqs+gjmxz
+ Px5hIi49aPuhtX4L8dWqrTnKmbhODvQGA8Rp0FX6+Jhm/e6I9jJmU7ubjxNF2sJ0cfrowrGM0
+ tPs/86+4YTOxAKMXS5geBSsAqTzbraSUrxOkkAWpP/lBRRF0waScvZ/DONPf6F69qDgf7/HxB
+ cWXMdstDXR5xvZ4ac/6AiB7DAqvlpYEWuwNabytzj+7fBonHSM5ZWu42oofVDzLIcji79TO7F
+ SWsHCIXPrprW3dyUXJxtEyv/fWkpPzmqiu883Sw==
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jan 8, 2020, at 10:52 AM, Edgecombe, Rick P <rick.p.edgecombe@intel.co=
-m> wrote:
+> The commit d96885e277b5 ("parisc: use pgtable-nopXd instead of
+> 4level-fixup") converted PA-RISC to use folded page tables, but it misse=
+d
+> the conversion of pgd_populate() to pud_populate() in maps_pages()
+> function. This caused the upper page table directory to remain empty and
+> the system would crash as a result.
 >
-> =EF=BB=BFOn Wed, 2020-01-08 at 00:41 -0800, Andy Lutomirski wrote:
->>> On Jan 7, 2020, at 9:01 AM, Edgecombe, Rick P <rick.p.edgecombe@intel.c=
-om>
->>> wrote:
->>>
->>> =EF=BB=BFCC Nadav and Jessica.
->>>
->>> On Mon, 2020-01-06 at 15:36 -1000, Andy Lutomirski wrote:
->>>>> On Jan 6, 2020, at 12:25 PM, Edgecombe, Rick P <
->>>>> rick.p.edgecombe@intel.com>
->>>>> wrote:
->>>>>
->>>>> =EF=BB=BFOn Sat, 2020-01-04 at 09:49 +0900, Andy Lutomirski wrote:
->>>>>>>>> On Jan 4, 2020, at 8:47 AM, KP Singh <kpsingh@chromium.org>
->>>>>>>>> wrote:
->>>>>>>>
->>>>>>>> =EF=BB=BFFrom: KP Singh <kpsingh@google.com>
->>>>>>>>
->>>>>>>> The image for the BPF trampolines is allocated with
->>>>>>>> bpf_jit_alloc_exe_page which marks this allocated page executable.
->>>>>>>> This
->>>>>>>> means that the allocated memory is W and X at the same time making
->>>>>>>> it
->>>>>>>> susceptible to WX based attacks.
->>>>>>>>
->>>>>>>> Since the allocated memory is shared between two trampolines (the
->>>>>>>> current and the next), 2 pages must be allocated to adhere to W^X
->>>>>>>> and
->>>>>>>> the following sequence is obeyed where trampolines are modified:
->>>>>>>
->>>>>>> Can we please do better rather than piling garbage on top of
->>>>>>> garbage?
->>>>>>>
->>>>>>>>
->>>>>>>> - Mark memory as non executable (set_memory_nx). While
->>>>>>>> module_alloc for
->>>>>>>> x86 allocates the memory as PAGE_KERNEL and not PAGE_KERNEL_EXEC,
->>>>>>>> not
->>>>>>>> all implementations of module_alloc do so
->>>>>>>
->>>>>>> How about fixing this instead?
->>>>>>>
->>>>>>>> - Mark the memory as read/write (set_memory_rw)
->>>>>>>
->>>>>>> Probably harmless, but see above about fixing it.
->>>>>>>
->>>>>>>> - Modify the trampoline
->>>>>>>
->>>>>>> Seems reasonable. It=E2=80=99s worth noting that this whole approac=
-h is
->>>>>>> suboptimal:
->>>>>>> the =E2=80=9Cmodule=E2=80=9D allocator should really be returning a=
- list of pages to
->>>>>>> be
->>>>>>> written (not at the final address!) with the actual executable
->>>>>>> mapping to
->>>>>>> be
->>>>>>> materialized later, but that=E2=80=99s a bigger project that you=E2=
-=80=99re welcome
->>>>>>> to
->>>>>>> ignore
->>>>>>> for now.  (Concretely, it should produce a vmap address with backin=
-g
->>>>>>> pages
->>>>>>> but
->>>>>>> with the vmap alias either entirely unmapped or read-only. A
->>>>>>> subsequent
->>>>>>> healer
->>>>>>> would, all at once, make the direct map pages RO or not-present and
->>>>>>> make
->>>>>>> the
->>>>>>> vmap alias RX.)
->>>>>>>> - Mark the memory as read-only (set_memory_ro)
->>>>>>>> - Mark the memory as executable (set_memory_x)
->>>>>>>
->>>>>>> No, thanks. There=E2=80=99s very little excuse for doing two IPI fl=
-ushes
->>>>>>> when one
->>>>>>> would suffice.
->>>>>>>
->>>>>>> As far as I know, all architectures can do this with a single flush
->>>>>>> without
->>>>>>> races  x86 certainly can. The module freeing code gets this sequenc=
-e
->>>>>>> right.
->>>>>>> Please reuse its mechanism or, if needed, export the relevant
->>>>>>> interfaces.
->>>>>
->>>>> So if I understand this right, some trampolines have been added that =
-are
->>>>> currently set as RWX at modification time AND left that way during
->>>>> runtime?
->>>>> The
->>>>> discussion on the order of set_memory_() calls in the commit message
->>>>> made me
->>>>> think that this was just a modification time thing at first.
->>>>
->>>> I=E2=80=99m not sure what the status quo is.
->>>>
->>>> We really ought to have a genuinely good API for allocation and
->>>> initialization
->>>> of text.  We can do so much better than set_memory_blahblah.
->>>>
->>>> FWIW, I have some ideas about making kernel flushes cheaper. It=E2=80=
-=99s
->>>> currently
->>>> blocked on finding some time and on tglx=E2=80=99s irqtrace work.
->>>>
->>>
->>> Makes sense to me. I guess there are 6 types of text allocations now:
->>> - These two BPF trampolines
->>> - BPF JITs
->>> - Modules
->>> - Kprobes
->>> - Ftrace
->>>
->>> All doing (or should be doing) pretty much the same thing. I believe Je=
-ssica
->>> had
->>> said at one point that she didn't like all the other features using
->>> module_alloc() as it was supposed to be just for real modules. Where wo=
-uld
->>> the
->>> API live?
->>
->> New header?  This shouldn=E2=80=99t matter that much.
->>
->> Here are two strawman proposals.  All of this is very rough -- the
->> actual data structures and signatures are likely problematic for
->> multiple reasons.
->>
->> --- First proposal ---
->>
->> struct text_allocation {
->>  void *final_addr;
->>  struct page *pages;
->>  int npages;
->> };
->>
->> int text_alloc(struct text_allocation *out, size_t size);
->>
->> /* now final_addr is not accessible and pages is writable. */
->>
->> int text_freeze(struct text_allocation *alloc);
->>
->> /* now pages are not accessible and final_addr is RO.  Alternatively,
->> pages are RO and final_addr is unmapped. */
->>
->> int text_finish(struct text_allocation *alloc);
->>
->> /* now final_addr is RX.  All done. */
->>
->> This gets it with just one flush and gives a chance to double-check in
->> case of race attacks from other CPUs.  Double-checking is annoying,
->> though.
->>
->> --- Second proposal ---
->>
->> struct text_allocation {
->>  void *final_addr;
->>  /* lots of opaque stuff including an mm_struct */
->>  /* optional: list of struct page, but this isn't obviously useful */
->> };
->>
->> int text_alloc(struct text_allocation *out, size_t size);
->>
->> /* Memory is allocated.  There is no way to access it at all right
->> now.  The memory is RO or not present in the direct map. */
->>
->> void __user *text_activate_mapping(struct text_allocation *out);
->>
->> /* Now the text is RW at *user* address given by return value.
->> Preemption is off if required by use_temporary_mm().  Real user memory
->> cannot be accessed. */
->>
->> void text_deactivate_mapping(struct text_allocation *alloc);
->>
->> /* Now the memory is inaccessible again. */
->>
->> void text_finalize(struct text_allocation *alloc);
->>
->> /* Now it's RX or XO at the final address. */
->>
->>
->> Pros of second approach:
->>
->> - Inherently immune to cross-CPU attack.  No double-check.
->>
->> - If we ever implement a cache of non-direct-mapped, unaliased pages,
->> then it works with no flushes at all.  We could even relax it a bit to
->> allow non-direct-mapped pages that may have RX / XO aliases but no W
->> aliases.
->>
->> - Can easily access without worrying about page boundaries.
->>
->> Cons:
->>
->> - The use of a temporary mm is annoying -- you can't copy from user
->> memory, for example.
+> Using pud_populate() that actually populates the page table instead of
+> dummy pgd_populate() fixes the issue.
+> ...
+> diff --git a/arch/parisc/mm/init.c b/arch/parisc/mm/init.c
+> index ddca8287d43b..354cf060b67f 100644
+> --- a/arch/parisc/mm/init.c
+> +++ b/arch/parisc/mm/init.c
+> @@ -401,7 +401,7 @@ static void __init map_pages(unsigned long start_vad=
+dr,
+>  			pmd =3D (pmd_t *) __pa(pmd);
+>  		}
 >
-> Probably the first proposal is better for usages where there is a signatu=
-re that
-> can be checked like modules, because you could more easily check the sign=
-ature
-> after the text is RO. I guess leaving the direct map as RO could work for=
- the
-> second option too. Both would probably require significant changes to mod=
-ule
-> signature verification though.
+> -		pgd_populate(NULL, pg_dir, __va(pmd));
+> +		pud_populate(NULL, (pud_t *)pg_dir, __va(pmd));
+>  #endif
 
-This sounds complicated =E2=80=94 for decent performance, we want to apply
-alternatives before we make the text RO, at which point verifying the
-signature is awkward at best.
+Wouldn't the untested patch below be more clean?
 
->
-> Just a minor point/clarification, but outside of an enhanced signed modul=
-e case,
-> I think the cross-CPU attack mitigation can't be full. For example, attac=
-king
-> the verified BPF byte code (which is apparently planned to no longer be R=
-O), or
-> the pointers being loaded into these trampolines. There is always going t=
-o be
-> some writable source or pointer to the source, and unless there is a way =
-to
-> verify the end RO result, it's an un-winnable game of whack-a-mole to do =
-it in
-> full. Still the less exposed surfaces the better since the writes we are
-> worrying about in this case are probably not fully arbitrary.
+Helge
 
-We could use hypervisor- or CR3-based protection. But I agree this is
-tricky and not strictly on topic :)
+diff --git a/arch/parisc/mm/init.c b/arch/parisc/mm/init.c
+index ddca8287d43b..73de58f31f5f 100644
+=2D-- a/arch/parisc/mm/init.c
++++ b/arch/parisc/mm/init.c
+@@ -387,6 +387,8 @@ static void __init map_pages(unsigned long start_vaddr=
+,
+ #if PTRS_PER_PMD =3D=3D 1
+ 		pmd =3D (pmd_t *)__pa(pg_dir);
+ #else
++		p4d_t *p4d;
++		pud_t *pud;
+ 		pmd =3D (pmd_t *)pgd_address(*pg_dir);
 
->
-> I don't see why it would be so bad to require copying data to the kernel =
-before
-> sending it through this process. Nothing copies to final allocation direc=
-tly
-> from userspace today, and from a perf perspective, how bad is an extra co=
-py when
-> we are saving TLB shootdowns? Are you thinking to protect the data that's=
- being
-> loaded from other CPUs?
+ 		/*
+@@ -401,7 +403,9 @@ static void __init map_pages(unsigned long start_vaddr=
+,
+ 			pmd =3D (pmd_t *) __pa(pmd);
+ 		}
 
-Hmm. If there=E2=80=99s a way to make loading stall, then the cross-cpu att=
-ack
-is a nice way to write shell code, so mitigating this has at least
-some value.
+-		pgd_populate(NULL, pg_dir, __va(pmd));
++		p4d =3D p4d_offset(pg_dir, vaddr);
++		pud =3D pud_offset(p4d, vaddr);
++		pud_populate(NULL, pud, __va(pmd));
+ #endif
+ 		pg_dir++;
 
->
-> Otherwise, could we lazily clone/sync the original mm into the temporary =
-one to
-> allow this? (possibly totally misguided idea)
-
-That involves allocating a virtual address at a safe position to make
-this work. On architectures like s390, I don=E2=80=99t even know if this is
-possible. Even on x86, it=E2=80=99s awkward.  I think it=E2=80=99s easier t=
-o just say
-that, while the temporary mapping is active, user memory is
-inaccessible.
-
->
-> FWIW, I really like the idea of a cache of unmapped or RO pages. Potentia=
-lly
-> several optimizations we could do there.
->
-
-I guess we would track these pages by the maximum permissions than any
-current or unmapped but unflushed alias has.  This lets us get totally
-unmapped or RO pages out of the cache.  Or even RX =E2=80=94 we could
-potentially allocate, free, and reallocate text without flushing.
-
-> If this API should be cross platform, we might want to abstract the copy =
-itself
-> as well, since other arch's might have non __user solutions for copying d=
-ata in.
-
-Agreed, although maybe all arches would use =E2=80=9Cuser=E2=80=9D mappings=
-.
-
->
-> Unless someone else wants to, I can probably take a look at a first cut o=
-f this
-> after I get the current thing I'm working on out. Probably better to let =
-the
-> dust settle on the ftrace changes as well.
-
-That would be great!
-
-Do you know why the change_page_attr code currently does
-vm_unmap_aliases?  This is yet more extra expense. I assume the idea
-is that, if we=E2=80=99re changing cache attributes on a non-self-snoop
-machine, we need to kill stale aliases, and we should also kill them
-if we=E2=80=99re reducing permissions.  But we currently do it excessively.
-
-We should also consider improving vm_unmap_aliases().  As a practical
-matter, vm_unmap_aliases() often does a global flush, but it can't be
-relied on.  On the other hand, a global flush initiated for other
-reasons won't tell the vmap code that aliases have been zapped.
-
-If the locking is okay, we could maybe get away with zapping aliases
-from the normal flush code.  Alternatively, we could do something
-lockless, e.g.:
-
-atomic64_t kernel_tlb_gen, flushed_kernel_tlb_gen;
-
-flush_tlb_kernel_range(), etc increment kernel_tlb_gen before flushing
-and then update flushed_kernel_tlb_gen to match after flushing.
-
-The vmap code immediately removes PTEs when unmaps occur (which it may
-very well do right now -- I haven't checked) but also tracks the
-kernel_tlb_gen associated with each record of an
-unmapped-but-not-zapped area.  Then we split vm_unmap_aliases() into a
-variant that unmaps all aliases and a variant that merely promises to
-unmap at least one alias.  The former does what the current code does
-except that it skips the IPI if all areas in question have tlb_gen <
-flushed_kernel_tlb_gen.  The latter clears all areas with tlb_gen <
-flushed_kernel_tlb_gen and, if there weren't any, does
-flush_tlb_kernel_range() and flushes everything.
-
-(Major caveat: this is wrong for the case where
-flush_tlb_kernel_range() only flushes some but not all of the kernel.
-So this needs considerable work if it's actually going to me useful.
-The plain old "take locks and clean up" approach might be a better
-bet.)
-
---Andy
