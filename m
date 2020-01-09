@@ -2,107 +2,120 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A34C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF67C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A88206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578563178;
-	bh=NHHel1PVO2HlRqINTAayeLOlQXHvdSb0MKXB6GwG2Xo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uRUCLyc2UNdounsR+1bJUTqdJEXuS700fSPJRO04Nf7kL21NHlZLbzWDSq/0H4n+N
-	 Pu2NeRlOLuO76iKeY4/hQvZfdaRq4TYSwXuqVMgfCdE4meffOwyntKWVhKU2d7wDBw
-	 IjKOyGH59h8aST7KIntBL+Q3Aw+wZl2cnBz0V1oI=
+	by mail.kernel.org (Postfix) with ESMTP id 9305F2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:47:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="a5Pp6DTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbgAIJqS (ORCPT
+        id S1729769AbgAIJrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:46:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728791AbgAIJqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:46:17 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ED0920678;
-        Thu,  9 Jan 2020 09:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578563176;
-        bh=NHHel1PVO2HlRqINTAayeLOlQXHvdSb0MKXB6GwG2Xo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Lv9mjO62CPa1so1ZNZc7FENfSViFFVsdY2DTNxbyY0LlNLpor7G78cti04LiXbtAQ
-         i1UplCiDuC04AomjvqZIGN5V5p177tJ+wuJY8hHksssGF7ld7YsHQULYsaCu+Rzqoe
-         SJjCc7PRPQRTg+7rJf13faQFdPYCd31nGKHrR8L8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1ipUOM-0002fn-Nv; Thu, 09 Jan 2020 09:46:14 +0000
+        Thu, 9 Jan 2020 04:47:05 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11234 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728755AbgAIJrF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:47:05 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0099bweL010751;
+        Thu, 9 Jan 2020 10:46:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=kaxJeJxsQ9kniwCq7eta3R28bBgqLC1dveeyS7Ju7cY=;
+ b=a5Pp6DTZ/GlpD0FCtQUjLWhUkZwYV9XTBXGlEbgqM3xXjL83GA5aBjJHRtBdxLxFebD6
+ YM8UtNwT1nPY+2lUxtgZn0hkLiH2X32GrsXvWvKPsBlAuk+72KzgGmRRoQewLA9cUh/Y
+ 5HbmkmBrUWs03P7nHFuHDrDO28ZknO+yzv0S1oXiNpSxqvsYpsZhKCROm5ycEEQmgvze
+ stnUxKE+c535SLRRjBUeE8uXVpS1PSswLjOv5mIkg6f1ecjRDDHjwf8R6S4THUBobKox
+ dtNGnv8UU29aXLYW6pidPc8CYc//SZgbGEfZ1VD1DYUAdhrIp8rBMwldu02/hFpyc5bP nQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2xakkb0ysg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 10:46:56 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 175E510003D;
+        Thu,  9 Jan 2020 10:46:52 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 01FEC2A791B;
+        Thu,  9 Jan 2020 10:46:52 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 Jan
+ 2020 10:46:51 +0100
+Subject: Re: [PATCH] ARM: dts: stm32: Add power-supply for RGB panel on
+ stm32429i-eval
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        <mcoquelin.stm32@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200108132647.26131-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <2af148e9-c67c-0654-716b-1e65a77510b7@st.com>
+Date:   Thu, 9 Jan 2020 10:46:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200108132647.26131-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 09 Jan 2020 09:46:14 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>, kvm-owner@vger.kernel.org
-Subject: Re: [RFC PATCH v9 7/8] ptp: arm64: Enable ptp_kvm for arm64
-In-Reply-To: <ee801dacbf4143e8d41807d5bfad1409@kernel.org>
-References: <20191210034026.45229-1-jianyong.wu@arm.com>
- <20191210034026.45229-8-jianyong.wu@arm.com>
- <ca162efb3a0de530e119f5237c006515@kernel.org>
- <HE1PR0801MB1676EE12CF0DB7C5BB8CC62DF4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <ee801dacbf4143e8d41807d5bfad1409@kernel.org>
-Message-ID: <a5f5fc5bf913c9a22923d1a556f511e6@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com, kvm-owner@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-09 09:24, Marc Zyngier wrote:
-> On 2020-01-09 05:59, Jianyong Wu wrote:
+Hi
 
-[...]
-
->> So we focus it on arm64. Also I have never tested it on arm32 machine
->> ( we lack of arm32 machine)
+On 1/8/20 2:26 PM, Benjamin Gaignard wrote:
+> Add a fixed regulator and use it as power supply for RBG panel.
 > 
-> I'm sure your employer can provide you with such a box. I can probably
-> even tell you which cupboard they are stored in... ;-)
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>   arch/arm/boot/dts/stm32429i-eval.dts | 8 ++++++++
+>   1 file changed, 8 insertions(+)
 > 
->> Do you think it's necessary to enable ptp_kvm on arm32? If so, I can 
->> do that.
+> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+> index 58288aa53fee..c27fa355e5ab 100644
+> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+> @@ -95,6 +95,13 @@
+>   		regulator-max-microvolt = <3300000>;
+>   	};
+>   
+> +	vdd_panel: vdd-panel {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vdd_panel";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+>   	leds {
+>   		compatible = "gpio-leds";
+>   		green {
+> @@ -138,6 +145,7 @@
+>   
+>   	panel_rgb: panel-rgb {
+>   		compatible = "ampire,am-480272h3tmqw-t01h";
+> +		power-supply = <&vdd_panel>;
+>   		status = "okay";
+>   		port {
+>   			panel_in_rgb: endpoint {
 > 
-> I can't see why we wouldn't, given that it should be a zero effort task
-> (none of the code here is arch specific).
 
-To be clear, what I'm after is support for 32bit *guests*. I don't 
-expect any
-issue with a 32bit host (it's all common code), but you should be able 
-to test
-32bit guests pretty easily (most ARMv8.0 CPUs support 32bit EL1).
+Applied on stm32-next.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks
+Alex
