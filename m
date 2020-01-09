@@ -2,219 +2,114 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_RED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 730A7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478DAC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392332072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:56:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7lvibFY"
+	by mail.kernel.org (Postfix) with ESMTP id 1C6F220661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578589006;
+	bh=9oyg27saFaqgN0kNufIh+bWG6/4Iwy6kaQ1n0BzczVk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kF1ggJur97vAs7R/rp4kelVLJUqOFmZpa5qmIiKqTrjgCFtJwRtQ8tkWVoNi8cpRm
+	 eUJ2soLQSLS8A6d3mcXQqPbp3FXOET/lmOErxswtxDW72kQBHcBUczpBRXRvsLk5cE
+	 lSjcn8V96X3hpin+NzLluy/4XE4Ucl5vxy8LRJ7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbgAIQ4m (ORCPT
+        id S2387939AbgAIQ4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:56:42 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36151 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727738AbgAIQ4m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:56:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578588999;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XBEU5CS/Vc8kZY19dgB6cMNAjnA7jgdwFT3l/8agYvI=;
-        b=c7lvibFYKJm27OAfBMkayFniFcDgPt9i8aKD/y9OcD36lN/FYeA+UEFa4XCvKUnVQQEui4
-        xOisYCRiTq4E0tFhV4xp51wVbD0pxhtjQSJwcQvQDHGzesozV4xGo/7zYSzfEfEm008Bqg
-        af3WDTVxPo/PdF5nB9Y5AquFQ62mpI8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-VcfvMZO9Mu-e5SS-4M_tGw-1; Thu, 09 Jan 2020 11:56:37 -0500
-X-MC-Unique: VcfvMZO9Mu-e5SS-4M_tGw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 9 Jan 2020 11:56:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731320AbgAIQ4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:56:43 -0500
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A4DD9CEF8;
-        Thu,  9 Jan 2020 16:56:36 +0000 (UTC)
-Received: from w520.home (ovpn-116-128.phx2.redhat.com [10.3.116.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 17E9A5DA66;
-        Thu,  9 Jan 2020 16:56:10 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 09:56:10 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
- tracking
-Message-ID: <20200109095610.167cd9f0@w520.home>
-In-Reply-To: <20200109110110-mutt-send-email-mst@kernel.org>
-References: <20200109145729.32898-1-peterx@redhat.com>
-        <20200109145729.32898-13-peterx@redhat.com>
-        <20200109110110-mutt-send-email-mst@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C9EA2075D;
+        Thu,  9 Jan 2020 16:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578589002;
+        bh=9oyg27saFaqgN0kNufIh+bWG6/4Iwy6kaQ1n0BzczVk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2CosUSQhDeszdClob89wkM5qUuLn+NGmxavbwwJtOjFrz9J9rb5rJcMgFQI1xDAQ4
+         fUXa0Ef1aePHujZvmpoUW/06Em/BF7VVOjDi5q5fkKIAJuUjWK6nHJS6vh0B+JXDfJ
+         atgBkzj5WtLXXdJkwB2Qpsf8KlWlFaaxn/mc4FF0=
+Received: by mail-qk1-f178.google.com with SMTP id r14so6552712qke.13;
+        Thu, 09 Jan 2020 08:56:42 -0800 (PST)
+X-Gm-Message-State: APjAAAWloDLS5fQEZE4v7aOsCtA5Rup0GXo5SQg8RtAKLM93Amf5aA4m
+        vCrzxnTi1CKTJIrJyR7rKHx71dJPQ1VRecow0A==
+X-Google-Smtp-Source: APXvYqwejonPhLn1c6g5UIO7dw/MXR05QYRJuuZwXtZ9dn62B4O5MWFoIh0m1SoNLfPeYaTMJ9QV835I1LSeJT6q4Lo=
+X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr10791122qkn.254.1578589001636;
+ Thu, 09 Jan 2020 08:56:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-5-drinkcat@chromium.org>
+ <20200108132302.GA3817@sirena.org.uk> <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
+In-Reply-To: <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 9 Jan 2020 10:56:29 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKvNBCVkiE4zKn0aXdrV4Ncx2bB6+KRpM+aPpMVzS4XbQ@mail.gmail.com>
+Message-ID: <CAL_JsqKvNBCVkiE4zKn0aXdrV4Ncx2bB6+KRpM+aPpMVzS4XbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
+ for the GPU
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jan 2020 11:29:28 -0500
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+On Wed, Jan 8, 2020 at 4:52 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> On Wed, Jan 8, 2020 at 9:23 PM Mark Brown <broonie@kernel.org> wrote:
+> >
+> > On Wed, Jan 08, 2020 at 01:23:34PM +0800, Nicolas Boichat wrote:
+> >
+> > > Some GPUs, namely, the bifrost/g72 part on MT8183, have a second
+> > > regulator for their SRAM, let's add support for that.
+> >
+> > > +     pfdev->regulator_sram = devm_regulator_get_optional(pfdev->dev, "sram");
+> > > +     if (IS_ERR(pfdev->regulator_sram)) {
+> >
+> > This supply is required for the devices that need it so I'd therefore
+> > expect the driver to request the supply non-optionally based on the
+> > compatible string rather than just hoping that a missing regulator isn't
+> > important.
+>
+> That'd be a bit awkward to match, though... Currently all bifrost
+> share the same compatible "arm,mali-bifrost", and it'd seem
+> weird/wrong to match "mediatek,mt8183-mali" in this driver? I have no
+> idea if any other Mali implementation will require a second regulator,
+> but with the MT8183 we do need it, see below.
 
-> On Thu, Jan 09, 2020 at 09:57:20AM -0500, Peter Xu wrote:
-> > This patch is heavily based on previous work from Lei Cao
-> > <lei.cao@stratus.com> and Paolo Bonzini <pbonzini@redhat.com>. [1]
-> > 
-> > KVM currently uses large bitmaps to track dirty memory.  These bitmaps
-> > are copied to userspace when userspace queries KVM for its dirty page
-> > information.  The use of bitmaps is mostly sufficient for live
-> > migration, as large parts of memory are be dirtied from one log-dirty
-> > pass to another.  However, in a checkpointing system, the number of
-> > dirty pages is small and in fact it is often bounded---the VM is
-> > paused when it has dirtied a pre-defined number of pages. Traversing a
-> > large, sparsely populated bitmap to find set bits is time-consuming,
-> > as is copying the bitmap to user-space.
-> > 
-> > A similar issue will be there for live migration when the guest memory
-> > is huge while the page dirty procedure is trivial.  In that case for
-> > each dirty sync we need to pull the whole dirty bitmap to userspace
-> > and analyse every bit even if it's mostly zeros.
-> > 
-> > The preferred data structure for above scenarios is a dense list of
-> > guest frame numbers (GFN).  
-> 
-> No longer, this uses an array of structs.
-> 
-> >  This patch series stores the dirty list in
-> > kernel memory that can be memory mapped into userspace to allow speedy
-> > harvesting.
-> > 
-> > This patch enables dirty ring for X86 only.  However it should be
-> > easily extended to other archs as well.
-> > 
-> > [1] https://patchwork.kernel.org/patch/10471409/
-> > 
-> > Signed-off-by: Lei Cao <lei.cao@stratus.com>
-> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >  Documentation/virt/kvm/api.txt  |  89 ++++++++++++++++++
-> >  arch/x86/include/asm/kvm_host.h |   3 +
-> >  arch/x86/include/uapi/asm/kvm.h |   1 +
-> >  arch/x86/kvm/Makefile           |   3 +-
-> >  arch/x86/kvm/mmu/mmu.c          |   6 ++
-> >  arch/x86/kvm/vmx/vmx.c          |   7 ++
-> >  arch/x86/kvm/x86.c              |   9 ++
-> >  include/linux/kvm_dirty_ring.h  |  55 +++++++++++
-> >  include/linux/kvm_host.h        |  26 +++++
-> >  include/trace/events/kvm.h      |  78 +++++++++++++++
-> >  include/uapi/linux/kvm.h        |  33 +++++++
-> >  virt/kvm/dirty_ring.c           | 162 ++++++++++++++++++++++++++++++++
-> >  virt/kvm/kvm_main.c             | 137 ++++++++++++++++++++++++++-
-> >  13 files changed, 606 insertions(+), 3 deletions(-)
-> >  create mode 100644 include/linux/kvm_dirty_ring.h
-> >  create mode 100644 virt/kvm/dirty_ring.c
-> > 
-> > diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-> > index ebb37b34dcfc..708c3e0f7eae 100644
-> > --- a/Documentation/virt/kvm/api.txt
-> > +++ b/Documentation/virt/kvm/api.txt
-> > @@ -231,6 +231,7 @@ Based on their initialization different VMs may have different capabilities.
-> >  It is thus encouraged to use the vm ioctl to query for capabilities (available
-> >  with KVM_CAP_CHECK_EXTENSION_VM on the vm fd)
-> >  
-> > +
-> >  4.5 KVM_GET_VCPU_MMAP_SIZE
-> >  
-> >  Capability: basic
-> > @@ -243,6 +244,18 @@ The KVM_RUN ioctl (cf.) communicates with userspace via a shared
-> >  memory region.  This ioctl returns the size of that region.  See the
-> >  KVM_RUN documentation for details.
-> >  
-> > +Besides the size of the KVM_RUN communication region, other areas of
-> > +the VCPU file descriptor can be mmap-ed, including:
-> > +
-> > +- if KVM_CAP_COALESCED_MMIO is available, a page at
-> > +  KVM_COALESCED_MMIO_PAGE_OFFSET * PAGE_SIZE; for historical reasons,
-> > +  this page is included in the result of KVM_GET_VCPU_MMAP_SIZE.
-> > +  KVM_CAP_COALESCED_MMIO is not documented yet.
-> > +
-> > +- if KVM_CAP_DIRTY_LOG_RING is available, a number of pages at
-> > +  KVM_DIRTY_LOG_PAGE_OFFSET * PAGE_SIZE.  For more information on
-> > +  KVM_CAP_DIRTY_LOG_RING, see section 8.3.
-> > +
-> >  
-> >  4.6 KVM_SET_MEMORY_REGION
-> >  
-> > @@ -5376,6 +5389,7 @@ CPU when the exception is taken. If this virtual SError is taken to EL1 using
-> >  AArch64, this value will be reported in the ISS field of ESR_ELx.
-> >  
-> >  See KVM_CAP_VCPU_EVENTS for more details.
-> > +
-> >  8.20 KVM_CAP_HYPERV_SEND_IPI
-> >  
-> >  Architectures: x86
-> > @@ -5383,6 +5397,7 @@ Architectures: x86
-> >  This capability indicates that KVM supports paravirtualized Hyper-V IPI send
-> >  hypercalls:
-> >  HvCallSendSyntheticClusterIpi, HvCallSendSyntheticClusterIpiEx.
-> > +
-> >  8.21 KVM_CAP_HYPERV_DIRECT_TLBFLUSH
-> >  
-> >  Architecture: x86
-> > @@ -5396,3 +5411,77 @@ handling by KVM (as some KVM hypercall may be mistakenly treated as TLB
-> >  flush hypercalls by Hyper-V) so userspace should disable KVM identification
-> >  in CPUID and only exposes Hyper-V identification. In this case, guest
-> >  thinks it's running on Hyper-V and only use Hyper-V hypercalls.
-> > +
-> > +8.22 KVM_CAP_DIRTY_LOG_RING
-> > +
-> > +Architectures: x86
-> > +Parameters: args[0] - size of the dirty log ring
-> > +
-> > +KVM is capable of tracking dirty memory using ring buffers that are
-> > +mmaped into userspace; there is one dirty ring per vcpu.
-> > +
-> > +One dirty ring is defined as below internally:
-> > +
-> > +struct kvm_dirty_ring {
-> > +	u32 dirty_index;
-> > +	u32 reset_index;
-> > +	u32 size;
-> > +	u32 soft_limit;
-> > +	struct kvm_dirty_gfn *dirty_gfns;
-> > +	struct kvm_dirty_ring_indices *indices;
-> > +	int index;
-> > +};
-> > +
-> > +Dirty GFNs (Guest Frame Numbers) are stored in the dirty_gfns array.
-> > +For each of the dirty entry it's defined as:
-> > +
-> > +struct kvm_dirty_gfn {
-> > +        __u32 pad;  
-> 
-> How about sticking a length here?
-> This way huge pages can be dirtied in one go.
+The current number of supported bifrost platforms is 0. It's only a
+matter of time until SoC specific compatibles need to be used in the
+driver. This is why we require them.
 
-Not just huge pages, but any contiguous range of dirty pages could be
-reported far more concisely.  Thanks,
+It could very well be that all bifrost implementations need 2
+supplies. On chip RAMs are very frequently a separate thing which are
+synthesized differently from logic. At least within a specific IP
+model, I somewhat doubt there's a variable number of supplies. It
+could be possible to connect both to the same supply, but the correct
+way to handle that is both -supply properties point to the same
+regulator.
 
-Alex
-
+Rob
