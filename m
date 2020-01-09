@@ -2,151 +2,153 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D54C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7478AC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C64102072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CCE20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o3iFruUp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T11ncRY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbgAIJ4D (ORCPT
+        id S1729940AbgAIJ51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:56:03 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49880 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729831AbgAIJ4C (ORCPT
+        Thu, 9 Jan 2020 04:57:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43875 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729831AbgAIJ50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:56:02 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0099tkHV091457;
-        Thu, 9 Jan 2020 03:55:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578563746;
-        bh=57suhMCFB8+YbjQP7Y/XHgAE605fSx1517RzPpUYq4I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=o3iFruUpSNapR9mFETDlc//SjIUW3ElYpWkWxpamXjh1YDO+tTeelXV+/PH3fUdao
-         Yp5Tv7ZClB1Jbku48lCiLk+y9vL3KCXV+L14GpB+kaSGSs0lhzvTR2ae6rHJW/dEPL
-         9eyFFfillTY1KsEF9azoAB8MQaQxVijURqiGXEqA=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0099tkGB004550
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Jan 2020 03:55:46 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
- 2020 03:55:46 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 9 Jan 2020 03:55:45 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0099tg5W116934;
-        Thu, 9 Jan 2020 03:55:43 -0600
-Subject: Re: ata: sunxi: Regression due to 5253fe05bb47 ("phy: core: Add
- consumer device link support")
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        <alexandre.torgue@st.com>, <mripard@kernel.org>, <wens@csie.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <axboe@kernel.dk>
-CC:     <linux-ide@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-sunxi@googlegroups.com>
-References: <20200109095403.GA26453@Red>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <f79dbcea-ea69-3687-1a2a-6d396cda4113@ti.com>
-Date:   Thu, 9 Jan 2020 15:27:49 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 9 Jan 2020 04:57:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578563844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WPUHKFNriVZaSgcFsWO+0YW2UjIuQDtKhvlVOvL8HYY=;
+        b=T11ncRY5Qctm3JYdiO6CF9BcH1Ru8RLj1ZDkxlBgacRfgkeQ5kcCv9jzzoT4Ou0Aup/+Lz
+        4pKHabtoIVi0vc/S9aP0RiOiBuWE96eddJLZOGtvpIQGADBtmUKO3aeL758tcwsspofmTq
+        3FobXXTEj0TdcD/RjgnmQnwHUWiP5k0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-42-RBM2kmkuPzS-yLGBf_qwVA-1; Thu, 09 Jan 2020 04:57:21 -0500
+X-MC-Unique: RBM2kmkuPzS-yLGBf_qwVA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 499A4107ACC5;
+        Thu,  9 Jan 2020 09:57:20 +0000 (UTC)
+Received: from ovpn-200-26.brq.redhat.com (ovpn-200-26.brq.redhat.com [10.40.200.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C03A160BE0;
+        Thu,  9 Jan 2020 09:57:17 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 10:58:43 +0100 (CET)
+From:   Michael Petlan <mpetlan@redhat.com>
+X-X-Sender: Michael@Diego
+To:     Andres Freund <andres@anarazel.de>
+cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] perf c2c: Fix sorting.
+In-Reply-To: <20200109043030.233746-1-andres@anarazel.de>
+Message-ID: <alpine.LRH.2.20.2001091055430.4075@Diego>
+References: <20200109043030.233746-1-andres@anarazel.de>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-In-Reply-To: <20200109095403.GA26453@Red>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 09/01/20 3:24 PM, Corentin Labbe wrote:
-> Hello
+On Wed, 8 Jan 2020, Andres Freund wrote:
+> Commit 722ddfde366f ("perf tools: Fix time sorting") changed -
+> correctly so - hist_entry__sort to return int64. Unfortunately several
+> of the builtin-c2c.c comparison routines only happened to work due the
+> cast caused by the wrong return type.
 > 
-> On next-20200108 (at least), the sunxi_ahci fail to probe with:
->     3.025955] 8<--- cut here ---
-> [    3.029012] Unable to handle kernel NULL pointer dereference at virtual address 00000071
-> [    3.037115] pgd = (ptrval)
-> [    3.039819] [00000071] *pgd=00000000
-> [    3.043408] Internal error: Oops: 5 [#1] SMP ARM
-> [    3.048019] Modules linked in:
-> [    3.051078] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1-00004-g5253fe05bb47 #24
-> [    3.059067] Hardware name: Allwinner sun7i (A20) Family
-> [    3.064297] PC is at device_link_add+0x68/0x4c8
-> [    3.068824] LR is at device_link_add+0x68/0x4c8
-> [    3.073348] pc : [<c04783ac>]    lr : [<c04783ac>]    psr: 60000013
-> [    3.079605] sp : ef04dd68  ip : 60000013  fp : 00000007
-> [    3.084822] r10: 00000000  r9 : eea8a740  r8 : ef0a5c10
-> [    3.090039] r7 : ef0a5c10  r6 : ffffffed  r5 : 00000001  r4 : 00000001
-> [    3.096556] r3 : ef060000  r2 : 00000000  r1 : 00000000  r0 : c0a4e588
-> [    3.103076] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> [    3.110201] Control: 10c5387d  Table: 4000406a  DAC: 00000051
-> [    3.115937] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-> [    3.121936] Stack: (0xef04dd68 to 0xef04e000)
-> [    3.126292] dd60:                   000005e4 c02141e4 ef7bf970 ffffffed ef0a5c10 eea8a7c0
-> [    3.134461] dd80: 00000000 ef0a5c10 eea8a740 00000000 00000007 c03acaec 00000000 ee8a3700
-> [    3.142630] dda0: ef7bf970 ee8a3700 ef0a5c10 c04d2804 ef04c000 ef0a5c10 ef0a5c00 ee8a3700
-> [    3.150799] ddc0: 00000000 00000000 00000000 c04d2e20 00000001 c029b2bc c0a4f9fc 00000000
-> [    3.158969] dde0: ef0b3630 c029aec8 00000000 5aef773a eea8c478 ef0a5c10 00000000 ef0a5c00
-> [    3.167138] de00: 00000000 00000000 c0a4f9fc 00000000 00000007 c04cedfc ef0a5c10 00000000
-> [    3.175307] de20: c0a4f9fc c047d6b8 c0aa51dc ef0a5c10 c0aa51e0 00000000 00000000 c047b894
-> [    3.183476] de40: ef0a5c10 c0a4f9fc c0a4f9fc c047be38 c093d834 c09004a8 000000d8 c047bb84
-> [    3.191646] de60: 000000d8 c05a37c0 c0760330 ef0a5c10 00000000 c0a4f9fc c047be38 c093d834
-> [    3.199815] de80: c09004a8 000000d8 00000007 c047be30 00000000 c0a4f9fc ef0a5c10 c047be90
-> [    3.207984] dea0: ef0fc634 ef04c000 c0a4f9fc c0479c68 c09004a8 ef01e458 ef0fc634 5aef773a
-> [    3.216152] dec0: c0a4df18 c0a4f9fc eea8a300 c0a4df18 00000000 c047acb0 c083ac48 c0aa5870
-> [    3.224321] dee0: c0a4f9fc c0a4f9fc c091eff4 00000000 ffffe000 c047c6fc c0a6fc40 c091eff4
-> [    3.232491] df00: 00000000 c01026e8 effffe6e c013c488 00000000 c08b9d00 c0845f90 00000000
-> [    3.240660] df20: 00000006 00000006 c07ff574 00000000 c0809bd8 c07ff5e8 00000000 effffe67
-> [    3.248829] df40: effffe6a 5aef773a 00000000 00000006 c0a6fc40 5aef773a c093d850 c0952220
-> [    3.256998] df60: c0a6fc40 c0a6fc40 c093d854 c0900ed0 00000006 00000006 00000000 c09004a8
-> [    3.265167] df80: 00000000 00000000 c06f7a9c 00000000 00000000 00000000 00000000 00000000
-> [    3.273335] dfa0: 00000000 c06f7aa4 00000000 c01010e8 00000000 00000000 00000000 00000000
-> [    3.281504] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    3.289672] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-> [    3.297858] [<c04783ac>] (device_link_add) from [<c03acaec>] (devm_of_phy_get+0x64/0xb0)
-> [    3.305947] [<c03acaec>] (devm_of_phy_get) from [<c04d2804>] (ahci_platform_get_phy+0x28/0xd0)
-> [    3.314552] [<c04d2804>] (ahci_platform_get_phy) from [<c04d2e20>] (ahci_platform_get_resources+0x234/0x448)
-> [    3.324372] [<c04d2e20>] (ahci_platform_get_resources) from [<c04cedfc>] (ahci_sunxi_probe+0x10/0xa8)
-> [    3.333585] [<c04cedfc>] (ahci_sunxi_probe) from [<c047d6b8>] (platform_drv_probe+0x48/0x98)
-> [    3.342017] [<c047d6b8>] (platform_drv_probe) from [<c047b894>] (really_probe+0x1e0/0x348)
-> [    3.350267] [<c047b894>] (really_probe) from [<c047bb84>] (driver_probe_device+0x60/0x16c)
-> [    3.358525] [<c047bb84>] (driver_probe_device) from [<c047be30>] (device_driver_attach+0x58/0x60)
-> [    3.367390] [<c047be30>] (device_driver_attach) from [<c047be90>] (__driver_attach+0x58/0xcc)
-> [    3.375908] [<c047be90>] (__driver_attach) from [<c0479c68>] (bus_for_each_dev+0x78/0xb8)
-> [    3.384080] [<c0479c68>] (bus_for_each_dev) from [<c047acb0>] (bus_add_driver+0x1b4/0x1d4)
-> [    3.392337] [<c047acb0>] (bus_add_driver) from [<c047c6fc>] (driver_register+0x74/0x108)
-> [    3.400423] [<c047c6fc>] (driver_register) from [<c01026e8>] (do_one_initcall+0x78/0x1d4)
-> [    3.408598] [<c01026e8>] (do_one_initcall) from [<c0900ed0>] (kernel_init_freeable+0x138/0x1d4)
-> [    3.417291] [<c0900ed0>] (kernel_init_freeable) from [<c06f7aa4>] (kernel_init+0x8/0x110)
-> [    3.425462] [<c06f7aa4>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> [    3.433019] Exception stack(0xef04dfb0 to 0xef04dff8)
-> [    3.438065] dfa0:                                     00000000 00000000 00000000 00000000
-> [    3.446234] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    3.454400] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [    3.461010] Code: e59f0464 03844040 eb0a0b7b eb004882 (e5d63084) 
-> [    3.467153] ---[ end trace 0dbbaca7a7b65a4b ]---
+> This causes meaningless ordering of both the cacheline list, and the
+> cacheline details page. E.g a simple
+>   perf c2c record -a sleep 3
+>   perf c2c report
+> will result in cacheline table like
+>   =================================================
+>              Shared Data Cache Line Table
+>   =================================================
+>   #
+>   #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----  ---- Store Reference ----  --- Load Dram ----      LLC    Total  ----- Core Load Hit -----  -- LLC Load Hit --
+>   # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt    Total    L1Hit   L1Miss       Lcl       Rmt  Ld Miss    Loads       FB       L1       L2       Llc       Rmt
+>   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  ........  ........  .......  .......  .......  .......  .......  ........  ........
+>   #
+>         0      0x7f0d27ffba00   N/A       0       52    0.12%       13        6        7       12       12        0         0         7       14       40        4       16        0         0         0
+>         1      0x7f0d27ff61c0   N/A       0     6353   14.04%     1475      801      674      779      779        0         0       718     1392     5574     1299     1967        0       115         0
+>         2      0x7f0d26d3ec80   N/A       0       71    0.15%       16        4       12       13       13        0         0        12       24       58        1       20        0         9         0
+>         3      0x7f0d26d3ec00   N/A       0       98    0.22%       23       17        6       19       19        0         0         6       12       79        0       40        0        10         0
+> i.e. with the list not being ordered by Total Hitm.
 > 
-> The problem was bisected to 5253fe05bb47a2402f471d76078b3dcc66442d6c ("phy: core: Add consumer device link support")
-> Reverting this patch fix the problem
+> Fixes: 722ddfde366f ("perf tools: Fix time sorting")
+> Signed-off-by: Andres Freund <andres@anarazel.de>
 
-This should be fixed in the latest -next branch. Please try it and let
-me us know.
+Tested on top of Arnaldo's perf/core branch. After the patch, the rows
+are ordered by Tot Hitm.
 
-Thanks
-Kishon
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Michael Petlan <mpetlan@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: stable@vger.kernel.org # v3.16+
+> ---
+>  tools/perf/builtin-c2c.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index e69f44941aad..f2e9d2b1b913 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  {
+>  	struct c2c_hist_entry *c2c_left;
+>  	struct c2c_hist_entry *c2c_right;
+> -	unsigned int tot_hitm_left;
+> -	unsigned int tot_hitm_right;
+> +	uint64_t tot_hitm_left;
+> +	uint64_t tot_hitm_right;
+>  
+>  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+>  	c2c_right = container_of(right, struct c2c_hist_entry, he);
+> @@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __maybe_unused,			\
+>  									\
+>  	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
+>  	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
+> -	return c2c_left->stats.__f - c2c_right->stats.__f;		\
+> +	return (uint64_t) c2c_left->stats.__f -				\
+> +	       (uint64_t) c2c_right->stats.__f;				\
+>  }
+>  
+>  #define STAT_FN(__f)		\
+> @@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+>  	c2c_right = container_of(right, struct c2c_hist_entry, he);
+>  
+> -	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
+> +	return (uint64_t) llc_miss(&c2c_left->stats) -
+> +	       (uint64_t) llc_miss(&c2c_right->stats);
+>  }
+>  
+>  static uint64_t total_records(struct c2c_stats *stats)
+> -- 
+> 2.25.0.rc1
+> 
+> 
+
