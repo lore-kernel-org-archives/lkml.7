@@ -2,174 +2,153 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC044C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09935C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFD320656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:08:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJYcvEmJ"
+	by mail.kernel.org (Postfix) with ESMTP id D7D692073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgAIUIi (ORCPT
+        id S1729005AbgAIUJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 15:08:38 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56034 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgAIUIi (ORCPT
+        Thu, 9 Jan 2020 15:09:07 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:45952 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728814AbgAIUJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 15:08:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so4357010wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 12:08:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cfTQKwhDn39Z9BPcDt5HjRV6ynzFTUIrt1bOiAf4Bjk=;
-        b=dJYcvEmJbcE97RqtVcw5loINNavY94FeTJInKLsHXn4oLH/YTcsByTUafTpo48YZY1
-         M7/CYR7M2bqciWZNqW0Q7QqfP+QqTcgCfb2IPIzBE8XtwbH+ZFSil+tvlQUxq4yvAvrf
-         ulHpxs1qUKzKaLvEr86yt6mTsvKluJeo794UVlCWaS1MQWDeLzDPVm3dGIrzTzvuArWa
-         mq2gtt0SHw7miuA7XDSyJWQTyexVs4as9tBh/V5MAr4EIGq5yPTDnz0z/sSVS3LEEVHO
-         82gSlT5ymZV+l0X62pe2BttJ0IurJ+CLI5x1YFsNx5auxhlEsBxvShjshDCuwnwnvqmX
-         o6jA==
+        Thu, 9 Jan 2020 15:09:06 -0500
+Received: by mail-qv1-f67.google.com with SMTP id l14so3515661qvu.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 12:09:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=cfTQKwhDn39Z9BPcDt5HjRV6ynzFTUIrt1bOiAf4Bjk=;
-        b=qMjWEqD9rfPVhqWjHO5i+U3c3uBMNeeI5CzD0L2nPLLJxv5OplgcxVQreFcsTMdxDE
-         KiD4kdr1GFBLMHXNVwi+X0kpsKqC1iatFhVtx3i8N07MvzNAmLXcl9EVY4mKnhltQ8xa
-         dmPRjnl6zI6gnYgoc6BP6m3Tdw/urtIhDchcIP/TVaXiTXMgluQRYias7VlQ1jVHy1r9
-         SKCQ9lw/XmdMaDjojdnx+uT6Gyb3GbYY1MmE4m0LcH7BbAsHBaWmuxk1Mvb2O0XxtFBD
-         6FSFbQweE031rT6NadnQmCQo1arwzBNTVo0Fs22CTn7G9bbM4SJSSC8hDqG4HtGI/1kE
-         hDpQ==
-X-Gm-Message-State: APjAAAVKkQ7V/x1w9jYQQsgaxzCp4G5rr0lNnOwduiMv1fDKAKhr9laW
-        Cbl86vV9by+qJXN4Y96IH7xuQg==
-X-Google-Smtp-Source: APXvYqyg8t+euJPl04/VCZ2VF/CO4WtGVGnXLLqxBZPedKnLK6Ny1yVCXvbanvzqJFw0Rrb2u1aJHQ==
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr6481314wmf.133.1578600516558;
-        Thu, 09 Jan 2020 12:08:36 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
-        by smtp.googlemail.com with ESMTPSA id h2sm9613168wrt.45.2020.01.09.12.08.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 12:08:36 -0800 (PST)
-Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
- thermal zones
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, wens@csie.org, anarsoul@gmail.com,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        megous@megous.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20200106174639.20862-1-tiny.windzz@gmail.com>
- <20200106174639.20862-2-tiny.windzz@gmail.com>
- <20200107075816.ly6exfd4qtvfxxua@gilmour.lan>
- <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
- <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
- CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
- U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
- UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
- KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
- ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
- 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
- UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
- d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
- 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
- z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
- Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
- 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
- 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
- eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
- NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
- 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
- gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
- qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
- OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
- gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
- 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
- PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
- F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
- WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
- qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
- l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
- BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
- 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
- eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
- t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
- i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
- X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
- fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
-Date:   Thu, 9 Jan 2020 21:08:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g6r8xg2PuYSK+TINnEVJUzqCO5IEgqeTFuVgwXoFM/k=;
+        b=XtF2I71kuPOPLhJAkUPO9u2uQoE1UasT9NtdxP+ICAgHLOZWLaoxcV0CK1kt48brTE
+         TpGVocfYgxAouqjNzxwd9Bz03vnbqzoUKH0VOFFF0m5pxdwZX8PWLf8klBOAYqauboMK
+         6eo/j8UIFWPSKRhr/opOlh03JZywOYuwTMdvgba2GmS1yo8vYuVTAs1P919XMX4hizy/
+         5oTxj32reu8X6lljTJrXSgQ3sP85/4BvSXzKWJVGK5Dvv4I0mcc/2sKmNF9xtUiJVCau
+         PPdqHxBDmw4Zz6p05C+y1un/QHYmVMqM3X2NByB2w4wGV8D76gbM0b8Op+dIme9DSP3x
+         +xPQ==
+X-Gm-Message-State: APjAAAXvBSfMc+eSkWjP3E1Aioa7nYgxBfOFc72teoliNG7rebseMDaq
+        cOpcq2ZVCeEvndUH0yexTuU=
+X-Google-Smtp-Source: APXvYqw5/XcgRrbzxq9lHogyXcUNlWAVgy+7sKUK8bzh5cJvi1OyjmqgYj7o70FBmYV9ZhBHYmx7ig==
+X-Received: by 2002:ad4:44ee:: with SMTP id p14mr10199737qvt.114.1578600545982;
+        Thu, 09 Jan 2020 12:09:05 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p126sm3552314qke.108.2020.01.09.12.09.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 12:09:05 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "H . J . Lu" <hjl.tools@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] x86/boot/compressed: Detect data relocations at link time
+Date:   Thu,  9 Jan 2020 15:09:04 -0500
+Message-Id: <20200109200904.514349-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/01/2020 14:13, Maxime Ripard wrote:
-> Hi Daniel,
-> 
-> On Thu, Jan 09, 2020 at 12:51:27PM +0100, Daniel Lezcano wrote:
->> On 07/01/2020 08:58, Maxime Ripard wrote:
->>> On Mon, Jan 06, 2020 at 05:46:39PM +0000, Yangtao Li wrote:
->>>> There are two sensors, sensor0 for CPU, sensor1 for GPU.
->>>>
->>>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
->>>> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
->>>> Tested-on: sun8i-r40-bananapi-m2-ultra
->>>
->>> As far as I know, tested-on is not documented anywhere (and isn't
->>> really used either). I've removed it and applied, thanks!
->>
->> I think this patch should go through my tree as it refers to a commit in
->> my branch.
-> 
-> I'm not quite sure to get why. Even though that patch depends on the
-> one affecting the driver to be functional, it doesn't break anything
-> when merged through arm-soc, and similarly yours doesn't affect any
-> other tree if it's merged through your tree, so there's no dependency?
+98f78525371b ("x86/boot: Refuse to build with data relocations") checks
+the .o files linked into compressed/vmlinux to see if any have a
+*.rel.local section, which typically is created from a data relocation.
 
-Sorry, I puzzled myself, I thought you meant you applied patch 1/2
+However, this check has some limitations:
+- it doesn't check libstub, as that gets linked in as a .a file
+- if the address of an external variable with default visibility is
+  referenced, rather than static or hidden, the section doesn't have
+  .local attached (i.e. it would be just .rel[a].data.rel for
+  example)
+- if the data is constant (eg const char * const table[] = { .. }) the
+  section is .data.rel.ro[.local]
 
+So it is dependent on how exactly the linker decides to name the
+sections in various cases.
 
+This patch modifies the linker script to capture all dynamic
+relocations, except for those in .head.text and .text (which come from
+head_{32,64}.o and are harmless), in .rel[a].bad and assert that those
+sections are empty. This is still dependent on linker naming convention
+of naming the final relocation sections as .rel[a]<section> but that
+should be more stable than the intermediate ones created for object
+files.
+
+The last remaining data relocation, in head_64.o's gdt structure, is
+also removed.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+
+---
+This patch is based on
+https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
+as of "efi/libstub/x86: use const attribute for efi_is_64bit()"
+---
+ arch/x86/boot/compressed/head_64.S     |  7 ++++---
+ arch/x86/boot/compressed/vmlinux.lds.S | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 1f1f6c8139b3..1838b59c6d6a 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -121,8 +121,9 @@ SYM_FUNC_START(startup_32)
+  */
+ 
+ 	/* Load new GDT with the 64bit segments using 32bit descriptor */
+-	addl	%ebp, gdt+2(%ebp)
+-	lgdt	gdt(%ebp)
++	leal	gdt(%ebp), %eax
++	movl	%eax, 2(%eax)
++	lgdt	(%eax)
+ 
+ 	/* Enable PAE mode */
+ 	movl	%cr4, %eax
+@@ -619,7 +620,7 @@ SYM_DATA_END(gdt64)
+ 	.balign	8
+ SYM_DATA_START_LOCAL(gdt)
+ 	.word	gdt_end - gdt
+-	.long	gdt
++	.long	0
+ 	.word	0
+ 	.quad	0x00cf9a000000ffff	/* __KERNEL32_CS */
+ 	.quad	0x00af9a000000ffff	/* __KERNEL_CS */
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 508cfa6828c5..1ba85b109ac0 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -73,4 +73,20 @@ SECTIONS
+ #endif
+ 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+ 	_end = .;
++
++	/* Discard text relocations */
++	/DISCARD/ : {
++		*(.rel.head.text .rel.text)
++		*(.rela.head.text .rela.text)
++	}
++
++	/* There should be no other relocations */
++	.rel.bad : {
++		*(.rel.*)
++	}
++	.rela.bad : {
++		*(.rela.*)
++	}
+ }
++
++ASSERT (SIZEOF(.rel.bad) == 0 && SIZEOF(.rela.bad) == 0, "Compressed kernel has data relocations!");
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.24.1
 
