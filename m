@@ -2,185 +2,159 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D2DC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB997C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3B2206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8320520673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tljAdzLx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QGT9LAJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgAIJIJ (ORCPT
+        id S1728986AbgAIJI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:08:09 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23198 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728782AbgAIJIJ (ORCPT
+        Thu, 9 Jan 2020 04:08:59 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39855 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbgAIJI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:08:09 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009943ki002842;
-        Thu, 9 Jan 2020 10:07:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=is6x6Xsavc4DrmaKIz9Vu39SoGM1pxSmkBDyOwyjfa0=;
- b=tljAdzLxNcuZNYbois3hdLfVjFYmM+a7XJR2qA4cbheXmLFBmwcvO4Tyd2PSUhPfrtUP
- dGkXZNfXXiMRik0oqLpd8MMkk8w2vph+qXFWX5RpZTzayz/MwKQUvtzaBUn9oB6DT/Xm
- fVEv5X/L+HfQinfv8d96XpjqpEwy/iu0DE07SVJbdbPA87ilcpoRnzVpAXrYHE5Ni44y
- DJi6tT4FeDBqo7qcL13pXZdGwr4mzsDAarBKJ4WnFg3E+4MH/wyWFxBwMPYr+oBUvd4n
- G3fWAxEmEzxBt2tq0Ajwg2Ez0Tt/KIWcBff3mLkHMpLMYIQAOsvVE1LNdaplPElsnl3P 1Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakm5rk43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 10:07:35 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A573A10003B;
-        Thu,  9 Jan 2020 10:07:32 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 84DD02A4D87;
-        Thu,  9 Jan 2020 10:07:32 +0100 (CET)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 Jan
- 2020 10:07:32 +0100
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1473.003; Thu, 9 Jan 2020 10:07:32 +0100
-From:   Christophe ROULLIER <christophe.roullier@st.com>
-To:     Maxime Ripard <mripard@kernel.org>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
- 'clocks', 'clock-names' properties
-Thread-Topic: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
- 'clocks', 'clock-names' properties
-Thread-Index: AQHVljS9qESSyYnraEKgryyZ/0O5A6eL1WwAgFaFz4A=
-Date:   Thu, 9 Jan 2020 09:07:32 +0000
-Message-ID: <009e8c0e-6a72-7e14-699e-8a897199ae16@st.com>
-References: <20191108103526.22254-1-christophe.roullier@st.com>
- <20191108103526.22254-2-christophe.roullier@st.com>
- <20191108104231.GE4345@gilmour.lan>
- <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
- <20191115075008.GY4345@gilmour.lan>
-In-Reply-To: <20191115075008.GY4345@gilmour.lan>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <23EE773BFEB22B40A7851F2EFDD3C50A@st.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jan 2020 04:08:58 -0500
+Received: by mail-qt1-f196.google.com with SMTP id e5so5278158qtm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:08:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iWKF4KF9Y1CtiEun++0rxUUQMRPGqGyeC6hWhJkdSUc=;
+        b=QGT9LAJanjfXKoCERl6lGxDO5mX9gXrEuQ7sDttgSjCnzBSKSYfwnG4X9f+Ngw4O1v
+         Jkhrpm+DlIJNPfdLLVhSKTc7QDIodBcyMEhHwaxzV8RY5q+Ffgk+1IFXnbZvNBlyfPV8
+         UQwFDYjv97NNGovIbt5sPou5JjNNOYGlmCfeQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iWKF4KF9Y1CtiEun++0rxUUQMRPGqGyeC6hWhJkdSUc=;
+        b=Bsm4Kgu/A7I0kniu7qzo7UCzsJn150eOUkZ+LPx8JCsnUIcws3L4EIhr5vLR+RvsR0
+         ILB9LhVt/RjhTxHAtkV+u+k70/Pb7f8mzMPpDymGhCCNuzHJVaY+RAs8D8lccQadB9CV
+         Qnqdy1YbhxH9Hi20bmLnYdEQGwNQL5p87zlJwHj4+m/sJxRCI09mbJZ2IkUOZ5jMuz0g
+         2+Y5dwc7GS56fo+CCuQ05PJjRggnlK1Wjp3N05a4QoKfbagniaGwBPAaPuiQoziNIoOX
+         h8WUp3mrz/cF45JM3I1fS/0eWGfiM+FhhcrFiw2XuUYIvXHAvHR97nHOGwy95cjdyw3U
+         41SA==
+X-Gm-Message-State: APjAAAUFCxFX+s00acri+LFb7dut1w3esd6Vnfb1vShPA6IGmAtyRInm
+        6GB0eqfblfGyOs03x6FNkl8IXNsy2J4wgy9ksXrohQ==
+X-Google-Smtp-Source: APXvYqzHUEojTodwcrGuQpgaBY41guNbk/ZtFyS1AoJQRt5Iu+x8Niu+YYkIDEdBurliWcTM+tgf2nUl95GTV1rYpXA=
+X-Received: by 2002:aed:2f45:: with SMTP id l63mr7382614qtd.221.1578560937298;
+ Thu, 09 Jan 2020 01:08:57 -0800 (PST)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
+References: <20200108052337.65916-1-drinkcat@chromium.org>
+In-Reply-To: <20200108052337.65916-1-drinkcat@chromium.org>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 9 Jan 2020 17:08:46 +0800
+Message-ID: <CANMq1KCKuOTvyDxhnL1baEeRSxnaPdgMp9Lj2pcHwj-30n2-5g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/11/2019 08:50, Maxime Ripard wrote:
-> On Fri, Nov 08, 2019 at 01:02:14PM +0000, Christophe ROULLIER wrote:
->> On 11/8/19 11:42 AM, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
->>>> This change is needed for some soc based on snps,dwmac, which have
->>>> more than 3 clocks.
->>>>
->>>> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
->>>> ---
->>>>    Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
->>>>    1 file changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/D=
-ocumentation/devicetree/bindings/net/snps,dwmac.yaml
->>>> index 4845e29411e4..376a531062c2 100644
->>>> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
->>>> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
->>>> @@ -27,6 +27,7 @@ select:
->>>>              - snps,dwmac-3.710
->>>>              - snps,dwmac-4.00
->>>>              - snps,dwmac-4.10a
->>>> +          - snps,dwmac-4.20a
->>>>              - snps,dwxgmac
->>>>              - snps,dwxgmac-2.10
->>>>
->>>> @@ -62,6 +63,7 @@ properties:
->>>>            - snps,dwmac-3.710
->>>>            - snps,dwmac-4.00
->>>>            - snps,dwmac-4.10a
->>>> +        - snps,dwmac-4.20a
->>>>            - snps,dwxgmac
->>>>            - snps,dwxgmac-2.10
->>>>
->>>> @@ -87,7 +89,8 @@ properties:
->>>>
->>>>      clocks:
->>>>        minItems: 1
->>>> -    maxItems: 3
->>>> +    maxItems: 5
->>>> +    additionalItems: true
->>> Those additional clocks should be documented
->>>
->>> Maxime
->> Hi Maxime,
->>
->> The problem it is specific to our soc, so is it possible to
->>
->> propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
->>
->> and "official" description in soc yaml file (stm32-dwmac.yaml) ?
->>
->>   =A0 clocks:
->>   =A0=A0=A0 minItems: 1
->>   =A0=A0=A0 maxItems: 5
->>   =A0=A0=A0 additionalItems: true
->>   =A0=A0=A0 items:
->>   =A0=A0=A0=A0=A0 - description: GMAC main clock
->>   =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
->>   =A0=A0=A0=A0=A0 - description:
->>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used fo=
-r programming the
->>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed t=
-hen the system
->>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on som=
-e platforms.
->>
->> +=A0=A0=A0=A0=A0 - description: optional clock
->>
->> +=A0=A0=A0=A0=A0 - description: optional clock
-> I guess we'd really need to figure out what those clocks are doing,
-> they are probably helpful (and used, under a different name) by
-> others.
+On Wed, Jan 8, 2020 at 1:23 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
 >
-> Hopefully the questions Rob asked will clear that out
+> Hi!
+>
+> Sorry for the long delay since https://patchwork.kernel.org/patch/11132381/,
+> finally got around to give this a real try.
+>
+> The main purpose of this series is to upstream the dts change and the binding
+> document, but I wanted to see how far I could probe the GPU, to check that the
+> binding is indeed correct. The rest of the patches are RFC/work-in-progress, but
+> I think some of them could already be picked up.
+>
+> So this is tested on MT8183 with a chromeos-4.19 kernel, and a ton of
+> backports to get the latest panfrost driver (I should probably try on
+> linux-next at some point but this was the path of least resistance).
+>
+> I tested it as a module as it's more challenging (originally probing would
+> work built-in, on boot, but not as a module, as I didn't have the power
+> domain changes, and all power domains are on by default during boot).
+>
+> Probing logs looks like this, currently:
+> [  221.867726] panfrost 13040000.gpu: clock rate = 511999970
+> [  221.867929] panfrost 13040000.gpu: Linked as a consumer to regulator.14
+> [  221.868600] panfrost 13040000.gpu: Linked as a consumer to regulator.31
+> [  221.870586] panfrost 13040000.gpu: Linked as a consumer to genpd:0:13040000.gpu
+> [  221.871492] panfrost 13040000.gpu: Linked as a consumer to genpd:1:13040000.gpu
+> [  221.871866] panfrost 13040000.gpu: Linked as a consumer to genpd:2:13040000.gpu
+> [  221.872427] panfrost 13040000.gpu: mali-g72 id 0x6221 major 0x0 minor 0x3 status 0x0
+> [  221.872439] panfrost 13040000.gpu: features: 00000000,13de77ff, issues: 00000000,00000400
+> [  221.872445] panfrost 13040000.gpu: Features: L2:0x07120206 Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
+> [  221.872449] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
+> [  221.873526] panfrost 13040000.gpu: error powering up gpu stack
+> [  221.878088] [drm] Initialized panfrost 1.1.0 20180908 for 13040000.gpu on minor 2
+> [  221.940817] panfrost 13040000.gpu: error powering up gpu stack
+> [  222.018233] panfrost 13040000.gpu: error powering up gpu stack
+> (repeated)
+>
+> So the GPU is probed, but there's an issue when powering up the STACK, not
+> quite sure why, I'll try to have a deeper look, at some point.
 
-Rob, do you have any ideas, suggestions ?
+Just as a follow-up to that one. stack_present=0x00000007 on my GPU.
 
-Thanks
+However, the ARM-provided driver I use on this platform doesn't have
+CONFIG_MALI_CORESTACK enabled so the "stack" is never turned on.
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/drivers/gpu/arm/midgard/Kconfig#101
+. So possibly this does not need to be done on Bifrost GPUs (and the
+error should be harmless).
 
-> Maxime=
+> Thanks!
+>
+> Nicolas
+>
+> v2:
+>  - Use sram instead of mali_sram as SRAM supply name.
+>  - Rename mali@ to gpu@.
+>  - Add dt-bindings changes
+>  - Stacking patches after the device tree change that allow basic
+>    probing (still incomplete and broken).
+>
+> Nicolas Boichat (7):
+>   dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+>   arm64: dts: mt8183: Add node for the Mali GPU
+>   drm/panfrost: Improve error reporting in panfrost_gpu_power_on
+>   drm/panfrost: Add support for a second regulator for the GPU
+>   drm/panfrost: Add support for multiple power domain support
+>   RFC: drm/panfrost: Add bifrost compatible string
+>   RFC: drm/panfrost: devfreq: Add support for 2 regulators
+>
+>  .../bindings/gpu/arm,mali-bifrost.yaml        |  20 ++++
+>  arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   7 ++
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 104 +++++++++++++++++
+>  drivers/gpu/drm/panfrost/panfrost_devfreq.c   |  18 +++
+>  drivers/gpu/drm/panfrost/panfrost_device.c    | 108 ++++++++++++++++--
+>  drivers/gpu/drm/panfrost/panfrost_device.h    |   7 ++
+>  drivers/gpu/drm/panfrost/panfrost_drv.c       |   1 +
+>  drivers/gpu/drm/panfrost/panfrost_gpu.c       |  15 ++-
+>  8 files changed, 267 insertions(+), 13 deletions(-)
+>
+> --
+> 2.24.1.735.g03f4e72817-goog
+>
