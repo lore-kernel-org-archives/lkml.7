@@ -2,97 +2,94 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23056C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2F5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD3A20705
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA532075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AWr0fZWg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pyTObPhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbgAIA2l (ORCPT
+        id S1727628AbgAIAaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:28:41 -0500
-Received: from ozlabs.org ([203.11.71.1]:38791 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbgAIA2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:28:40 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tRmj2jn4z9sPK;
-        Thu,  9 Jan 2020 11:28:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578529718;
-        bh=LS814onkvSihhXZk/7WZnWj4SNUmJxqt5+CWEeqw6J4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=AWr0fZWg49Tb3lgOFEPexyIcJb6SxLVRjmGp6mQ/ODOsI98njzuK+5PWx+swcrukL
-         9lBCYtuuFsJ+3y0fwwjMY0zVuGClN9mDJyF84PRZBXQWrMlT+82tCK+KgcAoYjIjb+
-         g8iSkM18Qt5APK4p36hjwk353VpVLCQ5VafxlFo/BMFT9JijZyf08fi/BDYmhFUkpq
-         ehOAI9LHdHQye0ntDAqtnGRsxF8U7JHQLQuBd4u+QTZw/T97FxT4h3HTYLQa+Vm3Jc
-         7K9bn75h4H87aRtJyCtbbXsnEmCS04szPZ6gao3ogbRZfwiphuwoHtHGFyf+XCqb9V
-         GTPqQstkS8BFA==
-Date:   Thu, 9 Jan 2020 11:28:36 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ma Feng <mafeng.ma@huawei.com>
-Subject: linux-next: Fixes tag needs some work in the pinctrl tree
-Message-ID: <20200109112836.0649c578@canb.auug.org.au>
+        Wed, 8 Jan 2020 19:30:19 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:42952 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbgAIAaT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 19:30:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1578529817; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=NHhHx7ZlRF7eivXl3/VLwz7qgS0NV8FmX8RqxK46cCo=;
+        b=pyTObPhS2panfCUwZeh7TMkP5NeDmK0j6O7a4knVlSYsQ+W4IE7vgiMVmfs8ratrnVHNQ8
+        azPFgtapRx/ZtkTyaZZPWiLbqLM+4I7duxshzMlUiD3PNsJTfGaeuwn3zkM5x7N7kmGX/e
+        m/uImfSjxz7ikrsJtAYdM8xNIOVM2Pw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] dt-bindings: panel-simple: Add compatible for GiantPlus GPM940B0
+Date:   Wed,  8 Jan 2020 21:29:59 -0300
+Message-Id: <20200109003000.119516-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/nnP7koDi38IvBl.12uEkaRd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/nnP7koDi38IvBl.12uEkaRd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add a compatible string for the GiantPlus GPM740B0 3" QVGA TFT LCD
+panel, and remove the old giantplus,gpm740b0.txt documentation which is
+now obsolete.
 
-Hi all,
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ .../bindings/display/panel/giantplus,gpm940b0.txt    | 12 ------------
+ .../bindings/display/panel/panel-simple.yaml         |  2 ++
+ 2 files changed, 2 insertions(+), 12 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
 
-In commit
+diff --git a/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
+deleted file mode 100644
+index 3dab52f92c26..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-GiantPlus 3.0" (320x240 pixels) 24-bit TFT LCD panel
+-
+-Required properties:
+-- compatible: should be "giantplus,gpm940b0"
+-- power-supply: as specified in the base binding
+-
+-Optional properties:
+-- backlight: as specified in the base binding
+-- enable-gpios: as specified in the base binding
+-
+-This binding is compatible with the simple-panel binding, which is specified
+-in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 090866260f4f..c1a77d9105a2 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -33,6 +33,8 @@ properties:
+       - ampire,am-480272h3tmqw-t01h
+         # Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
+       - ampire,am800480r3tmqwa1h
++        # GiantPlus GPM940B0 3.0" QVGA TFT LCD panel
++      - giantplus,gpm940b0
+ 
+   backlight: true
+   enable-gpios: true
+-- 
+2.24.1
 
-  d5d3594db9f0 ("pinctrl: armada-37xx: Remove unneeded semicolon")
-
-Fixes tag
-
-  Fixes: commit 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
-
-has these problem(s):
-
-  - leading word 'commit' unexpected
-
-Also, each line listating a fixed commit should have a Fixes: prefix and
-all the commit message tags should be kept together at the end of the
-commit message.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/nnP7koDi38IvBl.12uEkaRd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4Wc7QACgkQAVBC80lX
-0GwsZAgAiaF/YbrsUyDMyB8fN2SjVm/9jhJKR106vntQ7DXPkxMoBgvJLtCmtnlS
-dYigvt4Ib2+SvkSgjRk8+J8dyAhSQNCX4Q6YqK+v3xKxmrEULcqE+5vKsBoOMy+k
-crFzq/NXmds7GH787ZDwS2gIUTF0LWi33Gy/Eztx2GEj0SDmCr0CEuTW9AND8kkR
-fO1ZY5h3RnDN0vE+o6UPvT2P0qiqSq14bwnvcrqDnT9GCEeAsioTYt8cfsy1EtFQ
-t/bCI7AYqvySf3mkRxKL0xA2UIFlQQxXO9vnJGkGuAj9EssbwzWMfAIf3jG2r5b1
-iiyDi0lahOSZydNNdeRel4rGpOW12g==
-=NuSv
------END PGP SIGNATURE-----
-
---Sig_/nnP7koDi38IvBl.12uEkaRd--
