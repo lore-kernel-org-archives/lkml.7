@@ -2,179 +2,165 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2A3C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD48C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D47682075D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77512067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AZu8LgeD"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="dJG86w1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbgAIIUl (ORCPT
+        id S1728472AbgAIIVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:20:41 -0500
-Received: from mail-db8eur05on2047.outbound.protection.outlook.com ([40.107.20.47]:26009
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        Thu, 9 Jan 2020 03:21:42 -0500
+Received: from mail-mw2nam12on2050.outbound.protection.outlook.com ([40.107.244.50]:41312
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728331AbgAIIUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:20:41 -0500
+        id S1728347AbgAIIVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 03:21:41 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GlSmpeFF5ckBEz9xAOgS3CIztpAAZ1Jx0w+iF+HqUU7V71lZ8VONHFVpOnsi1q1kvpv6rOcuKSPx3YIkjU4DSPHztqnkDSS1H6yohTaT399JLegUFmnG53QravutNEAyhaaJtTcUmo15UK74OUGE5+sUk/BrbVGvnJyG92eEFNXzAYNxOlKPk6HdSPwvntSx0l1gPH8uCW0hDSI6Fjau98qaHWcjEJKwDnDbzisJWCe7/r9JFztcArHLdP3jtGx8eF0rXiVcIALneNOeFM5m/yjbBTp1VVjk8dkix6ofMh1wY8ivIXPGM4wmbV4L2OUvZSu5Ur40pdjtTkHhMIqcVA==
+ b=MRR8tCI+EicrWCMVgk58uNvz6c1xIxOcc2JDrv0aoGvY3dyXGDkncs+Sjf9N7a3cTpgmVI+y/MZTEXrK7utUoV9UIFrSrAE5/NCMcA42soPhiu585u7W2k73CYAoO+vnP6sThObQqHQTEnyXjHKrU/XnlYH/lw3mJkQDMiyP0Nzn+po3Bl9ybUfFGsfKPSjXhD3p9s8CZI1a4nklrlrZ/3ALBUz2u/XsQwWtPbDI25mMU3bnCiImYjDq2ZiSFkILc8V7qRn4Ya77VzjG0vNU9le7rE9TEVhj72d/xYAT2UG9vj1/8N+D5SicK1sBnb1fNUB9tZEGPkTPqf7bW11HEg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g/RlDsNBIbovVw78AZrEWsHUv0BHUUi0PAnQAQ1O3Yo=;
- b=BrXqZAjruzsFjlBWXUp4wpXRCTmRtnkGnr8StFxJt9JhjNrl3XqHjf1IjS4OL9sYj7QDT3Xd18fLGX7mNTvsoFpB17u2bJgpD3okKy4/nrYfNcvVKvxsbiAEkwpbkoGSPW5fZWLLjEHXPFdkp439yFkU6NeT2jFHcBLh6Ai7ac2xUsyI3tQRuO4hDHlCzCUJ3mE3731SaFsATmt7Yh3zH4G1nobLyYvqbnuld4L3GbJCGROc/1c5CpznmPxzlOLHKuAvr2erqR24wissE3merdAfb5Qaude9nz+piIc0tIJQpGTC+Fv7x3KfJMdAxfJycyOxMarjh1kKXj3ka94YPw==
+ bh=WtX2f0YurQVONZgMxEmgegAHNVwEUC8ikZ+lp0Tqi5c=;
+ b=OZ4Mrjiwx/2Ol+e7vpSBMczmDmO8L8iJ0NSSUH/eKXCcZ5EAKIdsSnLk8jNfXl5K7OxFssxnPrNjI7lE3X83TqxntCkq5+/1MNIlWsUKZZtPB5DQqMd5O4FYDzLoiwUoVFNbnuVeAQO185gWkdBvsjiQvkUqAypC+y+qeLoO12yXsmhqQP6PTF02YVLPjarOQWWf5j3XguRVQ2xPW9J997N5zdxhaKmvliDL67iZV02HsRbfnZql9R6MBcum8ztL6Z3kTgDYmfNkr47xQJl1i/z2NYIg15jhpTAxUU07NcURFByKCmuTqOgq1kd+IpOAhwmwqWqTI70GXL7iMxPZUQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g/RlDsNBIbovVw78AZrEWsHUv0BHUUi0PAnQAQ1O3Yo=;
- b=AZu8LgeDcT1bTZO3bILew6E65MusLMuyzIBiFcUquyOyJnm3W0mi2qN9+crRidXb0AMYy4zrh71dMGB2RxM7DqRjAe+VyCcZRaT1WPDx18q8OSMdNE2x8fgyjzcB8D+NzA2hokHTR9eOKCzlFYGGdQr4axN6yjKTV/t1KKu0F6o=
-Received: from VI1PR04MB4496.eurprd04.prod.outlook.com (20.177.54.92) by
- VI1PR04MB3229.eurprd04.prod.outlook.com (10.170.231.30) with Microsoft SMTP
+ bh=WtX2f0YurQVONZgMxEmgegAHNVwEUC8ikZ+lp0Tqi5c=;
+ b=dJG86w1BqyiMWssCEGUgjOWJBTIG27fbLwq4zrVD0xz1lUXgMDnxRMAhEj4NJxXsYH0n15MXuexMUsfjPbEYAzxqla5CVGuvw2rToqeyl1pW51S5J7RcxfFPGpZYKCJc0cjXdA3pdmoIcqpvdic1YUGZD4n3DEx9cim4nvwcKKg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Sandeep.Singh@amd.com; 
+Received: from MN2PR12MB3598.namprd12.prod.outlook.com (20.178.244.84) by
+ MN2PR12MB3504.namprd12.prod.outlook.com (20.178.244.74) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.15; Thu, 9 Jan 2020 08:20:38 +0000
-Received: from VI1PR04MB4496.eurprd04.prod.outlook.com
- ([fe80::25c7:9207:684a:5e2b]) by VI1PR04MB4496.eurprd04.prod.outlook.com
- ([fe80::25c7:9207:684a:5e2b%6]) with mapi id 15.20.2623.010; Thu, 9 Jan 2020
- 08:20:38 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "cniedermaier@dh-electronics.com" <cniedermaier@dh-electronics.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Subject: RE: [PATCH] ARM: imx: use of_root to simplify code
-Thread-Topic: [PATCH] ARM: imx: use of_root to simplify code
-Thread-Index: AQHVvvAOkP5pfM/SI0ufVklMt6+KwqfiDDEAgAAAu+A=
-Date:   Thu, 9 Jan 2020 08:20:38 +0000
-Message-ID: <VI1PR04MB4496D19E97406E9AC71BAE9F88390@VI1PR04MB4496.eurprd04.prod.outlook.com>
-References: <1577696316-27635-1-git-send-email-peng.fan@nxp.com>
- <20200109081603.GI4456@T480>
-In-Reply-To: <20200109081603.GI4456@T480>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f73319ba-d399-491b-44d0-08d794dccef4
-x-ms-traffictypediagnostic: VI1PR04MB3229:|VI1PR04MB3229:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB3229CBD636A1F5E9259B8B9388390@VI1PR04MB3229.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2733;
-x-forefront-prvs: 02778BF158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(366004)(376002)(189003)(199004)(2906002)(26005)(76116006)(66556008)(66476007)(8676002)(64756008)(66446008)(186003)(55016002)(81166006)(966005)(8936002)(9686003)(478600001)(81156014)(71200400001)(316002)(33656002)(6506007)(54906003)(110136005)(86362001)(4326008)(66946007)(7696005)(5660300002)(44832011)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3229;H:VI1PR04MB4496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ckQkR1zCHVklCswp+AqTiJRs2SRSJ/q2r4zNeF6HWSrhw8WQaOAzTjoHwJoJOw8li72dvAw+HFPHPkke5rgw+fDzv/WmxTGVlYMlBvj/XrJv6zC2T6zmX6XKdil5XF3lpYwxbuPLs4orcm+PGdsSY3Yq0aHhDllkeVL4iA5RBH71PIZ/sAUhJh05Q2G7qezcEgA2zZdGF4ClcTXD4+Mh8UJrVtLyiMvTUMxOBO9Elr9r4B6GNs7UjRqOvlwrNGaDt4LwKeqC8wnE1cWc2qEPN20YbQ3gvbRu8PKu/e/w1XAfxYoieP/K3O+fhmN6MSGnBgT8wywZmRD3VVgG6x0om6U1VoU8reRpcyGWa55ida0ZDJkg2uUJppUOhj/ea5KHd17Q6dkfK/9yW0Iuii8Q4Yi8rmSL7znyuHtgoKBqQJySjGnwCSF8BmGVLFqg9U+9rnC3sm2pFitXDwxts3mbwQP/YyFGWYZAO3TfPALMnEH7805MclBwyAF2BAL0G+ks3OdIaNpMOUHvNi4ou8mmIw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ 15.20.2623.9; Thu, 9 Jan 2020 08:21:37 +0000
+Received: from MN2PR12MB3598.namprd12.prod.outlook.com
+ ([fe80::10ce:b4fb:586d:8b9c]) by MN2PR12MB3598.namprd12.prod.outlook.com
+ ([fe80::10ce:b4fb:586d:8b9c%3]) with mapi id 15.20.2623.008; Thu, 9 Jan 2020
+ 08:21:37 +0000
+From:   Sandeep Singh <Sandeep.Singh@amd.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        srinivas.pandruvada@linux.intel.com, jic23@kernel.org,
+        linux-iio@vger.kernel.org
+Cc:     Shyam-sundar.S-k@amd.com, Sandeep Singh <sandeep.singh@amd.com>
+Subject: [PATCH 0/4] SFH: Add Support for AMD Sensor Fusion Hub
+Date:   Thu,  9 Jan 2020 13:51:17 +0530
+Message-Id: <1578558077-9798-1-git-send-email-Sandeep.Singh@amd.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR0101CA0036.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:22::22) To MN2PR12MB3598.namprd12.prod.outlook.com
+ (2603:10b6:208:d1::20)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f73319ba-d399-491b-44d0-08d794dccef4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 08:20:38.1635
+Received: from andbang2.amd.com (165.204.156.251) by MA1PR0101CA0036.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2623.9 via Frontend Transport; Thu, 9 Jan 2020 08:21:34 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 12fa5b8f-5d69-4936-a399-08d794dcf1fd
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3504:|MN2PR12MB3504:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3504B09C3132A4F43FA5F9A1E0390@MN2PR12MB3504.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 02778BF158
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(199004)(189003)(5660300002)(6666004)(66946007)(478600001)(16526019)(7696005)(52116002)(36756003)(4326008)(186003)(26005)(8676002)(6486002)(2906002)(2616005)(81156014)(66556008)(66476007)(81166006)(8936002)(316002)(956004)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3504;H:MN2PR12MB3598.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dZ4F9DKrY4SXv/p1I5Y7zInWcIqqfrXzFiIkPoqIhbnfApx07lhAckhLvnVFyULjgzeNzCAmV3AAFbrhP3GA2mYEZSmZtlcXyMtNKOZN3kjo1jrPVkp660otjs4D1b8EPRCFcjkySkDMz5dobq9ppu2FOhlzr3CGZXoklnKQd7wgSleZY3/EWfzNJgA9nxMnjjHv37wC9b4X9IieaYAQf0cL55TTIBwEh/0kRjg/Bx9QBkP4TEUrHOB96wqkcUBGXeHvzmsQrKQWsm0KuKR3eJuB659yxrDmuMdy4j7hnWSoKynwCsI/piJFoXBI7r7moPsRucjvw+SbUVKcJVyLpU77FwwWJUfxXKgUvTteqibf5myx0XkL2H13HMF6S13J7aNrqaMz6HRjdhLZRupLnsyd8FqbQ5Adq6nQNJjYgy3HVFJrb4frYZRw9LsgdlEC
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12fa5b8f-5d69-4936-a399-08d794dcf1fd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2020 08:21:37.2700
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9ZHAcOgyDtcgF+jr6C/2isYjgKFsZDU/SQ/z8W5JWxSQ32WXGKnsBZTQ+ryeh5DdTgxiLi4v5NdCiRVt+vLm3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3229
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XpiVaYD0p7BZiFqc7QZ6ib7/a6RLZH6wHhDNQSPGP0VKA4e8rpvc/t14dCT/4dmW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Rob
+From: Sandeep Singh <sandeep.singh@amd.com>
 
-Hi Shawn,
+AMD SFH is HID based driver. SFH FW is part of MP2
+processor and it runs on MP2 where in driver resides
+on X86. The driver functionalities are divided  into
+three parts:-
 
-> Subject: Re: [PATCH] ARM: imx: use of_root to simplify code
->=20
-> On Mon, Dec 30, 2019 at 09:03:51AM +0000, Peng Fan wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > start_kernel
-> >      |->setup_arch
-> >      |       |->unflatten_device_tree->of_root ready
-> >      |
-> >      |->do_initcalls
-> >            |->customize_machine
-> >                        |->init_machine
-> >                               |->imx_soc_device_init
-> >
-> > When imx_soc_device_init, of_root is ready, so we could directly use it=
-.
->=20
-> IMO, of_root is something for OF core code, not really for platform.
+1: amd-mp2-pcie:- This module will communicate with MP2 FW and
+                   provide that data into DRAM.
+2: Client driver :- This part for driver will use dram data and
+                     convert that data into HID format based on
+                     HID reports.
+3: Transport driver :- This part of driver will communicate with
+                        HID core. Communication between devices and
+                        HID core is mostly done via HID reports
 
-From below link, I see powerpc and some driver use of_root directly.
-https://elixir.bootlin.com/linux/v5.5-rc5/ident/of_root
+In terms of architecture it is much more reassembles like ISH.
+However the major difference is all The hid reports are generated
+as part of kernel driver. AMD SFH driver has taken reference
+from ISH in terms of design and functionalities at fewer location.
 
-of_root is exported as a symbol. Rob, could you please clarify whether
-platform code could use of_root directly?
+AMD sensor fusion Hub is part of a SOC starting from Ryzen
+based platforms. The solution is working well on windows OS
+in several OEM products. AMD SFH uses HID over PCIe bus.
 
-Thanks,
-Peng.
 
->=20
-> Shawn
->=20
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >
-> > V1:
-> >  Tested on i.MX7D-SDB
-> >
-> >  arch/arm/mach-imx/cpu.c | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> >
-> > diff --git a/arch/arm/mach-imx/cpu.c b/arch/arm/mach-imx/cpu.c index
-> > 06f8d64b65af..77319b359070 100644
-> > --- a/arch/arm/mach-imx/cpu.c
-> > +++ b/arch/arm/mach-imx/cpu.c
-> > @@ -88,7 +88,6 @@ struct device * __init imx_soc_device_init(void)
-> >  	struct soc_device_attribute *soc_dev_attr;
-> >  	const char *ocotp_compat =3D NULL;
-> >  	struct soc_device *soc_dev;
-> > -	struct device_node *root;
-> >  	struct regmap *ocotp =3D NULL;
-> >  	const char *soc_id;
-> >  	u64 soc_uid =3D 0;
-> > @@ -101,9 +100,7 @@ struct device * __init imx_soc_device_init(void)
-> >
-> >  	soc_dev_attr->family =3D "Freescale i.MX";
-> >
-> > -	root =3D of_find_node_by_path("/");
-> > -	ret =3D of_property_read_string(root, "model", &soc_dev_attr->machine=
-);
-> > -	of_node_put(root);
-> > +	ret =3D of_property_read_string(of_root, "model",
-> > +&soc_dev_attr->machine);
-> >  	if (ret)
-> >  		goto free_soc;
-> >
-> > --
-> > 2.16.4
-> >
+Sandeep Singh (4):
+  SFH: Add maintainer list and documentation for AMD SFH based      on
+    HID framework
+  SFH: PCI driver to add support of AMD sensor fusion Hub      using HID
+    framework
+  SFH: Transport Driver to add support of AMD sensor fusion      Hub
+    (SFH)
+  SFH: Create HID report to Enable support of AMD sensor fusion Hub
+    (SFH)
+
+ Documentation/hid/amd-sfh-hid.rst                  | 159 +++++
+ MAINTAINERS                                        |   8 +
+ drivers/hid/Kconfig                                |   2 +
+ drivers/hid/Makefile                               |   1 +
+ drivers/hid/amd-sfh-hid/Kconfig                    |  17 +
+ drivers/hid/amd-sfh-hid/Makefile                   |  17 +
+ drivers/hid/amd-sfh-hid/amd_mp2_pcie.c             | 255 ++++++++
+ drivers/hid/amd-sfh-hid/amd_mp2_pcie.h             | 169 ++++++
+ drivers/hid/amd-sfh-hid/amdsfh-debugfs.c           | 251 ++++++++
+ drivers/hid/amd-sfh-hid/amdsfh-debugfs.h           |  14 +
+ drivers/hid/amd-sfh-hid/amdsfh-hid-client.c        | 257 +++++++++
+ drivers/hid/amd-sfh-hid/amdsfh-hid.c               | 179 ++++++
+ drivers/hid/amd-sfh-hid/amdsfh-hid.h               |  85 +++
+ .../hid_descriptor/amd_sfh_hid_descriptor.c        | 275 +++++++++
+ .../hid_descriptor/amd_sfh_hid_descriptor.h        | 125 ++++
+ .../hid_descriptor/amd_sfh_hid_report_descriptor.h | 642 +++++++++++++++++++++
+ 16 files changed, 2456 insertions(+)
+ create mode 100644 Documentation/hid/amd-sfh-hid.rst
+ create mode 100644 drivers/hid/amd-sfh-hid/Kconfig
+ create mode 100644 drivers/hid/amd-sfh-hid/Makefile
+ create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.c
+ create mode 100644 drivers/hid/amd-sfh-hid/amd_mp2_pcie.h
+ create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-debugfs.c
+ create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-debugfs.h
+ create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid-client.c
+ create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid.c
+ create mode 100644 drivers/hid/amd-sfh-hid/amdsfh-hid.h
+ create mode 100644 drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_descriptor.c
+ create mode 100644 drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_descriptor.h
+ create mode 100644 drivers/hid/amd-sfh-hid/hid_descriptor/amd_sfh_hid_report_descriptor.h
+
+-- 
+2.7.4
+
