@@ -2,317 +2,291 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29BAC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82A4C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45CC2073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oRoij5Jn"
+	by mail.kernel.org (Postfix) with ESMTP id 993352073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgAIVRt (ORCPT
+        id S1728095AbgAIVUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:17:49 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42179 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgAIVRs (ORCPT
+        Thu, 9 Jan 2020 16:20:03 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30628 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725763AbgAIVUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:17:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q6so8924551wro.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 13:17:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qyCXD4vr+CxrllLBvsL4+jVtHYuViKNKBfxikWr3PLM=;
-        b=oRoij5JnWSAzDoK+ggWMXcAqnWhKoBf/TwQrJL3Gd9j4PxZIOAR8KqBO9MB8uHfGnX
-         Y2GZwLjcQRCIbMmjJwv/OkYagNEIppnFmO/sF4Fzm0lch6vUJAVdgELnxoVwH/KhEyg3
-         ekOZUKipGGhrY1E8z5yBttQpWCLLqlAu6UwxZod69xVmwITFG0j+68LltOp0Dp2UoAT7
-         MivWhDveT1P6FYVNCC6fZJWaY5z1njBz6tk+Xyv9vnuOBIlPfHoyziSlBYXhcAtBOoWv
-         3Rd/SfD9LCLBH6pa7FdWVhBGoEb7rtV2Krpre7Hj8Q83qdxLt6swFg69HCsloczWJv1q
-         EM5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qyCXD4vr+CxrllLBvsL4+jVtHYuViKNKBfxikWr3PLM=;
-        b=a5iI/UQK9+h7+cN+f0zYOixeo9+pjAA9Zjr8nW1Ccz1LUuJdpX3PXS15a+MpSXYMJq
-         eDxKrwkuAeNXndZ8Oh7IurzkRZQr8fwKjOxUNe5e67hCCVpam6TF++Qy73mfAkLHSpVk
-         c8FUO4+IKZY2xzJh8eXanl779UJXCaOlXxRpZe7hWZe8W5lNgEoQL24ypeODK2C4Pllq
-         RGaXfeDkjd2/gpVI4WYaxJLQspLI8RlmMCw6en5FgK40OXtWoMufrIkNevenzZrKh+EY
-         FAWoX4iPP2H1AY7rKSuG5QbGV3tXBRcWlcX9dpSVFJxb0RJcrX6U3nB1jfBBA+adNc4o
-         wfOg==
-X-Gm-Message-State: APjAAAUDxz8lNTcnaL/hxbdg35nanCXJU8+dmwvKBNtUUjtpiobXTJ/I
-        lEpkbhgSU0C9DweC6dXauAbzRYEht/hAyQ==
-X-Google-Smtp-Source: APXvYqxsXWMWUZCh/HEmygjcgJ8fi+WlzDrhxZ5x0b/eKvFt06A6uu6ebKswkzOKN89tLFRMo+/RVg==
-X-Received: by 2002:a5d:6748:: with SMTP id l8mr13221008wrw.188.1578604664754;
-        Thu, 09 Jan 2020 13:17:44 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
-        by smtp.googlemail.com with ESMTPSA id m7sm4111134wma.39.2020.01.09.13.17.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 13:17:44 -0800 (PST)
-Subject: Re: [PATCH v2 2/6] thermal: brcmstb_thermal: Prepare to support a
- different process
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Markus Mayer <mmayer@broadcom.com>,
-        "maintainer:BROADCOM STB AVS TMON DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191211203143.2952-1-f.fainelli@gmail.com>
- <20191211203143.2952-3-f.fainelli@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a8e6cb1a-fa03-a443-eaa2-2a6385ac6a37@linaro.org>
-Date:   Thu, 9 Jan 2020 22:17:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 16:20:03 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009LHdlg108791;
+        Thu, 9 Jan 2020 16:19:57 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xe2vswwev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 16:19:57 -0500
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 009LI2rU109581;
+        Thu, 9 Jan 2020 16:19:56 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xe2vswwdt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 16:19:56 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 009LG2g4029750;
+        Thu, 9 Jan 2020 21:19:55 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 2xajb85beq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Jan 2020 21:19:55 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 009LJruN47251770
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jan 2020 21:19:53 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF98E136053;
+        Thu,  9 Jan 2020 21:19:53 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 34339136055;
+        Thu,  9 Jan 2020 21:19:53 +0000 (GMT)
+Received: from rascal.austin.ibm.com (unknown [9.41.179.32])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jan 2020 21:19:52 +0000 (GMT)
+From:   Scott Cheloha <cheloha@linux.vnet.ibm.com>
+To:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
+        mhocko@suse.com, Scott Cheloha <cheloha@linux.ibm.com>
+Subject: [PATCH] drivers/base/memory.c: cache blocks in radix tree to accelerate lookup
+Date:   Thu,  9 Jan 2020 15:19:52 -0600
+Message-Id: <20200109211952.12747-1-cheloha@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191217193238-1-cheloha@linux.vnet.ibm.com>
+References: <20191217193238-1-cheloha@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211203143.2952-3-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_05:2020-01-09,2020-01-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 suspectscore=0
+ impostorscore=0 bulkscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001090176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/2019 21:31, Florian Fainelli wrote:
-> The driver is currently assuming that it is operating with a 28nm
-> process chip, which has a specific formula to convert temperature to a
-> code and vice versa. Update the code to support providing two key
-> values: offset and multiplier to derive the correct formulas.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/thermal/broadcom/brcmstb_thermal.c | 54 ++++++++++++++++------
->  1 file changed, 39 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
-> index 680f1a070606..68f89f7c7e7f 100644
-> --- a/drivers/thermal/broadcom/brcmstb_thermal.c
-> +++ b/drivers/thermal/broadcom/brcmstb_thermal.c
-> @@ -102,18 +102,27 @@ static struct avs_tmon_trip avs_tmon_trips[] = {
->  	},
->  };
->  
-> +struct brcmstb_thermal_params {
-> +	unsigned int offset;
-> +	unsigned int mult;
-> +};
-> +
->  struct brcmstb_thermal_priv {
->  	void __iomem *tmon_base;
->  	struct device *dev;
->  	struct thermal_zone_device *thermal;
-> +	/* Process specific thermal parameters used for calculations */
-> +	struct brcmstb_thermal_params temp_params;
->  };
->  
->  /* Convert a HW code to a temperature reading (millidegree celsius) */
-> -static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
-> +static inline int avs_tmon_code_to_temp(struct brcmstb_thermal_priv *priv,
->  					u32 code)
->  {
-> -	return (AVS_TMON_TEMP_OFFSET -
-> -		(int)((code & AVS_TMON_TEMP_MAX) * AVS_TMON_TEMP_SLOPE));
-> +	int offset = priv->temp_params.offset;
-> +	int mult = priv->temp_params.mult;
-> +
-> +	return (offset - (int)((code & AVS_TMON_TEMP_MASK) * mult));
->  }
->  
->  /*
-> @@ -122,21 +131,22 @@ static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
->   * @temp: temperature to convert
->   * @low: if true, round toward the low side
->   */
-> -static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
-> +static inline u32 avs_tmon_temp_to_code(struct brcmstb_thermal_priv *priv,
->  					int temp, bool low)
->  {
-> +	int offset = priv->temp_params.offset;
-> +	int mult = priv->temp_params.mult;
-> +
->  	if (temp < AVS_TMON_TEMP_MIN)
-> -		return AVS_TMON_TEMP_MAX;	/* Maximum code value */
-> +		return AVS_TMON_TEMP_MASK;	/* Maximum code value */
+Searching for a particular memory block by id is an O(n) operation
+because each memory block's underlying device is kept in an unsorted
+linked list on the subsystem bus.
 
-Why this change?
+We can cut the lookup cost to O(log n) if we cache the memory blocks in
+a radix tree.  With a radix tree cache in place both memory subsystem
+initialization and memory hotplug run palpably faster on systems with a
+large number of memory blocks.
 
->  
-> -	if (temp >= AVS_TMON_TEMP_OFFSET)
-> +	if (temp >= offset)
->  		return 0;	/* Minimum code value */
->  
->  	if (low)
-> -		return (u32)(DIV_ROUND_UP(AVS_TMON_TEMP_OFFSET - temp,
-> -					  AVS_TMON_TEMP_SLOPE));
-> +		return (u32)(DIV_ROUND_UP(offset - temp, mult));
->  	else
-> -		return (u32)((AVS_TMON_TEMP_OFFSET - temp) /
-> -			      AVS_TMON_TEMP_SLOPE);
-> +		return (u32)((offset - temp) / mult);
->  }
->  
->  static int brcmstb_get_temp(void *data, int *temp)
-> @@ -154,7 +164,7 @@ static int brcmstb_get_temp(void *data, int *temp)
->  
->  	val = (val & AVS_TMON_STATUS_data_msk) >> AVS_TMON_STATUS_data_shift;
->  
-> -	t = avs_tmon_code_to_temp(priv->thermal, val);
-> +	t = avs_tmon_code_to_temp(priv, val);
->  	if (t < 0)
->  		*temp = 0;
->  	else
-> @@ -188,7 +198,7 @@ static int avs_tmon_get_trip_temp(struct brcmstb_thermal_priv *priv,
->  	val &= trip->reg_msk;
->  	val >>= trip->reg_shift;
->  
-> -	return avs_tmon_code_to_temp(priv->thermal, val);
-> +	return avs_tmon_code_to_temp(priv, val);
->  }
->  
->  static void avs_tmon_set_trip_temp(struct brcmstb_thermal_priv *priv,
-> @@ -201,7 +211,7 @@ static void avs_tmon_set_trip_temp(struct brcmstb_thermal_priv *priv,
->  	dev_dbg(priv->dev, "set temp %d to %d\n", type, temp);
->  
->  	/* round toward low temp for the low interrupt */
-> -	val = avs_tmon_temp_to_code(priv->thermal, temp,
-> +	val = avs_tmon_temp_to_code(priv, temp,
->  				    type == TMON_TRIP_TYPE_LOW);
->  
->  	val <<= trip->reg_shift;
-> @@ -218,7 +228,7 @@ static int avs_tmon_get_intr_temp(struct brcmstb_thermal_priv *priv)
->  	u32 val;
->  
->  	val = __raw_readl(priv->tmon_base + AVS_TMON_TEMP_INT_CODE);
-> -	return avs_tmon_code_to_temp(priv->thermal, val);
-> +	return avs_tmon_code_to_temp(priv, val);
->  }
->  
->  static irqreturn_t brcmstb_tmon_irq_thread(int irq, void *data)
-> @@ -282,19 +292,32 @@ static const struct thermal_zone_of_device_ops of_ops = {
->  	.set_trips	= brcmstb_set_trips,
->  };
->  
-> +static const struct brcmstb_thermal_params brcmstb_28nm_params = {
-> +	.offset	= 410040,
-> +	.mult	= 487,
-> +};
-> +
->  static const struct of_device_id brcmstb_thermal_id_table[] = {
-> -	{ .compatible = "brcm,avs-tmon" },
-> +	{ .compatible = "brcm,avs-tmon", .data = &brcmstb_28nm_params },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, brcmstb_thermal_id_table);
->  
->  static int brcmstb_thermal_probe(struct platform_device *pdev)
->  {
-> +	const struct brcmstb_thermal_params *params;
-> +	const struct of_device_id *of_id = NULL;
->  	struct thermal_zone_device *thermal;
->  	struct brcmstb_thermal_priv *priv;
->  	struct resource *res;
->  	int irq, ret;
->  
-> +	of_id = of_match_node(brcmstb_thermal_id_table, pdev->dev.of_node);
-> +	if (!of_id || !of_id->data)
-> +		return -EINVAL;
+Signed-off-by: Scott Cheloha <cheloha@linux.ibm.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+---
+v2 incorporates suggestions from David Hildenbrand.
 
-of_device_get_match_data(&pdev->dev) ?
+v3 changes:
+  - Rebase atop "drivers/base/memory.c: drop the mem_sysfs_mutex"
 
-> +	params = of_id->data;
-> +
->  	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
->  		return -ENOMEM;
-> @@ -304,6 +327,7 @@ static int brcmstb_thermal_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->tmon_base))
->  		return PTR_ERR(priv->tmon_base);
->  
-> +	memcpy(&priv->temp_params, params, sizeof(priv->temp_params));
+  - Be conservative: don't use radix_tree_for_each_slot() in
+    walk_memory_blocks() yet.  It introduces RCU which could
+    change behavior.  Walking the tree "by hand" with
+    find_memory_block_by_id() is slower but keeps the patch
+    simple.
 
-Do you really need a copy here? Why not convert to a pointer and assign it?
+v4 changes:
+  - Rewrite commit message to explicitly note the time
+    complexity improvements.
 
->  	priv->dev = &pdev->dev;
->  	platform_set_drvdata(pdev, priv);
->  
-> 
+  - Provide anecdotal accounts of time-savings in the changelog
+    (see below).
 
+mhocko@suse.com has asked for additional details on time
+savings, so here are some results I've collected when measuring
+memory_dev_init() with/without the patch.
 
+1. A 32GB POWER9 VM with 16MB memblocks has 2048 blocks:
+
+# Unpatched
+[    0.005121] adding memory block 0... ok
+[...]
+[    0.095230] adding memory block 1024... ok
+[...]
+[    0.304248] adding memory block 2047... ok
+[    0.304508] added all memory blocks
+
+# Patched
+[    0.004701] adding memory block 0... ok
+[...]
+[    0.033383] adding memory block 1024... ok
+[...]
+[    0.061387] adding memory block 2047... ok
+[    0.061414] added all memory blocks
+
+   Unpatched, memory_dev_init() runs in about 0.299 seconds.  Patched,
+   it runs in about 0.057 seconds.  Savings of .242 seconds, or nearly
+   a quarter of a second.
+
+2. A 32TB POWER9 LPAR with 256MB memblocks has 131072 blocks:
+
+# Unpatched
+[   13.703907] memory_dev_init: adding blocks
+[   13.703931] memory_dev_init: added block 0
+[   13.762678] memory_dev_init: added block 1024
+[   13.910359] memory_dev_init: added block 2048
+[   14.146941] memory_dev_init: added block 3072
+[...]
+[  218.516235] memory_dev_init: added block 57344
+[  229.310467] memory_dev_init: added block 58368
+[  240.590857] memory_dev_init: added block 59392
+[  252.351665] memory_dev_init: added block 60416
+[...]
+[ 2152.023248] memory_dev_init: added block 128000
+[ 2196.464430] memory_dev_init: added block 129024
+[ 2241.746515] memory_dev_init: added block 130048
+[ 2287.406099] memory_dev_init: added all blocks
+
+# Patched
+[   13.696898] memory_dev_init: adding blocks
+[   13.696920] memory_dev_init: added block 0
+[   13.710966] memory_dev_init: added block 1024
+[   13.724865] memory_dev_init: added block 2048
+[   13.738802] memory_dev_init: added block 3072
+[...]
+[   14.520999] memory_dev_init: added block 57344
+[   14.536355] memory_dev_init: added block 58368
+[   14.551747] memory_dev_init: added block 59392
+[   14.567128] memory_dev_init: added block 60416
+[...]
+[   15.595638] memory_dev_init: added block 126976
+[   15.611761] memory_dev_init: added block 128000
+[   15.627889] memory_dev_init: added block 129024
+[   15.644048] memory_dev_init: added block 130048
+[   15.660035] memory_dev_init: added all blocks
+
+   Unpatched, memory_dev_init() runs in about 2275 seconds,
+   or ~37 minutes.  Patched, memory_dev_init() runs in about
+   1.97 seconds.  Savings of ~37 minutes.
+
+   I did not actually measure walk_memory_blocks(), but during
+   boot on this machine without the patch I got the following
+   (abbreviated) traces:
+
+[ 2347.494986] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 2527.625378] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 2707.761977] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 2887.899975] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 3068.028318] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 3248.158764] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 3428.287296] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 3608.425357] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 3788.554572] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 3968.695071] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+[ 4148.823970] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
+
+   Those traces disappeared with the patch, so I'm pretty sure
+   this patch shaves ~30 minutes off of walk_memory_blocks()
+   at boot.
+
+Given the above results I think it is safe to say that this patch will
+dramatically improve boot times on large POWER systems.
+
+ drivers/base/memory.c | 36 +++++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 799b43191dea..8902930d5ef2 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -19,6 +19,7 @@
+ #include <linux/memory.h>
+ #include <linux/memory_hotplug.h>
+ #include <linux/mm.h>
++#include <linux/radix-tree.h>
+ #include <linux/stat.h>
+ #include <linux/slab.h>
+ 
+@@ -56,6 +57,13 @@ static struct bus_type memory_subsys = {
+ 	.offline = memory_subsys_offline,
+ };
+ 
++/*
++ * Memory blocks are cached in a local radix tree to avoid
++ * a costly linear search for the corresponding device on
++ * the subsystem bus.
++ */
++static RADIX_TREE(memory_blocks, GFP_KERNEL);
++
+ static BLOCKING_NOTIFIER_HEAD(memory_chain);
+ 
+ int register_memory_notifier(struct notifier_block *nb)
+@@ -572,20 +580,14 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+ /* A reference for the returned memory block device is acquired. */
+ static struct memory_block *find_memory_block_by_id(unsigned long block_id)
+ {
+-	struct device *dev;
++	struct memory_block *mem;
+ 
+-	dev = subsys_find_device_by_id(&memory_subsys, block_id, NULL);
+-	return dev ? to_memory_block(dev) : NULL;
++	mem = radix_tree_lookup(&memory_blocks, block_id);
++	if (mem)
++		get_device(&mem->dev);
++	return mem;
+ }
+ 
+-/*
+- * For now, we have a linear search to go find the appropriate
+- * memory_block corresponding to a particular phys_index. If
+- * this gets to be a real problem, we can always use a radix
+- * tree or something here.
+- *
+- * This could be made generic for all device subsystems.
+- */
+ struct memory_block *find_memory_block(struct mem_section *section)
+ {
+ 	unsigned long block_id = base_memory_block_id(__section_nr(section));
+@@ -628,9 +630,15 @@ int register_memory(struct memory_block *memory)
+ 	memory->dev.offline = memory->state == MEM_OFFLINE;
+ 
+ 	ret = device_register(&memory->dev);
+-	if (ret)
++	if (ret) {
+ 		put_device(&memory->dev);
+-
++		return ret;
++	}
++	ret = radix_tree_insert(&memory_blocks, memory->dev.id, memory);
++	if (ret) {
++		put_device(&memory->dev);
++		device_unregister(&memory->dev);
++	}
+ 	return ret;
+ }
+ 
+@@ -688,6 +696,8 @@ static void unregister_memory(struct memory_block *memory)
+ 	if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
+ 		return;
+ 
++	WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) == NULL);
++
+ 	/* drop the ref. we got via find_memory_block() */
+ 	put_device(&memory->dev);
+ 	device_unregister(&memory->dev);
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.24.1
 
