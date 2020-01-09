@@ -2,102 +2,198 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9792BC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3A8C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6563620678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:48:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MC9xf9Me"
+	by mail.kernel.org (Postfix) with ESMTP id 037EA20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578563312;
+	bh=m+UQ+q1bLF1ujlcVSbh8EpQonTNkNaBCgnDIa9dh3hY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t7hyQwuAA9I8JGm2vnNREflXYi2EC6clHHynBjdMSgMSkGWqdoGGVc4GYwBuFnjbs
+	 5VOjW2g7eIwGuPRvAiHxT/0elyJ2pjT48UzaCLjdSxaFueDjzyHPVgYksGF0nLJ79G
+	 5R+hS0Frd1udrSu2FHeA8ygJOCqB9e1/Dzu9muEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgAIJsJ (ORCPT
+        id S1729849AbgAIJsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:48:09 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33457 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729826AbgAIJsI (ORCPT
+        Thu, 9 Jan 2020 04:48:30 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55504 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729170AbgAIJsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:48:08 -0500
-Received: by mail-qk1-f195.google.com with SMTP id d71so5431893qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:48:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kFt5sINwCshN7f9XPeO36FD74hM2+ZVDRrYbGF8loWg=;
-        b=MC9xf9MeaTGS0ORWl9iQ4wapynYiCn/Ktx+vvFlfK7odU2KpzoA3/BD2X7r+BBwEUj
-         AJ+a/oeCIJjWrmW+5Jkmq9Yz9BZKT3Bmjjfzm56uBKhiMmmYCEBALZMqSORH3orOG9Qe
-         TAgbPzK5lBIgc+Er5fKe809mLb5nhY4ThWFYcg73GSGOAZbFnxeBRDy1jP/4ew9PsA3N
-         K5n2c3kN97ulvkzH79saWCh2c62itzxld2703wwno5bBSesTGCIUGJHKceWczsTpMIz1
-         GFHWXdjGPtiqukwIyrP4OipPnI1rXSeO7ZUlKGAtio6wR4aDkXYfl3sLVndplD62fp2K
-         TjWg==
+        Thu, 9 Jan 2020 04:48:30 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so2126621wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 01:48:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kFt5sINwCshN7f9XPeO36FD74hM2+ZVDRrYbGF8loWg=;
-        b=qDUKcSIaw7EX/egsUmb5BEYdQhivGbfpr1svYbM5sS7G2+ytE0D04tZOXl9t6PWdtg
-         Lpysa5p3qaUkcX+wjS1gXWUsox5twWIL/SCBEvcr6jhBMv/d5+ds3USf1jej9QVC7ijO
-         lSeNHmZEps8VROIQYm/+83RLyxiLegNxWuA2lbTbjfT/WevaEQHei1WcbCUkytsaJ26g
-         3MezNiWVsRyNxVRyv+Jq6xRszF5SOT47xJE6E59PWHvyj3VlHM9HhGcKQCb8pJwedO8P
-         nQU7IyjA8HFh+n39wGPs5bWrX1ifCzx0IMPfS8MyTYpyHte0MsAzU0whpvhTA0kZs60a
-         kxNA==
-X-Gm-Message-State: APjAAAXIqkGVt7fCl0NORm7RDjsQsp+UixiFqNgFLD+fwZulgK3qZM18
-        oK0P/QEftqDclRLW8+QfrrfkmfK+WhEDmvPGfIWLGw==
-X-Google-Smtp-Source: APXvYqwtJLDiExkWMnInqbVktQr9vDV/d5lmAhlTP7G0mBpb6RfrkdSR6eG91YtmQ+x9YK8qMe3vwS9aE/HYkSbCbkg=
-X-Received: by 2002:a05:620a:12cf:: with SMTP id e15mr8766111qkl.120.1578563287029;
- Thu, 09 Jan 2020 01:48:07 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VpQvERxakUZ1UL5EKNg0L8sNveIoCSm0oaTrp1MgJb4=;
+        b=q36hY4oBiccRb1WYx1L3KBZ+kr5sR2hq8ivrdm06+it2Ldtyx6V5d3A0SbNQD1tFOu
+         eAZOlYdb7WJTy4ykYrJ4T4SJ4IPl3Ty8I85dUyCMICfP0iJD82vzOYXTk+9cnCXw2GS4
+         d4xpYgbLf/BjopSzd7DgBAtYSc348hiMCohwwINxa2w/jnO6zfpbx73yv7UuhzwhIr6D
+         bjWe02eUuwoefdqd4deoju3kAgTtks05+k2ZlM5DNuE72K+NU0akl1u/ZXtxgRiT5RsT
+         KFojJmJ5vQx4e1NhjWf0hAwSUjBOkS2ix4YtifP1ovhps6iL7bK/SRXVbS13FRFwluna
+         zHhQ==
+X-Gm-Message-State: APjAAAWivccyKqQaObcx8jNV6B1zx6d9i9b9bi3fS8UkwMojohzHCAsf
+        wEa8G/6h485oSMQmOSHsj6o=
+X-Google-Smtp-Source: APXvYqz4ON2jA2tWcodHRXkhlMmnRg1j/DLkhL9fuPcAPKIuylCJPzptCS14N8LmSw9VHitEKQrWOQ==
+X-Received: by 2002:a1c:22c6:: with SMTP id i189mr3954852wmi.15.1578563308233;
+        Thu, 09 Jan 2020 01:48:28 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id d10sm7798233wrw.64.2020.01.09.01.48.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 01:48:27 -0800 (PST)
+Date:   Thu, 9 Jan 2020 10:48:26 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Scott Cheloha <cheloha@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>, nathanl@linux.ibm.com,
+        ricklind@linux.vnet.ibm.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3] drivers/base/memory.c: cache blocks in radix tree to
+ accelerate lookup
+Message-ID: <20200109094826.GL4951@dhcp22.suse.cz>
+References: <20191121195952.3728-1-cheloha@linux.vnet.ibm.com>
+ <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20200107092922.18408-1-ktouil@baylibre.com> <20200107092922.18408-5-ktouil@baylibre.com>
- <20200108205447.GA16981@bogus>
-In-Reply-To: <20200108205447.GA16981@bogus>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 9 Jan 2020 10:47:56 +0100
-Message-ID: <CAMpxmJXffr-S51udNmUyMHz687jAoBKrYspNypfUUqjOD45zxQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] dt-bindings: at25: add reference for the wp-gpios property
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        baylibre-upstreaming@groups.io,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217193238.3098-1-cheloha@linux.vnet.ibm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 8 sty 2020 o 21:54 Rob Herring <robh@kernel.org> napisa=C5=82(a):
->
-> On Tue,  7 Jan 2020 10:29:21 +0100, Khouloud Touil wrote:
-> > As the at25 uses the NVMEM subsystem, and the property is now being
-> > handled, adding reference for it in the device tree binding document,
-> > which allows to specify the GPIO line to which the write-protect pin
-> > is connected.
-> >
-> > Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
-> > ---
-> >  Documentation/devicetree/bindings/eeprom/at25.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue 17-12-19 13:32:38, Scott Cheloha wrote:
+> Searching for a particular memory block by id is slow because each block
+> device is kept in an unsorted linked list on the subsystem bus.
+> 
+> Lookup is much faster if we cache the blocks in a radix tree.  Memory
+> subsystem initialization and hotplug/hotunplug is at least a little faster
+> for any machine with more than ~100 blocks, and the speedup grows with
+> the block count.
+> 
+> Signed-off-by: Scott Cheloha <cheloha@linux.vnet.ibm.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Hi Greg,
+OK, Greg doesn't see demand for abstracting a faster lookup into the
+core so making a memory subsystem thing sounds like the way to go.
+Please add more information about time savings into the changelog and
+then feel free to add
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-AT25 patches usually go through the char-misc tree. In this case
-however, the change depends on the other patches in this series. Can
-you ack this and I'll take it through the AT24 tree exceptionally?
+Do not forget to add Andrew to the Cc when resubmitting.
 
-Best regards,
-Bartosz Golaszewski
+Thanks!
+
+> ---
+> v2 incorporates suggestions from David Hildenbrand.
+> 
+> v3 changes:
+>   - Rebase atop "drivers/base/memory.c: drop the mem_sysfs_mutex"
+> 
+>   - Be conservative: don't use radix_tree_for_each_slot() in
+>     walk_memory_blocks() yet.  It introduces RCU which could
+>     change behavior.  Walking the tree "by hand" with
+>     find_memory_block_by_id() is slower but keeps the patch
+>     simple.
+> 
+>  drivers/base/memory.c | 36 +++++++++++++++++++++++-------------
+>  1 file changed, 23 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 799b43191dea..8902930d5ef2 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/memory.h>
+>  #include <linux/memory_hotplug.h>
+>  #include <linux/mm.h>
+> +#include <linux/radix-tree.h>
+>  #include <linux/stat.h>
+>  #include <linux/slab.h>
+>  
+> @@ -56,6 +57,13 @@ static struct bus_type memory_subsys = {
+>  	.offline = memory_subsys_offline,
+>  };
+>  
+> +/*
+> + * Memory blocks are cached in a local radix tree to avoid
+> + * a costly linear search for the corresponding device on
+> + * the subsystem bus.
+> + */
+> +static RADIX_TREE(memory_blocks, GFP_KERNEL);
+> +
+>  static BLOCKING_NOTIFIER_HEAD(memory_chain);
+>  
+>  int register_memory_notifier(struct notifier_block *nb)
+> @@ -572,20 +580,14 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+>  /* A reference for the returned memory block device is acquired. */
+>  static struct memory_block *find_memory_block_by_id(unsigned long block_id)
+>  {
+> -	struct device *dev;
+> +	struct memory_block *mem;
+>  
+> -	dev = subsys_find_device_by_id(&memory_subsys, block_id, NULL);
+> -	return dev ? to_memory_block(dev) : NULL;
+> +	mem = radix_tree_lookup(&memory_blocks, block_id);
+> +	if (mem)
+> +		get_device(&mem->dev);
+> +	return mem;
+>  }
+>  
+> -/*
+> - * For now, we have a linear search to go find the appropriate
+> - * memory_block corresponding to a particular phys_index. If
+> - * this gets to be a real problem, we can always use a radix
+> - * tree or something here.
+> - *
+> - * This could be made generic for all device subsystems.
+> - */
+>  struct memory_block *find_memory_block(struct mem_section *section)
+>  {
+>  	unsigned long block_id = base_memory_block_id(__section_nr(section));
+> @@ -628,9 +630,15 @@ int register_memory(struct memory_block *memory)
+>  	memory->dev.offline = memory->state == MEM_OFFLINE;
+>  
+>  	ret = device_register(&memory->dev);
+> -	if (ret)
+> +	if (ret) {
+>  		put_device(&memory->dev);
+> -
+> +		return ret;
+> +	}
+> +	ret = radix_tree_insert(&memory_blocks, memory->dev.id, memory);
+> +	if (ret) {
+> +		put_device(&memory->dev);
+> +		device_unregister(&memory->dev);
+> +	}
+>  	return ret;
+>  }
+>  
+> @@ -688,6 +696,8 @@ static void unregister_memory(struct memory_block *memory)
+>  	if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
+>  		return;
+>  
+> +	WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) == NULL);
+> +
+>  	/* drop the ref. we got via find_memory_block() */
+>  	put_device(&memory->dev);
+>  	device_unregister(&memory->dev);
+> -- 
+> 2.24.0
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
