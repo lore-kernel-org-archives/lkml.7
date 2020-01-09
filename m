@@ -2,125 +2,86 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FC4C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0DFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2002077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15BC52077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 22:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbgAIWMW convert rfc822-to-8bit (ORCPT
+        id S1729152AbgAIWPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 17:12:22 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34011 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgAIWMW (ORCPT
+        Thu, 9 Jan 2020 17:15:35 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:55537 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725840AbgAIWPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 17:12:22 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l136so165881oig.1;
-        Thu, 09 Jan 2020 14:12:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AUzrpm3sEv4FUbDtxyORZJwwFEEsXnw0vdkx3PoXBx8=;
-        b=ZrgxLuIx9Xcuar/ap2EP3dhR2TMCT9Gxh/LBClrvvxzj58+v6U/5ASww0KsdJkTH2X
-         GaVRs28U9Nfz7HxRDp0MKr5Kuz7/G/LuQN9gR1+VYiL4Vg9JVsF4k5GcC36SJNaqTvkR
-         rRe2W5I6UbroUQ1iizE0N60teiW2HIjT+xn0TfR6DE3zVKYkzcx9Qd5GNiXMbnSMOZKx
-         nSMTFgDEMI7KYJzj1w21etN9zomLM2u3ToD5/o++xufC9mIqeaeF6Gf6E5SdkbytkJZt
-         VVuAX7gb6tkKOCmFPGbpCG8/E0P5k5bdgiIHjQqjWMpFBWwL3AY+kaZ7gfWblBsHmX30
-         32ng==
-X-Gm-Message-State: APjAAAWix9CHymJnYFari0UhXeM6MMP/2a+ZzPAS9NgXAsdwUJjTZdwL
-        0qtcN9T/4TBn3dgdaX1/R7zOaJ7+lRJv9/6hvZ8fe4zV
-X-Google-Smtp-Source: APXvYqyX3gzA2iZLZF6a6Zoyk2WBsT2dvHOETCKarm/3/0LNleqC+csc3+SDvQAnjn9N3Mi7D44XlaDDRjRGOGiMZus=
-X-Received: by 2002:aca:48cd:: with SMTP id v196mr5203388oia.102.1578607941317;
- Thu, 09 Jan 2020 14:12:21 -0800 (PST)
+        Thu, 9 Jan 2020 17:15:35 -0500
+Received: from [88.149.160.229] (port=59042 helo=[192.168.77.51])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1ipg5U-003Orv-BB; Thu, 09 Jan 2020 23:15:32 +0100
+Subject: Re: [PATCH v2] docs: i2c: Fix return value of i2c_smbus_xxx functions
+To:     Jean Delvare <jdelvare@suse.de>, Wolfram Sang <wsa@the-dreams.de>
+Cc:     Lei YU <mine260309@gmail.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1574162632-65848-1-git-send-email-mine260309@gmail.com>
+ <20191125144857.GA2412@kunai> <20191126115243.673fc164@endymion>
+ <20200106130056.GA1290@ninjato> <20200109173929.1b42e0a6@endymion>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <0bf8bf55-525f-fd4e-0f10-fe0efad9ecb2@lucaceresoli.net>
+Date:   Thu, 9 Jan 2020 23:15:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191227174055.4923-1-sashal@kernel.org> <20191227174055.4923-96-sashal@kernel.org>
-In-Reply-To: <20191227174055.4923-96-sashal@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 9 Jan 2020 23:12:10 +0100
-Message-ID: <CAMuHMdVgOPdo1YwcX7wG8tv5+B-ZDR62HS61p3LjqQh-se9h1Q@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 096/187] ARM: shmobile: defconfig: Restore
- debugfs support
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200109173929.1b42e0a6@endymion>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+Hi Jean,
 
-(replying with the same response to an email with broader audience)
+On 09/01/20 17:39, Jean Delvare wrote:
+> On Mon, 6 Jan 2020 14:01:09 +0100, Wolfram Sang wrote:
+>>> I would go further and move half of the document to i2c-tools. i2c-dev
+>>> itself only provides the ioctls. Everything on top of that is in libi2c
+>>> now, so the kernel documentation should point to libi2c and the
+>>> detailed documentation should come with libi2c.
+>>>
+>>> So I guess I should review the whole document now to see what needs to
+>>> be updated, what should stay, and what should move.  
+>>
+>> Maybe you can collaborate with Luca on this who just revamped a lot of
+>> the docs? Putting him on CC and marking this patch as 'Deferred'.
+> 
+> I'm resuming my work on this. Luca, can you point me to your changes to
+> Documentation/i2c/dev-interface.rst so that I can adjust my own changes
+> to fit on top?
 
-On Fri, Dec 27, 2019 at 6:42 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> [ Upstream commit fa2cdb1762d15f701b83efa60b04f0d04e71bf89 ]
->
-> Since commit 0e4a459f56c32d3e ("tracing: Remove unnecessary DEBUG_FS
-> dependency"), CONFIG_DEBUG_FS is no longer auto-enabled.  This breaks
+Commits 4 and 26 of this series:
 
-AFAIK, that commit is not present in v5.4, and hasn't been backported yet.
-So I don't think there is a need to backport this and all other fixes restoring
-debugfs support in post-v5.4 kernels.
+https://patchwork.ozlabs.org/project/linux-i2c/list/?series=151292
 
-BTW, I noticed you plan to backport this "fix" not just to v5.4, but also
-to v4.19?
-
-> booting Debian 9, as systemd needs debugfs:
->
->     [FAILED] Failed to mount /sys/kernel/debug.
->     See 'systemctl status sys-kernel-debug.mount' for details.
->     [DEPEND] Dependency failed for Local File Systems.
->     ...
->     You are in emergGive root password for maintenance
->     (or press Control-D to continue):
->
-> Fix this by enabling CONFIG_DEBUG_FS explicitly.
->
-> See also commit 18977008f44c66bd ("ARM: multi_v7_defconfig: Restore
-> debugfs support").
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> Link: https://lore.kernel.org/r/20191209101327.26571-1-geert+renesas@glider.be
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  arch/arm/configs/shmobile_defconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
-> index c6c70355141c..7e7b678ae153 100644
-> --- a/arch/arm/configs/shmobile_defconfig
-> +++ b/arch/arm/configs/shmobile_defconfig
-> @@ -215,4 +215,5 @@ CONFIG_DMA_CMA=y
->  CONFIG_CMA_SIZE_MBYTES=64
->  CONFIG_PRINTK_TIME=y
->  # CONFIG_ENABLE_MUST_CHECK is not set
-> +CONFIG_DEBUG_FS=y
->  CONFIG_DEBUG_KERNEL=y
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Pretty trivial patches anyway, I haven't really tackled that specific
+file so far, which is good as you are planning to remove all/most of it.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Luca
