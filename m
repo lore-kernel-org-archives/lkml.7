@@ -2,145 +2,299 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D767C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7402C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173002067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8399C2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNUYrsna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbgAIA46 convert rfc822-to-8bit (ORCPT
+        id S1727727AbgAIA7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:56:58 -0500
-Received: from mga07.intel.com ([134.134.136.100]:45603 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgAIA45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:56:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 16:56:56 -0800
-X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
-   d="scan'208";a="218221687"
-Received: from aguedesl-mac01.jf.intel.com (HELO localhost) ([10.24.12.236])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 16:56:55 -0800
-Content-Type: text/plain; charset="utf-8"
+        Wed, 8 Jan 2020 19:59:09 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38681 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbgAIA7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 19:59:09 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d7so5571304otf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 16:59:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cuIZsqo9UeRSk4/TnTRSL/BMf1IA3NGdXRfpceX2Xks=;
+        b=FNUYrsna8KPM2qp/hcRah+OlZdZO4XxDpwHNv24Fud+r01fSgWsfiMj7N9F9dqS83h
+         BSmrUkUMjQSPCiHbR9gc55NXMsSMR9H1EWBwKh+eXPdgUht7fFdYKuMYI13leXvHKXMP
+         mLFLlCp53kwfgHes5YJnvv1Gbj4LsO6gRaItIvoZpQ2LrgieGYNATzU3J9HZySvNQVOc
+         Wi93OIBrGd84cCUBofXEUsnDFc1MLxsiF245E96Y7z0s2JM7j3YScf3kcnHPCIakSCEh
+         FbAGWub18fUjBDKjwxqNdc+X3wCWICesdTI1yTbzGT/oCroJBYyBhLR2M8fkyI6g33AC
+         8kHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cuIZsqo9UeRSk4/TnTRSL/BMf1IA3NGdXRfpceX2Xks=;
+        b=sNG62oCq92Q7546mNkfvWwgwJTu4pALRRreGAnseWilEwydLa/d47py27XLgyAM5xZ
+         8TKiMJyvFTnnP2nZpMkUQ3heSLy1q2z06NlPRbZK6wz7y05dLyXdhySHh4n8QnUi2xpB
+         UKMtrZwonUTWKYbqrBleMAhaDMCw3aGCemmyTVpiqNDvGG3KNhaD0TXfNKiMWdCsWU8d
+         WBLkWBAmItWo6d3TEUkl7PyTLuBAtPX4dCUvVrf+c4rKZOC/4MgE6Rq3QpAPp2rJFc3R
+         hWteXcK3/9oV44KHx4tKRPO68IfXn3jv3AiUUTcMUM58DHda0IzWSlxrU8hL/Svt9Lou
+         Pjlw==
+X-Gm-Message-State: APjAAAUf1U8gfsQj1HLI36fHKsWUITFgOyuW6O2sQTQKtlcBxJPjV25k
+        d/QhPwI54vsk5I5j0hTfpsNhdPJwWl4sgW1KdakcrA==
+X-Google-Smtp-Source: APXvYqy4xJojn/QVQEgwIJnTyqqrQjpAVhzjN+VIkhCK44nKFJGM0ZB9NDNlm/542WrsAy5qRkdkgHqIAVAy4b7a3Fo=
+X-Received: by 2002:a9d:70d9:: with SMTP id w25mr6757437otj.231.1578531548163;
+ Wed, 08 Jan 2020 16:59:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <87eex43pzm.fsf@linux.intel.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com> <157603276975.18462.4638422874481955289@pipeline> <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com> <87eex43pzm.fsf@linux.intel.com>
-Subject: RE: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
-From:   Andre Guedes <andre.guedes@linux.intel.com>
-Cc:     "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-To:     "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Po Liu <po.liu@nxp.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Message-ID: <157853141533.36295.15469390811167798190@aguedesl-mac01.jf.intel.com>
-User-Agent: alot/0.8.1
-Date:   Wed, 08 Jan 2020 16:56:55 -0800
+References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-3-saravanak@google.com>
+ <20200108105348.p4y3s2mbuchiu4mf@vireshk-i7>
+In-Reply-To: <20200108105348.p4y3s2mbuchiu4mf@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 8 Jan 2020 16:58:32 -0800
+Message-ID: <CAGETcx8QEV+_+d2yt_+bE09mi4qyHZDHPJqPiDXv_HgJPgQJoQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jan 8, 2020 at 2:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 06-12-19, 16:24, Saravana Kannan wrote:
+> > Not all devices quantify their performance points in terms of frequency.
+> > Devices like interconnects quantify their performance points in terms of
+> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> > add support for parsing bandwidth OPPs from DT.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/opp/core.c | 15 +++++++++--
+> >  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
+> >  drivers/opp/opp.h  |  5 ++++
+> >  3 files changed, 62 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > index be7a7d332332..c79bbfac7289 100644
+> > --- a/drivers/opp/core.c
+> > +++ b/drivers/opp/core.c
+> > @@ -1282,11 +1282,21 @@ static bool _opp_supported_by_regulators(struct dev_pm_opp *opp,
+> >       return true;
+> >  }
+> >
+> > +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
+> > +{
+> > +     if (opp1->rate != opp2->rate)
+> > +             return opp1->rate < opp2->rate ? -1 : 1;
+> > +     if (opp1->peak_bw != opp2->peak_bw)
+> > +             return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
+>
+> Please also add level here.
 
-Quoting Vinicius Costa Gomes (2019-12-16 13:44:13)
-> >> Quoting Po Liu (2019-11-27 01:59:18)
-> >> > User can check the feature 'tx-preemption' by command 'ethtool -k
-> >> > devname'. If hareware set preemption feature. The property would be a
-> >> > fixed value 'on' if hardware support the frame preemption.
-> >> > Feature would show a fixed value 'off' if hardware don't support the
-> >> > frame preemption.
-> 
-> Having some knobs in ethtool to enable when/how Frame Preemption is
-> advertised on the wire makes sense. I also agree that it should be "on"
-> by default.
+I can, but I vaguely remember finding opp-levels could have
+duplicates? Am I wrong? If so I can add the opp-level comparison too.
 
-Agreed. If Frame Preemption is supported by hardware and it can be
-enabled/disabled, I think we should allow the user to configure it, instead of
-having it fixed in 'on'.
+> > +     return 0;
+> > +}
+> > +
+> >  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
+> >                            struct opp_table *opp_table,
+> >                            struct list_head **head)
+> >  {
+> >       struct dev_pm_opp *opp;
+> > +     int opp_cmp;
+> >
+> >       /*
+> >        * Insert new OPP in order of increasing frequency and discard if
+> > @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
+> >        * loop.
+> >        */
+> >       list_for_each_entry(opp, &opp_table->opp_list, node) {
+> > -             if (new_opp->rate > opp->rate) {
+> > +             opp_cmp = opp_compare_key(new_opp, opp);
+> > +             if (opp_cmp > 0) {
+> >                       *head = &opp->node;
+> >                       continue;
+> >               }
+> >
+> > -             if (new_opp->rate < opp->rate)
+> > +             if (opp_cmp < 0)
+> >                       return 0;
+> >
+> >               /* Duplicate OPPs */
+> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > index 1cbb58240b80..b565da5a2b1f 100644
+> > --- a/drivers/opp/of.c
+> > +++ b/drivers/opp/of.c
+> > @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> >
+> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+> > +                      bool *rate_not_available)
+> > +{
+> > +     int ret;
+> > +     u64 rate;
+> > +     u32 bw;
+> > +
+> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     if (!ret) {
+> > +             /*
+> > +              * Rate is defined as an unsigned long in clk API, and so
+> > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > +              * bit guaranteed in clk API.
+> > +              */
+> > +             new_opp->rate = (unsigned long)rate;
+> > +             goto out;
+> > +     }
+> > +
+> > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> > +     if (!ret) {
+> > +             new_opp->peak_bw = bw;
+> > +
+> > +             if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
+> > +                     new_opp->avg_bw = bw;
+>
+> Maybe
+>                 of_property_read_u32(np, "opp-avg-kBps", &new_opp->avg_bw);
+>
+> and same for opp-peak-kbps as well.
 
-> >> In an early RFC series [1], we proposed a way to support frame preemption. I'm
-> >> not sure if you have considered it before implementing this other proposal
-> >> based on ethtool interface so I thought it would be a good idea to bring that up
-> >> to your attention, just in case.
-> >  
-> > Sorry, I didn't notice the RFC proposal. Using ethtool set the
-> > preemption just thinking about 8021Qbu as standalone. And not limit to
-> > the taprio if user won't set 802.1Qbv.
-> 
-> I see your point of using frame-preemption "standalone", I have two
-> ideas:
-> 
->  1. add support in taprio to be configured without any schedule in the
->  "full offload" mode. In practice, allowing taprio to work somewhat
->  similar to (mqprio + frame-preemption), changes in the code should de
->  fairly small;
-> 
->  2. extend mqprio to support frame-preemption;
+But those are not u32. Is it always safe to directly read into it
+across all endian-ness and unsigned int sizes? I get tripped up by
+that occasionally.
 
-I'm not sure 2) is a good way to support frame preemption "standalone"
-functionality since mpqrio already looks overloaded. Besides its original goal
-(map traffic flows to hardware queues), it also supports different modes and
-traffic shaping. I rather not add another functionality to it.
+> > +     }
+> > +
+> > +out:
+> > +     *rate_not_available = !!ret;
+> > +     /*
+> > +      * If ret is 0 at this point, we have already found a key. If we
+> > +      * haven't found a key yet, then ret already has an error value. In
+> > +      * either case, we don't need to update ret.
+> > +      */
+> > +     of_property_read_u32(np, "opp-level", &new_opp->level);
+>
+> Yes, it wasn't done earlier but we should do it now. Check level as
+> well and treat it as any other key.
+>
+> I think add a preparatory patch first which does all the cleanup
+> before bandwidth thing is added.
 
-> > As some feedback  also want to set the MAC merge minimal fragment size
-> > and get some more information of 802.3br.
-> 
-> The minimal fragment size, I guess, also makes sense to be kept in
-> ethtool. That is we have a sane default, and allow the user to change
-> this setting for special cases.
+Ah come on man! You are making this too painful. It's okay to add a
+few more error checks as part of implementing a new feature. Please
+don't make me add more patches before this.
 
-Yes, the mim fragment size is another configuration knob we should have, and it
-should probably live at the same place we land the enable/disable knob.
+> > +
+> > +     return ret;
+> > +}
+> > +
+> >  /**
+> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+> >   * @opp_table:       OPP table
+> > @@ -558,26 +596,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (!new_opp)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > -     if (ret < 0) {
+> > -             /* "opp-hz" is optional for devices like power domains. */
+> > -             if (!opp_table->is_genpd) {
+> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > -                     goto free_opp;
+> > -             }
+> > -
+> > -             rate_not_available = true;
+> > -     } else {
+> > -             /*
+> > -              * Rate is defined as an unsigned long in clk API, and so
+> > -              * casting explicitly to its type. Must be fixed once rate is 64
+> > -              * bit guaranteed in clk API.
+> > -              */
+> > -             new_opp->rate = (unsigned long)rate;
+> > +     ret = _read_opp_key(new_opp, np, &rate_not_available);
+> > +     if (ret) {
+> > +             dev_err(dev, "%s: opp key field not found\n", __func__);
+> > +             goto free_opp;
+> >       }
+> >
+> > -     of_property_read_u32(np, "opp-level", &new_opp->level);
+> > -
+> >       /* Check if the OPP supports hardware's hierarchy of versions or not */
+> >       if (!_opp_is_supported(dev, opp_table, np)) {
+> >               dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
+> > @@ -616,7 +640,8 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (of_property_read_bool(np, "opp-suspend")) {
+> >               if (opp_table->suspend_opp) {
+> >                       /* Pick the OPP with higher rate as suspend OPP */
+> > -                     if (new_opp->rate > opp_table->suspend_opp->rate) {
+> > +                     if (opp_compare_key(new_opp,
+> > +                                         opp_table->suspend_opp) > 1) {
+>
+> Maybe leave this place as is as we never want to compare anything else
+> but rate.
 
-> >> It also aligns with the gate control operations Set-And-Hold-MAC and Set-And-
-> >> Release-MAC that can be set via 'sched-entry' (see Table 8.7 from
-> >> 802.1Q-2018 for further details.
-> >  
-> > I am curious about Set-And-Hold-Mac via 'sched-entry'. Actually, it
-> > could be understand as guardband by hardware preemption. MAC should
-> > auto calculate the nano seconds before  express entry slot start to
-> > break to two fragments. Set-And-Hold-MAC should minimal larger than
-> > the fragment-size oct times.
-> 
-> Another interesting point. My first idea is that when the schedule is
-> offloaded to the driver and the driver detects that the "entry" width is
-> smaller than the fragment side, the driver could reject that schedule
-> with a nice error message.
+We do want to support suspend bandwidth. So I think I should have this
+fix here so it works in general. Also, why not suspend opp-level?
 
-My understanding is that, if HOLD operation is supported, the hardware issues
-an MM_CTL.request(HOLD) at 'holdAdvance' nsecs in advance to the point where
-the 'sched-entry' with Set-And-Hold-MAC starts. This comes from the description
-in Table 8-7 from 802.1Q-2018.
+> >                               opp_table->suspend_opp->suspend = false;
+> >                               new_opp->suspend = true;
+> >                               opp_table->suspend_opp = new_opp;
+> > diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> > index 01a500e2c40a..0def3154d07b 100644
+> > --- a/drivers/opp/opp.h
+> > +++ b/drivers/opp/opp.h
+> > @@ -57,6 +57,8 @@ extern struct list_head opp_tables;
+> >   * @suspend: true if suspend OPP
+> >   * @pstate: Device's power domain's performance state.
+> >   * @rate:    Frequency in hertz
+> > + * @peak_bw: Peak bandwidth in kilobytes per second
+> > + * @avg_bw:  Average bandwidth in kilobytes per second
+> >   * @level:   Performance level
+> >   * @supplies:        Power supplies voltage/current values
+> >   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
+> > @@ -78,6 +80,8 @@ struct dev_pm_opp {
+> >       bool suspend;
+> >       unsigned int pstate;
+> >       unsigned long rate;
+> > +     unsigned int peak_bw;
+> > +     unsigned int avg_bw;
+> >       unsigned int level;
+> >
+> >       struct dev_pm_opp_supply *supplies;
+> > @@ -213,6 +217,7 @@ struct opp_device *_add_opp_dev(const struct device *dev, struct opp_table *opp_
+> >  void _dev_pm_opp_find_and_remove_table(struct device *dev);
+> >  struct dev_pm_opp *_opp_allocate(struct opp_table *opp_table);
+> >  void _opp_free(struct dev_pm_opp *opp);
+> > +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2);
+>
+> make it _opp_compare_key() instead.
 
-Best regards,
+Ack.
 
-Andre
+-Saravana
