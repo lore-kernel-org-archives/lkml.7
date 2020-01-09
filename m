@@ -2,159 +2,97 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14B7C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3107C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC36206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D712075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:59:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CxBMXD1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgAIB6q (ORCPT
+        id S1727887AbgAIB67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 20:58:46 -0500
-Received: from mga14.intel.com ([192.55.52.115]:1677 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgAIB6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 20:58:46 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 17:58:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
-   d="scan'208";a="233955535"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga002.jf.intel.com with ESMTP; 08 Jan 2020 17:58:44 -0800
-Date:   Thu, 9 Jan 2020 09:58:45 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        n-horiguchi@ah.jp.nec.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm/memory-failure.c: not necessary to recalculate
- hpage
-Message-ID: <20200109015845.GA31041@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191118082003.26240-1-richardw.yang@linux.intel.com>
- <20191118082003.26240-2-richardw.yang@linux.intel.com>
- <fdba31c8-d0c0-83a8-62d1-c04c1e894218@redhat.com>
- <20191202222827.isaelnqmuyn7zrns@master>
- <37eedde2-05ab-e42e-7bcd-09090b090366@redhat.com>
- <20191206014825.GA3846@richard>
- <fd9dc6a9-3fe8-2258-3fc3-0cbdd6b3ef98@redhat.com>
+        Wed, 8 Jan 2020 20:58:59 -0500
+Received: from mail-lf1-f54.google.com ([209.85.167.54]:36019 "EHLO
+        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgAIB67 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 20:58:59 -0500
+Received: by mail-lf1-f54.google.com with SMTP id n12so3980480lfe.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 17:58:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4HLXba65IV99LLkH3oDHgUrEsAK+Af9w2DfQh6SRBRg=;
+        b=CxBMXD1K0oXMPSBhBEDTwmq8dZh1xY7iXli6Q2oINfshT8e+3LbrF1lPNkx8u/PGJQ
+         luQnZipBucOXUA2y/xdFuXxvcQVPdpncXK5I/Tt+Cijw7UsEFPD5rCKKLMIzr5WLVIU8
+         z5nt5NTPz9s8EfX4UlaEZklWXYSWuxDLieUTyZ4ap8vS0J2mP+pXEDT1FfTzecqy9fir
+         Vd4jqS7IE5WQqoYuKYvoYELlNZJAsQ5qh//KKqTvJhIe6JukyPt0c62N5NPmFmZ0ljUn
+         wpmT2arhfy5K4eSN16I8A8JhXCLmv5cn90HaIIFpmXxjZy3BmxIic1u3P/HEjFi9DKbT
+         5npw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4HLXba65IV99LLkH3oDHgUrEsAK+Af9w2DfQh6SRBRg=;
+        b=JuB4B5NUR5EI3rjmeA6JzWdmeK0YMtGzsy06ZfCPEM2c+Fia8tCy4LhtqMVRQWjIE7
+         O8dAAxDCLCuN8HofbN4XxcsbN+2Dw5bHZPsdS2uz0fhAhI2w8DsoQAdx96B8d7RQZk7y
+         FFeVLh8CC5ARntPYtVfwqk68HWS1miF4vb5jgWGA3EhLnvlIbDP2c5Atjeaqb4D4p9Ic
+         Tg02tuLCXj9fSyAo74MSdB8iEm8s+CfSsRG9UouuY9c/yS3deEsEIQfk0PnEoNgx7J2B
+         j2ItiNi9N7MsxMYZx8hqvfuuScz5b1EPa53QAtvUXkDAenX44nlw+IBBdQJdS11+mJ6S
+         +PRA==
+X-Gm-Message-State: APjAAAUyFJhSSa+bPu6qb7Nf112eeDHokTdW3zihmg2dU0AcsZ1ybi6t
+        d6AxJqGj+sgwjxREYxzmY4jad+UGYf6rHgV2/5MKFw==
+X-Google-Smtp-Source: APXvYqym0x25O7/j2uOuILFJYpslF8H/cNSZB9HqV2Amzfra19PlmFsNj9gYjF3rDfVcy/PgZQAtlMNHT3HlwBxcZQ4=
+X-Received: by 2002:ac2:55a8:: with SMTP id y8mr4539518lfg.117.1578535137217;
+ Wed, 08 Jan 2020 17:58:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fd9dc6a9-3fe8-2258-3fc3-0cbdd6b3ef98@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200109112836.0649c578@canb.auug.org.au>
+In-Reply-To: <20200109112836.0649c578@canb.auug.org.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 9 Jan 2020 02:58:46 +0100
+Message-ID: <CACRpkdbZi3qV1RFvA4SDa_7T-b-eSaKGdA9_m4s_1gk=2MQNDQ@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the pinctrl tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ma Feng <mafeng.ma@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 01:20:44PM +0100, David Hildenbrand wrote:
->On 06.12.19 02:48, Wei Yang wrote:
->> On Thu, Dec 05, 2019 at 04:06:20PM +0100, David Hildenbrand wrote:
->>> On 02.12.19 23:28, Wei Yang wrote:
->>>> On Wed, Nov 20, 2019 at 04:07:38PM +0100, David Hildenbrand wrote:
->>>>> On 18.11.19 09:20, Wei Yang wrote:
->>>>>> hpage is not changed.
->>>>>>
->>>>>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->>>>>> ---
->>>>>>   mm/memory-failure.c | 1 -
->>>>>>   1 file changed, 1 deletion(-)
->>>>>>
->>>>>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->>>>>> index 392ac277b17d..9784f4339ae7 100644
->>>>>> --- a/mm/memory-failure.c
->>>>>> +++ b/mm/memory-failure.c
->>>>>> @@ -1319,7 +1319,6 @@ int memory_failure(unsigned long pfn, int flags)
->>>>>>   		}
->>>>>>   		unlock_page(p);
->>>>>>   		VM_BUG_ON_PAGE(!page_count(p), p);
->>>>>> -		hpage = compound_head(p);
->>>>>>   	}
->>>>>>   	/*
->>>>>>
->>>>>
->>>>> I am *absolutely* no transparent huge page expert (sorry :) ), but won't the
->>>>> split_huge_page(p) eventually split the compound page, such that
->>>>> compound_head(p) will return something else after that call?
->>>>>
->>>>
->>>> Hi, David
->>>>
->>>> Took sometime to look into the code and re-think about it. Found maybe we can
->>>> simplify this in another way.
->>>>
->>>> First, code touches here means split_huge_page() succeeds and "p" is now a PTE
->>>> page. So compound_head(p) == p.
->>>
->>> While this would also be my intuition, I can't state that this is
->>> guaranteed to be the case (IOW, I did not check the code/documentation) :)
->>>
->> 
->> If my understanding is correct, split_huge_page() succeeds the THP would be
->> tear down to normal page.
->> 
->>>>
->>>> Then let's look at who will use hpage in the following function. There are two
->>>> uses in current upstream:
->>>>
->>>>     * page_flags calculation
->>>>     * hwpoison_user_mappings()
->>>>
->>>> The first one would be removed in next patch since PageHuge is handled at the
->>>> beginning.
->>>>
->>>> And in the second place, comment says if split succeeds, hpage points to page
->>>> "p".
->>>>
->>>> After all, we don't need to re-calculate hpage after split, and just replace
->>>> hpage in hwpoison_user_mappings() with p is enough.
->>>
->>> That assumption would only be true in case all compound pages at this
->>> point are transparent huge pages, no? AFAIK that is not necessarily
->>> true. Or am I missing something?
->>>
->> 
->> Function hwpoison_user_mappings() just handle user space mapping. If my
->> understanding is correct, we just have three type of pages would be used in
->> user space mapping:
->> 
->>     * normal page
->>     * THP
->>     * hugetlb
->> 
->> Since THP would be split or already returned and hugetlb is handled in another
->> branch, this means for other pages hwpoison_user_mappings() would just return
->> true.
->> 
->
->Sorry for the late reply :)
->
->While I think you are correct, I am not sure if the change you are
->suggesting is a) future proof and b) worth it. IOW, the recalculation
->after the split makes it clear that something changed and that the
->compound page does no longer exist. I might be wrong of course and this
->cleanup makes perfect sense :)
->
+On Thu, Jan 9, 2020 at 1:28 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Yep, you are welcome.
-
-I would think about the whole picture again.
-
+> In commit
 >
->-- 
->Thanks,
+>   d5d3594db9f0 ("pinctrl: armada-37xx: Remove unneeded semicolon")
 >
->David / dhildenb
+> Fixes tag
+>
+>   Fixes: commit 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
+>
+> has these problem(s):
+>
+>   - leading word 'commit' unexpected
+>
+> Also, each line listating a fixed commit should have a Fixes: prefix and
+> all the commit message tags should be kept together at the end of the
+> commit message.
 
--- 
-Wei Yang
-Help you, Help me
+Do we have to fix this? It is a trivial fix to a non-critial non-regression
+problem so it's not like we need those Fixes tags to get it picked to
+stable or anything. To me it's just some random free-form commit
+message.
+
+I have merged a bunch of pull requests on top so I need a real good
+reason to back all that out. :/ it just doesn't seem worth it.
+
+Yours,
+Linus Walleij
