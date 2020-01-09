@@ -7,63 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A01BC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284CEC33CA4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8182072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE1E2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:32:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HuDbXpFB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kDYbUtGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbgAIKcK (ORCPT
+        id S1730204AbgAIKcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:32:10 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53618 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728614AbgAIKcH (ORCPT
+        Thu, 9 Jan 2020 05:32:16 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36772 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730159AbgAIKcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:32:07 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m24so2299794wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:32:06 -0800 (PST)
+        Thu, 9 Jan 2020 05:32:08 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z3so6828756wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:32:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0b+aMIWgaqOGNLhH5jThwdZY8oNLzZ6JoyOvUDXTde8=;
-        b=HuDbXpFBD3WuhbTSxy2ZahTGpjjyL2g284NrIyhv0FmCNx2NqyjpMn0GOIsxlEZkg4
-         KWOnKfnCWiCqK7978KPycWLJ1f9oCfHJXi3629C2ognUFMA9tyYV5k5qpM2GP8mpM5L0
-         wI+RcZmjgCezlD6aGL03X43fkDKd/SbPYHXgKDuYa+9Gbv0NH06eomko8XY5ISmIRMld
-         aN8pEuVuQgHb/VMS6d93dY7rK9KaM0ZbCq1az5O+FX4sktWAX/CSB2cpAORKY1SVWT3g
-         p2OgK8VCA2DoDfUl/ZLS/m4P37/5L90ImzaOs0zgfyKpU/BG/+nXF5mSazeqpOxuo3Oe
-         2Rfg==
+        bh=ZiyT8hwvH3cU7wQHlzEyrwouYDKnzGuvicSuE25MKEE=;
+        b=kDYbUtGvtpoqFjdUiPy/Qs+FxsV+7IrisdZ1CN4ZtVeUMF0Qr8yloG0sEfVd77Jyrp
+         ZinMo3r9p0JZnO1AZybj77R0K5pf96++LO+0WodXA/155//yNUIKY8ktawiqGkjPCeyU
+         UVdnbPfFbmp8lL8ak0bMEwr5LP1hzwiuIcsA1Bd56U/lFBnRZclDNWEDebgSWx8I540G
+         BT+9YuzrHH71OmSCqRkjPcmm34f18Fy897LBxsXoPZ3/fP8SHmKNkoJ13JjQbmaWttmK
+         GfPRMcNYBgE9sSRr7OeT2OzRYCLQqDeOY1nlZ466AfdmCYpEUBcc+Q2tUUGjuCd8gvAZ
+         URZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0b+aMIWgaqOGNLhH5jThwdZY8oNLzZ6JoyOvUDXTde8=;
-        b=UOC/1PnnOpsPhckDHv4aUYViCBwLipN//+mZxXvjQB6F44s/6iUTxsz9eOKzKPvJV/
-         Yiw7jwqUj+Jg1PuqNM/eOmwNpjLWdInmwKN4NadWYN8+ZUDMGpEvaQ5y5gFAK6jK4Tv1
-         JD6hzQbej5MRCbPoTn+Y6vNbiQ0J7i/c9b3DQFanry/5CeuHX5ExC6FlxeKdt30PTZNg
-         FQ8LIav90ANnRxDcclJ2wjI1DUISNWQp5MPlIePgIf1TzpXBb9CyFA+UjWs2Lgapa8OT
-         sVoWTBRyg64Yr9d+leAVOlGa6SqIdi05Z+fcIES+37UwtPL2KSv44PL63QgSjnpaNsLk
-         02LA==
-X-Gm-Message-State: APjAAAUONsFzW8sSmxcXb+prXawzGhU9E3Azz1bz4aDFTs1OYdNAgzc9
-        X2zXNli1JgYLgBdbc8xovs/yNw==
-X-Google-Smtp-Source: APXvYqyz/wYHZpdMR1qsoovmpqHI+yfop5dqpsJS2BFGsCABoFISXSZTtsAcI+fAvwuhcEvqr+6pyg==
-X-Received: by 2002:a1c:2355:: with SMTP id j82mr4073740wmj.135.1578565925414;
-        Thu, 09 Jan 2020 02:32:05 -0800 (PST)
+        bh=ZiyT8hwvH3cU7wQHlzEyrwouYDKnzGuvicSuE25MKEE=;
+        b=DWhhyCSTiteY0wtK5mJopWRzTjSC3tf+62PgNENtf3S09b55dmweWy/zctbUzI6VYT
+         z4QjlYImXfpDljG9+yLTfWXm4eSO121OquDKB6g+TwjONondwwwSIcaHnJIA/p6Iv7WX
+         y0PLSZu1rMNQ8LfnnfMRm7JbJWuNw3V3WvPQkcuZ40vTFVfhDoIpjRKUBQ/+4GozBMaI
+         252HF5fjjTLy3padC7JVw0GJtJZTU8YQI5bjZruZ8QXyga/EEes1y1GbB9EAE8OzM9xD
+         uUd+/zJrAm8MMvZBULgD4HVlKSlBvw8Pkd8/svxkWlFxlbbEp56Xz3slDk1b+L60BAom
+         +fpQ==
+X-Gm-Message-State: APjAAAVPkuWJtEhq2gdBO4D/SGyG2Uddx6pcDDOmddefL09kNWZ1uygR
+        9sJbyAXq1R9/idY1aylXXTskPA==
+X-Google-Smtp-Source: APXvYqzVJu0yS1smPrcIKa/S/XC2ZAl7Oi98yjPRNSdY+O8HRcZBxqK3CaskQy1Wa6EHH7ZKPHqgGQ==
+X-Received: by 2002:adf:ea05:: with SMTP id q5mr10286093wrm.48.1578565926637;
+        Thu, 09 Jan 2020 02:32:06 -0800 (PST)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id z83sm2473830wmg.2.2020.01.09.02.32.04
+        by smtp.gmail.com with ESMTPSA id z83sm2473830wmg.2.2020.01.09.02.32.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 02:32:04 -0800 (PST)
+        Thu, 09 Jan 2020 02:32:05 -0800 (PST)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        Joe Perches <joe@perches.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/4] slimbus: qcom-ngd-ctrl: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Thu,  9 Jan 2020 10:31:46 +0000
-Message-Id: <20200109103148.5612-3-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 3/4] slimbus: Use the correct style for SPDX License Identifier
+Date:   Thu,  9 Jan 2020 10:31:47 +0000
+Message-Id: <20200109103148.5612-4-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200109103148.5612-1-srinivas.kandagatla@linaro.org>
 References: <20200109103148.5612-1-srinivas.kandagatla@linaro.org>
@@ -74,58 +75,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Nishad Kamdar <nishadkamdar@gmail.com>
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+This patch corrects the SPDX License Identifier style in
+header file related to SLIMbus driver.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
 
-By using dma_request_chan() directly the driver can support deferred
-probing against DMA.
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/slimbus/qcom-ngd-ctrl.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/slimbus/slimbus.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-index 29fbab55c3b3..e3f5ebc0c05e 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -666,10 +666,12 @@ static int qcom_slim_ngd_init_rx_msgq(struct qcom_slim_ngd_ctrl *ctrl)
- 	struct device *dev = ctrl->dev;
- 	int ret, size;
- 
--	ctrl->dma_rx_channel = dma_request_slave_channel(dev, "rx");
--	if (!ctrl->dma_rx_channel) {
--		dev_err(dev, "Failed to request dma channels");
--		return -EINVAL;
-+	ctrl->dma_rx_channel = dma_request_chan(dev, "rx");
-+	if (IS_ERR(ctrl->dma_rx_channel)) {
-+		dev_err(dev, "Failed to request RX dma channel");
-+		ret = PTR_ERR(ctrl->dma_rx_channel);
-+		ctrl->dma_rx_channel = NULL;
-+		return ret;
- 	}
- 
- 	size = QCOM_SLIM_NGD_DESC_NUM * SLIM_MSGQ_BUF_LEN;
-@@ -703,10 +705,12 @@ static int qcom_slim_ngd_init_tx_msgq(struct qcom_slim_ngd_ctrl *ctrl)
- 	int ret = 0;
- 	int size;
- 
--	ctrl->dma_tx_channel = dma_request_slave_channel(dev, "tx");
--	if (!ctrl->dma_tx_channel) {
--		dev_err(dev, "Failed to request dma channels");
--		return -EINVAL;
-+	ctrl->dma_tx_channel = dma_request_chan(dev, "tx");
-+	if (IS_ERR(ctrl->dma_tx_channel)) {
-+		dev_err(dev, "Failed to request TX dma channel");
-+		ret = PTR_ERR(ctrl->dma_tx_channel);
-+		ctrl->dma_tx_channel = NULL;
-+		return ret;
- 	}
- 
- 	size = ((QCOM_SLIM_NGD_DESC_NUM + 1) * SLIM_MSGQ_BUF_LEN);
+diff --git a/drivers/slimbus/slimbus.h b/drivers/slimbus/slimbus.h
+index b2f013bfe42e..c73035915f1d 100644
+--- a/drivers/slimbus/slimbus.h
++++ b/drivers/slimbus/slimbus.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2011-2017, The Linux Foundation
+  */
 -- 
 2.21.0
 
