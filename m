@@ -4,33 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2817C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668A7C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E842072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401492072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbgAIMew (ORCPT
+        id S1731102AbgAIMe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:34:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37974 "EHLO mx2.suse.de"
+        Thu, 9 Jan 2020 07:34:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37960 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbgAIMeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730942AbgAIMeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 Jan 2020 07:34:09 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C4E60B2208;
-        Thu,  9 Jan 2020 12:34:03 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 17702B2209;
+        Thu,  9 Jan 2020 12:34:05 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Paul Burton <paulburton@kernel.org>
 Cc:     Ralf Baechle <ralf@linux-mips.org>,
         James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 02/14] MIPS: SGI-IP27: use cpu physid already present while scanning for CPUs
-Date:   Thu,  9 Jan 2020 13:33:39 +0100
-Message-Id: <20200109123353.5656-3-tbogendoerfer@suse.de>
+Subject: [PATCH 04/14] MIPS: SGI-IP27: get rid of asm/sn/sn0/ip27.h
+Date:   Thu,  9 Jan 2020 13:33:41 +0100
+Message-Id: <20200109123353.5656-5-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200109123353.5656-1-tbogendoerfer@suse.de>
 References: <20200109123353.5656-1-tbogendoerfer@suse.de>
@@ -41,168 +41,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By using cpu physid already present when scanning for CPUs
-get_cpu_slice() is unsued and can be removed together with two
-other then used functions.
+The only piece needed in ip27.h is SEND_NMI. Move the define to the only
+place where it's used and remove ip27.h
 
 Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- arch/mips/include/asm/sn/arch.h     |  1 -
- arch/mips/include/asm/sn/klconfig.h |  4 ---
- arch/mips/sgi-ip27/ip27-klconfig.c  | 51 -----------------------------
- arch/mips/sgi-ip27/ip27-smp.c       | 26 +++++----------
- 4 files changed, 8 insertions(+), 74 deletions(-)
+ arch/mips/include/asm/sn/sn0/ip27.h | 85 -----------------------------
+ arch/mips/sgi-ip27/ip27-init.c      |  1 -
+ arch/mips/sgi-ip27/ip27-nmi.c       |  3 +
+ arch/mips/sgi-ip27/ip27-smp.c       |  1 -
+ arch/mips/sgi-ip27/ip27-timer.c     |  1 -
+ 5 files changed, 3 insertions(+), 88 deletions(-)
+ delete mode 100644 arch/mips/include/asm/sn/sn0/ip27.h
 
-diff --git a/arch/mips/include/asm/sn/arch.h b/arch/mips/include/asm/sn/arch.h
-index f7d3273d9599..f8b34d34d872 100644
---- a/arch/mips/include/asm/sn/arch.h
-+++ b/arch/mips/include/asm/sn/arch.h
-@@ -26,6 +26,5 @@
- #define INVALID_PARTID		(partid_t)-1
+diff --git a/arch/mips/include/asm/sn/sn0/ip27.h b/arch/mips/include/asm/sn/sn0/ip27.h
+deleted file mode 100644
+index 3b5efeefcc3f..000000000000
+--- a/arch/mips/include/asm/sn/sn0/ip27.h
++++ /dev/null
+@@ -1,85 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Derived from IRIX <sys/SN/SN0/IP27.h>.
+- *
+- * Copyright (C) 1992 - 1997, 1999 Silicon Graphics, Inc.
+- * Copyright (C) 1999, 2006 by Ralf Baechle
+- */
+-#ifndef _ASM_SN_SN0_IP27_H
+-#define _ASM_SN_SN0_IP27_H
+-
+-#include <asm/mipsregs.h>
+-
+-/*
+- * Simple definitions for the masks which remove SW bits from pte.
+- */
+-
+-#define TLBLO_HWBITSHIFT	0		/* Shift value, for masking */
+-
+-#ifndef __ASSEMBLY__
+-
+-#define CAUSE_BERRINTR		IE_IRQ5
+-
+-#define ECCF_CACHE_ERR	0
+-#define ECCF_TAGLO	1
+-#define ECCF_ECC	2
+-#define ECCF_ERROREPC	3
+-#define ECCF_PADDR	4
+-#define ECCF_SIZE	(5 * sizeof(long))
+-
+-#endif /* !__ASSEMBLY__ */
+-
+-#ifdef __ASSEMBLY__
+-
+-/*
+- * KL_GET_CPUNUM (similar to EV_GET_SPNUM for EVEREST platform) reads
+- * the processor number of the calling processor.  The proc parameters
+- * must be a register.
+- */
+-#define KL_GET_CPUNUM(proc)				\
+-	dli	proc, LOCAL_HUB(0);			\
+-	ld	proc, PI_CPU_NUM(proc)
+-
+-#endif /* __ASSEMBLY__ */
+-
+-/*
+- * R10000 status register interrupt bit mask usage for IP27.
+- */
+-#define SRB_SWTIMO	IE_SW0		/* 0x0100 */
+-#define SRB_NET		IE_SW1		/* 0x0200 */
+-#define SRB_DEV0	IE_IRQ0		/* 0x0400 */
+-#define SRB_DEV1	IE_IRQ1		/* 0x0800 */
+-#define SRB_TIMOCLK	IE_IRQ2		/* 0x1000 */
+-#define SRB_PROFCLK	IE_IRQ3		/* 0x2000 */
+-#define SRB_ERR		IE_IRQ4		/* 0x4000 */
+-#define SRB_SCHEDCLK	IE_IRQ5		/* 0x8000 */
+-
+-#define SR_IBIT_HI	SRB_DEV0
+-#define SR_IBIT_PROF	SRB_PROFCLK
+-
+-#define SRB_SWTIMO_IDX		0
+-#define SRB_NET_IDX		1
+-#define SRB_DEV0_IDX		2
+-#define SRB_DEV1_IDX		3
+-#define SRB_TIMOCLK_IDX		4
+-#define SRB_PROFCLK_IDX		5
+-#define SRB_ERR_IDX		6
+-#define SRB_SCHEDCLK_IDX	7
+-
+-#define NUM_CAUSE_INTRS		8
+-
+-#define SCACHE_LINESIZE 128
+-#define SCACHE_LINEMASK (SCACHE_LINESIZE - 1)
+-
+-#include <asm/sn/addrs.h>
+-
+-#define LED_CYCLE_MASK	0x0f
+-#define LED_CYCLE_SHFT	4
+-
+-#define SEND_NMI(_nasid, _slice)	\
+-	  REMOTE_HUB_S((_nasid),  (PI_NMI_A + ((_slice) * PI_NMI_OFFSET)), 1)
+-
+-#endif /* _ASM_SN_SN0_IP27_H */
+diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
+index b8758af4c5b7..484db3b73b7d 100644
+--- a/arch/mips/sgi-ip27/ip27-init.c
++++ b/arch/mips/sgi-ip27/ip27-init.c
+@@ -32,7 +32,6 @@
+ #include <asm/thread_info.h>
+ #include <asm/sn/launch.h>
+ #include <asm/sn/sn_private.h>
+-#include <asm/sn/sn0/ip27.h>
+ #include <asm/sn/mapped_kernel.h>
  
- extern nasid_t get_nasid(void);
--extern int get_cpu_slice(cpuid_t);
+ #include "ip27-common.h"
+diff --git a/arch/mips/sgi-ip27/ip27-nmi.c b/arch/mips/sgi-ip27/ip27-nmi.c
+index 916e795fdac7..84889b57d5ff 100644
+--- a/arch/mips/sgi-ip27/ip27-nmi.c
++++ b/arch/mips/sgi-ip27/ip27-nmi.c
+@@ -17,6 +17,9 @@
+ #define NODE_NUM_CPUS(n)	CPUS_PER_NODE
+ #endif
  
- #endif /* _ASM_SN_ARCH_H */
-diff --git a/arch/mips/include/asm/sn/klconfig.h b/arch/mips/include/asm/sn/klconfig.h
-index 467c313d5767..117f85e4bef5 100644
---- a/arch/mips/include/asm/sn/klconfig.h
-+++ b/arch/mips/include/asm/sn/klconfig.h
-@@ -889,10 +889,6 @@ typedef union {
- extern lboard_t *find_lboard(lboard_t *start, unsigned char type);
- extern klinfo_t *find_component(lboard_t *brd, klinfo_t *kli, unsigned char type);
- extern klinfo_t *find_first_component(lboard_t *brd, unsigned char type);
--extern klcpu_t *nasid_slice_to_cpuinfo(nasid_t, int);
- extern lboard_t *find_lboard_class(lboard_t *start, unsigned char brd_class);
++#define SEND_NMI(_nasid, _slice)	\
++	REMOTE_HUB_S((_nasid),  (PI_NMI_A + ((_slice) * PI_NMI_OFFSET)), 1)
++
+ typedef unsigned long machreg_t;
  
--
--extern klcpu_t *sn_get_cpuinfo(cpuid_t cpu);
--
- #endif /* _ASM_SN_KLCONFIG_H */
-diff --git a/arch/mips/sgi-ip27/ip27-klconfig.c b/arch/mips/sgi-ip27/ip27-klconfig.c
-index 6cb2160e7689..81a1646e609a 100644
---- a/arch/mips/sgi-ip27/ip27-klconfig.c
-+++ b/arch/mips/sgi-ip27/ip27-klconfig.c
-@@ -72,54 +72,3 @@ lboard_t *find_lboard_class(lboard_t *start, unsigned char brd_type)
- 	/* Didn't find it. */
- 	return (lboard_t *)NULL;
- }
--
--klcpu_t *nasid_slice_to_cpuinfo(nasid_t nasid, int slice)
--{
--	lboard_t *brd;
--	klcpu_t *acpu;
--
--	if (!(brd = find_lboard((lboard_t *)KL_CONFIG_INFO(nasid), KLTYPE_IP27)))
--		return (klcpu_t *)NULL;
--
--	if (!(acpu = (klcpu_t *)find_first_component(brd, KLSTRUCT_CPU)))
--		return (klcpu_t *)NULL;
--
--	do {
--		if ((acpu->cpu_info.physid) == slice)
--			return acpu;
--	} while ((acpu = (klcpu_t *)find_component(brd, (klinfo_t *)acpu,
--								KLSTRUCT_CPU)));
--	return (klcpu_t *)NULL;
--}
--
--klcpu_t *sn_get_cpuinfo(cpuid_t cpu)
--{
--	nasid_t nasid;
--	int slice;
--	klcpu_t *acpu;
--
--	if (!(cpu < MAXCPUS)) {
--		printk("sn_get_cpuinfo: illegal cpuid 0x%lx\n", cpu);
--		return NULL;
--	}
--
--	nasid = cputonasid(cpu);
--	if (nasid  == INVALID_NASID)
--		return NULL;
--
--	for (slice = 0; slice < CPUS_PER_NODE; slice++) {
--		acpu = nasid_slice_to_cpuinfo(nasid, slice);
--		if (acpu && acpu->cpu_info.virtid == cpu)
--			return acpu;
--	}
--	return NULL;
--}
--
--int get_cpu_slice(cpuid_t cpu)
--{
--	klcpu_t *acpu;
--
--	if ((acpu = sn_get_cpuinfo(cpu)) == NULL)
--		return -1;
--	return acpu->cpu_info.physid;
--}
+ static arch_spinlock_t nmi_lock = __ARCH_SPIN_LOCK_UNLOCKED;
 diff --git a/arch/mips/sgi-ip27/ip27-smp.c b/arch/mips/sgi-ip27/ip27-smp.c
-index faa0244c8b0c..de3711e9b1ba 100644
+index 1ae053ecf75c..0f6df00ca00f 100644
 --- a/arch/mips/sgi-ip27/ip27-smp.c
 +++ b/arch/mips/sgi-ip27/ip27-smp.c
-@@ -29,22 +29,11 @@
+@@ -24,7 +24,6 @@
+ #include <asm/sn/mapped_kernel.h>
+ #include <asm/sn/sn_private.h>
+ #include <asm/sn/types.h>
+-#include <asm/sn/sn0/ip27.h>
  
  #include "ip27-common.h"
  
--/*
-- * Takes as first input the PROM assigned cpu id, and the kernel
-- * assigned cpu id as the second.
-- */
--static void alloc_cpupda(nasid_t nasid, cpuid_t cpu, int cpunum)
--{
--	cputonasid(cpunum) = nasid;
--	cputoslice(cpunum) = get_cpu_slice(cpu);
--}
--
--static int do_cpumask(nasid_t nasid, int highest)
-+static int node_scan_cpus(nasid_t nasid, int highest)
- {
--	static int tot_cpus_found = 0;
-+	static int cpus_found;
- 	lboard_t *brd;
- 	klcpu_t *acpu;
--	int cpus_found = 0;
- 	cpuid_t cpuid;
+diff --git a/arch/mips/sgi-ip27/ip27-timer.c b/arch/mips/sgi-ip27/ip27-timer.c
+index 1b285c042ca7..62c7da59f55a 100644
+--- a/arch/mips/sgi-ip27/ip27-timer.c
++++ b/arch/mips/sgi-ip27/ip27-timer.c
+@@ -27,7 +27,6 @@
+ #include <asm/sn/addrs.h>
+ #include <asm/sn/agent.h>
+ #include <asm/sn/sn_private.h>
+-#include <asm/sn/sn0/ip27.h>
  
- 	brd = find_lboard((lboard_t *)KL_CONFIG_INFO(nasid), KLTYPE_IP27);
-@@ -55,13 +44,13 @@ static int do_cpumask(nasid_t nasid, int highest)
- 			cpuid = acpu->cpu_info.virtid;
- 			/* Only let it join in if it's marked enabled */
- 			if ((acpu->cpu_info.flags & KLINFO_ENABLE) &&
--			    (tot_cpus_found != NR_CPUS)) {
-+			    (cpus_found != NR_CPUS)) {
- 				if (cpuid > highest)
- 					highest = cpuid;
- 				set_cpu_possible(cpuid, true);
--				alloc_cpupda(nasid, cpuid, tot_cpus_found);
-+				cputonasid(cpus_found) = nasid;
-+				cputoslice(cpus_found) = acpu->cpu_info.physid;
- 				cpus_found++;
--				tot_cpus_found++;
- 			}
- 			acpu = (klcpu_t *)find_component(brd, (klinfo_t *)acpu,
- 								KLSTRUCT_CPU);
-@@ -87,7 +76,7 @@ void cpu_node_probe(void)
- 		if (nasid == INVALID_NASID)
- 			break;
- 		node_set_online(nasid);
--		highest = do_cpumask(nasid, highest);
-+		highest = node_scan_cpus(nasid, highest);
- 	}
+ #define TICK_SIZE (tick_nsec / 1000)
  
- 	printk("Discovered %d cpus on %d nodes\n", highest + 1, num_online_nodes());
-@@ -180,7 +169,8 @@ static void __init ip27_smp_setup(void)
- 	/*
- 	 * PROM sets up system, that boot cpu is always first CPU on nasid 0
- 	 */
--	alloc_cpupda(0, 0, 0);
-+	cputonasid(0) = 0;
-+	cputoslice(0) = LOCAL_HUB_L(PI_CPU_NUM);
- }
- 
- static void __init ip27_prepare_cpus(unsigned int max_cpus)
 -- 
 2.24.1
 
