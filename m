@@ -2,153 +2,114 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7478AC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BC5C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CCE20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:57:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T11ncRY5"
+	by mail.kernel.org (Postfix) with ESMTP id E799F20673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbgAIJ51 (ORCPT
+        id S1729971AbgAIJ5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:57:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43875 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729831AbgAIJ50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:57:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578563844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WPUHKFNriVZaSgcFsWO+0YW2UjIuQDtKhvlVOvL8HYY=;
-        b=T11ncRY5Qctm3JYdiO6CF9BcH1Ru8RLj1ZDkxlBgacRfgkeQ5kcCv9jzzoT4Ou0Aup/+Lz
-        4pKHabtoIVi0vc/S9aP0RiOiBuWE96eddJLZOGtvpIQGADBtmUKO3aeL758tcwsspofmTq
-        3FobXXTEj0TdcD/RjgnmQnwHUWiP5k0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-RBM2kmkuPzS-yLGBf_qwVA-1; Thu, 09 Jan 2020 04:57:21 -0500
-X-MC-Unique: RBM2kmkuPzS-yLGBf_qwVA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 499A4107ACC5;
-        Thu,  9 Jan 2020 09:57:20 +0000 (UTC)
-Received: from ovpn-200-26.brq.redhat.com (ovpn-200-26.brq.redhat.com [10.40.200.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C03A160BE0;
-        Thu,  9 Jan 2020 09:57:17 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 10:58:43 +0100 (CET)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     Andres Freund <andres@anarazel.de>
-cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] perf c2c: Fix sorting.
-In-Reply-To: <20200109043030.233746-1-andres@anarazel.de>
-Message-ID: <alpine.LRH.2.20.2001091055430.4075@Diego>
-References: <20200109043030.233746-1-andres@anarazel.de>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Thu, 9 Jan 2020 04:57:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38054 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729944AbgAIJ5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:57:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 702DBC27F;
+        Thu,  9 Jan 2020 09:57:49 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 09:42:28 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/12] i2c: taos-evm: convert to use
+ i2c_new_client_device()
+Message-ID: <20200109094228.2e058653@endymion>
+In-Reply-To: <20200108115822.20871d77@endymion>
+References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
+        <20200107174748.9616-7-wsa+renesas@sang-engineering.com>
+        <20200108115822.20871d77@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jan 2020, Andres Freund wrote:
-> Commit 722ddfde366f ("perf tools: Fix time sorting") changed -
-> correctly so - hist_entry__sort to return int64. Unfortunately several
-> of the builtin-c2c.c comparison routines only happened to work due the
-> cast caused by the wrong return type.
-> 
-> This causes meaningless ordering of both the cacheline list, and the
-> cacheline details page. E.g a simple
->   perf c2c record -a sleep 3
->   perf c2c report
-> will result in cacheline table like
->   =================================================
->              Shared Data Cache Line Table
->   =================================================
->   #
->   #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----  ---- Store Reference ----  --- Load Dram ----      LLC    Total  ----- Core Load Hit -----  -- LLC Load Hit --
->   # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt    Total    L1Hit   L1Miss       Lcl       Rmt  Ld Miss    Loads       FB       L1       L2       Llc       Rmt
->   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  ........  ........  .......  .......  .......  .......  .......  ........  ........
->   #
->         0      0x7f0d27ffba00   N/A       0       52    0.12%       13        6        7       12       12        0         0         7       14       40        4       16        0         0         0
->         1      0x7f0d27ff61c0   N/A       0     6353   14.04%     1475      801      674      779      779        0         0       718     1392     5574     1299     1967        0       115         0
->         2      0x7f0d26d3ec80   N/A       0       71    0.15%       16        4       12       13       13        0         0        12       24       58        1       20        0         9         0
->         3      0x7f0d26d3ec00   N/A       0       98    0.22%       23       17        6       19       19        0         0         6       12       79        0       40        0        10         0
-> i.e. with the list not being ordered by Total Hitm.
-> 
-> Fixes: 722ddfde366f ("perf tools: Fix time sorting")
-> Signed-off-by: Andres Freund <andres@anarazel.de>
+Hi again Wolfram,
 
-Tested on top of Arnaldo's perf/core branch. After the patch, the rows
-are ordered by Tot Hitm.
-
-Tested-by: Michael Petlan <mpetlan@redhat.com>
-
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Michael Petlan <mpetlan@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: stable@vger.kernel.org # v3.16+
-> ---
->  tools/perf/builtin-c2c.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+On Wed, 8 Jan 2020 11:58:22 +0100, Jean Delvare wrote:
+> On Tue, 7 Jan 2020 18:47:40 +0100, Wolfram Sang wrote:
+> > Move away from the deprecated API and return the shiny new ERRPTR where
+> > useful.
+> > 
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > ---
+> > Build tested only.
+> > 
+> >  drivers/i2c/busses/i2c-taos-evm.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-taos-evm.c b/drivers/i2c/busses/i2c-taos-evm.c
+> > index 0bff3f3a8779..b4050f5b6746 100644
+> > --- a/drivers/i2c/busses/i2c-taos-evm.c
+> > +++ b/drivers/i2c/busses/i2c-taos-evm.c
+> > @@ -49,10 +49,10 @@ static struct i2c_client *taos_instantiate_device(struct i2c_adapter *adapter)
+> >  	if (!strncmp(adapter->name, "TAOS TSL2550 EVM", 16)) {
+> >  		dev_info(&adapter->dev, "Instantiating device %s at 0x%02x\n",
+> >  			tsl2550_info.type, tsl2550_info.addr);
+> > -		return i2c_new_device(adapter, &tsl2550_info);
+> > +		return i2c_new_client_device(adapter, &tsl2550_info);
+> >  	}
+> >  
+> > -	return NULL;
+> > +	return ERR_PTR(-ENODEV);
+> >  }
+> >  
+> >  static int taos_smbus_xfer(struct i2c_adapter *adapter, u16 addr,  
 > 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index e69f44941aad..f2e9d2b1b913 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
->  {
->  	struct c2c_hist_entry *c2c_left;
->  	struct c2c_hist_entry *c2c_right;
-> -	unsigned int tot_hitm_left;
-> -	unsigned int tot_hitm_right;
-> +	uint64_t tot_hitm_left;
-> +	uint64_t tot_hitm_right;
->  
->  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
->  	c2c_right = container_of(right, struct c2c_hist_entry, he);
-> @@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __maybe_unused,			\
->  									\
->  	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
->  	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
-> -	return c2c_left->stats.__f - c2c_right->stats.__f;		\
-> +	return (uint64_t) c2c_left->stats.__f -				\
-> +	       (uint64_t) c2c_right->stats.__f;				\
->  }
->  
->  #define STAT_FN(__f)		\
-> @@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
->  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
->  	c2c_right = container_of(right, struct c2c_hist_entry, he);
->  
-> -	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
-> +	return (uint64_t) llc_miss(&c2c_left->stats) -
-> +	       (uint64_t) llc_miss(&c2c_right->stats);
->  }
->  
->  static uint64_t total_records(struct c2c_stats *stats)
-> -- 
-> 2.25.0.rc1
-> 
-> 
+> Looks good to me, although ideally the caller should handle the error
+> instead of ignoring it. But that's out of scope for this conversion
+> patch, I'll look into submitting an update on top.
 
+I take that back. taos_instantiate_device() is instantiating an
+optional slave device on the bus. If that fails, the bus is still
+usable, therefore failing the whole registration would be inappropriate.
+
+Makes me wonder if return ERR_PTR(-ENODEV) is the right thing to do in
+the fallback case. The i2c-taos-evm driver was designed to support
+multiple TAOS evaluation module types, even though the only one fully
+supported right now is the only one I own (TSL2550). The driver can
+still be used with other modules, just no slave device will be
+instantiated. It can still be done later from user-space.
+
+In my opinion -ENODEV should only be used for "I expected a device but
+could not find it". For the case where we simply don't know what slave
+device to instantiate, NULL seems more appropriate, as it's not an
+error.
+
+What do you think? Either way I agree it doesn't make much practical
+difference in the end as i2c_unregister_device() will deal gracefully
+with both.
+
+> So:
+> 
+> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+> 
+> I'll also try to revive my evaluation module to give it some testing.
+
+That I did, and it works fine, as expected :-)
+
+Tested-by: Jean Delvare <jdelvare@suse.de>
+
+-- 
+Jean Delvare
+SUSE L3 Support
