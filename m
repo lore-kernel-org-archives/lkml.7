@@ -2,291 +2,124 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82A4C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4943C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993352073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E082077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 21:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578605121;
+	bh=OfONYsywgIj9Whd4PChcEhUaXXyPK2lEFxpo/BO33HQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lKp64/I6OT0C7dd0N0OHY6RqpDFEeNcBoU/rs3N6Cfd6lhhoHgs7b2nRfhExB6JDM
+	 o0na2aDfYuAC1K/Rp6erRSWJLfjR4fzJwy/uoO5kUIdjD+UjVpuuBLvJP0WGQCe3ho
+	 CqFtJJHJgjkQd8MEBhcOdZjkPajtXPFQnQf4Yxww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgAIVUD (ORCPT
+        id S1728387AbgAIVZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 16:20:03 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30628 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725763AbgAIVUD (ORCPT
+        Thu, 9 Jan 2020 16:25:21 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40340 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgAIVZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 16:20:03 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009LHdlg108791;
-        Thu, 9 Jan 2020 16:19:57 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xe2vswwev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 16:19:57 -0500
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 009LI2rU109581;
-        Thu, 9 Jan 2020 16:19:56 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xe2vswwdt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 16:19:56 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 009LG2g4029750;
-        Thu, 9 Jan 2020 21:19:55 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03dal.us.ibm.com with ESMTP id 2xajb85beq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 21:19:55 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 009LJruN47251770
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jan 2020 21:19:53 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF98E136053;
-        Thu,  9 Jan 2020 21:19:53 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34339136055;
-        Thu,  9 Jan 2020 21:19:53 +0000 (GMT)
-Received: from rascal.austin.ibm.com (unknown [9.41.179.32])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jan 2020 21:19:52 +0000 (GMT)
-From:   Scott Cheloha <cheloha@linux.vnet.ibm.com>
-To:     linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
-        mhocko@suse.com, Scott Cheloha <cheloha@linux.ibm.com>
-Subject: [PATCH] drivers/base/memory.c: cache blocks in radix tree to accelerate lookup
-Date:   Thu,  9 Jan 2020 15:19:52 -0600
-Message-Id: <20200109211952.12747-1-cheloha@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191217193238-1-cheloha@linux.vnet.ibm.com>
-References: <20191217193238-1-cheloha@linux.vnet.ibm.com>
+        Thu, 9 Jan 2020 16:25:20 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so4421356wmi.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 13:25:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M/fC6s3aJPS96C3A0a7p8hYvGSefECWe4S/GhKz+rM4=;
+        b=adP70iqefGjq9vy4VQA3VscnC38QXpSQm75lpsKOAlmcckHODdmHXFYEfUVzfQTsT7
+         of0rjyQ9xSHYH9Tijq0BSzykoFYjUF3Zfa9DrwPs05y3BjH+cQEaRLg1LwSBfOkXh3GA
+         Ud0GGBbCRdXjzGfnVDPphZvaBtEAtFhYUX87hpf+CXxcOReIPIM/c3BGR/MhGVzW9nSp
+         0yVzmsgTLGtvHzZtxXXBaBf9q1o6f9qASmCv75eKWNL/2/Py1HsXpOmXIoO3kaEpwizW
+         874SyfbcXG2rWfyxjkQoYVaa/wfw7QDWihFt69vXGNCtvk3ZTw+T7aQ/Z6aBbnG4TVUD
+         v13A==
+X-Gm-Message-State: APjAAAUu017sRkJ2hE0eNMX7GV/X9QW58F2gA5qwBnM6vKIobdzoo7U8
+        jP9N2LntCkZjV+wr1VTlGHm8tpBc
+X-Google-Smtp-Source: APXvYqw8M4bievOHJLVqpOPRe4k3DoDwDFFbBTUI/8frm+mCFsybwOP5RYcBie/CzQOSQy250fLBLQ==
+X-Received: by 2002:a1c:1dcd:: with SMTP id d196mr19577wmd.106.1578605118956;
+        Thu, 09 Jan 2020 13:25:18 -0800 (PST)
+Received: from localhost (ip-37-188-146-105.eurotel.cz. [37.188.146.105])
+        by smtp.gmail.com with ESMTPSA id b21sm4124385wmd.37.2020.01.09.13.25.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 13:25:17 -0800 (PST)
+Date:   Thu, 9 Jan 2020 22:25:16 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Subject: Re: OOM killer not nearly agressive enough?
+Message-ID: <20200109212516.GA23620@dhcp22.suse.cz>
+References: <20200107204412.GA29562@amd>
+ <20200109115633.GR4951@dhcp22.suse.cz>
+ <20200109210307.GA1553@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_05:2020-01-09,2020-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 malwarescore=0 mlxlogscore=999 clxscore=1011 suspectscore=0
- impostorscore=0 bulkscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001090176
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109210307.GA1553@duo.ucw.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Searching for a particular memory block by id is an O(n) operation
-because each memory block's underlying device is kept in an unsorted
-linked list on the subsystem bus.
+On Thu 09-01-20 22:03:07, Pavel Machek wrote:
+> On Thu 2020-01-09 12:56:33, Michal Hocko wrote:
+> > On Tue 07-01-20 21:44:12, Pavel Machek wrote:
+> > > Hi!
+> > > 
+> > > I updated my userspace to x86-64, and now chromium likes to eat all
+> > > the memory and bring the system to standstill.
+> > > 
+> > > Unfortunately, OOM killer does not react:
+> > > 
+> > > I'm now running "ps aux", and it prints one line every 20 seconds or
+> > > more. Do we agree that is "unusable" system? I attempted to do kill
+> > > from other session.
+> > 
+> > Does sysrq+f help?
+> 
+> May try that next time.
+> 
+> > > Do we agree that OOM killer should have reacted way sooner?
+> > 
+> > This is impossible to answer without knowing what was going on at the
+> > time. Was the system threshing over page cache/swap? In other words, is
+> > the system completely out of memory or refaulting the working set all
+> > the time because it doesn't fit into memory?
+> 
+> Swap was full, so "completely out of memory", I guess. Chromium does
+> that fairly often :-(.
 
-We can cut the lookup cost to O(log n) if we cache the memory blocks in
-a radix tree.  With a radix tree cache in place both memory subsystem
-initialization and memory hotplug run palpably faster on systems with a
-large number of memory blocks.
+The oom heuristic is based on the reclaim failure. If the reclaim makes
+some progress then the oom killer is not hit. Have a look at
+should_reclaim_retry for more details.
 
-Signed-off-by: Scott Cheloha <cheloha@linux.ibm.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
-v2 incorporates suggestions from David Hildenbrand.
+> > > Is there something I can tweak to make it behave more reasonably?
+> > 
+> > PSI based early OOM killing might help. See https://github.com/facebookincubator/oomd
+> 
+> Um. Before doing that... is there some knob somewhere saying "hey
+> oomkiller, one hour to recover machine is a bit too much, can you
+> please react sooner"?
 
-v3 changes:
-  - Rebase atop "drivers/base/memory.c: drop the mem_sysfs_mutex"
+No, there is nothing like that.
 
-  - Be conservative: don't use radix_tree_for_each_slot() in
-    walk_memory_blocks() yet.  It introduces RCU which could
-    change behavior.  Walking the tree "by hand" with
-    find_memory_block_by_id() is slower but keeps the patch
-    simple.
+> PSI is completely different system, but I guess
+> I should attempt to tweak the existing one first...
 
-v4 changes:
-  - Rewrite commit message to explicitly note the time
-    complexity improvements.
-
-  - Provide anecdotal accounts of time-savings in the changelog
-    (see below).
-
-mhocko@suse.com has asked for additional details on time
-savings, so here are some results I've collected when measuring
-memory_dev_init() with/without the patch.
-
-1. A 32GB POWER9 VM with 16MB memblocks has 2048 blocks:
-
-# Unpatched
-[    0.005121] adding memory block 0... ok
-[...]
-[    0.095230] adding memory block 1024... ok
-[...]
-[    0.304248] adding memory block 2047... ok
-[    0.304508] added all memory blocks
-
-# Patched
-[    0.004701] adding memory block 0... ok
-[...]
-[    0.033383] adding memory block 1024... ok
-[...]
-[    0.061387] adding memory block 2047... ok
-[    0.061414] added all memory blocks
-
-   Unpatched, memory_dev_init() runs in about 0.299 seconds.  Patched,
-   it runs in about 0.057 seconds.  Savings of .242 seconds, or nearly
-   a quarter of a second.
-
-2. A 32TB POWER9 LPAR with 256MB memblocks has 131072 blocks:
-
-# Unpatched
-[   13.703907] memory_dev_init: adding blocks
-[   13.703931] memory_dev_init: added block 0
-[   13.762678] memory_dev_init: added block 1024
-[   13.910359] memory_dev_init: added block 2048
-[   14.146941] memory_dev_init: added block 3072
-[...]
-[  218.516235] memory_dev_init: added block 57344
-[  229.310467] memory_dev_init: added block 58368
-[  240.590857] memory_dev_init: added block 59392
-[  252.351665] memory_dev_init: added block 60416
-[...]
-[ 2152.023248] memory_dev_init: added block 128000
-[ 2196.464430] memory_dev_init: added block 129024
-[ 2241.746515] memory_dev_init: added block 130048
-[ 2287.406099] memory_dev_init: added all blocks
-
-# Patched
-[   13.696898] memory_dev_init: adding blocks
-[   13.696920] memory_dev_init: added block 0
-[   13.710966] memory_dev_init: added block 1024
-[   13.724865] memory_dev_init: added block 2048
-[   13.738802] memory_dev_init: added block 3072
-[...]
-[   14.520999] memory_dev_init: added block 57344
-[   14.536355] memory_dev_init: added block 58368
-[   14.551747] memory_dev_init: added block 59392
-[   14.567128] memory_dev_init: added block 60416
-[...]
-[   15.595638] memory_dev_init: added block 126976
-[   15.611761] memory_dev_init: added block 128000
-[   15.627889] memory_dev_init: added block 129024
-[   15.644048] memory_dev_init: added block 130048
-[   15.660035] memory_dev_init: added all blocks
-
-   Unpatched, memory_dev_init() runs in about 2275 seconds,
-   or ~37 minutes.  Patched, memory_dev_init() runs in about
-   1.97 seconds.  Savings of ~37 minutes.
-
-   I did not actually measure walk_memory_blocks(), but during
-   boot on this machine without the patch I got the following
-   (abbreviated) traces:
-
-[ 2347.494986] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 2527.625378] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 2707.761977] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 2887.899975] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 3068.028318] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 3248.158764] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 3428.287296] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 3608.425357] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 3788.554572] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 3968.695071] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-[ 4148.823970] [c000000014c5bb60] [c000000000869af4] walk_memory_blocks+0x94/0x160
-
-   Those traces disappeared with the patch, so I'm pretty sure
-   this patch shaves ~30 minutes off of walk_memory_blocks()
-   at boot.
-
-Given the above results I think it is safe to say that this patch will
-dramatically improve boot times on large POWER systems.
-
- drivers/base/memory.c | 36 +++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 799b43191dea..8902930d5ef2 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -19,6 +19,7 @@
- #include <linux/memory.h>
- #include <linux/memory_hotplug.h>
- #include <linux/mm.h>
-+#include <linux/radix-tree.h>
- #include <linux/stat.h>
- #include <linux/slab.h>
- 
-@@ -56,6 +57,13 @@ static struct bus_type memory_subsys = {
- 	.offline = memory_subsys_offline,
- };
- 
-+/*
-+ * Memory blocks are cached in a local radix tree to avoid
-+ * a costly linear search for the corresponding device on
-+ * the subsystem bus.
-+ */
-+static RADIX_TREE(memory_blocks, GFP_KERNEL);
-+
- static BLOCKING_NOTIFIER_HEAD(memory_chain);
- 
- int register_memory_notifier(struct notifier_block *nb)
-@@ -572,20 +580,14 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
- /* A reference for the returned memory block device is acquired. */
- static struct memory_block *find_memory_block_by_id(unsigned long block_id)
- {
--	struct device *dev;
-+	struct memory_block *mem;
- 
--	dev = subsys_find_device_by_id(&memory_subsys, block_id, NULL);
--	return dev ? to_memory_block(dev) : NULL;
-+	mem = radix_tree_lookup(&memory_blocks, block_id);
-+	if (mem)
-+		get_device(&mem->dev);
-+	return mem;
- }
- 
--/*
-- * For now, we have a linear search to go find the appropriate
-- * memory_block corresponding to a particular phys_index. If
-- * this gets to be a real problem, we can always use a radix
-- * tree or something here.
-- *
-- * This could be made generic for all device subsystems.
-- */
- struct memory_block *find_memory_block(struct mem_section *section)
- {
- 	unsigned long block_id = base_memory_block_id(__section_nr(section));
-@@ -628,9 +630,15 @@ int register_memory(struct memory_block *memory)
- 	memory->dev.offline = memory->state == MEM_OFFLINE;
- 
- 	ret = device_register(&memory->dev);
--	if (ret)
-+	if (ret) {
- 		put_device(&memory->dev);
--
-+		return ret;
-+	}
-+	ret = radix_tree_insert(&memory_blocks, memory->dev.id, memory);
-+	if (ret) {
-+		put_device(&memory->dev);
-+		device_unregister(&memory->dev);
-+	}
- 	return ret;
- }
- 
-@@ -688,6 +696,8 @@ static void unregister_memory(struct memory_block *memory)
- 	if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
- 		return;
- 
-+	WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) == NULL);
-+
- 	/* drop the ref. we got via find_memory_block() */
- 	put_device(&memory->dev);
- 	device_unregister(&memory->dev);
+PSI is measuring the cost of the allocation (among other things) and
+that can give you some idea on how much time is spent to get memory.
+Userspace can implement a policy based on that and act. The kernel oom
+killer is the last resort when there is really no memory to allocate.
 -- 
-2.24.1
-
+Michal Hocko
+SUSE Labs
