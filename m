@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90A2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F589C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5B42072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760ED2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fejB4S7Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ifvsF29A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731935AbgAIO5u (ORCPT
+        id S1731974AbgAIO55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:57:50 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52374 "EHLO
+        Thu, 9 Jan 2020 09:57:57 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47551 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731918AbgAIO5s (ORCPT
+        by vger.kernel.org with ESMTP id S1731943AbgAIO5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:57:48 -0500
+        Thu, 9 Jan 2020 09:57:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578581867;
+        s=mimecast20190719; t=1578581871;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Nm8O4Xii0OuE4zFVyte5k6dYfDYh4EMQdTOkPftgaqU=;
-        b=fejB4S7Zcfeq7czzSrZeICFBGTJNZDrYZHr/HyonuzeqtfBPaNsEXzEa4lJUAEnBssIULh
-        +bXgw6wUo6uh+ae4HGD2ObpTMNKhgwMiB4hUUECVbJ4qgD9er4d3semINJZ9mH7n7Zs8bI
-        wW9jcEQZJ7F73ekv+6rnugZhksO0BTI=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-243-nGFyknB0N9OtlZNjCwJ4UQ-1; Thu, 09 Jan 2020 09:57:46 -0500
-X-MC-Unique: nGFyknB0N9OtlZNjCwJ4UQ-1
-Received: by mail-qv1-f69.google.com with SMTP id g6so4275792qvp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:46 -0800 (PST)
+        bh=aRATN7sKWcZdWDij4U02uLG0iob0fByx2e0Dt2ueT/w=;
+        b=ifvsF29AAoPaNiAHGjmliWV+BCppV20kafRoHF6alACjBXV07bNOtoAzxGDXao2nxE2uSi
+        iU6iq9Xa5yRnDTFiH3vuPbizJJjwZfw+u64FmA7Z8GVnJSz1zw1FqfNt6FO6Ai9bVxdZzE
+        1Ci4jtQ1pGzBw4wOHGmqJsAF3OFmwIc=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-EAjB-O8FM-qXNnANpdX_mg-1; Thu, 09 Jan 2020 09:57:48 -0500
+X-MC-Unique: EAjB-O8FM-qXNnANpdX_mg-1
+Received: by mail-qt1-f199.google.com with SMTP id m30so4364742qtb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Nm8O4Xii0OuE4zFVyte5k6dYfDYh4EMQdTOkPftgaqU=;
-        b=l2rNwxv1MDnfsbYUC4hVLErX0dc4TaAy6yWskGcbiu0dQ1+MgV2v4fPB3cj+rzUx7R
-         WPzdeItIbCBxmM05ZXWxNDFl51Sqf/bub9pern8g7aUsXk8KBJl3zlB06In6SH6bwPr7
-         f2+vNRxr5BNOawGkEaPdbxtEoG5tEvtRU2T+ny6Rr/13mvptbZX6KJQPOnyPVoUK7wj3
-         bMqJspUjRmDPhzJ3VtIK2C4B3Pg6yBWGL2XEVcstfiOK1NrbM9R5e/diN8u2959P6Oki
-         +fiSjctgrU9/V+Eh8JGBkM81vtVP9H0H2u2ggVwPrIUvfG6z/reMkZtEu2BhTlIM/x5R
-         Hgew==
-X-Gm-Message-State: APjAAAVOK3Vmil9IJpELc05ulpYhDdvcB/xs7HZ2V8/0vPuJRT4hhzAK
-        zZggeo4RmXGe5mYoP+2e3MLyl7y4BrUKq5mjZE5U3lxEPuI8ONITPdETbA8q8+T4Xs95jRRGvx0
-        NmkcNQ+A9g0ahRQTrhAAB0AkE
-X-Received: by 2002:ae9:ec01:: with SMTP id h1mr10129983qkg.33.1578581864674;
-        Thu, 09 Jan 2020 06:57:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzNTAs/SAnbPG+ivO60ziyJlazNT+NDxUAFeemJ1UyIi2OiGROdyCVheaB21amr6IgdyN2YNA==
-X-Received: by 2002:ae9:ec01:: with SMTP id h1mr10129964qkg.33.1578581864482;
-        Thu, 09 Jan 2020 06:57:44 -0800 (PST)
+        bh=aRATN7sKWcZdWDij4U02uLG0iob0fByx2e0Dt2ueT/w=;
+        b=BPj0xRucAOYAZla5sKlXW2rg+EDAaC0kswvJR+39BJaodfPRT08yoELpVva8VnfRhZ
+         Ti6rLEwQ/a3y25XZWNS8nUIbYDpRaVXtdYXY6Av1zLYWn+x/AChoETZFH/ipGbEEo9Vb
+         R9xUzMTzgwpm3BLlrH9Kt/Da9bKuBLMrWwvhTKhYztd4X7EdqaazXO65VEYojO/xAxHd
+         l7Kphkz3IKNF9TDDkfWRT2ziGqnmvy5ChYkVltzOFPXVzPeSKZHPA/vfsiYZfI+pY5AN
+         PYHjtBVYefXV+z+JdyqpJLpzmNFsx+ZWCe2CU6AWVrmBkTqYw8USx3C0J7lNvI2UiklU
+         lVyw==
+X-Gm-Message-State: APjAAAUD43qMidavFVwsn120t1lSMeC/IKFJ6qs47b70pYS/rAZSfVzU
+        /dED69SEpQ6G7TOJpFfT/J2IFuZR7W6mEBGeWv8I8IfNdlyUiIrCEcb4ampWACZZpIok2TF7JFP
+        OuGypOAgQOPF8H5RiWNq3ljeV
+X-Received: by 2002:a05:620a:102e:: with SMTP id a14mr9511642qkk.159.1578581868294;
+        Thu, 09 Jan 2020 06:57:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyRbVnZp1vzZ6tL+7JcD0WsY8mA3XV8L6qTwZsx0HCnJl+m4kcc+RK3EtswtsJg3qtmZCifYA==
+X-Received: by 2002:a05:620a:102e:: with SMTP id a14mr9511621qkk.159.1578581868090;
+        Thu, 09 Jan 2020 06:57:48 -0800 (PST)
 Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.41
+        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 06:57:43 -0800 (PST)
+        Thu, 09 Jan 2020 06:57:46 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Christophe de Dinechin <dinechin@redhat.com>,
@@ -74,9 +74,9 @@ Cc:     Christophe de Dinechin <dinechin@redhat.com>,
         Kevin Kevin <kevin.tian@intel.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>, peterx@redhat.com,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v3 04/21] KVM: Add build-time error check on kvm_run size
-Date:   Thu,  9 Jan 2020 09:57:12 -0500
-Message-Id: <20200109145729.32898-5-peterx@redhat.com>
+Subject: [PATCH v3 05/21] KVM: X86: Change parameter for fast_page_fault tracepoint
+Date:   Thu,  9 Jan 2020 09:57:13 -0500
+Message-Id: <20200109145729.32898-6-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200109145729.32898-1-peterx@redhat.com>
 References: <20200109145729.32898-1-peterx@redhat.com>
@@ -87,27 +87,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's already going to reach 2400 Bytes (which is over half of page
-size on 4K page archs), so maybe it's good to have this build-time
-check in case it overflows when adding new fields.
+It would be clearer to dump the return value to know easily on whether
+did we go through the fast path for handling current page fault.
+Remove the old two last parameters because after all the old/new sptes
+were dumped in the same line.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- virt/kvm/kvm_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/mmutrace.h | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 24c9cf4c8a52..70b78ccaf3b5 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -338,6 +338,7 @@ int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
- 	vcpu->pre_pcpu = -1;
- 	INIT_LIST_HEAD(&vcpu->blocked_vcpu_list);
+diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmutrace.h
+index 3c6522b84ff1..456371406d2a 100644
+--- a/arch/x86/kvm/mmutrace.h
++++ b/arch/x86/kvm/mmutrace.h
+@@ -244,9 +244,6 @@ TRACE_EVENT(
+ 		  __entry->access)
+ );
  
-+	BUILD_BUG_ON(sizeof(struct kvm_run) > PAGE_SIZE);
- 	page = alloc_page(GFP_KERNEL | __GFP_ZERO);
- 	if (!page) {
- 		r = -ENOMEM;
+-#define __spte_satisfied(__spte)				\
+-	(__entry->retry && is_writable_pte(__entry->__spte))
+-
+ TRACE_EVENT(
+ 	fast_page_fault,
+ 	TP_PROTO(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u32 error_code,
+@@ -274,12 +271,10 @@ TRACE_EVENT(
+ 	),
+ 
+ 	TP_printk("vcpu %d gva %llx error_code %s sptep %p old %#llx"
+-		  " new %llx spurious %d fixed %d", __entry->vcpu_id,
++		  " new %llx ret %d", __entry->vcpu_id,
+ 		  __entry->cr2_or_gpa, __print_flags(__entry->error_code, "|",
+ 		  kvm_mmu_trace_pferr_flags), __entry->sptep,
+-		  __entry->old_spte, __entry->new_spte,
+-		  __spte_satisfied(old_spte), __spte_satisfied(new_spte)
+-	)
++		  __entry->old_spte, __entry->new_spte, __entry->retry)
+ );
+ 
+ TRACE_EVENT(
 -- 
 2.24.1
 
