@@ -2,132 +2,121 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01831C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3065C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32DD206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD302072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578585281;
+	bh=CO2oAXeI60Yqe46XfH5899cbMwfHKmsfrdFWFp4IkwY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iDbm08/APeTJwY1CXgrH91VRAtAsDC1FhvpGazQIEbjGfVMHx1vd9Y6F1g0OneJtS
+	 FO566FLPsaOerJn0AFVQoDmTUCirJmQ2Q8iGACUWw8D9mG0xuYgvjCy7tSLHeU95/U
+	 o6D+K9Qi+H4Yqpslt2KvFVelWavlvMUsS284pN0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732664AbgAIPyF (ORCPT
+        id S1732673AbgAIPyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:54:05 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2241 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732573AbgAIPyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:54:04 -0500
-Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id EAEA9FEA2FA6E372B4D1;
-        Thu,  9 Jan 2020 15:54:02 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 9 Jan 2020 15:54:02 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 9 Jan 2020
- 15:54:02 +0000
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
- driver
-To:     <broonie@kernel.org>, <marek.vasut@gmail.com>,
-        <tudor.ambarus@microchip.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>,
-        <chenxiang66@hisilicon.com>
-References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
- <1575900490-74467-3-git-send-email-john.garry@huawei.com>
-Message-ID: <0dc5cb2e-b765-9e13-b05e-9e3c835c5985@huawei.com>
-Date:   Thu, 9 Jan 2020 15:54:00 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 9 Jan 2020 10:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729591AbgAIPyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:54:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA078206ED;
+        Thu,  9 Jan 2020 15:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578585279;
+        bh=CO2oAXeI60Yqe46XfH5899cbMwfHKmsfrdFWFp4IkwY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ChgxqELAE5vIbirpB/5834tX0zLmq/6Qkuwk3PhP6YsOSsJDsGlEhIyTXox1JsuJN
+         B1OIZI0Cw440zjgdeGT0HZFi52lZIWWtxsYhHreFRGpfMlj3sPcQYGOOAw2rt9a52Q
+         sqj3ztbeMWxnUDTLUqyEnMlliuBSWr8muk4dTo5Y=
+Date:   Thu, 9 Jan 2020 16:54:37 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     mchehab@kernel.org, sean@mess.org, tglx@linutronix.de,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 1/1] media: dvb_dummy_tuner: implement driver skeleton
+Message-ID: <20200109155437.GA568342@kroah.com>
+References: <20200109152408.919325-1-dwlsalmeida@gmail.com>
+ <20200109152408.919325-2-dwlsalmeida@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1575900490-74467-3-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109152408.919325-2-dwlsalmeida@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/12/2019 14:08, John Garry wrote:
-> +	if (ret)
-> +		return ret;
+On Thu, Jan 09, 2020 at 12:24:08PM -0300, Daniel W. S. Almeida wrote:
+> +static int dvb_dummy_tuner_i2c_probe(struct i2c_client *client,
+> +				     const struct i2c_device_id *id)
+> +{
+> +	int ret = 0;
+> +	struct dvb_dummy_tuner_config *config = client->dev.platform_data;
+> +	struct dvb_frontend *fe = config->fe;
+> +	struct dvb_dummy_tuner_dev *tuner_dev = NULL;
 > +
-> +	if (op->data.dir == SPI_MEM_DATA_IN)
-> +		hisi_sfc_v3xx_read_databuf(host, op->data.buf.in, len);
+> +	tuner_dev = kzalloc(sizeof(*tuner_dev), GFP_KERNEL);
+> +	if (!tuner_dev) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
 > +
-> +	return 0;
+> +	i2c_set_clientdata(client, tuner_dev);
+> +	tuner_dev->fe = config->fe;
+> +
+> +	memcpy(&fe->ops.tuner_ops,
+> +	       &dvb_dummy_tuner_ops,
+> +	       sizeof(struct dvb_tuner_ops));
+> +
+> +	fe->tuner_priv = client;
+> +
+> +	pr_debug("%s: Successfully probed %s\n", __func__, client->name);
+
+As you are a driver, you should never need to call any pr_* calls,
+instead use dev_*().  For this, you can use dev_dbg(), but really, why
+is that even needed except for your debugging bringup.  And for that,
+you can use ftrace, right?  So no need for any printing of anything
+here.
+
+> +	return ret;
+> +
+> +err:
+> +	pr_err("%s: failed\n", __func__);
+
+Again, dev_err() would be proper, but there's no need for any error
+message here.
+
+
+Don't you need to register the tuner ops with something in this
+function?
+
+> +	return ret;
 > +}
 > +
-> +static int hisi_sfc_v3xx_exec_op(struct spi_mem *mem,
-> +				 const struct spi_mem_op *op)
+> +static int dvb_dummy_tuner_i2c_remove(struct i2c_client *client)
 > +{
-> +	struct hisi_sfc_v3xx_host *host;
-> +	struct spi_device *spi = mem->spi;
-> +	u8 chip_select = spi->chip_select;
+> +	struct dvb_dummy_tuner_dev *tuner_dev = i2c_get_clientdata(client);
+> +	struct dvb_frontend *fe = tuner_dev->fe;
 > +
-> +	host = spi_controller_get_devdata(spi->master);
-> +
-> +	return hisi_sfc_v3xx_generic_exec_op(host, op, chip_select);
-> +}
-> +
-> +static const struct spi_controller_mem_ops hisi_sfc_v3xx_mem_ops = {
-> +	.adjust_op_size = hisi_sfc_v3xx_adjust_op_size,
-> +	.exec_op = hisi_sfc_v3xx_exec_op,
-> +};
-> +
-> +static int hisi_sfc_v3xx_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct hisi_sfc_v3xx_host *host;
-> +	struct spi_controller *ctlr;
-> +	u32 version;
-> +	int ret;
-> +
-> +	ctlr = spi_alloc_master(&pdev->dev, sizeof(*host));
-> +	if (!ctlr)
-> +		return -ENOMEM;
+> +	memset(&fe->ops.tuner_ops, 0, sizeof(struct dvb_tuner_ops));
+> +	fe->tuner_priv = NULL;
+> +	kfree(tuner_dev);
 > +
 
+Don't you need to unregister the tuner ops in here?
 
-Hi Mark,
+thanks,
 
-> +	ctlr->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD |
-> +			  SPI_TX_DUAL | SPI_TX_QUAD;
-
-I have an issue with dual/quad support. I naively thought that setting 
-these bits would give me the highest protocol available.
-
-However, now I notice that spi_device.mode needs to be set for supported 
-protocols for the slave - I'm using the generic spi mem ops to check if 
-protocols are supported based on this value.
-
- From checking acpi_spi_add_resource() or anywhere else, I cannot see 
-how SPI_RX_DUAL or the others are set for spi_device.mode. What am I 
-missing? Are these just not supported yet for ACPI? Or should the 
-spi-nor code not be relying on this since we should be able to get this 
-info from the SPI NOR part?
-
-Cheers,
-John
-
-> +
-> +	host = spi_controller_get_devdata(ctlr);
-> +	host->dev = dev;
-> +
-> +	platform_set_drvdata(pdev, host);
-> +
-> +	host->regbase = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(host->regbase)) {
-> +		ret = PTR_ERR(host->regbase);
-> +		goto err_put_master;
-
+greg k-h
