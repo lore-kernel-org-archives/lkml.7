@@ -2,254 +2,77 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30641C33CA3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC01C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F7B2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Vhlsglha"
+	by mail.kernel.org (Postfix) with ESMTP id 76CFB2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578566938;
+	bh=5kjb4RoCfMIaDZCVnC/sXJA7vuX0Fa/Imd5LZVK+Nn4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E69JnzzkttU+tHhsNjWPgaWUE97ulv7XXTkQP1U/J5B9FBWt1X8G0tSmBRzb6AqVv
+	 AEwC6xb6qZv9yJZPebl6rqPwKfv5QSPaHDitJrWLZ3W9uvBgvGtPxOOEBGwza++UMX
+	 9oq4ivFgdr56exTMcmCyiFHvk5WnlCAM83nsJMZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbgAIKrG (ORCPT
+        id S1730442AbgAIKs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:47:06 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:39326 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729709AbgAIKrF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:47:05 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200109104701epoutp034a3c3d52fc0d08c03c93f782ccf44ebb~oMikyWA8h0622006220epoutp03a
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 10:47:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200109104701epoutp034a3c3d52fc0d08c03c93f782ccf44ebb~oMikyWA8h0622006220epoutp03a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578566821;
-        bh=q8vj0BcK18G8xmFgVWnFYICGZOyJli/3tcnfk3LTJ8A=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Vhlsglha3Fm/BY5NMERIOFlFGbKnYdhVjVpipaiOuL4mlVuv3qZjQmaQ+PKg17+xY
-         UKmRdiHDkRSczn8/6UP4Uzi1++NZrAt5EQZigEq4tW6H/dzmo5DuaddnRucNv9zf91
-         38lHeFfFC7jkfOTNziphBIVcDNLl1e3CfLWb6Z/A=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200109104701epcas1p29b302a54bf7ad5b1f453de9d6e965274~oMikScT0K0845108451epcas1p20;
-        Thu,  9 Jan 2020 10:47:01 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47tjVB1bSXzMqYkZ; Thu,  9 Jan
-        2020 10:46:58 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        20.0F.48498.2A4071E5; Thu,  9 Jan 2020 19:46:58 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200109104657epcas1p41d90cb9037af506897e14e15b0ed43a0~oMihCjHQe2909129091epcas1p48;
-        Thu,  9 Jan 2020 10:46:57 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200109104657epsmtrp1a2c3598f84f274456c8b5ffb4bc4a7de~oMihBp2MA0405704057epsmtrp1J;
-        Thu,  9 Jan 2020 10:46:57 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-29-5e1704a2a1a7
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AA.14.06569.1A4071E5; Thu,  9 Jan 2020 19:46:57 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200109104657epsmtip1cf3e05328ada9f32d7e46b8409ca6f84~oMigv4SII0075600756epsmtip1A;
-        Thu,  9 Jan 2020 10:46:57 +0000 (GMT)
-Subject: Re: [PATCH v2 02/11] PM / devfreq: Remove
- devfreq_get_devfreq_by_phandle function
-To:     Lukasz Luba <lukasz.luba@arm.com>, robh+dt@kernel.org,
-        krzk@kernel.org, heiko@sntech.de, leonard.crestez@nxp.com
-Cc:     mark.rutland@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <22cde618-d51e-2d4d-461e-e2d2c1b52af2@samsung.com>
-Date:   Thu, 9 Jan 2020 19:54:04 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 9 Jan 2020 05:48:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729328AbgAIKs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 05:48:57 -0500
+Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7688D2067D;
+        Thu,  9 Jan 2020 10:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578566936;
+        bh=5kjb4RoCfMIaDZCVnC/sXJA7vuX0Fa/Imd5LZVK+Nn4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G9wUrSCV2mkeS2OiIkXfip54plZvxVLGk2MZmBPamu9qbuk+vo3JJstzZhZC/geNM
+         RE2SE78G4pCdk4k+JJIQPEFGnl+N1G+G9p8n1dAjPO6V0przfF4sVN7Nn8kiye6r73
+         HIhSZALp6BYOdxRh6VBT1h+fL85B99xe+zHbalkI=
+Date:   Thu, 9 Jan 2020 18:48:47 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: imx: only select ARM_ERRATA_814220 for ARMv7-A
+Message-ID: <20200109104847.GS4456@T480>
+References: <20200107215157.1450319-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <b9a1ebe5-e114-3a6b-6081-c794e1341329@arm.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJsWRmVeSWpSXmKPExsWy7bCmvu4iFvE4g74OTov781oZLeYfOcdq
-        8f/Ra1aL/sevmS3On9/AbnG26Q27xYq7H1ktNj2+xmpxedccNovPvUcYLT49+M9sMeP8PiaL
-        hU0t7BZrj9xlt1h6/SKTxe3GFWwWrXuPsDsIeqyZt4bRY9OqTjaPzUvqPTa+28Hk0bdlFaPH
-        9mvzmD0+b5ILYI/KtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLx
-        CdB1y8wB+kBJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BZoFecmFtcmpeul5yf
-        a2VoYGBkClSYkJ3x4vBZpoKzyhVnJrYyNzD+ke1i5OSQEDCR2HO7hb2LkYtDSGAHo8SFj7dZ
-        IZxPjBKLljyFcr4BZbYvYIZpeXblKBtEYi+jxKmXHVD97xkl1nxYygZSJSwQI/Fx4QZWEFtE
-        oExiwp6bjCBFzAI3mCQutyxgB0mwCWhJ7H9xA6yBX0BR4uqPx4wgNq+AncSkzcvAmlkEVCR2
-        7nsEFhcVCJM4ua0FqkZQ4uTMJywgNqeAtcSr17/B6pkFxCVuPZnPBGHLSzRvnQ119il2iVkd
-        8RC2i0T/qrmsELawxKvjW9ghbCmJl/1tUHa1xMqTR8DelBDoYJTYsv8CVIOxxP6lk4EWcAAt
-        0JRYv0sfIqwosfP3XEaIvXwS7772sIKUSAjwSnS0CUGUKEtcfnCXCcKWlFjc3sk2gVFpFpJv
-        ZiH5YBaSD2YhLFvAyLKKUSy1oDg3PbXYsMAIObo3MYKTt5bZDsZF53wOMQpwMCrx8DIoicUJ
-        sSaWFVfmHmKU4GBWEuE9egMoxJuSWFmVWpQfX1Sak1p8iNEUGNgTmaVEk/OBmSWvJN7Q1MjY
-        2NjCxNDM1NBQSZyX48fFWCGB9MSS1OzU1ILUIpg+Jg5OqQZGn2uV/29Iz5SvZUlbrvWV6eJ9
-        na9cUvL3bknN2cs0f5PrYcG1089F/9/B9zk9e79h1H3D1Y52F7oNHieu8711yCtHvqY5MGvj
-        YWfR9I8H/vQKajPr8B95/Dvm49nP71KC1/DX30x4Hmh4Y+r+irB09V2v+uST66wj3m94z68q
-        538rLi0vycxTiaU4I9FQi7moOBEAnoLKzfQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSnO5CFvE4g9tXdCzuz2tltJh/5Byr
-        xf9Hr1kt+h+/ZrY4f34Du8XZpjfsFivufmS12PT4GqvF5V1z2Cw+9x5htPj04D+zxYzz+5gs
-        Fja1sFusPXKX3WLp9YtMFrcbV7BZtO49wu4g6LFm3hpGj02rOtk8Ni+p99j4bgeTR9+WVYwe
-        26/NY/b4vEkugD2KyyYlNSezLLVI3y6BK+PF4bNMBWeVK85MbGVuYPwj28XIySEhYCLx7MpR
-        ti5GLg4hgd2MElP/fWaGSEhKTLt4FMjmALKFJQ4fLoaoecsoMefEHiaQGmGBGImPCzewgtgi
-        AmUSm9YtZwcpYha4wSRx8PwMVoiOD4wS3d9nM4JUsQloSex/cYMNxOYXUJS4+uMxWJxXwE5i
-        0uZlYJNYBFQkdu57BBYXFQiT2LnkMRNEjaDEyZlPWEBsTgFriVevf4PVMwuoS/yZd4kZwhaX
-        uPVkPhOELS/RvHU28wRG4VlI2mchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL
-        89L1kvNzNzGC41hLawfjiRPxhxgFOBiVeHgZlMTihFgTy4orcw8xSnAwK4nwHr0BFOJNSays
-        Si3Kjy8qzUktPsQozcGiJM4rn38sUkggPbEkNTs1tSC1CCbLxMEp1cAoxKLu+mJ/QL8pg9OO
-        oxfW//qwcGq27BTnjyx/fMQOpZ4Onhj65flN97vteSpF7kq39wUcUkqyddrsZqIrzFhUuerP
-        sQnJPTVZbJK7mz7LmJ5ewGL/42FFeX91Cv+0ne7LCzVYtNY4hGtemqvWpDPFlu/HhvrSJR38
-        z1kVFkgynA1peRO+eKYSS3FGoqEWc1FxIgAEWzda3wIAAA==
-X-CMS-MailID: 20200109104657epcas1p41d90cb9037af506897e14e15b0ed43a0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0
-References: <20191220002430.11995-1-cw00.choi@samsung.com>
-        <CGME20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0@epcas1p4.samsung.com>
-        <20191220002430.11995-3-cw00.choi@samsung.com>
-        <b9a1ebe5-e114-3a6b-6081-c794e1341329@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107215157.1450319-1-arnd@arndb.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 7:37 PM, Lukasz Luba wrote:
-> Hi Chanwoo,
+On Tue, Jan 07, 2020 at 10:51:39PM +0100, Arnd Bergmann wrote:
+> i.MX7D is supported for either the v7-A or the v7-M cores,
+> but the latter causes a warning:
 > 
-> On 12/20/19 12:24 AM, Chanwoo Choi wrote:
->> Previously, devfreq core support 'devfreq' property in order to get
->> the devfreq device by phandle. But, 'devfreq' property name is not proper
->> on devicetree binding because this name doesn't mean the any h/w attribute.
->>
->> The devfreq core hand over the right to decide the property name
->> for getting the devfreq device on devicetree. Each devfreq driver
->> will decide the property name on devicetree binding and then get
->> the devfreq device by using devfreq_get_devfreq_by_node().
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>   drivers/devfreq/devfreq.c    | 35 -----------------------------------
->>   drivers/devfreq/exynos-bus.c | 12 +++++++++++-
->>   include/linux/devfreq.h      |  8 --------
->>   3 files changed, 11 insertions(+), 44 deletions(-)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->> index cb8ca81c8973..c3d3c7c802a0 100644
->> --- a/drivers/devfreq/devfreq.c
->> +++ b/drivers/devfreq/devfreq.c
->> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
->>         return ERR_PTR(-ENODEV);
->>   }
->> -
->> -/*
->> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
->> - * @dev - instance to the given device
->> - * @index - index into list of devfreq
->> - *
->> - * return the instance of devfreq device
->> - */
->> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
->> -{
->> -    struct device_node *node;
->> -    struct devfreq *devfreq;
->> -
->> -    if (!dev)
->> -        return ERR_PTR(-EINVAL);
->> -
->> -    if (!dev->of_node)
->> -        return ERR_PTR(-EINVAL);
->> -
->> -    node = of_parse_phandle(dev->of_node, "devfreq", index);
->> -    if (!node)
->> -        return ERR_PTR(-ENODEV);
->> -
->> -    devfreq = devfreq_get_devfreq_by_node(node);
->> -    of_node_put(node);
->> -
->> -    return devfreq;
->> -}
->> -
->>   #else
->>   struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
->>   {
->>       return ERR_PTR(-ENODEV);
->>   }
->> -
->> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
->> -{
->> -    return ERR_PTR(-ENODEV);
->> -}
->>   #endif /* CONFIG_OF */
->>   EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);
->> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
->>     /**
->>    * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
->> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
->> index 7f5917d59072..1bc4e3c81115 100644
->> --- a/drivers/devfreq/exynos-bus.c
->> +++ b/drivers/devfreq/exynos-bus.c
->> @@ -86,6 +86,16 @@ static int exynos_bus_get_event(struct exynos_bus *bus,
->>       return ret;
->>   }
->>   +static struct devfreq *exynos_bus_get_parent_devfreq(struct device_node *np)
->> +{
->> +    struct device_node *node = of_parse_phandle(np, "devfreq", 0);
->> +
->> +    if (!node)
->> +        return ERR_PTR(-ENODEV);
->> +
->> +    return devfreq_get_devfreq_by_node(node);
->> +}
->> +
->>   /*
->>    * devfreq function for both simple-ondemand and passive governor
->>    */
->> @@ -353,7 +363,7 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
->>       profile->exit = exynos_bus_passive_exit;
->>         /* Get the instance of parent devfreq device */
->> -    parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
->> +    parent_devfreq = exynos_bus_get_parent_devfreq(dev->of_node);
->>       if (IS_ERR(parent_devfreq))
->>           return -EPROBE_DEFER;
->>   
+> WARNING: unmet direct dependencies detected for ARM_ERRATA_814220
+>   Depends on [n]: CPU_V7 [=n]
+>   Selected by [y]:
+>   - SOC_IMX7D [=y] && ARCH_MXC [=y] && (ARCH_MULTI_V7 [=n] || ARM_SINGLE_ARMV7M [=y])
 > 
-> These changes won't apply, probably I need some base for it.
-
-I developed it on devfreq-next branch[1]
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-next
-
-And I try to apply these patchset to linux-next[2] with tags/next-20200109.
-But, patch10/11 of deviceetree has some merge conflict
-because patch[3] related to exynos-bus was merged.
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/
-[3] https://patchwork.kernel.org/cover/11303235/
-    - [v2,0/2] Exynos5422: fix bus related OPPs for Odroid XU3/XU4/HC1
-
-On next version, I'll rebase it on latest patches.
-
+> Make the select statement conditional.
 > 
-> Regards,
-> Lukasz
-> 
-> 
-> 
+> Fixes: 4562fa4c86c9 ("ARM: imx: Enable ARM_ERRATA_814220 for i.MX6UL and i.MX7D")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Applied, thanks.
