@@ -2,95 +2,91 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B37C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF688C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33DA2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E5942077B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 02:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BVPW3l4J"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ljvBMHd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgAICY1 (ORCPT
+        id S1727877AbgAIC2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 21:24:27 -0500
-Received: from ozlabs.org ([203.11.71.1]:36125 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgAICY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 21:24:27 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tVLJ3Ml9z9sRW;
-        Thu,  9 Jan 2020 13:24:24 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578536664;
-        bh=feYRiXgf79MA9R3HmP/RWQv0wmPGZpr38pcwO87gD+Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BVPW3l4Ju7MR7WVioerqAz46uuSfuCR5DVFpdU1o2n4IzjyOF0mGgS6p9sEshDX9/
-         wGJVg2koVVPOp68/EGU2nXE9gYgMaD+4/p/wldgfLrliZXJJc5eSnRWSG3jt4oO/JK
-         wr2posQhy/HICchgvzKevnvlllKpdYwBBURnq3yV866m3Va9ZJb+CfU7zcwZIOlH6K
-         F29Z/W0xYZMBniRG1+3wbUxYTlTz9v7TWfGpauktL5KgZPzvk/g6VzoxLRXddpkFJP
-         07Syg1R6KtIOSixqDaRlvhYAAm5lEjPcW8xVZk+beCq5rJxuHE+gYjs+ZjWBg3JbXL
-         TvjGzQhNsXXMg==
-Date:   Thu, 9 Jan 2020 13:24:23 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ma Feng <mafeng.ma@huawei.com>
-Subject: Re: linux-next: Fixes tag needs some work in the pinctrl tree
-Message-ID: <20200109132423.1ff0d009@canb.auug.org.au>
-In-Reply-To: <CACRpkdbZi3qV1RFvA4SDa_7T-b-eSaKGdA9_m4s_1gk=2MQNDQ@mail.gmail.com>
-References: <20200109112836.0649c578@canb.auug.org.au>
-        <CACRpkdbZi3qV1RFvA4SDa_7T-b-eSaKGdA9_m4s_1gk=2MQNDQ@mail.gmail.com>
+        Wed, 8 Jan 2020 21:28:10 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:17409 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726758AbgAIC2K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 21:28:10 -0500
+X-UUID: 8efac21a52b6424690e94ac0a754df04-20200109
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=838Cc8+KqcxYDVnAL0XU6OJBKM3nfNiVLnoFblbQyZw=;
+        b=ljvBMHd1pKAcKBG1lWVx336Jjl2GJ+HSNn4bHAqZjzvEAtBA8fS687I9MTAn/dOT3eo5UttZinpAJXlWMHKeiEGLmf8JNvTt8bO5FYb6UX/MFiyEsx5vLgswg2xwG7s6J+DxVvqY/6dk5NfiQ2dZ4EtHa6iSOenNMAp19GJ2/Wk=;
+X-UUID: 8efac21a52b6424690e94ac0a754df04-20200109
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1912375700; Thu, 09 Jan 2020 10:27:57 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 9 Jan
+ 2020 10:24:17 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 9 Jan 2020 10:28:13 +0800
+Message-ID: <1578536872.21256.25.camel@mhfsdcap03>
+Subject: Re: [PATCH] usb: common: usb-conn-gpio: Register charger
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <od@zcrc.me>,
+        <linux-usb@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 9 Jan 2020 10:27:52 +0800
+In-Reply-To: <1578504370.3.1@crapouillou.net>
+References: <20200107002901.940297-1-paul@crapouillou.net>
+         <20200108165323.GA2506374@kroah.com> <1578504370.3.1@crapouillou.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GZF_vgOc+c6jCyQ7qTik7N3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-TM-SNTS-SMTP: 40D221BFADE0B52CB83D97C4692C5266B11D679C287C449086D5AC23C5A64CFC2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GZF_vgOc+c6jCyQ7qTik7N3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+SGkgUGF1bCwNCg0KT24gV2VkLCAyMDIwLTAxLTA4IGF0IDE0OjI2IC0wMzAwLCBQYXVsIENlcmN1
+ZWlsIHdyb3RlOg0KPiBIaSBHcmVnLA0KPiANCj4gDQo+IExlIG1lci4sIGphbnYuIDgsIDIwMjAg
+YXQgMTc6NTMsIEdyZWcgS3JvYWgtSGFydG1hbiANCj4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24u
+b3JnPiBhIMOpY3JpdCA6DQo+ID4gT24gVHVlLCBKYW4gMDcsIDIwMjAgYXQgMDE6Mjk6MDFBTSAr
+MDEwMCwgUGF1bCBDZXJjdWVpbCB3cm90ZToNCj4gPj4gIFJlZ2lzdGVyIGEgcG93ZXIgc3VwcGx5
+IGNoYXJnZXIsIHdob3NlIG9ubGluZSBzdGF0ZSBkZXBlbmRzIG9uIA0KPiA+PiB3aGV0aGVyDQo+
+ID4+ICB0aGUgVVNCIHJvbGUgaXMgc2V0IHRvIGRldmljZSBvciBub3QuDQo+ID4gDQo+ID4gVGhh
+dCBzYXlzIF93aGF0XyB5b3UgYXJlIGRvaW5nLCBidXQgSSBoYXZlIG5vIGlkZWEgX3doeV8geW91
+IHdhbnQgdG8gDQo+ID4gZG8NCj4gPiB0aGlzLg0KPiA+IA0KPiA+IFdoYXQgaXMgdGhpcyBnb2lu
+ZyB0byBjYXVzZSB0byBoYXZlIGhhcHBlbj8gIFdoYXQgbmV3IHVzZXJzcGFjZSBhcGkgaXMNCj4g
+PiBnb2luZyB0byByZXN1bHQ/ICBXaGF0IHdpbGwgYSB1c2VyIGRvIHdpdGggdGhpcz8NCj4gDQo+
+IFRoaXMgaXMgdXNlZnVsIHdoZW4gdGhlIFVTQiByb2xlIGlzIHRoZSBvbmx5IHdheSB0byBrbm93
+IGlmIHRoZSBkZXZpY2UgDQo+IGlzIGNoYXJnaW5nIGZyb20gVVNCLg0KVGhlcmUgaXMgbm8gY2hh
+cmdlciBJQyBvbiB5b3VyIHBsYXRmb3JtPw0KDQo+IA0KPiBUaGUgQVBJIGlzIHRoZSBzdGFuZGFy
+ZCBwb3dlciBzdXBwbHkgY2hhcmdlciBBUEksIHlvdSBnZXQgYSANCj4gL3N5cy9jbGFzcy9wb3dl
+cl9zdXBwbHkveHh4L29ubGluZSBub2RlIHdoaWNoIHRlbGxzIHlvdSB0aGUgc3RhdGUgb2YgDQo+
+IHRoZSBjaGFyZ2VyLg0KPiANCj4gVGhlIHNvbGUgcHVycG9zZSBvZiB0aGlzIGlzIHRvIGdpdmUg
+dXNlcnNwYWNlIGFwcGxpY2F0aW9ucyBhIHdheSB0byANCj4ga25vdyB3aGV0aGVyIG9yIG5vdCB0
+aGUgY2hhcmdlciBpcyBwbHVnZ2VkLg0KPiANCj4gPiBJcyB0aGlzIGdvaW5nIHRvIGFsd2F5cyBz
+aG93IHVwLCBubyBtYXR0ZXIgaWYgdGhlIHJvbGUgaXMgbm90IGV2ZW4NCj4gPiByZWxldmFudCBm
+b3IgYSBwb3dlciBzdXBwbHk/DQo+IA0KPiBJIGd1ZXNzIGl0J2QgYWx3YXlzIHNob3cgdXAsIHll
+cy4gSW4gd2hpY2ggY2FzZSB3b3VsZCB0aGUgcm9sZSBub3QgYmUgDQo+IHJlbGV2YW50IGZvciBh
+IHBvd2VyIHN1cHBseT8gDQpEbyB5b3UgYWxzbyBuZWVkIGl0IGlmIHRoZSBwbGF0Zm9ybSBkb24n
+dCBoYXZlIGJhdHRlcnk/DQoNCg0KPiBJcyBncGlvLWItY29ubmVjdG9yIG5vdCBhbHdheXMgdXNl
+ZCBmb3IgDQo+IE9URyBjb25uZWN0b3JzPw0KSXQgYWxzbyBzdXBwb3J0cyBkZXZpY2Ugb25seSBt
+b2RlLCB1c3VhbGx5IHVzZXMgdkJ1cyBwaW4gdG8NCmVuYWJsZS9kaXNhYmxlIGNvbnRyb2xsZXIN
+Cg0KPiANCj4gQ2hlZXJzLA0KPiAtUGF1bA0KPiANCj4gDQo+ID4gWW91IG5lZWQgYSBsb3QgbW9y
+ZSB0ZXh0IGhlcmUgdG8gbWFrZSB0aGlzIG1lcmdhYmxlLg0KPiA+IA0KPiA+IHRoYW5rcywNCj4g
+PiANCj4gPiBncmVnIGstaA0KPiANCj4gDQoNCg==
 
-Hi Linus,
-
-On Thu, 9 Jan 2020 02:58:46 +0100 Linus Walleij <linus.walleij@linaro.org> =
-wrote:
->
-> Do we have to fix this? It is a trivial fix to a non-critial non-regressi=
-on
-> problem so it's not like we need those Fixes tags to get it picked to
-> stable or anything. To me it's just some random free-form commit
-> message.
-
-Sure, no worries ... just a learning exercise for next time.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/GZF_vgOc+c6jCyQ7qTik7N3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4WjtcACgkQAVBC80lX
-0Gy6+Af/X9Z2miIZ7EThhYvbQUCvjDXkw2pvamAfaQcvvKtnNvgx6c8CW9XaaGhz
-1EvRRQ2sqTQC8F7BM6DAmxKfAz9oW+mBoJBJi4/YQxjlcBsXT2VT3f2N9qWm9ada
-UOjLD9k4F0q8kmWG1TOF9LDWu+u9DPSn5gn/JEWy221hR8og5Z+0nyptwbtpmrsb
-7nveNgMSKosRPvZDuK4CsKFvGo5/ywmVBqjeNkCvJTu78h52dfcdxD/ZDR6YibKh
-UuQBQhBeMvTJbtqp7Drz95U0Oy+J1US2ZHwBtFGzgh+kZ/0TPghqR0u+0wwdaxdT
-VVeH60H2kTZw/1Ei9vv0kzqbVbOSUw==
-=c+dc
------END PGP SIGNATURE-----
-
---Sig_/GZF_vgOc+c6jCyQ7qTik7N3--
