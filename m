@@ -2,282 +2,193 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2BEC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77F5C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAEC2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F8C2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AaSXI6pr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732245AbgAIPJh (ORCPT
+        id S1732247AbgAIPKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:09:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:60812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732220AbgAIPJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:09:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E08C1FB;
-        Thu,  9 Jan 2020 07:09:32 -0800 (PST)
-Received: from [10.1.27.38] (e122027.cambridge.arm.com [10.1.27.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 336333F534;
-        Thu,  9 Jan 2020 07:09:30 -0800 (PST)
-Subject: Re: [PATCH v2 6/6] KVM: arm64: Support the VCPU preemption check
-To:     Zengruan Ye <yezengruan@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     maz@kernel.org, james.morse@arm.com, linux@armlinux.org.uk,
-        suzuki.poulose@arm.com, julien.thierry.kdev@gmail.com,
-        catalin.marinas@arm.com, mark.rutland@arm.com, will@kernel.org,
-        daniel.lezcano@linaro.org
-References: <20191226135833.1052-1-yezengruan@huawei.com>
- <20191226135833.1052-7-yezengruan@huawei.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <5a1f6745-2deb-253b-7022-f2725d8d40ba@arm.com>
-Date:   Thu, 9 Jan 2020 15:09:28 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 10:10:08 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34736 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729483AbgAIPKH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:10:07 -0500
+Received: by mail-pl1-f194.google.com with SMTP id x17so2691431pln.1;
+        Thu, 09 Jan 2020 07:10:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1DdEpgV3qSTUavFzlgz+OfLM8pMDHuE+us22+FmCcxA=;
+        b=AaSXI6prgQa5mOunsrwbxtu/8XiUkd6z17wEwhka38z+UxSftRqeY5dWFJYUmiAkhr
+         q5n704lrCTYwTx5SMsA9okpdE4eHneDbPzCwy6tHGxKpw0+dMXKO4XWI0DLGIfDre9el
+         z2SBGi/394Z8/2WFduIjqWn9lxkC+XLiRjhcLUhcK4TZg+6H1gmg3jWjw4E3jgdMD6tp
+         BFieUZHHq2BQ+xTbAwUCtBSy8gzDlzp0Jce+8Ro8I2fc79gBclaKLIuHZoVhLrR5jgV/
+         9JtTBM/chAVC6sh4ngcmTGWIQtG2IsFKP6mi7KskRnA72Pua4zeda2qT4ryy1Howykce
+         iW0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1DdEpgV3qSTUavFzlgz+OfLM8pMDHuE+us22+FmCcxA=;
+        b=JtlFylI1SCQwPkpdsPBXKy0QeNjohrMUvfsyDK2BQpBhn/5VtKK5EBb4d3ncWipKiq
+         4Mf+q08/zGLcpublnxfrMH9hAozUToDDu6EQTn5HpAxXC82U+2v1smP57oFtyZ5oAlKc
+         elKUYHPxIHobpHxSh8Gc/XZzHE4z+YhGkzdCXctKMBEp1I2jUSWZ9xgyP19xf3ycc+If
+         jQkRLxG6CQqdLiivuUV8/pOpbn6DUGhOcKJSLSdLZyuCMoUUjahFwAPyk4CZvJ9E8yEo
+         DiYKl5epV/4bTaUhAxKIZLYKK3UrvKi6FtYJfvDYRelqPkYd7jZ0u8fF1MwKzmohuIF9
+         nbOA==
+X-Gm-Message-State: APjAAAXSB2sTSEYpcNK/5/7iiuAa1W6Lv2eMqRmhKBScYLNWHpTq26Z0
+        JekheOt7PeCgdVQHvquPi4O2AtElAISQg8nj/bg=
+X-Google-Smtp-Source: APXvYqxW4/RLnKlf959Q6Ahn+JSRYHZfjihIXmV92wTSiJEu+KPYezvWYFBC44j20+G4RoCdssnDt+ehSt3D62Pt7wM=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr5945398pjq.132.1578582605791;
+ Thu, 09 Jan 2020 07:10:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191226135833.1052-7-yezengruan@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20191221071751.269025-1-lkundrak@v3.sk>
+In-Reply-To: <20191221071751.269025-1-lkundrak@v3.sk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Jan 2020 17:09:57 +0200
+Message-ID: <CAHp75VcYoWqvgLv-PmgxqhrHmYOH5=Nru6Msj3rryT=jL+y9xw@mail.gmail.com>
+Subject: Re: [PATCH] power: supply: olpc_battery: fix the power supply name
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/12/2019 13:58, Zengruan Ye wrote:
-> Support the vcpu_is_preempted() functionality under KVM/arm64. This will
-> enhance lock performance on overcommitted hosts (more runnable VCPUs
-> than physical CPUs in the system) as doing busy waits for preempted
-> VCPUs will hurt system performance far worse than early yielding.
-> 
-> unix benchmark result:
->    host:  kernel 5.5.0-rc1, HiSilicon Kunpeng920, 8 CPUs
->    guest: kernel 5.5.0-rc1, 16 VCPUs
-> 
->                 test-case                |    after-patch    |   before-patch
-> ----------------------------------------+-------------------+------------------
->   Dhrystone 2 using register variables   | 334600751.0 lps   | 335319028.3 lps
->   Double-Precision Whetstone             |     32856.1 MWIPS |     32849.6 MWIPS
->   Execl Throughput                       |      3662.1 lps   |      2718.0 lps
->   File Copy 1024 bufsize 2000 maxblocks  |    432906.4 KBps  |    158011.8 KBps
->   File Copy 256 bufsize 500 maxblocks    |    116023.0 KBps  |     37664.0 KBps
->   File Copy 4096 bufsize 8000 maxblocks  |   1432769.8 KBps  |    441108.8 KBps
->   Pipe Throughput                        |   6405029.6 lps   |   6021457.6 lps
->   Pipe-based Context Switching           |    185872.7 lps   |    184255.3 lps
->   Process Creation                       |      4025.7 lps   |      3706.6 lps
->   Shell Scripts (1 concurrent)           |      6745.6 lpm   |      6436.1 lpm
->   Shell Scripts (8 concurrent)           |       998.7 lpm   |       931.1 lpm
->   System Call Overhead                   |   3913363.1 lps   |   3883287.8 lps
-> ----------------------------------------+-------------------+------------------
->   System Benchmarks Index Score          |      1835.1       |      1327.6
-> 
-> Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
+On Sat, Dec 21, 2019 at 9:18 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> The framework is unhappy about them, because it uses the names in sysfs
+> attributes:
+>
+>   power_supply olpc-ac: hwmon: 'olpc-ac' is not a valid name attribute, please fix
+>   power_supply olpc-battery: hwmon: 'olpc-battery' is not a valid name attribute, please fix
+
+I'm wondering if it's an ABI change and how user space is supposed to
+cope with it.
+
+>
+> See also commit 648cd48c9e56 ("hwmon: Do not accept invalid name
+> attributes") and commit 74d3b6419772 ("hwmon: Relax name attribute
+> validation for new APIs").
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
->   arch/arm64/include/asm/paravirt.h |   3 +
->   arch/arm64/kernel/paravirt.c      | 117 ++++++++++++++++++++++++++++++
->   arch/arm64/kernel/setup.c         |   2 +
->   include/linux/cpuhotplug.h        |   1 +
->   4 files changed, 123 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
-> index 7b1c81b544bb..ca3a2c7881f3 100644
-> --- a/arch/arm64/include/asm/paravirt.h
-> +++ b/arch/arm64/include/asm/paravirt.h
-> @@ -29,6 +29,8 @@ static inline u64 paravirt_steal_clock(int cpu)
->   
->   int __init pv_time_init(void);
->   
-> +int __init pv_lock_init(void);
-> +
->   __visible bool __native_vcpu_is_preempted(int cpu);
->   
->   static inline bool pv_vcpu_is_preempted(int cpu)
-> @@ -39,6 +41,7 @@ static inline bool pv_vcpu_is_preempted(int cpu)
->   #else
->   
->   #define pv_time_init() do {} while (0)
-> +#define pv_lock_init() do {} while (0)
->   
->   #endif // CONFIG_PARAVIRT
->   
-> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
-> index d8f1ba8c22ce..bd2ad6a17a26 100644
-> --- a/arch/arm64/kernel/paravirt.c
-> +++ b/arch/arm64/kernel/paravirt.c
-> @@ -22,6 +22,7 @@
->   #include <asm/paravirt.h>
->   #include <asm/pvclock-abi.h>
->   #include <asm/smp_plat.h>
-> +#include <asm/pvlock-abi.h>
->   
->   struct static_key paravirt_steal_enabled;
->   struct static_key paravirt_steal_rq_enabled;
-> @@ -35,6 +36,10 @@ struct pv_time_stolen_time_region {
->   	struct pvclock_vcpu_stolen_time *kaddr;
->   };
->   
-> +struct pv_lock_state_region {
-> +	struct pvlock_vcpu_state *kaddr;
-> +};
-> +
->   static DEFINE_PER_CPU(struct pv_time_stolen_time_region, stolen_time_region);
->   
->   static bool steal_acc = true;
-> @@ -158,3 +163,115 @@ int __init pv_time_init(void)
->   
->   	return 0;
->   }
-> +
-> +static DEFINE_PER_CPU(struct pv_lock_state_region, lock_state_region);
-> +
-> +static bool kvm_vcpu_is_preempted(int cpu)
-> +{
-> +	struct pv_lock_state_region *reg;
-> +	__le64 preempted_le;
-> +
-> +	reg = per_cpu_ptr(&lock_state_region, cpu);
-> +	if (!reg->kaddr) {
-> +		pr_warn_once("PV lock enabled but not configured for cpu %d\n",
-> +			     cpu);
-> +		return false;
-> +	}
-> +
-> +	preempted_le = le64_to_cpu(READ_ONCE(reg->kaddr->preempted));
-> +
-> +	return !!(preempted_le & 1);
+>  arch/x86/platform/olpc/olpc-xo1-sci.c  | 4 ++--
+>  arch/x86/platform/olpc/olpc-xo15-sci.c | 4 ++--
+>  drivers/platform/olpc/olpc-xo175-ec.c  | 4 ++--
+>  drivers/power/supply/olpc_battery.c    | 4 ++--
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
+> index 99a28ce2244c7..09bd195cc9012 100644
+> --- a/arch/x86/platform/olpc/olpc-xo1-sci.c
+> +++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
+> @@ -53,7 +53,7 @@ static const char * const lid_wake_mode_names[] = {
+>
+>  static void battery_status_changed(void)
+>  {
+> -       struct power_supply *psy = power_supply_get_by_name("olpc-battery");
+> +       struct power_supply *psy = power_supply_get_by_name("olpc_battery");
+>
+>         if (psy) {
+>                 power_supply_changed(psy);
+> @@ -63,7 +63,7 @@ static void battery_status_changed(void)
+>
+>  static void ac_status_changed(void)
+>  {
+> -       struct power_supply *psy = power_supply_get_by_name("olpc-ac");
+> +       struct power_supply *psy = power_supply_get_by_name("olpc_ac");
+>
+>         if (psy) {
+>                 power_supply_changed(psy);
+> diff --git a/arch/x86/platform/olpc/olpc-xo15-sci.c b/arch/x86/platform/olpc/olpc-xo15-sci.c
+> index 6d193bb36021b..7bc1ea6a47974 100644
+> --- a/arch/x86/platform/olpc/olpc-xo15-sci.c
+> +++ b/arch/x86/platform/olpc/olpc-xo15-sci.c
+> @@ -75,7 +75,7 @@ static struct kobj_attribute lid_wake_on_close_attr =
+>
+>  static void battery_status_changed(void)
+>  {
+> -       struct power_supply *psy = power_supply_get_by_name("olpc-battery");
+> +       struct power_supply *psy = power_supply_get_by_name("olpc_battery");
+>
+>         if (psy) {
+>                 power_supply_changed(psy);
+> @@ -85,7 +85,7 @@ static void battery_status_changed(void)
+>
+>  static void ac_status_changed(void)
+>  {
+> -       struct power_supply *psy = power_supply_get_by_name("olpc-ac");
+> +       struct power_supply *psy = power_supply_get_by_name("olpc_ac");
+>
+>         if (psy) {
+>                 power_supply_changed(psy);
+> diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olpc/olpc-xo175-ec.c
+> index 83ed1fbf73cfd..5e1d14e35f20b 100644
+> --- a/drivers/platform/olpc/olpc-xo175-ec.c
+> +++ b/drivers/platform/olpc/olpc-xo175-ec.c
+> @@ -410,7 +410,7 @@ static void olpc_xo175_ec_complete(void *arg)
+>                 dev_dbg(dev, "got event %.2x\n", byte);
+>                 switch (byte) {
+>                 case EVENT_AC_CHANGE:
+> -                       psy = power_supply_get_by_name("olpc-ac");
+> +                       psy = power_supply_get_by_name("olpc_ac");
+>                         if (psy) {
+>                                 power_supply_changed(psy);
+>                                 power_supply_put(psy);
+> @@ -420,7 +420,7 @@ static void olpc_xo175_ec_complete(void *arg)
+>                 case EVENT_BATTERY_CRITICAL:
+>                 case EVENT_BATTERY_SOC_CHANGE:
+>                 case EVENT_BATTERY_ERROR:
+> -                       psy = power_supply_get_by_name("olpc-battery");
+> +                       psy = power_supply_get_by_name("olpc_battery");
+>                         if (psy) {
+>                                 power_supply_changed(psy);
+>                                 power_supply_put(psy);
+> diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/olpc_battery.c
+> index ad0e9e0edb3f8..e0476ec06601d 100644
+> --- a/drivers/power/supply/olpc_battery.c
+> +++ b/drivers/power/supply/olpc_battery.c
+> @@ -88,7 +88,7 @@ static enum power_supply_property olpc_ac_props[] = {
+>  };
+>
+>  static const struct power_supply_desc olpc_ac_desc = {
+> -       .name = "olpc-ac",
+> +       .name = "olpc_ac",
+>         .type = POWER_SUPPLY_TYPE_MAINS,
+>         .properties = olpc_ac_props,
+>         .num_properties = ARRAY_SIZE(olpc_ac_props),
+> @@ -605,7 +605,7 @@ static const struct attribute_group *olpc_bat_sysfs_groups[] = {
+>   *********************************************************************/
+>
+>  static struct power_supply_desc olpc_bat_desc = {
+> -       .name = "olpc-battery",
+> +       .name = "olpc_battery",
+>         .get_property = olpc_bat_get_property,
+>         .use_for_apm = 1,
+>  };
+> --
+> 2.24.1
+>
 
-According to the documentation preempted != 0 means preempted, but here you are checking the LSB. You need to be consistent about the ABI.
 
-> +}
-> +
-> +static int pvlock_vcpu_state_dying_cpu(unsigned int cpu)
-> +{
-> +	struct pv_lock_state_region *reg;
-> +
-> +	reg = this_cpu_ptr(&lock_state_region);
-> +	if (!reg->kaddr)
-> +		return 0;
-> +
-> +	memunmap(reg->kaddr);
-> +	memset(reg, 0, sizeof(*reg));
-> +
-> +	return 0;
-> +}
-> +
-> +static int init_pvlock_vcpu_state(unsigned int cpu)
-> +{
-> +	struct pv_lock_state_region *reg;
-> +	struct arm_smccc_res res;
-> +
-> +	reg = this_cpu_ptr(&lock_state_region);
-> +
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_HV_PV_LOCK_PREEMPTED, &res);
-> +
-> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED) {
-> +		pr_warn("Failed to init PV lock data structure\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	reg->kaddr = memremap(res.a0,
-> +			      sizeof(struct pvlock_vcpu_state),
-> +			      MEMREMAP_WB);
-> +
-> +	if (!reg->kaddr) {
-> +		pr_warn("Failed to map PV lock data structure\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int kvm_arm_init_pvlock(void)
-> +{
-> +	int ret;
-> +
-> +	ret = cpuhp_setup_state(CPUHP_AP_ARM_KVM_PVLOCK_STARTING,
-> +				"hypervisor/arm/pvlock:starting",
-> +				init_pvlock_vcpu_state,
-> +				pvlock_vcpu_state_dying_cpu);
-> +	if (ret < 0) {
-> +		pr_warn("PV-lock init failed\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static bool has_kvm_pvlock(void)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	/* To detect the presence of PV lock support we require SMCCC 1.1+ */
-> +	if (psci_ops.smccc_version < SMCCC_VERSION_1_1)
-> +		return false;
-> +
-> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
-> +			     ARM_SMCCC_HV_PV_LOCK_FEATURES, &res);
-
-As mentioned previously we could do with something more robust to check that the hypervisor is actually KVM before assuming that vendor specific IDs are valid.
-
-Steve
-
-> +
-> +	if (res.a0 != SMCCC_RET_SUCCESS)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +int __init pv_lock_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (is_hyp_mode_available())
-> +		return 0;
-> +
-> +	if (!has_kvm_pvlock())
-> +		return 0;
-> +
-> +	ret = kvm_arm_init_pvlock();
-> +	if (ret)
-> +		return ret;
-> +
-> +	pv_ops.lock.vcpu_is_preempted = kvm_vcpu_is_preempted;
-> +	pr_info("using PV-lock preempted\n");
-> +
-> +	return 0;
-> +}
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 56f664561754..aa3a8b9e710f 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -341,6 +341,8 @@ void __init setup_arch(char **cmdline_p)
->   	smp_init_cpus();
->   	smp_build_mpidr_hash();
->   
-> +	pv_lock_init();
-> +
->   	/* Init percpu seeds for random tags after cpus are set up. */
->   	kasan_init_tags();
->   
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index e51ee772b9f5..f72ff95ab63a 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -138,6 +138,7 @@ enum cpuhp_state {
->   	CPUHP_AP_DUMMY_TIMER_STARTING,
->   	CPUHP_AP_ARM_XEN_STARTING,
->   	CPUHP_AP_ARM_KVMPV_STARTING,
-> +	CPUHP_AP_ARM_KVM_PVLOCK_STARTING,
->   	CPUHP_AP_ARM_CORESIGHT_STARTING,
->   	CPUHP_AP_ARM64_ISNDEP_STARTING,
->   	CPUHP_AP_SMPCFD_DYING,
-> 
-
+-- 
+With Best Regards,
+Andy Shevchenko
