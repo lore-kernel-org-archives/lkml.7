@@ -2,135 +2,286 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E276C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A88C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8592067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:47:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vsIYH0hO"
+	by mail.kernel.org (Postfix) with ESMTP id 523332072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgAIHry (ORCPT
+        id S1728339AbgAIHsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:47:54 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.36]:17420 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728184AbgAIHrx (ORCPT
+        Thu, 9 Jan 2020 02:48:02 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:21655 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728184AbgAIHsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:47:53 -0500
-X-Greylist: delayed 1335 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 02:47:53 EST
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 8347D400CBA1A
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 01:25:37 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id pSCHiAzkyW4frpSCHiQlzN; Thu, 09 Jan 2020 01:25:37 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZGG68xB9srENApCLFB8NBnGMr0wtGwoST9dYSScyw8w=; b=vsIYH0hOFBwj3BrTLB197B7YcA
-        odvWXuI6yOFwAjN1MJe0rVsNO2bhblFxE3WStAwNRx8A64wf9TJ9nOybBO5gAVrVRsbxBne6Xlj5Z
-        Uy1l+oJV/RVZ2VRWFsTfZ7RoQmnGq8jUydHva4wPLcQqm1qs96Xx+oZd/aRmT6affDu9TwIWCmaer
-        TLbAP/hzYKR3xnnF7iJTNQXduRZtVRLb0ynGN0gQ36zqc4v1D9T6PhpnmExJL5FJ9V3CfvanfpBY/
-        1WjphPt9wY4aJb8Jr/VGBh7cIQRuZ+7g9YY0aERYlU5ufwEe1IIfCfTnQaK0If1y9dv5vFOAhDD5f
-        K1QCN5Xw==;
-Received: from [189.152.215.240] (port=37182 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1ipSCF-000871-Le; Thu, 09 Jan 2020 01:25:36 -0600
-Date:   Thu, 9 Jan 2020 01:27:35 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] pwm: sun4i: Fix inconsistent IS_ERR and PTR_ERR
-Message-ID: <20200109072735.GA22886@embeddedor>
+        Thu, 9 Jan 2020 02:48:02 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: bWlFSeDW8nza6EHS6ZKDGqzEBeVWt8PfOpZ1P0KFfyVmA2I+3DlTM2CZwCwTMxL8gXoF+DytV4
+ PZsEESUhROUp5fw3cK1C4QkQ8qUnOxmCOf4h1FTGWolpdMrfvtAQTDvDK5sm38zb2uloV3qe2E
+ WxqeXswRMIp+O/MIT5pkCRReJu3B/fdNJ83ljMm8BcDxaGa2F3pOjCrnKVYHDxrPceimdrf2V/
+ X1RmD8scsFtok4SWaCY5KPdBLL9119KJEyiUYHGCYjKsWqM8EOpt9835xfd7UMRLHejY0YyhW1
+ jzk=
+X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
+   d="scan'208";a="64145399"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jan 2020 00:48:00 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 9 Jan 2020 00:47:59 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 9 Jan 2020 00:47:58 -0700
+Date:   Thu, 9 Jan 2020 08:47:29 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Codrin Ciubotariu - M19940 <Codrin.Ciubotariu@microchip.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kamel.bouhara@bootlin.com" <kamel.bouhara@bootlin.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "Nicolas Ferre - M43238" <Nicolas.Ferre@microchip.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh@kernel.org" <robh@kernel.org>
+Subject: Re: [PATCH v2 3/6] i2c: at91: Send bus clear command if SCL is down
+Message-ID: <20200109074729.zare4va5ugbq62f3@M43218.corp.atmel.com>
+Mail-Followup-To: Codrin Ciubotariu - M19940 <Codrin.Ciubotariu@microchip.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kamel.bouhara@bootlin.com" <kamel.bouhara@bootlin.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh@kernel.org" <robh@kernel.org>
+References: <20200103094821.13185-1-codrin.ciubotariu@microchip.com>
+ <20200103094821.13185-4-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.152.215.240
-X-Source-L: No
-X-Exim-ID: 1ipSCF-000871-Le
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.152.215.240]:37182
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200103094821.13185-4-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix inconsistent IS_ERR and PTR_ERR in sun4i_pwm_probe().
+On Fri, Jan 03, 2020 at 09:49:07AM +0000, Codrin Ciubotariu - M19940 wrote:
+> After a transfer timeout, some faulty I2C slave devices might hold down
+> the SCL pin. We can generate a bus clear command, hoping that the slave
+> might release the pins.
+> 
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-The proper pointers to be passed as arguments are pwm->clk and pwm->bus_clk.
+This patch may conflict with another one removing the explicit set to
+false.
 
-This bug was detected with the help of Coccinelle.
+> ---
+> 
+> Changes in v2:
+>  - use CLEAR command only if SDA is down; update patch subject to
+>    reflect this;
+>  - CLEAR command is no longer used for sama5d2, only sam9x60;
+> 
+>  drivers/i2c/busses/i2c-at91-core.c   |  9 ++++++++
+>  drivers/i2c/busses/i2c-at91-master.c | 32 +++++++++++++++++++++++-----
+>  drivers/i2c/busses/i2c-at91.h        |  7 +++++-
+>  3 files changed, 42 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
+> index e13af4874976..128eafc05adb 100644
+> --- a/drivers/i2c/busses/i2c-at91-core.c
+> +++ b/drivers/i2c/busses/i2c-at91-core.c
+> @@ -71,6 +71,7 @@ static struct at91_twi_pdata at91rm9200_config = {
+>  	.has_dig_filtr = false,
+>  	.has_adv_dig_filtr = false,
+>  	.has_ana_filtr = false,
+> +	.has_clear_cmd = false,
+>  };
+>  
+>  static struct at91_twi_pdata at91sam9261_config = {
+> @@ -82,6 +83,7 @@ static struct at91_twi_pdata at91sam9261_config = {
+>  	.has_dig_filtr = false,
+>  	.has_adv_dig_filtr = false,
+>  	.has_ana_filtr = false,
+> +	.has_clear_cmd = false,
+>  };
+>  
+>  static struct at91_twi_pdata at91sam9260_config = {
+> @@ -93,6 +95,7 @@ static struct at91_twi_pdata at91sam9260_config = {
+>  	.has_dig_filtr = false,
+>  	.has_adv_dig_filtr = false,
+>  	.has_ana_filtr = false,
+> +	.has_clear_cmd = false,
+>  };
+>  
+>  static struct at91_twi_pdata at91sam9g20_config = {
+> @@ -104,6 +107,7 @@ static struct at91_twi_pdata at91sam9g20_config = {
+>  	.has_dig_filtr = false,
+>  	.has_adv_dig_filtr = false,
+>  	.has_ana_filtr = false,
+> +	.has_clear_cmd = false,
+>  };
+>  
+>  static struct at91_twi_pdata at91sam9g10_config = {
+> @@ -115,6 +119,7 @@ static struct at91_twi_pdata at91sam9g10_config = {
+>  	.has_dig_filtr = false,
+>  	.has_adv_dig_filtr = false,
+>  	.has_ana_filtr = false,
+> +	.has_clear_cmd = false,
+>  };
+>  
+>  static const struct platform_device_id at91_twi_devtypes[] = {
+> @@ -148,6 +153,7 @@ static struct at91_twi_pdata at91sam9x5_config = {
+>  	.has_dig_filtr = false,
+>  	.has_adv_dig_filtr = false,
+>  	.has_ana_filtr = false,
+> +	.has_clear_cmd = false,
+>  };
+>  
+>  static struct at91_twi_pdata sama5d4_config = {
+> @@ -159,6 +165,7 @@ static struct at91_twi_pdata sama5d4_config = {
+>  	.has_dig_filtr = true,
+>  	.has_adv_dig_filtr = false,
+>  	.has_ana_filtr = false,
+> +	.has_clear_cmd = false,
+>  };
+>  
+>  static struct at91_twi_pdata sama5d2_config = {
+> @@ -170,6 +177,7 @@ static struct at91_twi_pdata sama5d2_config = {
+>  	.has_dig_filtr = true,
+>  	.has_adv_dig_filtr = true,
+>  	.has_ana_filtr = true,
+> +	.has_clear_cmd = false,	/* due to errata, CLEAR cmd is not working */
 
-Fixes: b8d74644f34a ("pwm: sun4i: Prefer "mod" clock to unnamed")
-Fixes: 5b090b430d75 ("pwm: sun4i: Add an optional probe for bus clock")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/pwm/pwm-sun4i.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+In this case it's probably worth keeping it.
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 1afd41ebd3fd..a805c347ee84 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -423,7 +423,7 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	 */
- 	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
- 	if (IS_ERR(pwm->clk)) {
--		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+		if (PTR_ERR(pwm->clk) != -EPROBE_DEFER)
- 			dev_err(&pdev->dev, "get mod clock failed %pe\n",
- 				pwm->clk);
- 		return PTR_ERR(pwm->clk);
-@@ -432,7 +432,7 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	if (!pwm->clk) {
- 		pwm->clk = devm_clk_get(&pdev->dev, NULL);
- 		if (IS_ERR(pwm->clk)) {
--			if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+			if (PTR_ERR(pwm->clk) != -EPROBE_DEFER)
- 				dev_err(&pdev->dev, "get unnamed clock failed %pe\n",
- 					pwm->clk);
- 			return PTR_ERR(pwm->clk);
-@@ -441,7 +441,7 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 
- 	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
- 	if (IS_ERR(pwm->bus_clk)) {
--		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-+		if (PTR_ERR(pwm->bus_clk) != -EPROBE_DEFER)
- 			dev_err(&pdev->dev, "get bus clock failed %pe\n",
- 				pwm->bus_clk);
- 		return PTR_ERR(pwm->bus_clk);
--- 
-2.23.0
+Ludovic
 
+>  };
+>  
+>  static struct at91_twi_pdata sam9x60_config = {
+> @@ -181,6 +189,7 @@ static struct at91_twi_pdata sam9x60_config = {
+>  	.has_dig_filtr = true,
+>  	.has_adv_dig_filtr = true,
+>  	.has_ana_filtr = true,
+> +	.has_clear_cmd = true,
+>  };
+>  
+>  static const struct of_device_id atmel_twi_dt_ids[] = {
+> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+> index c55e8ff35201..8c4f20317847 100644
+> --- a/drivers/i2c/busses/i2c-at91-master.c
+> +++ b/drivers/i2c/busses/i2c-at91-master.c
+> @@ -480,7 +480,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
+>  	unsigned long time_left;
+>  	bool has_unre_flag = dev->pdata->has_unre_flag;
+>  	bool has_alt_cmd = dev->pdata->has_alt_cmd;
+> -	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
+> +	bool has_clear_cmd = dev->pdata->has_clear_cmd;
+>  
+>  	/*
+>  	 * WARNING: the TXCOMP bit in the Status Register is NOT a clear on
+> @@ -641,10 +641,32 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
+>  			       AT91_TWI_THRCLR | AT91_TWI_LOCKCLR);
+>  	}
+>  
+> -	if (rinfo->get_sda && !(rinfo->get_sda(&dev->adapter))) {
+> -		dev_dbg(dev->dev,
+> -			"SDA is down; clear bus using gpio\n");
+> -		i2c_recover_bus(&dev->adapter);
+> +	/*
+> +	 * some faulty I2C slave devices might hold SDA down;
+> +	 * we can send a bus clear command, hoping that the pins will be
+> +	 * released
+> +	 */
+> +	if (has_clear_cmd) {
+> +		if (!(dev->transfer_status & AT91_TWI_SDA)) {
+> +			dev_dbg(dev->dev,
+> +				"SDA is down; sending bus clear command\n");
+> +			if (dev->use_alt_cmd) {
+> +				unsigned int acr;
+> +
+> +				acr = at91_twi_read(dev, AT91_TWI_ACR);
+> +				acr &= ~AT91_TWI_ACR_DATAL_MASK;
+> +				at91_twi_write(dev, AT91_TWI_ACR, acr);
+> +			}
+> +			at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
+> +		}
+> +	} else {
+> +		struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
+> +
+> +		if (rinfo->get_sda && !(rinfo->get_sda(&dev->adapter))) {
+> +			dev_dbg(dev->dev,
+> +				"SDA is down; clear bus using gpio\n");
+> +			i2c_recover_bus(&dev->adapter);
+> +		}
+>  	}
+>  
+>  	return ret;
+> diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
+> index eb335b71e775..80f77d523346 100644
+> --- a/drivers/i2c/busses/i2c-at91.h
+> +++ b/drivers/i2c/busses/i2c-at91.h
+> @@ -36,6 +36,7 @@
+>  #define	AT91_TWI_SVDIS		BIT(5)	/* Slave Transfer Disable */
+>  #define	AT91_TWI_QUICK		BIT(6)	/* SMBus quick command */
+>  #define	AT91_TWI_SWRST		BIT(7)	/* Software Reset */
+> +#define	AT91_TWI_CLEAR		BIT(15) /* Bus clear command */
+>  #define	AT91_TWI_ACMEN		BIT(16) /* Alternative Command Mode Enable */
+>  #define	AT91_TWI_ACMDIS		BIT(17) /* Alternative Command Mode Disable */
+>  #define	AT91_TWI_THRCLR		BIT(24) /* Transmit Holding Register Clear */
+> @@ -69,6 +70,8 @@
+>  #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
+>  #define	AT91_TWI_EOSACC		BIT(11)	/* End Of Slave Access */
+>  #define	AT91_TWI_LOCK		BIT(23) /* TWI Lock due to Frame Errors */
+> +#define	AT91_TWI_SCL		BIT(24) /* TWI SCL status */
+> +#define	AT91_TWI_SDA		BIT(25) /* TWI SDA status */
+>  
+>  #define	AT91_TWI_INT_MASK \
+>  	(AT91_TWI_TXCOMP | AT91_TWI_RXRDY | AT91_TWI_TXRDY | AT91_TWI_NACK \
+> @@ -81,7 +84,8 @@
+>  #define	AT91_TWI_THR		0x0034	/* Transmit Holding Register */
+>  
+>  #define	AT91_TWI_ACR		0x0040	/* Alternative Command Register */
+> -#define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
+> +#define	AT91_TWI_ACR_DATAL_MASK	GENMASK(15, 0)
+> +#define	AT91_TWI_ACR_DATAL(len)	((len) & AT91_TWI_ACR_DATAL_MASK)
+>  #define	AT91_TWI_ACR_DIR	BIT(8)
+>  
+>  #define AT91_TWI_FILTR		0x0044
+> @@ -118,6 +122,7 @@ struct at91_twi_pdata {
+>  	bool has_dig_filtr;
+>  	bool has_adv_dig_filtr;
+>  	bool has_ana_filtr;
+> +	bool has_clear_cmd;
+>  	struct at_dma_slave dma_slave;
+>  };
+>  
+> -- 
+> 2.20.1
