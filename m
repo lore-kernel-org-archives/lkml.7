@@ -7,69 +7,69 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46515C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63963C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1B7206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C625206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:04:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KYpdglr1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VtX4QbDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732888AbgAIQEa (ORCPT
+        id S1732898AbgAIQEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:04:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43956 "EHLO
+        Thu, 9 Jan 2020 11:04:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54956 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728231AbgAIQEa (ORCPT
+        with ESMTP id S1732883AbgAIQEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:04:30 -0500
+        Thu, 9 Jan 2020 11:04:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578585868;
+        s=mimecast20190719; t=1578585870;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bWQrA7VCFyRmkR4P5YmsvhynTE3rA5d5XHSqEPaJkPo=;
-        b=KYpdglr1O/DevWu6KtNToEeJEe04UcPXcu1RJlV2NJusKKzOODBc4vLPLCZdZAldM+EnyC
-        jg7b14nnU4cWuarGQNlNafo0hkLyof56EgVZG1092PKlQwT7u1bJH20dfyTCa5kzMPfBCV
-        tQKF21yIw3YNZMQmoIxXI7OhL6qTTbw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-2xjqZr9yOcWZmj9aIebroA-1; Thu, 09 Jan 2020 11:04:27 -0500
-X-MC-Unique: 2xjqZr9yOcWZmj9aIebroA-1
-Received: by mail-wm1-f69.google.com with SMTP id m133so618859wmf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:04:27 -0800 (PST)
+        bh=LKRV6Dbt/iehaVr8Oe5+bZly0BQdm7b+eiiMLnIM3KI=;
+        b=VtX4QbDJJ8/uLDsqDarPDelFPo05Uxom0VbBYl6/lA0A1WVItKH8VKWoLKEOswS2/1abg1
+        BpgPFOYTPjVhkNY5I5FuCNP9ZnbtsY5PWEbwDvz36h+uSfCpFGr4ARCjftsgwehySzjPgZ
+        oqQnBbUGDpN7a2PKh8hQGtRNR1HDB7k=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-DYlxJV2RNmelp9pT6rGaGw-1; Thu, 09 Jan 2020 11:04:29 -0500
+X-MC-Unique: DYlxJV2RNmelp9pT6rGaGw-1
+Received: by mail-wr1-f70.google.com with SMTP id c6so3025715wrm.18
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 08:04:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bWQrA7VCFyRmkR4P5YmsvhynTE3rA5d5XHSqEPaJkPo=;
-        b=Yf1oiQKIH+nnOrIyV6AHZ7eDgqQiEq0IYK1Z298EaRxHExEdVUtUT3OcVjW5GFA29k
-         0Vv9fslQO2/TSmzD13UQX3C5Ccz3i1tluaOjdRILvYT/CGh4NDWmUsX/9MPmqze9aVKS
-         OqdKYPKNBsL2SYpfjnnj7UdR5fhCBKgwljJZKbZYj29Aq6neJd5HMq/XdCSyX/z7pVZ3
-         l6pdIgJDen1+edlAymXr3vI1+CEG7SONaDirUrLPcirTJzuH9VR4g4ugdPMMmSRKQm5o
-         Os2N3mcbBOzj7ap2NALgdrWMAwQMkoZbdJipYZm0LpGSkC+n+HF/vbBzyBJvqvRiSU+C
-         /8vQ==
-X-Gm-Message-State: APjAAAVlUbm+H+Iha9ymQ347zrlO9qS6oHzZssn7kMgAIni4DTPSJdQx
-        uBL0ZNEoyPOHLkuKTWoyZCFWBHKw9cG/Czli1XIDIT5CdQ66G3zEKmJytXP8mPKgOBIIR7Gajin
-        ljbUFESsnsPE4RPN9eTJb+XXh
-X-Received: by 2002:adf:8b4f:: with SMTP id v15mr11990371wra.231.1578585866198;
-        Thu, 09 Jan 2020 08:04:26 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyRBNHddmXJHExrgBfiG3rOVNGpjzR688ErWpsppuCbMLL/G6HOJYCSxBlJEZgOnpRtPnxIbA==
-X-Received: by 2002:adf:8b4f:: with SMTP id v15mr11990334wra.231.1578585865969;
-        Thu, 09 Jan 2020 08:04:25 -0800 (PST)
+        bh=LKRV6Dbt/iehaVr8Oe5+bZly0BQdm7b+eiiMLnIM3KI=;
+        b=PQIq3jju8gauhN41N0ynx11XqmiYPrlCKcjj+mMeoy3tWtH3rvHdkC/VwyKKJtsele
+         8uXtgPFtDYupnDDLjRRkfKUHgOUBVpHavyahEWgqOpPsy5O2gX2WUNjCnGCd2HZfe4YE
+         Q/5/B90VazIT7wqRGXu3F5Z42EYYuGuv0wJP271Yzv8A/1A1h6M73dHTPPNOkFnW/4LW
+         +s5ibGR5/3KTeBhCjvVnC14rA1+fcEXttWdyslYJV46pq3EazSQzNVq1mlnHrhB3KYuM
+         9hOwr3mNZcEg9Tq2pAFUgbq2I4LvpKOmik0ZKsTOxoWVqp8nvtpGfL9zKjaRokESS7nC
+         7qsg==
+X-Gm-Message-State: APjAAAX9WXRQ0Oxcm6mlwINGNJwcqr1QmanZLBgNbMeixj2uFJRcV+nY
+        MlWRfqvadQu33txaaawZib+NsJqS7FC8UQdLjeVxON/UxzjHSofAbGAGC5jh1ygWJ5W4jmzdUco
+        y3S1/TWeBNADjkKS8rj8e0JOP
+X-Received: by 2002:a05:6000:149:: with SMTP id r9mr11718061wrx.147.1578585867816;
+        Thu, 09 Jan 2020 08:04:27 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwE3TyBDC9AqG/yX8Wr+TMrqckkMWTYZH3Gv26HTZhn0fYryvFxFkZBJQubZ1op9IAokDJnzw==
+X-Received: by 2002:a05:6000:149:: with SMTP id r9mr11718025wrx.147.1578585867532;
+        Thu, 09 Jan 2020 08:04:27 -0800 (PST)
 Received: from redfedo.redhat.com (host81-140-166-164.range81-140.btcentralplus.com. [81.140.166.164])
-        by smtp.gmail.com with ESMTPSA id b17sm8615898wrp.49.2020.01.09.08.04.24
+        by smtp.gmail.com with ESMTPSA id b17sm8615898wrp.49.2020.01.09.08.04.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 08:04:25 -0800 (PST)
+        Thu, 09 Jan 2020 08:04:27 -0800 (PST)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
         catalin.marinas@arm.com, will@kernel.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [RFC v5 10/57] objtool: Split generic and arch specific CFI definitions
-Date:   Thu,  9 Jan 2020 16:02:13 +0000
-Message-Id: <20200109160300.26150-11-jthierry@redhat.com>
+Subject: [RFC v5 11/57] objtool: Abstract alternative special case handling
+Date:   Thu,  9 Jan 2020 16:02:14 +0000
+Message-Id: <20200109160300.26150-12-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200109160300.26150-1-jthierry@redhat.com>
 References: <20200109160300.26150-1-jthierry@redhat.com>
@@ -80,90 +80,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some CFI definitions used by generic objtool code have no reason to vary
-from one architecture to another. Move those definition to generic code
-and keep a separate per arch header to provide architecture specific CFI
-definitions.
+Some alternatives associated with a specific feature need to be treated
+in a special way. Since the features and how to treat them vary from one
+architecture to another, move the special case handling to arch specific
+code.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/arch/x86/include/cfi_regs.h  | 25 ++++++++++++++++++++++
- tools/objtool/{arch/x86/include => }/cfi.h | 21 ++----------------
- 2 files changed, 27 insertions(+), 19 deletions(-)
- create mode 100644 tools/objtool/arch/x86/include/cfi_regs.h
- rename tools/objtool/{arch/x86/include => }/cfi.h (54%)
+ tools/objtool/arch/x86/Build                  |  1 +
+ tools/objtool/arch/x86/arch_special.c         | 34 +++++++++++++++++++
+ tools/objtool/arch/x86/include/arch_special.h |  5 +++
+ tools/objtool/special.c                       | 25 +-------------
+ tools/objtool/special.h                       |  8 +++++
+ 5 files changed, 49 insertions(+), 24 deletions(-)
+ create mode 100644 tools/objtool/arch/x86/arch_special.c
 
-diff --git a/tools/objtool/arch/x86/include/cfi_regs.h b/tools/objtool/arch/x86/include/cfi_regs.h
+diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
+index e43fd6fa0ee1..971f9fa90a3c 100644
+--- a/tools/objtool/arch/x86/Build
++++ b/tools/objtool/arch/x86/Build
+@@ -1,3 +1,4 @@
++objtool-y += arch_special.o
+ objtool-y += decode.o
+ objtool-y += orc_dump.o
+ objtool-y += orc_gen.o
+diff --git a/tools/objtool/arch/x86/arch_special.c b/tools/objtool/arch/x86/arch_special.c
 new file mode 100644
-index 000000000000..79bc517efba8
+index 000000000000..6dba31f419d0
 --- /dev/null
-+++ b/tools/objtool/arch/x86/include/cfi_regs.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
++++ b/tools/objtool/arch/x86/arch_special.c
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "../../special.h"
++#include "../../builtin.h"
 +
-+#ifndef _OBJTOOL_CFI_REGS_H
-+#define _OBJTOOL_CFI_REGS_H
-+
-+#define CFI_AX			0
-+#define CFI_DX			1
-+#define CFI_CX			2
-+#define CFI_BX			3
-+#define CFI_SI			4
-+#define CFI_DI			5
-+#define CFI_BP			6
-+#define CFI_SP			7
-+#define CFI_R8			8
-+#define CFI_R9			9
-+#define CFI_R10			10
-+#define CFI_R11			11
-+#define CFI_R12			12
-+#define CFI_R13			13
-+#define CFI_R14			14
-+#define CFI_R15			15
-+#define CFI_RA			16
-+#define CFI_NUM_REGS		17
-+
-+#endif /* _OBJTOOL_CFI_REGS_H */
-diff --git a/tools/objtool/arch/x86/include/cfi.h b/tools/objtool/cfi.h
-similarity index 54%
-rename from tools/objtool/arch/x86/include/cfi.h
-rename to tools/objtool/cfi.h
-index 4427bf8ed686..1a3e7b807994 100644
---- a/tools/objtool/arch/x86/include/cfi.h
-+++ b/tools/objtool/cfi.h
-@@ -6,30 +6,13 @@
- #ifndef _OBJTOOL_CFI_H
- #define _OBJTOOL_CFI_H
++void arch_handle_alternative(unsigned short feature, struct special_alt *alt)
++{
++	/*
++	 * If UACCESS validation is enabled; force that alternative;
++	 * otherwise force it the other way.
++	 *
++	 * What we want to avoid is having both the original and the
++	 * alternative code flow at the same time, in that case we can
++	 * find paths that see the STAC but take the NOP instead of
++	 * CLAC and the other way around.
++	 */
++	switch (feature) {
++	case X86_FEATURE_SMAP:
++		if (uaccess)
++			alt->skip_orig = true;
++		else
++			alt->skip_alt = true;
++		break;
++	case X86_FEATURE_POPCNT:
++		/*
++		 * It has been requested that we don't validate the !POPCNT
++		 * feature path which is a "very very small percentage of
++		 * machines".
++		 */
++		alt->skip_orig = true;
++		break;
++	default:
++		break;
++	}
++}
+diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
+index 426178d504a8..3ab2dc32424b 100644
+--- a/tools/objtool/arch/x86/include/arch_special.h
++++ b/tools/objtool/arch/x86/include/arch_special.h
+@@ -20,4 +20,9 @@
+ #define X86_FEATURE_POPCNT (4 * 32 + 23)
+ #define X86_FEATURE_SMAP   (9 * 32 + 20)
  
-+#include "cfi_regs.h"
++struct special_alt;
 +
- #define CFI_UNDEFINED		-1
- #define CFI_CFA			-2
- #define CFI_SP_INDIRECT		-3
- #define CFI_BP_INDIRECT		-4
++#define arch_handle_alternative arch_handle_alternative
++void arch_handle_alternative(unsigned short feature, struct special_alt *alt);
++
+ #endif /* _X86_ARCH_SPECIAL_H */
+diff --git a/tools/objtool/special.c b/tools/objtool/special.c
+index b8ccee1b5382..67461b25e649 100644
+--- a/tools/objtool/special.c
++++ b/tools/objtool/special.c
+@@ -75,30 +75,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
  
--#define CFI_AX			0
--#define CFI_DX			1
--#define CFI_CX			2
--#define CFI_BX			3
--#define CFI_SI			4
--#define CFI_DI			5
--#define CFI_BP			6
--#define CFI_SP			7
--#define CFI_R8			8
--#define CFI_R9			9
--#define CFI_R10			10
--#define CFI_R11			11
--#define CFI_R12			12
--#define CFI_R13			13
--#define CFI_R14			14
--#define CFI_R15			15
--#define CFI_RA			16
--#define CFI_NUM_REGS		17
+ 		feature = *(unsigned short *)(sec->data->d_buf + offset +
+ 					      entry->feature);
 -
- struct cfi_reg {
- 	int base;
- 	int offset;
+-		/*
+-		 * It has been requested that we don't validate the !POPCNT
+-		 * feature path which is a "very very small percentage of
+-		 * machines".
+-		 */
+-		if (feature == X86_FEATURE_POPCNT)
+-			alt->skip_orig = true;
+-
+-		/*
+-		 * If UACCESS validation is enabled; force that alternative;
+-		 * otherwise force it the other way.
+-		 *
+-		 * What we want to avoid is having both the original and the
+-		 * alternative code flow at the same time, in that case we can
+-		 * find paths that see the STAC but take the NOP instead of
+-		 * CLAC and the other way around.
+-		 */
+-		if (feature == X86_FEATURE_SMAP) {
+-			if (uaccess)
+-				alt->skip_orig = true;
+-			else
+-				alt->skip_alt = true;
+-		}
++		arch_handle_alternative(feature, alt);
+ 	}
+ 
+ 	orig_rela = find_rela_by_dest(sec, offset + entry->orig);
+diff --git a/tools/objtool/special.h b/tools/objtool/special.h
+index 35061530e46e..738a05bc6d3a 100644
+--- a/tools/objtool/special.h
++++ b/tools/objtool/special.h
+@@ -8,6 +8,7 @@
+ 
+ #include <stdbool.h>
+ #include "elf.h"
++#include "arch_special.h"
+ 
+ struct special_alt {
+ 	struct list_head list;
+@@ -28,4 +29,11 @@ struct special_alt {
+ 
+ int special_get_alts(struct elf *elf, struct list_head *alts);
+ 
++#ifndef arch_handle_alternative
++static inline void arch_handle_alternative(unsigned short feature,
++					   struct special_alt *alt)
++{
++}
++#endif
++
+ #endif /* _SPECIAL_H */
 -- 
 2.21.0
 
