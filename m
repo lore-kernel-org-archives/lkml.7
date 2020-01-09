@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008A8C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A02DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B862072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4C42072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:59:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XoqMRlwK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PllpM14t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731091AbgAIO70 (ORCPT
+        id S1731965AbgAIO54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:59:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56179 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731961AbgAIO55 (ORCPT
+        Thu, 9 Jan 2020 09:57:56 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54494 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731944AbgAIO5x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:57:57 -0500
+        Thu, 9 Jan 2020 09:57:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578581875;
+        s=mimecast20190719; t=1578581872;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EWV08i+y09T0shEQm4Du/cNi7j67EsBakky7HQM3iHM=;
-        b=XoqMRlwKNuy1kh5HFK3GTjotAYxQSPD6ZXUydHAmmbS5nTouHc3aO0UhhmL2lxbCrqXzRQ
-        XTsasPjEujaErIKF9NXOldLlSyatvLsZoRNPa2taTmHaFagqQWLN33XeV0S+XgNLt89pCS
-        JxhWH/w78y+k6pZb+4JOizG3QveqVDE=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-8c9ykytWOGaebDisxP5hAw-1; Thu, 09 Jan 2020 09:57:53 -0500
-X-MC-Unique: 8c9ykytWOGaebDisxP5hAw-1
-Received: by mail-qv1-f71.google.com with SMTP id z9so4242195qvo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:53 -0800 (PST)
+        bh=iOwBnRfuU+D9l17RCY4C+mlVimy3V5B0lUjjJ1K6zlg=;
+        b=PllpM14tI8Vewo7CphHSE9UQGVwNboRdzi0MRZkd46Au29wGLMXho6Z5PDoDvHs2z96Ngo
+        1M9qFoo9QCdpqhsGBL/wR/XU5b9czPnk56U8matgYCNSw+UfwaLA0/KFZLRSzjbTJ3qijC
+        svv8g3/F/bWpftlmjFIpp7f5bWyPRoo=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-CzqlwK-xO_uhKj8NxhYbjQ-1; Thu, 09 Jan 2020 09:57:51 -0500
+X-MC-Unique: CzqlwK-xO_uhKj8NxhYbjQ-1
+Received: by mail-qk1-f198.google.com with SMTP id s9so4250968qkg.21
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EWV08i+y09T0shEQm4Du/cNi7j67EsBakky7HQM3iHM=;
-        b=W3CTTRzkwdC/1HhS1tjLDT8Tm1I/JKjsXgqWJWlQ9XWGD57nuagYb3F7VTVWysv/42
-         ZDXokqr3EjbEalmMn3Sx9t81nrUxWqv5mYInENZh7yrAEn9ipohHIw4hRJpF6PoOBeMY
-         Go5Af3trUeTVycI2WdRr4SrOKX5bwE/gc96pNuSt4scIC2prCV8kquYkVaBxRxiwbjww
-         RwLNYbmauEsJNCptjIstwLELrEFz/gMKKJQa/0cp03wKbo3O4ozyXM3FcvreZu2z3Ehx
-         UUhMati1k9bq2iCnSrcR7JnQVrDLyTov/OJd0qhTZmEV/PsxrrmAh0w0oOw4LdzIJu+7
-         KoeQ==
-X-Gm-Message-State: APjAAAWFgzWuJrentEzR5ktEkZZn7eEUGu1LUzMGNNGZQQzx2+lJ6OoT
-        9bUEJwxj51OD8qrocd14OMFQoLbIrA2eIXwppnzQ2LXG9k1Lf9eCRPcUk9phJ7iL5pvhhlgDohj
-        BiBImV8Vf5FIMrg8C+FodD9sP
-X-Received: by 2002:a05:620a:136e:: with SMTP id d14mr9774126qkl.342.1578581873442;
-        Thu, 09 Jan 2020 06:57:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxCvoe5Ap6+5M5ORKV7xt2P5nsc1tcHZco1QoU+FUiuKNxmacCYbTCTEN1X9W8lMsTu+hLsCQ==
-X-Received: by 2002:a05:620a:136e:: with SMTP id d14mr9774109qkl.342.1578581873235;
-        Thu, 09 Jan 2020 06:57:53 -0800 (PST)
+        bh=iOwBnRfuU+D9l17RCY4C+mlVimy3V5B0lUjjJ1K6zlg=;
+        b=lENA2Nv9QTLIsG7dY7rdUUvvQVS7zPqMHxEyJrBRZLC7/Qszp10Vf5qylVeVkgIj3i
+         L/hMa4me8LU92s8f3PsSoe33s0gRnMpHMFYY5iaXj3ZZKjOJEPPXytlIaDXbFntn9bzx
+         siihsoyI1W4/XVz85aOK95XCnXshotAPMFzeq0vn3hkup3rCmiZ1aemN6zSrizCjZQy2
+         aJvI3nvCx9P5VLR7Vp53APqIir/nuQNmBIbYFMFcsYruyxQwQqckwv0Iqn39MefE2dPF
+         wsIX9CTcUckKNUYkHyNe9File0I1dJWFeZWxhpJZywSqoznOejo4g4kfSGUIhOxqdo/i
+         2Kgw==
+X-Gm-Message-State: APjAAAX3Oq/2a4x2J/3Qa3HdOJvimGWuRvkyyFAlN2kLo+hDGOO5X3V9
+        e12XH0bm2YZWAOqniNesdM4TkKBIDoxa936IGaLLjI51O2yQEccg4vdMh3OwXYZgt7WBARuNIZS
+        wgIj/EESeyKvqPALT30F0a+7w
+X-Received: by 2002:a05:6214:903:: with SMTP id dj3mr9256929qvb.27.1578581871205;
+        Thu, 09 Jan 2020 06:57:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyjzq+Zf7itjTFb9hX/DEDGZiDvjZ55SpaSIA4PVTPWagLi4h5EO3WDSjPMFAcJ3UFk0noDsw==
+X-Received: by 2002:a05:6214:903:: with SMTP id dj3mr9256894qvb.27.1578581870928;
+        Thu, 09 Jan 2020 06:57:50 -0800 (PST)
 Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.51
+        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 06:57:52 -0800 (PST)
+        Thu, 09 Jan 2020 06:57:50 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Christophe de Dinechin <dinechin@redhat.com>,
@@ -74,9 +74,9 @@ Cc:     Christophe de Dinechin <dinechin@redhat.com>,
         Kevin Kevin <kevin.tian@intel.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>, peterx@redhat.com,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v3 07/21] KVM: Cache as_id in kvm_memory_slot
-Date:   Thu,  9 Jan 2020 09:57:15 -0500
-Message-Id: <20200109145729.32898-8-peterx@redhat.com>
+Subject: [PATCH v3 06/21] KVM: X86: Don't take srcu lock in init_rmode_identity_map()
+Date:   Thu,  9 Jan 2020 09:57:14 -0500
+Message-Id: <20200109145729.32898-7-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200109145729.32898-1-peterx@redhat.com>
 References: <20200109145729.32898-1-peterx@redhat.com>
@@ -87,42 +87,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cache the address space ID just like the slot ID.  It will be used in
-order to fill in the dirty ring entries.
+We've already got the slots_lock, so we should be safe.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- include/linux/kvm_host.h | 1 +
- virt/kvm/kvm_main.c      | 2 ++
- 2 files changed, 3 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 2337f9b6112c..763adf8c47b0 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -348,6 +348,7 @@ struct kvm_memory_slot {
- 	unsigned long userspace_addr;
- 	u32 flags;
- 	short id;
-+	u8 as_id;
- };
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index b5a0c2e05825..7add2fc8d8e9 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3475,7 +3475,7 @@ static int init_rmode_tss(struct kvm *kvm)
+ static int init_rmode_identity_map(struct kvm *kvm)
+ {
+ 	struct kvm_vmx *kvm_vmx = to_kvm_vmx(kvm);
+-	int i, idx, r = 0;
++	int i, r = 0;
+ 	kvm_pfn_t identity_map_pfn;
+ 	u32 tmp;
  
- static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 70b78ccaf3b5..1fd204f27028 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1040,6 +1040,8 @@ int __kvm_set_memory_region(struct kvm *kvm,
+@@ -3483,7 +3483,7 @@ static int init_rmode_identity_map(struct kvm *kvm)
+ 	mutex_lock(&kvm->slots_lock);
  
- 	new = old = *slot;
+ 	if (likely(kvm_vmx->ept_identity_pagetable_done))
+-		goto out2;
++		goto out;
  
-+	BUILD_BUG_ON(U8_MAX < KVM_ADDRESS_SPACE_NUM);
-+	new.as_id = as_id;
- 	new.id = id;
- 	new.base_gfn = base_gfn;
- 	new.npages = npages;
+ 	if (!kvm_vmx->ept_identity_map_addr)
+ 		kvm_vmx->ept_identity_map_addr = VMX_EPT_IDENTITY_PAGETABLE_ADDR;
+@@ -3492,9 +3492,8 @@ static int init_rmode_identity_map(struct kvm *kvm)
+ 	r = __x86_set_memory_region(kvm, IDENTITY_PAGETABLE_PRIVATE_MEMSLOT,
+ 				    kvm_vmx->ept_identity_map_addr, PAGE_SIZE);
+ 	if (r < 0)
+-		goto out2;
++		goto out;
+ 
+-	idx = srcu_read_lock(&kvm->srcu);
+ 	r = kvm_clear_guest_page(kvm, identity_map_pfn, 0, PAGE_SIZE);
+ 	if (r < 0)
+ 		goto out;
+@@ -3510,9 +3509,6 @@ static int init_rmode_identity_map(struct kvm *kvm)
+ 	kvm_vmx->ept_identity_pagetable_done = true;
+ 
+ out:
+-	srcu_read_unlock(&kvm->srcu, idx);
+-
+-out2:
+ 	mutex_unlock(&kvm->slots_lock);
+ 	return r;
+ }
 -- 
 2.24.1
 
