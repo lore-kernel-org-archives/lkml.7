@@ -2,152 +2,162 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55DCC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEA1C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5ADA2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BFF220673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730300AbgAIKgS (ORCPT
+        id S1730312AbgAIKhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:36:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55516 "EHLO mx2.suse.de"
+        Thu, 9 Jan 2020 05:37:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:56666 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbgAIKgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:36:05 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 079C46A057;
-        Thu,  9 Jan 2020 10:34:45 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Paul Burton <paulburton@kernel.org>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: [PATCH v12 0/3] Use MFD framework for SGI IOC3 drivers
-Date:   Thu,  9 Jan 2020 11:34:26 +0100
-Message-Id: <20200109103430.12057-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.24.1
+        id S1729326AbgAIKhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 05:37:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7852E31B;
+        Thu,  9 Jan 2020 02:37:41 -0800 (PST)
+Received: from [10.37.12.111] (unknown [10.37.12.111])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD0053F6C4;
+        Thu,  9 Jan 2020 02:37:37 -0800 (PST)
+Subject: Re: [PATCH v2 02/11] PM / devfreq: Remove
+ devfreq_get_devfreq_by_phandle function
+To:     Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        krzk@kernel.org, heiko@sntech.de, leonard.crestez@nxp.com
+Cc:     mark.rutland@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+References: <20191220002430.11995-1-cw00.choi@samsung.com>
+ <CGME20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0@epcas1p4.samsung.com>
+ <20191220002430.11995-3-cw00.choi@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <b9a1ebe5-e114-3a6b-6081-c794e1341329@arm.com>
+Date:   Thu, 9 Jan 2020 10:37:35 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191220002430.11995-3-cw00.choi@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGI IOC3 ASIC includes support for ethernet, PS2 keyboard/mouse,
-NIC (number in a can), GPIO and a byte  bus. By attaching a
-SuperIO chip to it, it also supports serial lines and a parallel
-port. The chip is used on a variety of SGI systems with different
-configurations. This patchset moves code out of the network driver,
-which doesn't belong there, into its new place a MFD driver and
-specific platform drivers for the different subfunctions.
+Hi Chanwoo,
 
-Changes in v12:
- - added support for mapping all PCI interrupts as ioc3 uses INTB,
-   if both ethernet and superio is used
+On 12/20/19 12:24 AM, Chanwoo Choi wrote:
+> Previously, devfreq core support 'devfreq' property in order to get
+> the devfreq device by phandle. But, 'devfreq' property name is not proper
+> on devicetree binding because this name doesn't mean the any h/w attribute.
+> 
+> The devfreq core hand over the right to decide the property name
+> for getting the devfreq device on devicetree. Each devfreq driver
+> will decide the property name on devicetree binding and then get
+> the devfreq device by using devfreq_get_devfreq_by_node().
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>   drivers/devfreq/devfreq.c    | 35 -----------------------------------
+>   drivers/devfreq/exynos-bus.c | 12 +++++++++++-
+>   include/linux/devfreq.h      |  8 --------
+>   3 files changed, 11 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index cb8ca81c8973..c3d3c7c802a0 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>   
+>   	return ERR_PTR(-ENODEV);
+>   }
+> -
+> -/*
+> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
+> - * @dev - instance to the given device
+> - * @index - index into list of devfreq
+> - *
+> - * return the instance of devfreq device
+> - */
+> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+> -{
+> -	struct device_node *node;
+> -	struct devfreq *devfreq;
+> -
+> -	if (!dev)
+> -		return ERR_PTR(-EINVAL);
+> -
+> -	if (!dev->of_node)
+> -		return ERR_PTR(-EINVAL);
+> -
+> -	node = of_parse_phandle(dev->of_node, "devfreq", index);
+> -	if (!node)
+> -		return ERR_PTR(-ENODEV);
+> -
+> -	devfreq = devfreq_get_devfreq_by_node(node);
+> -	of_node_put(node);
+> -
+> -	return devfreq;
+> -}
+> -
+>   #else
+>   struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>   {
+>   	return ERR_PTR(-ENODEV);
+>   }
+> -
+> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+> -{
+> -	return ERR_PTR(-ENODEV);
+> -}
+>   #endif /* CONFIG_OF */
+>   EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);
+> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
+>   
+>   /**
+>    * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index 7f5917d59072..1bc4e3c81115 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -86,6 +86,16 @@ static int exynos_bus_get_event(struct exynos_bus *bus,
+>   	return ret;
+>   }
+>   
+> +static struct devfreq *exynos_bus_get_parent_devfreq(struct device_node *np)
+> +{
+> +	struct device_node *node = of_parse_phandle(np, "devfreq", 0);
+> +
+> +	if (!node)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return devfreq_get_devfreq_by_node(node);
+> +}
+> +
+>   /*
+>    * devfreq function for both simple-ondemand and passive governor
+>    */
+> @@ -353,7 +363,7 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>   	profile->exit = exynos_bus_passive_exit;
+>   
+>   	/* Get the instance of parent devfreq device */
+> -	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+> +	parent_devfreq = exynos_bus_get_parent_devfreq(dev->of_node);
+>   	if (IS_ERR(parent_devfreq))
+>   		return -EPROBE_DEFER;
+>   
 
-Changes in v11:
- - dropped accepted patches out of the series
- - moved byte swapping patch first in series
- - added ip30 system board support
+These changes won't apply, probably I need some base for it.
 
-Changes in v10:
- - generation of fake subdevice ID had vendor and device ID swapped
-
-Changes in v9:
- - remove generated MFD devices, when driver is removed or in case
-   of a mfd device setup error
- - remove irq domain, if setup of mfd devices failed
- - pci_iounmap on exit/error cases
- - added irq domain unmap function
-
-Changes in v8:
- - Re-worked comments in drivers/mfd/ioc3.c
- - Added select CRC16 to ioc3-eth.c
- - Patches 1 and 2 are already taken to mips-next, but
-   for completeness of the series they are still included.
-   What's missing to get the remaining 3 patches via the MIPS
-   tree is an ack from a network maintainer
-
-Changes in v7:
- - added patch to enable ethernet phy for Origin 200 systems
- - depend on 64bit for ioc3 mfd driver
-
-Changes in v6:
- - dropped patches accepted for v5.4-rc1
- - moved serio patch to ip30 patch series
- - adapted nvmem patch
-
-Changes in v5:
- - requested by Jakub I've splited ioc3 ethernet driver changes into
-   more steps to make the transition more visible; on the way there 
-   I've "checkpatched" the driver and reduced code reorderings
- - dropped all uint16_t and uint32_t
- - added nvmem API extension to the documenation file
- - changed to use request_irq/free_irq in serio driver
- - removed wrong kfree() in serio error path
-
-Changes in v4:
- - added w1 drivers to the series after merge in 5.3 failed because
-   of no response from maintainer and other parts of this series
-   won't work without that drivers
- - moved ip30 systemboard support to the ip30 series, which will
-   deal with rtc oddity Lee found
- - converted to use devm_platform_ioremap_resource
- - use PLATFORM_DEVID_AUTO for serial, ethernet and serio in mfd driver
- - fixed reverse christmas order in ioc3-eth.c
- - formating issue found by Lee
- - re-worked irq request/free in serio driver to avoid crashes during
-   probe/remove
-
-Changes in v3:
- - use 1-wire subsystem for handling proms
- - pci-xtalk driver uses prom information to create PCI subsystem
-   ids for use in MFD driver
- - changed MFD driver to only use static declared mfd_cells
- - added IP30 system board setup to MFD driver
- - mac address is now read from ioc3-eth driver with nvmem framework
-
-Changes in v2:
- - fixed issue in ioc3kbd.c reported by Dmitry Torokhov
- - merged IP27 RTC removal and 8250 serial driver addition into
-   main MFD patch to keep patches bisectable
-
-Thomas Bogendoerfer (3):
-  MIPS: PCI: Support mapping of INTB/C/D for pci-xtalk-bridge
-  MIPS: SGI-IP27: fix readb/writeb addressing
-  mfd: ioc3: Add driver for SGI IOC3 chip
-
- arch/mips/include/asm/mach-ip27/mangle-port.h |   4 +-
- arch/mips/include/asm/pci/bridge.h            |   3 +-
- arch/mips/include/asm/sn/ioc3.h               |  38 +-
- arch/mips/pci/pci-xtalk-bridge.c              |  28 +-
- arch/mips/sgi-ip27/ip27-timer.c               |  20 -
- drivers/mfd/Kconfig                           |  13 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/ioc3.c                            | 669 ++++++++++++++++++
- drivers/net/ethernet/sgi/Kconfig              |   5 +-
- drivers/net/ethernet/sgi/ioc3-eth.c           | 544 +++-----------
- drivers/rtc/rtc-m48t35.c                      |  11 +
- drivers/tty/serial/8250/8250_ioc3.c           |  98 +++
- drivers/tty/serial/8250/Kconfig               |  11 +
- drivers/tty/serial/8250/Makefile              |   1 +
- 14 files changed, 951 insertions(+), 495 deletions(-)
- create mode 100644 drivers/mfd/ioc3.c
- create mode 100644 drivers/tty/serial/8250/8250_ioc3.c
-
--- 
-2.24.1
+Regards,
+Lukasz
 
