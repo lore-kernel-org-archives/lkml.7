@@ -2,106 +2,122 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFF5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51D2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594442067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8276B2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731973AbgAIPD4 convert rfc822-to-8bit (ORCPT
+        id S1732057AbgAIPGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:03:56 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:34135 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727980AbgAIPD4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:03:56 -0500
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 38014200005;
-        Thu,  9 Jan 2020 15:03:53 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 16:03:52 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH] mtd: set mtd partition panic write flag
-Message-ID: <20200109160352.6080e1e5@xps13>
-In-Reply-To: <1718371158.75883.1572995022606.JavaMail.zimbra@nod.at>
-References: <20191021193343.41320-1-kdasu.kdev@gmail.com>
-        <20191105200344.1e8c3eab@xps13>
-        <1718371158.75883.1572995022606.JavaMail.zimbra@nod.at>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 10:06:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53916 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728346AbgAIPGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:06:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7E64DAE34;
+        Thu,  9 Jan 2020 15:06:06 +0000 (UTC)
+From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To:     cgroups@vger.kernel.org
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH] cgroup: Prevent double killing of css when enabling threaded cgroup
+Date:   Thu,  9 Jan 2020 16:05:59 +0100
+Message-Id: <20200109150559.14457-1-mkoutny@suse.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191219022716.o7vxxia6o67tyfmf@wittgenstein>
+References: <20191219022716.o7vxxia6o67tyfmf@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The test_cgcore_no_internal_process_constraint_on_threads selftest when
+running with subsystem controlling noise triggers two warnings:
 
-Richard Weinberger <richard@nod.at> wrote on Wed, 6 Nov 2019 00:03:42
-+0100 (CET):
+> [  597.443115] WARNING: CPU: 1 PID: 28167 at kernel/cgroup/cgroup.c:3131 cgroup_apply_control_enable+0xe0/0x3f0
+> [  597.443413] WARNING: CPU: 1 PID: 28167 at kernel/cgroup/cgroup.c:3177 cgroup_apply_control_disable+0xa6/0x160
 
-> ----- Ursprüngliche Mail -----
-> > Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
-> > An: "Kamal Dasu" <kdasu.kdev@gmail.com>
-> > CC: "linux-mtd" <linux-mtd@lists.infradead.org>, "bcm-kernel-feedback-list" <bcm-kernel-feedback-list@broadcom.com>,
-> > "linux-kernel" <linux-kernel@vger.kernel.org>, "David Woodhouse" <dwmw2@infradead.org>, "Brian Norris"
-> > <computersforpeace@gmail.com>, "Marek Vasut" <marek.vasut@gmail.com>, "richard" <richard@nod.at>, "Vignesh Raghavendra"
-> > <vigneshr@ti.com>
-> > Gesendet: Dienstag, 5. November 2019 20:03:44
-> > Betreff: Re: [PATCH] mtd: set mtd partition panic write flag  
-> 
-> > Hi Kamal,
-> > 
-> > Richard, something to look into below :)  
-> 
-> I'm still recovering from a bad cold. So my brain is not fully working ;)
->  
-> > Kamal Dasu <kdasu.kdev@gmail.com> wrote on Mon, 21 Oct 2019 15:32:52
-> > -0400:
-> >   
-> >> Check mtd panic write flag and set the mtd partition panic
-> >> write flag so that low level drivers can use it to take
-> >> required action to ensure oops data gets written to assigned
-> >> mtd partition.  
-> > 
-> > I feel there is something wrong with the current implementation
-> > regarding partitions but I am not sure this is the right fix. Is this
-> > something you detected with some kind of static checker or did you
-> > actually experience an issue?
-> > 
-> > In the commit log you say "check mtd (I suppose you mean the
-> > master) panic write flag and set the mtd partition panic write flag"
-> > which makes sense, but in reality my understanding is that you do the
-> > opposite: you check mtd->oops_panic_write which is the partitions'
-> > structure, and set part->parent->oops_panic_write which is the master's
-> > flag.  
-> 
-> IIUC the problem happens when you run mtdoops on a mtd partition.
-> The the flag is only set for the partition instead for the master.
-> 
-> So the right fix would be setting the parent's oops_panic_write in
-> mtd_panic_write().
-> Then we don't have to touch mtdpart.c
-> 
+Both stem from a call to cgroup_type_write. The first warning was also
+triggered by syzkaller.
 
-This issue is still open, right? Kamal can you send an updated version?
+When we're switching cgroup to threaded mode shortly after a subsystem
+was disabled on it, we can see the respective subsystem css dying there.
 
+The warning in cgroup_apply_control_enable is harmless in this case
+since we're not adding new subsys anyway.
+The warning in cgroup_apply_control_disable indicates an attempt to kill
+css of recently disabled subsystem repeatedly.
 
-Thanks,
-Miquèl
+The commit prevents these situations by making cgroup_type_write wait
+for all dying csses to go away before re-applying subtree controls.
+When at it, the locations of WARN_ON_ONCE calls are moved so that
+warning is triggered only when we are about to misuse the dying css.
+
+Reported-by: syzbot+5493b2a54d31d6aea629@syzkaller.appspotmail.com
+Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ kernel/cgroup/cgroup.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 53098c1d45e2..97cc713079df 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -3054,8 +3054,6 @@ static int cgroup_apply_control_enable(struct cgroup *cgrp)
+ 		for_each_subsys(ss, ssid) {
+ 			struct cgroup_subsys_state *css = cgroup_css(dsct, ss);
+ 
+-			WARN_ON_ONCE(css && percpu_ref_is_dying(&css->refcnt));
+-
+ 			if (!(cgroup_ss_mask(dsct) & (1 << ss->id)))
+ 				continue;
+ 
+@@ -3065,6 +3063,8 @@ static int cgroup_apply_control_enable(struct cgroup *cgrp)
+ 					return PTR_ERR(css);
+ 			}
+ 
++			WARN_ON_ONCE(percpu_ref_is_dying(&css->refcnt));
++
+ 			if (css_visible(css)) {
+ 				ret = css_populate_dir(css);
+ 				if (ret)
+@@ -3100,11 +3100,11 @@ static void cgroup_apply_control_disable(struct cgroup *cgrp)
+ 		for_each_subsys(ss, ssid) {
+ 			struct cgroup_subsys_state *css = cgroup_css(dsct, ss);
+ 
+-			WARN_ON_ONCE(css && percpu_ref_is_dying(&css->refcnt));
+-
+ 			if (!css)
+ 				continue;
+ 
++			WARN_ON_ONCE(percpu_ref_is_dying(&css->refcnt));
++
+ 			if (css->parent &&
+ 			    !(cgroup_ss_mask(dsct) & (1 << ss->id))) {
+ 				kill_css(css);
+@@ -3391,7 +3391,8 @@ static ssize_t cgroup_type_write(struct kernfs_open_file *of, char *buf,
+ 	if (strcmp(strstrip(buf), "threaded"))
+ 		return -EINVAL;
+ 
+-	cgrp = cgroup_kn_lock_live(of->kn, false);
++	/* drain dying csses before we re-apply (threaded) subtree control */
++	cgrp = cgroup_kn_lock_live(of->kn, true);
+ 	if (!cgrp)
+ 		return -ENOENT;
+ 
+-- 
+2.24.1
+
