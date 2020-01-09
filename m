@@ -2,134 +2,213 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690D0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA3BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9022072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578579794;
-	bh=NNCzD1lmxUFsxcsEkZYkrNX1RV1NIrNRacx8C8F8324=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=bW4qwYtioY/V8mjHZd2YMw3y46mivB+oM+yk4aLV3bCfLhgMpJas9ivoYCRGLj+1d
-	 a4HUkuOajuyMOjvKBkutTMGDYTIU3BkWiFYmfbM73SbXlK6KfxmBWpIyokUBxfe1Tb
-	 mQvc6+ktT/MUaDpovJ4OcbytkKd3ollJsrFCDPD8=
+	by mail.kernel.org (Postfix) with ESMTP id 3744520661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6pSdriL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgAIOXN (ORCPT
+        id S1731627AbgAIOYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:23:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbgAIOXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:23:12 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922B420661;
-        Thu,  9 Jan 2020 14:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578579792;
-        bh=NNCzD1lmxUFsxcsEkZYkrNX1RV1NIrNRacx8C8F8324=;
-        h=Date:From:To:cc:Subject:From;
-        b=b2Jssm/QMAFHhGUBvBvC5kpmsGjW6Rm2+jF6vX38o4oHHHCD3//7gUesKAZrmlMai
-         PuNHGQr4YSw+2T5YWKfFJYm0ZFRmI5CclYu0ARMlwP2W5gSwP8rEfvj/T6nLUPOJVw
-         asdTdTlwipSK5FnVkM3S/3OwkIJ6sdaX27fpWkYE=
-Date:   Thu, 9 Jan 2020 15:23:09 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [GIT PULL] HID fixes
-Message-ID: <nycvar.YFH.7.76.2001091519080.31058@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 9 Jan 2020 09:24:17 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42232 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgAIOYQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 09:24:16 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y4so7406478ljj.9;
+        Thu, 09 Jan 2020 06:24:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MoqmXAxGo4n6apMGzF9n/VnxI31PFNeDGlCPbkHxfQk=;
+        b=D6pSdriLHh8g6eu9pwXCmK0ZOp83kh0r5ImPr35Afg/5vWZCauVlQWgMdenHFspuGB
+         wDSwpgKwPBEDO7A8xTqoFKWExJZMjJw7Hku01cpgXOcx15UkUCUZaft9bi5JrMgguZ52
+         ng1xSPAlmvAhh2qAXVJxCC/z/g3IDeCx/IUSIItqseMhkH1mU4XK0PpX/pN677PttPn4
+         N8AFth/QKR1iH9ckHJcAb7z6exgR5uOcPI5Tz40AKhrmZiv39LaZQO8xHC1Yr8jd0IjC
+         2JUJprFH3kt2Raiae5C3bJbHU/BRMdqxDiXpBQw+2ZCEKSa7QL1tomhyBL6Rzs75MzGZ
+         Q9Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MoqmXAxGo4n6apMGzF9n/VnxI31PFNeDGlCPbkHxfQk=;
+        b=IgS0DriPTyK4J7bDddRbpmaVCEJet5v3GcKIR/oCesDNqa5Ys4D7osZl3xstXESVLI
+         D+WG3HOe7BmXgH61vezryi35ZFUKMOugOxdlv1EWBYrUT9afZlO3mZ6cqGqAq3UW9+UX
+         sBpXFV4XWVOkMFAh6DchiUMCSbIgjK/pq42G1uKKaANWno2NF3ELOilhdL1w109YqY4q
+         pOmBT4ArzYXbwRk4ypvld8xi4UWH6UuVl0U+D59SPvGxJLjw49LpOAX+o1fU4gToRX1c
+         41jWG3YGj5NyqzIl8EYfgPxvc9kZozbuLT6JuMZ8ARxW5WeaEjXZzLAzNze5JUOsL7Rn
+         gRRQ==
+X-Gm-Message-State: APjAAAWm7N0M7WYcz3eA9HIqgGPsj0/wiPMs6dfyBOPe/6pY/1YD6oD6
+        ohkCK/YnZ7q8jew6yacr5HJjFt7Z
+X-Google-Smtp-Source: APXvYqwRlr/wi51hG62x9NcJDoflp6FB7pfIgWzl9lVs1zg75nNAm2JWYsU/eeAtZpt3xY1kpmlU7w==
+X-Received: by 2002:a2e:8804:: with SMTP id x4mr6486693ljh.187.1578579853763;
+        Thu, 09 Jan 2020 06:24:13 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id e17sm3087809ljg.101.2020.01.09.06.24.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 06:24:13 -0800 (PST)
+Subject: Re: [PATCH v3 00/13] NVIDIA Tegra APB DMA driver fixes and
+ improvements
+To:     Thierry Reding <treding@nvidia.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCIGF3?= <mirq-linux@rere.qmqm.pl>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200106011708.7463-1-digetx@gmail.com>
+ <85d8ea335734417081399a082d44024c@HQMAIL105.nvidia.com>
+ <c68cde59-0571-f58f-bf3c-8ce1cbdcc387@gmail.com>
+ <20200109100442.GA2008067@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f873269b-541a-363c-353a-191a88a65d06@gmail.com>
+Date:   Thu, 9 Jan 2020 17:24:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200109100442.GA2008067@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+09.01.2020 13:04, Thierry Reding пишет:
+> On Wed, Jan 08, 2020 at 06:07:46PM +0300, Dmitry Osipenko wrote:
+>> 08.01.2020 15:51, Thierry Reding пишет:
+>>> On Mon, 06 Jan 2020 04:16:55 +0300, Dmitry Osipenko wrote:
+>>>> Hello,
+>>>>
+>>>> This is series fixes some problems that I spotted recently, secondly the
+>>>> driver's code gets a cleanup. Please review and apply, thanks in advance!
+>>>>
+>>>> Changelog:
+>>>>
+>>>> v3: - In the review comment to v1 Michał Mirosław suggested that "Prevent
+>>>>       race conditions on channel's freeing" does changes that deserve to
+>>>>       be separated into two patches. I factored out and improved tasklet
+>>>>       releasing into this new patch:
+>>>>
+>>>>         dmaengine: tegra-apb: Clean up tasklet releasing
+>>>>
+>>>>     - The "Fix use-after-free" patch got an improved commit message.
+>>>>
+>>>> v2: - I took another look at the driver and spotted few more things that
+>>>>       could be improved, which resulted in these new patches:
+>>>>
+>>>>         dmaengine: tegra-apb: Remove runtime PM usage
+>>>>         dmaengine: tegra-apb: Clean up suspend-resume
+>>>>         dmaengine: tegra-apb: Add missing of_dma_controller_free
+>>>>         dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+>>>>         dmaengine: tegra-apb: Remove MODULE_ALIAS
+>>>>
+>>>> Dmitry Osipenko (13):
+>>>>   dmaengine: tegra-apb: Fix use-after-free
+>>>>   dmaengine: tegra-apb: Implement synchronization callback
+>>>>   dmaengine: tegra-apb: Prevent race conditions on channel's freeing
+>>>>   dmaengine: tegra-apb: Clean up tasklet releasing
+>>>>   dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+>>>>   dmaengine: tegra-apb: Use devm_platform_ioremap_resource
+>>>>   dmaengine: tegra-apb: Use devm_request_irq
+>>>>   dmaengine: tegra-apb: Fix coding style problems
+>>>>   dmaengine: tegra-apb: Remove runtime PM usage
+>>>>   dmaengine: tegra-apb: Clean up suspend-resume
+>>>>   dmaengine: tegra-apb: Add missing of_dma_controller_free
+>>>>   dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+>>>>   dmaengine: tegra-apb: Remove MODULE_ALIAS
+>>>>
+>>>>  drivers/dma/Kconfig           |   2 +-
+>>>>  drivers/dma/tegra20-apb-dma.c | 481 ++++++++++++++++------------------
+>>>>  2 files changed, 220 insertions(+), 263 deletions(-)
+>>>
+>>> Test results:
+>>>   13 builds: 13 pass, 0 fail
+>>>   12 boots:  11 pass, 1 fail
+>>
+>> I'm not sure how to interpret this result. Could you please explain what
+>> that fail means?
+> 
+> Yeah, Jon and I have been discussing about whether to expose this as
+> failure or not. Basically what I'm trying to do here is to provide
+> automated test results. The way that I'm currently doing this is to run
+> these patches through our internal test farm and if the tests succeed,
+> send out the results and reply with a Tested-by: to all patches so that
+> patchwork has a record of it.
+> 
+> So just the fact that the test results were sent means the tests passed.
+> I do see now that that's not at all clear, so I'm going to have to tweak
+> the summary a bit to clarify that.
+> 
+> I've also added something like this to the bottom of the summary:
+> 
+> 	Warnings:
+> 	- 1 failure for board tegra186-p2771-0000 but tests passed
+> 
+> This is supposed to indicate that the one failure that you're seeing in
+> the test results is an intermittent failure. Looking at the logs I see
+> that at some point there was an intermittent boot failure for Jetson TX2
+> but then the test farm rebooted the system and then it succeeded and ran
+> the tests successfully.
+> 
+> So I guess in general this means that if you get that test summary and a
+> list of Tested-by: replies to the patches, all is well. Unfortunately I
+> don't really have a useful way of reporting failure, so I'm not sending
+> out a summary in that case. That means you currently can't distinguish
+> between whether the series hasn't been tested at all or whether it
+> failed. Although, I have also started to use patchwork checks to track
+> this in patchwork, so you could look at the patches in patchwork and see
+> if they have been tested, and that does record success or failure.
 
-please pull from
+The patchwork now says that all patches in this series failed.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+Perhaps something needs to be done about filtering out the unimportant
+intermittent noise.
 
-to get fixes for HID subsystem:
+>>>   38 tests:  38 pass, 0 fail
+>>>
+>>> Linux version: 5.5.0-rc5-gf9d40c056c0f
+>>> Boards tested: tegra20-ventana, tegra30-cardhu-a04, tegra124-jetson-tk1,
+>>>                tegra186-p2771-0000, tegra194-p2972-0000,
+>>>                tegra210-p2371-2180
+>>>
+>>
+>> Will be awesome to see the detailed testing results, at least console
+>> log like it was with NVTB.
+> 
+> Yeah, I'm working on that. It's the only reason I'm not sending out
+> failure reports because it would just say that things failed without
+> giving you any indication about why.
+> 
+> Currently the plan is to upload more detailed test results to a public
+> location (perhaps github, like nvtb used to) and provide a link to them
+> in patchwork and the test summary.
+> 
+> Do you think that would be helpful?
 
-=====
-- fix for OOB in hiddev, from Dmitry Torokhov
-- _poll API fixes for hidraw, from Marcel Holtmann
-- functional fix for Steam driver, from Rodrigo Rivas Costa
-- a few new device IDs / device-specific quirks and other assorted
-  smaller fixes
-=====
+Yes, the full log is absolutely necessary in a case of problem.
 
-Thanks.
+> Anything else you think would be useful to have in these reports?
 
-----------------------------------------------------------------
-Aaron Ma (1):
-      HID: multitouch: Add LG MELF0410 I2C touchscreen support
+Optionally, there should be instructions about how to reproduce problem,
+which includes rootfs, toolchain and etc.
 
-Alan Stern (1):
-      HID: Fix slab-out-of-bounds read in hid_field_extract
+> Or anything about the above that you think is impractical for you as a contributor?
 
-Dmitry Torokhov (2):
-      HID: hid-input: clear unmapped usages
-      HID: hiddev: fix mess in hiddev_open()
-
-Even Xu (1):
-      HID: intel-ish-hid: ipc: add CMP device id
-
-Hans de Goede (2):
-      HID: ite: Add USB id match for Acer SW5-012 keyboard dock
-      HID: asus: Ignore Asus vendor-page usage-code 0xff events
-
-Jason Gerecke (1):
-      HID: wacom: Recognize new MobileStudio Pro PID
-
-Marcel Holtmann (2):
-      HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
-      HID: uhid: Fix returning EPOLLOUT from uhid_char_poll
-
-Pan Zhang (1):
-      drivers/hid/hid-multitouch.c: fix a possible null pointer access.
-
-Pavel Balan (1):
-      HID: Add quirk for incorrect input length on Lenovo Y720
-
-Priit Laes (1):
-      HID: Add quirk for Xin-Mo Dual Controller
-
-Rodrigo Rivas Costa (1):
-      HID: steam: Fix input device disappearing
-
-Srinivas Pandruvada (1):
-      HID: intel-ish-hid: ipc: Add Tiger Lake PCI device ID
-
- drivers/hid/hid-asus.c                  |  3 +-
- drivers/hid/hid-core.c                  |  6 ++
- drivers/hid/hid-ids.h                   |  3 +
- drivers/hid/hid-input.c                 | 16 ++++--
- drivers/hid/hid-ite.c                   |  3 +
- drivers/hid/hid-multitouch.c            |  5 +-
- drivers/hid/hid-quirks.c                |  1 +
- drivers/hid/hid-steam.c                 |  4 ++
- drivers/hid/hidraw.c                    |  4 +-
- drivers/hid/i2c-hid/i2c-hid-core.c      | 16 +++++-
- drivers/hid/intel-ish-hid/ipc/hw-ish.h  |  2 +
- drivers/hid/intel-ish-hid/ipc/pci-ish.c |  2 +
- drivers/hid/uhid.c                      |  2 +-
- drivers/hid/usbhid/hiddev.c             | 97 ++++++++++++++-------------------
- drivers/hid/wacom_wac.c                 |  6 +-
- 15 files changed, 101 insertions(+), 69 deletions(-)
-
--- 
-Jiri Kosina
-SUSE Labs
-
+The intermittent noise should be impractical to report in the short
+logs, telling that tests failed. But probably it won't hurt to have a
+warning, like you suggested above, and then also to have everything
+reported in the detailed log.
