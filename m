@@ -2,305 +2,160 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F16DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15979C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BA220838
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:31:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xy0GMMRi"
+	by mail.kernel.org (Postfix) with ESMTP id DFB1E206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 04:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578544511;
+	bh=QXa52UDQgogCv0yZ0qFyjtSf0PFDJvX8CCIwqKv2hKA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=yVg8GMSPjgy9Tv26r9rq4cHG5tJFC5g1clAWnncDC/27bqoG35cErTE7vuMMf2hso
+	 xAIlfhkjaJev5KpudKEZsNTe/oeNagFioI4v4m+hkUaX9nM6xucjTdpXqrzH/Bj+EX
+	 +AN9ijsyiUgynt3V/m4Yx/UI493G21YacVO/zv84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgAIEbN (ORCPT
+        id S1727884AbgAIEfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 23:31:13 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35125 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbgAIEbN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 23:31:13 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i23so2729322pfo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 20:31:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RbHjM0wg62cWEianIkLtCJW1X5EzJpKvrs71soaeoPo=;
-        b=xy0GMMRi3LpivqEhjmd3Niy/3CDXdyzZc4meM+jjBObf/6hOF1cWTN7l/ZdK4B41sQ
-         kxXIhOG0+DqTmlX5BoJvnO70csEiuOfsQgIWnoTF9z+xjKfquLw0G2HPYQUhRgWkZrbm
-         RmERBCidfmC6Sad+LyNZ2MHl5KvGin5CuBlvbsv5fN8uj8NotL5S5Rhj1mPf9BqM56bL
-         QjOfXz9hod/P/9shnZCXDktla8gpMQOqscKKwAJXk15FUSXRNrEtvJ867yY0rnV+0zV/
-         3mhA29y1DdjTlw9UrctKvz3GD28jt1IwmfROrCx9vctZGTiBqMnCvOE0HWwhXxbVGstY
-         PAyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RbHjM0wg62cWEianIkLtCJW1X5EzJpKvrs71soaeoPo=;
-        b=U/IdIx0HV1f3N59wU2E0Kqhc3ehnoM6diejAKzRloRxj+YX7eExlLTypEocUDSZubp
-         gjoPYz6058ox5N2pN/CWzxlUEZ3mCEU9c4+kkyPz3z9j6C51s8ghRgvKgrd5So1GgXeO
-         6TRVQZz0d0ke6+WnSDewYf0FpbJugOWXaLSXfjUoR+kC2A8KZGHHyTUPMFRPph1KdDBi
-         0CpBqTnjT0OYu5jpCxMCe4UjHaTrZRUnDXnJAKRH+LpzpceKukK9OXBqvPJaHkiitm/P
-         +Y5KQv+6OCqOXprvHqBaHxNRcgSrTqSy/xLYLTToIAaVbGZbO3r9GfikNDIqA9078JXf
-         dNIA==
-X-Gm-Message-State: APjAAAXCPjBXt8eCYNxtdqe6VL4skg72Mlr9LdAn27YULRk87ZJJ8IGV
-        8oWvPO55FmFYatUSRn5//TDINg==
-X-Google-Smtp-Source: APXvYqyPPlKBAwfC//N4cbCcGppvgRthgjc5wns7FMRVy/ezHB4QROyqdIP/FxTlFcM7wvRUTUXQjQ==
-X-Received: by 2002:a63:2ac2:: with SMTP id q185mr9172175pgq.417.1578544271706;
-        Wed, 08 Jan 2020 20:31:11 -0800 (PST)
-Received: from localhost ([122.172.140.51])
-        by smtp.gmail.com with ESMTPSA id w11sm5647434pfi.77.2020.01.08.20.31.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jan 2020 20:31:10 -0800 (PST)
-Date:   Thu, 9 Jan 2020 10:01:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
-Message-ID: <20200109043108.fzvk3hp7vodtw6zy@vireshk-i7>
-References: <20191207002424.201796-1-saravanak@google.com>
- <20191207002424.201796-3-saravanak@google.com>
- <20200108105348.p4y3s2mbuchiu4mf@vireshk-i7>
- <CAGETcx8QEV+_+d2yt_+bE09mi4qyHZDHPJqPiDXv_HgJPgQJoQ@mail.gmail.com>
+        Wed, 8 Jan 2020 23:35:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbgAIEfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 23:35:09 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34850206ED;
+        Thu,  9 Jan 2020 04:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578544508;
+        bh=QXa52UDQgogCv0yZ0qFyjtSf0PFDJvX8CCIwqKv2hKA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rfaSQbAtuEYkNhIkP/sck/+fk20Ie9wy6IjDtGb4nelEYIAOeWVo+ZZJSEubVxV8Z
+         WxlWe7djDXDsxGhjcbPuGwxpvZ01n56LkiPmYj5fq7UgZAYRf/9KYiwkixvl6TfjD2
+         GLVTnPHJ++MoY7SDhVCixTzoa4GpbuH+0+xVW4xQ=
+Date:   Wed, 8 Jan 2020 22:35:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Muni Sekhar <munisekharrms@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: pcie: xilinx: kernel hang - ISR readl()
+Message-ID: <20200109043505.GA223446@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAGETcx8QEV+_+d2yt_+bE09mi4qyHZDHPJqPiDXv_HgJPgQJoQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHhAz+iy9b8Cyc6O=tjzjjixUQqKpTchrQWc+Y4JicAxB_HY5A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-01-20, 16:58, Saravana Kannan wrote:
-> On Wed, Jan 8, 2020 at 2:53 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Thu, Jan 09, 2020 at 08:47:51AM +0530, Muni Sekhar wrote:
+> On Thu, Jan 9, 2020 at 1:45 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Jan 07, 2020 at 09:45:13PM +0530, Muni Sekhar wrote:
+> > > Hi,
+> > >
+> > > I have module with Xilinx FPGA. It implements UART(s), SPI(s),
+> > > parallel I/O and interfaces them to the Host CPU via PCI Express bus.
+> > > I see that my system freezes without capturing the crash dump for
+> > > certain tests. I debugged this issue and it was tracked down to the
+> > > below mentioned interrupt handler code.
+> > >
+> > >
+> > > In ISR, first reads the Interrupt Status register using ‘readl()’ as
+> > > given below.
+> > >     status = readl(ctrl->reg + INT_STATUS);
+> > >
+> > >
+> > > And then clears the pending interrupts using ‘writel()’ as given blow.
+> > >         writel(status, ctrl->reg + INT_STATUS);
+> > >
+> > >
+> > > I've noticed a kernel hang if INT_STATUS register read again after
+> > > clearing the pending interrupts.
+> > >
+> > > Can someone clarify me why the kernel hangs without crash dump incase
+> > > if I read the INT_STATUS register using readl() after clearing the
+> > > pending bits?
+> > >
+> > > Can readl() block?
 > >
-> > On 06-12-19, 16:24, Saravana Kannan wrote:
-> > > Not all devices quantify their performance points in terms of frequency.
-> > > Devices like interconnects quantify their performance points in terms of
-> > > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> > > add support for parsing bandwidth OPPs from DT.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/opp/core.c | 15 +++++++++--
-> > >  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
-> > >  drivers/opp/opp.h  |  5 ++++
-> > >  3 files changed, 62 insertions(+), 21 deletions(-)
-> > >
-> > > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> > > index be7a7d332332..c79bbfac7289 100644
-> > > --- a/drivers/opp/core.c
-> > > +++ b/drivers/opp/core.c
-> > > @@ -1282,11 +1282,21 @@ static bool _opp_supported_by_regulators(struct dev_pm_opp *opp,
-> > >       return true;
-> > >  }
-> > >
-> > > +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
-> > > +{
-> > > +     if (opp1->rate != opp2->rate)
-> > > +             return opp1->rate < opp2->rate ? -1 : 1;
-> > > +     if (opp1->peak_bw != opp2->peak_bw)
-> > > +             return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
-> >
-> > Please also add level here.
+> > readl() should not block in software.  Obviously at the hardware CPU
+> > instruction level, the read instruction has to wait for the result of
+> > the read.  Since that data is provided by the device, i.e., your FPGA,
+> > it's possible there's a problem there.
 > 
-> I can, but I vaguely remember finding opp-levels could have
-> duplicates? Am I wrong? If so I can add the opp-level comparison too.
+> Thank you very much for your reply.
+> Where can I find the details about what is protocol for reading the
+> ‘memory mapped IO’? Can you point me to any useful links..
+> I tried locate the exact point of the kernel code where CPU waits for
+> read instruction as given below.
+> readl() -> __raw_readl() -> return *(const volatile u32 __force *)add
+> Do I need to check for the assembly instructions, here?
 
-No they can't have duplicates.
+The C pointer dereference, e.g., "*address", will be some sort of a
+"load" instruction in assembly.  The CPU wait isn't explicit; it's
+just that when you load a value, the CPU waits for the value.
 
-> > > +     return 0;
-> > > +}
-> > > +
-> > >  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
-> > >                            struct opp_table *opp_table,
-> > >                            struct list_head **head)
-> > >  {
-> > >       struct dev_pm_opp *opp;
-> > > +     int opp_cmp;
-> > >
-> > >       /*
-> > >        * Insert new OPP in order of increasing frequency and discard if
-> > > @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp *new_opp,
-> > >        * loop.
-> > >        */
-> > >       list_for_each_entry(opp, &opp_table->opp_list, node) {
-> > > -             if (new_opp->rate > opp->rate) {
-> > > +             opp_cmp = opp_compare_key(new_opp, opp);
-> > > +             if (opp_cmp > 0) {
-> > >                       *head = &opp->node;
-> > >                       continue;
-> > >               }
-> > >
-> > > -             if (new_opp->rate < opp->rate)
-> > > +             if (opp_cmp < 0)
-> > >                       return 0;
-> > >
-> > >               /* Duplicate OPPs */
-> > > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > > index 1cbb58240b80..b565da5a2b1f 100644
-> > > --- a/drivers/opp/of.c
-> > > +++ b/drivers/opp/of.c
-> > > @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device *dev)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-> > >
-> > > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
-> > > +                      bool *rate_not_available)
-> > > +{
-> > > +     int ret;
-> > > +     u64 rate;
-> > > +     u32 bw;
-> > > +
-> > > +     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > > +     if (!ret) {
-> > > +             /*
-> > > +              * Rate is defined as an unsigned long in clk API, and so
-> > > +              * casting explicitly to its type. Must be fixed once rate is 64
-> > > +              * bit guaranteed in clk API.
-> > > +              */
-> > > +             new_opp->rate = (unsigned long)rate;
-> > > +             goto out;
-> > > +     }
-> > > +
-> > > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> > > +     if (!ret) {
-> > > +             new_opp->peak_bw = bw;
-> > > +
-> > > +             if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
-> > > +                     new_opp->avg_bw = bw;
-> >
-> > Maybe
-> >                 of_property_read_u32(np, "opp-avg-kBps", &new_opp->avg_bw);
-> >
-> > and same for opp-peak-kbps as well.
+> > Can you tell whether the FPGA has received the Memory Read for
+> > INT_STATUS and sent the completion?
 > 
-> But those are not u32. Is it always safe to directly read into it
-> across all endian-ness and unsigned int sizes? I get tripped up by
-> that occasionally.
+> Is there a way to know this with the help of software debugging(either
+> enabling dynamic debugging or adding new debug prints)? Can you please
+> point some tools\hw needed to find this?
 
-It may not be safe.
+You could learn this either via a PCIe analyzer (expensive piece of
+hardware) or possibly some logic in the FPGA that would log PCIe
+transactions in a buffer and make them accessible via some other
+interface (you mentioned it had parallel and other interfaces).
 
-> > > +     }
-> > > +
-> > > +out:
-> > > +     *rate_not_available = !!ret;
-> > > +     /*
-> > > +      * If ret is 0 at this point, we have already found a key. If we
-> > > +      * haven't found a key yet, then ret already has an error value. In
-> > > +      * either case, we don't need to update ret.
-> > > +      */
-> > > +     of_property_read_u32(np, "opp-level", &new_opp->level);
-> >
-> > Yes, it wasn't done earlier but we should do it now. Check level as
-> > well and treat it as any other key.
-> >
-> > I think add a preparatory patch first which does all the cleanup
-> > before bandwidth thing is added.
+> > On the architectures I'm familiar with, if a device doesn't respond,
+> > something would eventually time out so the CPU doesn't wait forever.
 > 
-> Ah come on man! You are making this too painful. It's okay to add a
-> few more error checks as part of implementing a new feature. Please
-> don't make me add more patches before this.
+> What is timeout here? I mean how long CPU waits for completion? Since
+> this code runs from interrupt context, does it causes the system to
+> freeze if timeout is more?
 
-It will only make your life easier and not painful in my opinion as
-the reviews are getting mixed/confused between the new things and the
-old fields right now. With a separate patch introducing just the
-bandwidth part, it will get reviewed in maximum 1-2 versions, else you
-will keep updating the unrelated patch and I will keep reviewing it as
-it is all a single patch.
+The Root Port should have a Completion Timeout.  This is required by
+the PCIe spec.  The *reporting* of the timeout is somewhat
+implementation-specific since the reporting is outside the PCIe
+domain.  I don't know the duration of the timeout, but it certainly
+shouldn't be long enough to look like a "system freeze".
 
-It is always suggested to break patches into the smallest possible
-meaningful separate things you want to achieve. You are introducing
-something here and adding cleanup to that.
+> lspci output:
+> $ lspci
+> 00:00.0 Host bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
+> Series SoC Transaction Register (rev 11)
+> 00:02.0 VGA compatible controller: Intel Corporation Atom Processor
+> Z36xxx/Z37xxx Series Graphics & Display (rev 11)
+> 00:13.0 SATA controller: Intel Corporation Atom Processor E3800 Series
+> SATA AHCI Controller (rev 11)
+> 00:14.0 USB controller: Intel Corporation Atom Processor
+> Z36xxx/Z37xxx, Celeron N2000 Series USB xHCI (rev 11)
+> 00:1a.0 Encryption controller: Intel Corporation Atom Processor
+> Z36xxx/Z37xxx Series Trusted Execution Engine (rev 11)
+> 00:1b.0 Audio device: Intel Corporation Atom Processor Z36xxx/Z37xxx
+> Series High Definition Audio Controller (rev 11)
+> 00:1c.0 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+> Express Root Port 1 (rev 11)
+> 00:1c.2 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+> Express Root Port 3 (rev 11)
+> 00:1c.3 PCI bridge: Intel Corporation Atom Processor E3800 Series PCI
+> Express Root Port 4 (rev 11)
+> 00:1d.0 USB controller: Intel Corporation Atom Processor Z36xxx/Z37xxx
+> Series USB EHCI (rev 11)
+> 00:1f.0 ISA bridge: Intel Corporation Atom Processor Z36xxx/Z37xxx
+> Series Power Control Unit (rev 11)
+> 00:1f.3 SMBus: Intel Corporation Atom Processor E3800 Series SMBus
+> Controller (rev 11)
+> 01:00.0 RAM memory: PLDA Device 5555
 
-> > > +
-> > > +     return ret;
-> > > +}
-> > > +
-> > >  /**
-> > >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-> > >   * @opp_table:       OPP table
-> > > @@ -558,26 +596,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> > >       if (!new_opp)
-> > >               return ERR_PTR(-ENOMEM);
-> > >
-> > > -     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > > -     if (ret < 0) {
-> > > -             /* "opp-hz" is optional for devices like power domains. */
-> > > -             if (!opp_table->is_genpd) {
-> > > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > > -                     goto free_opp;
-> > > -             }
-> > > -
-> > > -             rate_not_available = true;
-> > > -     } else {
-> > > -             /*
-> > > -              * Rate is defined as an unsigned long in clk API, and so
-> > > -              * casting explicitly to its type. Must be fixed once rate is 64
-> > > -              * bit guaranteed in clk API.
-> > > -              */
-> > > -             new_opp->rate = (unsigned long)rate;
-> > > +     ret = _read_opp_key(new_opp, np, &rate_not_available);
-> > > +     if (ret) {
-> > > +             dev_err(dev, "%s: opp key field not found\n", __func__);
-> > > +             goto free_opp;
-> > >       }
-> > >
-> > > -     of_property_read_u32(np, "opp-level", &new_opp->level);
-> > > -
-> > >       /* Check if the OPP supports hardware's hierarchy of versions or not */
-> > >       if (!_opp_is_supported(dev, opp_table, np)) {
-> > >               dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
-> > > @@ -616,7 +640,8 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> > >       if (of_property_read_bool(np, "opp-suspend")) {
-> > >               if (opp_table->suspend_opp) {
-> > >                       /* Pick the OPP with higher rate as suspend OPP */
-> > > -                     if (new_opp->rate > opp_table->suspend_opp->rate) {
-> > > +                     if (opp_compare_key(new_opp,
-> > > +                                         opp_table->suspend_opp) > 1) {
-> >
-> > Maybe leave this place as is as we never want to compare anything else
-> > but rate.
-> 
-> We do want to support suspend bandwidth.
+Is this 01:00.0 device the FPGA?
 
-Yeah, I understood that from a later patch.
-
-> So I think I should have this
-> fix here so it works in general. Also, why not suspend opp-level?
-
-Because we don't want/need to set a specific value to the
-voltage-corners during suspend directly from the PM domain driver.
-This should happen automatically via a call from the underlying
-cpufreq or device driver.
-
-And that's what I expected out of the interconnect thing. For example,
-say during suspend you put the interconnect or PM domains to a low
-bandwidth/level value, while the underlying device driver (which uses
-the interconnect or domain) never requested for it. Who will be
-responsible to restore the value during resume as we would be out of
-sync here.
-
--- 
-viresh
+> 03:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network
+> Connection (rev 03)
