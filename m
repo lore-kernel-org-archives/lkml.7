@@ -2,151 +2,112 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B258C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A45C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009F5206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:56:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PVj20/v8"
+	by mail.kernel.org (Postfix) with ESMTP id 1BA122072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:58:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578556724;
+	bh=IxIDaYwn1hYLk4AjZMN5Qonq1h8D5Y/VRrDjQJUKNq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ItFK7p4N9Bt7kqO88VQSMJ3En5opw1oJ3Trmmu5jwMi0iiqKz4swUG5k1QtTR4gaf
+	 bLJaA67xOw+TbhONwBGDQxP0COy16Obe4xG22QZ0yzgB1SbJh2tgh9fs3ZogA9irJi
+	 S47Q38Z21ruDf87CbhwCyl/i6G1/ZMsUFRHE/HZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgAIH4p (ORCPT
+        id S1728351AbgAIH6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:56:45 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43083 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbgAIH4l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:56:41 -0500
-Received: by mail-lj1-f194.google.com with SMTP id a13so6122191ljm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 23:56:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=av7HcYUDPVtq744dD/jQrW74iw2JEPAQcG8TalAj878=;
-        b=PVj20/v8nJEgW8x/2ffVvBamuKf2e+R62LDvNuEA454AhRrfVxNT28PWF8j2eQFFY3
-         wJ8tb2Hs7uEgaYoY4eAJsTmm4YmKiPqlLdmp6NB+kXVzgV/eqpsWGNL0Isg0RISvjH5T
-         ly3S+sjE4shGQ1/XEy8Xyp69P2w+g857mH7FKOg6LyVltln+Zd3YI3H/gnHpM76KzYqK
-         feM4TmqZc2L6BKecEskzhScWfisE6zCR5roB7Bt3C1vl922bUsPdmJxniwmpHHQkaqp/
-         lSgwHCFFgC4qzCrogLsAURnjxaAXsc5DkPpX6Ljioxkslb8zVny8T67CtgG6NXSJSkKH
-         Zmfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=av7HcYUDPVtq744dD/jQrW74iw2JEPAQcG8TalAj878=;
-        b=Bzjln5IWbfy5Ygj5Iqw/J9CPdUuqEp8Fd3zYxd3PVKY5xqshTct2jNMqDIu/yQtCFH
-         MlvYmCakCdia4iikQEO+8+MTjOB78YsBoFUfBx1s02G1G7e/aiE67QKLtRPoVdr6NsiD
-         HzqXaOYOW4zzhUSBkjgS8wH7e4U18qOdk6h1eJyieWSLWJvnpQpEuX8SflgQlh2oVV54
-         MjeWPs/BTCCVw4vHmbMjtS91xw02qMlEN+kIHbHnvfz7ooPeveL8OXdyNaZX6rfnzrv9
-         xbFX7y+SPphk73qddVK5Um7BeCJdzS2R/QPats4PEMM6X45UbUrOjBL2IuU29/Urq0wl
-         Mnbw==
-X-Gm-Message-State: APjAAAVmeBpxUxE2gDblmlo0ek8uhz0o/N5rZAdwMyeX+dZ1+jkjmu1n
-        iCFRmObxdzgJ/G6JjQkUWsJ9PFBd/cvB6Q==
-X-Google-Smtp-Source: APXvYqym0Tv71bG9Gm071smIw2DYk3olyayzv//M2eg9LEq/S8Kd10Rbhgbgeqz0ZdYKOuQLGwmx+A==
-X-Received: by 2002:a2e:8942:: with SMTP id b2mr5478293ljk.162.1578556599344;
-        Wed, 08 Jan 2020 23:56:39 -0800 (PST)
-Received: from localhost.localdomain (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id d9sm2452745lja.73.2020.01.08.23.56.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 23:56:38 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/2] pinctrl: intel: Pass irqchip when adding gpiochip
-Date:   Thu,  9 Jan 2020 08:53:29 +0100
-Message-Id: <20200109075329.398347-2-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200109075329.398347-1-linus.walleij@linaro.org>
-References: <20200109075329.398347-1-linus.walleij@linaro.org>
+        Thu, 9 Jan 2020 02:58:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728276AbgAIH6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 02:58:42 -0500
+Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CC10206ED;
+        Thu,  9 Jan 2020 07:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578556721;
+        bh=IxIDaYwn1hYLk4AjZMN5Qonq1h8D5Y/VRrDjQJUKNq0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q9FuoXicRdmdy8u3f4kO6XoaxwV4LHUFXa/jXJ1M8Hb5Kaj4P8nFNuYO0ld5JUzTP
+         LcKNnf/QO//ezjudN3G2NSzz0chy2/HbRRoosjYXlp156GJc5Vdueu/ym2rJfKJ55t
+         GoYrUkNzy6tzqDqUe8nm5NwIbog2TM9mBg9cNOVo=
+Date:   Thu, 9 Jan 2020 15:58:33 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Aapo Vienamo <aapo.vienamo@iki.fi>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: mxs: Enable usbphy1 and usb1 on apx4devkit DTS
+Message-ID: <20200109075832.GG4456@T480>
+References: <20191229131503.20843-1-aapo.vienamo@iki.fi>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191229131503.20843-1-aapo.vienamo@iki.fi>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
+On Sun, Dec 29, 2019 at 03:15:03PM +0200, Aapo Vienamo wrote:
+> Enable the USB host port on the APx4 development board.
+> 
+> Signed-off-by: Aapo Vienamo <aapo.vienamo@iki.fi>
+> ---
+>  arch/arm/boot/dts/imx28-apx4devkit.dts | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx28-apx4devkit.dts b/arch/arm/boot/dts/imx28-apx4devkit.dts
+> index 3a184d13887b..f00d201ce242 100644
+> --- a/arch/arm/boot/dts/imx28-apx4devkit.dts
+> +++ b/arch/arm/boot/dts/imx28-apx4devkit.dts
+> @@ -183,6 +183,12 @@ auart2: serial@8006e000 {
+>  				pinctrl-0 = <&auart2_2pins_a>;
+>  				status = "okay";
+>  			};
+> +
+> +			usbphy1: usbphy@8007e000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&usb1_pins_a>;
+> +				status = "okay";
+> +			};
+>  		};
+>  	};
+>  
+> @@ -193,6 +199,10 @@ mac0: ethernet@800f0000 {
+>  			pinctrl-0 = <&mac0_pins_a>;
+>  			status = "okay";
+>  		};
+> +
+> +		usb1: usb@80090000 {
 
-For chained irqchips this is a pretty straight-forward conversion.
+We want to keep nodes with unit-address sorted in that address.  That
+said, usb@80090000 should go before ethernet@800f0000.
 
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-Please apply this to the Intel pinctrl tree when you are
-happy with the result!
----
- drivers/pinctrl/intel/pinctrl-intel.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+Shawn
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index b479bcf1e246..ffacd77861f7 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1224,6 +1224,7 @@ static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
- static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- {
- 	int ret;
-+	struct gpio_irq_chip *girq;
- 
- 	pctrl->chip = intel_gpio_chip;
- 
-@@ -1244,16 +1245,9 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 	pctrl->irqchip.irq_set_wake = intel_gpio_irq_wake;
- 	pctrl->irqchip.flags = IRQCHIP_MASK_ON_SUSPEND;
- 
--	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
--	if (ret) {
--		dev_err(pctrl->dev, "failed to register gpiochip\n");
--		return ret;
--	}
--
- 	/*
--	 * We need to request the interrupt here (instead of providing chip
--	 * to the irq directly) because on some platforms several GPIO
--	 * controllers share the same interrupt line.
-+	 * On some platforms several GPIO controllers share the same interrupt
-+	 * line.
- 	 */
- 	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
- 			       IRQF_SHARED | IRQF_NO_THREAD,
-@@ -1263,14 +1257,20 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 		return ret;
- 	}
- 
--	ret = gpiochip_irqchip_add(&pctrl->chip, &pctrl->irqchip, 0,
--				   handle_bad_irq, IRQ_TYPE_NONE);
-+	girq = &pctrl->chip.irq;
-+	girq->chip = &pctrl->irqchip;
-+	/* This will let us handle the IRQ in the driver */
-+	girq->parent_handler = NULL;
-+	girq->num_parents = 0;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_bad_irq;
-+
-+	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
- 	if (ret) {
--		dev_err(pctrl->dev, "failed to add irqchip\n");
-+		dev_err(pctrl->dev, "failed to register gpiochip\n");
- 		return ret;
- 	}
- 
--	gpiochip_set_chained_irqchip(&pctrl->chip, &pctrl->irqchip, irq, NULL);
- 	return 0;
- }
- 
--- 
-2.23.0
-
+> +		      status = "okay";
+> +		};
+>  	};
+>  
+>  	regulators {
+> -- 
+> 2.24.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
