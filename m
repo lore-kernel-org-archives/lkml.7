@@ -2,100 +2,160 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6315C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C366FC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977AA2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9512C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:48:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJBHtW0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgAIIsB (ORCPT
+        id S1728736AbgAIIsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:48:01 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:47331 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbgAIIsB (ORCPT
+        Thu, 9 Jan 2020 03:48:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48838 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728448AbgAIIsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:48:01 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mw99Y-1jey8c0CyC-00s2rY; Thu, 09 Jan 2020 09:47:46 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Moni Shoua <monis@mellanox.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] IB/core: Fix build failure without hugepages
-Date:   Thu,  9 Jan 2020 09:47:30 +0100
-Message-Id: <20200109084740.2872079-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Thu, 9 Jan 2020 03:48:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578559711;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7gUnYXOKmpS/NEpT+R2hURrL5sPZKcFBzwobZVjhnkk=;
+        b=NJBHtW0xn5JCsHSIrKofmXfYHFcT/Cj7wYlK/MRvwsGAL9dzFHl2TWBcsr0awMLL7fsUJ6
+        fpW3LAChVTAht3vZQyRLppbzV4IvVo5et+MZPceHpsF+jgXJNkR75JO5yCDxWdmHxxhmhH
+        BLuoRudaTt8ErKUjjD/OpYdur4i1b/8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-405-CnYy1Ns1Od6kEkzjCocMXg-1; Thu, 09 Jan 2020 03:48:28 -0500
+X-MC-Unique: CnYy1Ns1Od6kEkzjCocMXg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAA79107ACC4;
+        Thu,  9 Jan 2020 08:48:26 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA83A10013A7;
+        Thu,  9 Jan 2020 08:48:24 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 09:48:22 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andres Freund <andres@anarazel.de>
+Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] perf c2c: Fix sorting.
+Message-ID: <20200109084822.GD52936@krava>
+References: <20200109043030.233746-1-andres@anarazel.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mkrhrw40NErOvP8CxwUXSW4llRsS42HydBRTLlnckgzOAZHs4E/
- hAw/7GSlComduAO87UIxsrWBEWcIF+7ft/buqQtfeeqxApMdprqOpGlFDlfIhDQNy1E1LEd
- 2Q9J9QMoA8Lp7KAaqUzbTAxbc2w0PjVgVJZEnlMdjvNGiewGek9MojVygyqKU2Zpmx+rZW7
- 7C0RDFSmDuAbfH6Rn18MA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:03kATHjJVDc=:OV0JtzVoDE39MIMzD9tJrj
- IYkYlVS89skmK73I+iAs19WcYvxf9Z3w+YV/Ly32JQYhnaTysEDXIRG85ttV280GphHPno7A9
- 3PW7EbmUUQJPqSFUyVfjJ/P4WnmW4i4SN4iSDyJgP7cowHA9cyTtQTeDYN9xArJwqXuHp0GA4
- LdK+cF8PEE1b03EtnlVrhibhltwQm+zEG/RI8fLHpv8GMRdRB4SjN/M5+acPjjwnirz1sHU9O
- mb8hDzwVWeI6jP/52JbUbyOV4RRoITZkIC1BKNkCWO7/AI+1hwxAevhCO6Htqy7R1HV+WqHzq
- Ruq174DQRlJuJxTHTJnylvvjr2pC1UAKFQcD4s8VqiVgnJK9t4NrtblGD3tNP/Zj0Fhi1fK2p
- NJkTKkMWoojSKEFeSKrvLgtAGJl1LCHM8wuWeK1142iS1f20/rF0+VPldBCkJZjFtvagAkucB
- KePnVLLnAjgjR44CI1Op9TGJSzd2ndiwVrl7hdgYJ0LtmvlIrPnPhExQ86wJ248dtRTYng6Bt
- sD0+tdqXMuEQo5Hk/6KcuoRZiwj3O9jWKE/OwLNiDb/vfzaeUw4vEfdGsY3nkxD5FsuEMQx28
- HRYnUBRCaiWan6Ikit6MNNwROhFc1m2EAW72evrSNRuu4CyL1kT6XOlAFiiCFBq8srPZaum1C
- bUOoouGoI3+15NHBpOBq58N6eqWzMzjVvHLwdYnBlUYKTAbFCigx2iBzS0P4N7CIrbjH1V+ue
- v+/LDRj2iLUivulKIWDOtN9fM6AAbBSHEM9rldw1UXeTz8lSM9IfBr5KkeNAg3nrdslG5BlCn
- FZhY52Vgf+zP4b2XZgIrgxxqfYFlIvJdnFFlDFIB6w206b8OEh2tDP31rfqCl2hnRZL8wwK2J
- xMKRZdN0K9IHPNvz8lfg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109043030.233746-1-andres@anarazel.de>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HPAGE_SHIFT is only defined on architectures that support hugepages:
+On Wed, Jan 08, 2020 at 08:30:30PM -0800, Andres Freund wrote:
+> Commit 722ddfde366f ("perf tools: Fix time sorting") changed -
+> correctly so - hist_entry__sort to return int64. Unfortunately several
+> of the builtin-c2c.c comparison routines only happened to work due the
+> cast caused by the wrong return type.
+> 
+> This causes meaningless ordering of both the cacheline list, and the
+> cacheline details page. E.g a simple
+>   perf c2c record -a sleep 3
+>   perf c2c report
+> will result in cacheline table like
+>   =================================================
+>              Shared Data Cache Line Table
+>   =================================================
+>   #
+>   #        ----------- Cacheline ----------    Total      Tot  ----- LLC Load Hitm -----  ---- Store Reference ----  --- Load Dram ----      LLC    Total  ----- Core Load Hit -----  -- LLC Load Hit --
+>   # Index             Address  Node  PA cnt  records     Hitm    Total      Lcl      Rmt    Total    L1Hit   L1Miss       Lcl       Rmt  Ld Miss    Loads       FB       L1       L2       Llc       Rmt
+>   # .....  ..................  ....  ......  .......  .......  .......  .......  .......  .......  .......  .......  ........  ........  .......  .......  .......  .......  .......  ........  ........
+>   #
+>         0      0x7f0d27ffba00   N/A       0       52    0.12%       13        6        7       12       12        0         0         7       14       40        4       16        0         0         0
+>         1      0x7f0d27ff61c0   N/A       0     6353   14.04%     1475      801      674      779      779        0         0       718     1392     5574     1299     1967        0       115         0
+>         2      0x7f0d26d3ec80   N/A       0       71    0.15%       16        4       12       13       13        0         0        12       24       58        1       20        0         9         0
+>         3      0x7f0d26d3ec00   N/A       0       98    0.22%       23       17        6       19       19        0         0         6       12       79        0       40        0        10         0
+> i.e. with the list not being ordered by Total Hitm.
+> 
+> Fixes: 722ddfde366f ("perf tools: Fix time sorting")
+> Signed-off-by: Andres Freund <andres@anarazel.de>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Michael Petlan <mpetlan@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: stable@vger.kernel.org # v3.16+
+> ---
+>  tools/perf/builtin-c2c.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index e69f44941aad..f2e9d2b1b913 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  {
+>  	struct c2c_hist_entry *c2c_left;
+>  	struct c2c_hist_entry *c2c_right;
+> -	unsigned int tot_hitm_left;
+> -	unsigned int tot_hitm_right;
+> +	uint64_t tot_hitm_left;
+> +	uint64_t tot_hitm_right;
 
-drivers/infiniband/core/umem_odp.c: In function 'ib_umem_odp_get':
-drivers/infiniband/core/umem_odp.c:245:26: error: 'HPAGE_SHIFT' undeclared (first use in this function); did you mean 'PAGE_SHIFT'?
+that change looks right, but I can't see how that could
+happened because of change in Fixes: tag
 
-Enclose this in an #ifdef.
+was the return statement of this function:
 
-Fixes: 9ff1b6466a29 ("IB/core: Fix ODP with IB_ACCESS_HUGETLB handling")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/infiniband/core/umem_odp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+        return tot_hitm_left - tot_hitm_right;
 
-diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-index f42fa31c24a2..b9baf7d0a5cb 100644
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -241,10 +241,11 @@ struct ib_umem_odp *ib_umem_odp_get(struct ib_udata *udata, unsigned long addr,
- 	umem_odp->umem.owning_mm = mm = current->mm;
- 	umem_odp->notifier.ops = ops;
- 
-+	umem_odp->page_shift = PAGE_SHIFT;
-+#ifdef CONFIG_HUGETLB_PAGE
- 	if (access & IB_ACCESS_HUGETLB)
- 		umem_odp->page_shift = HPAGE_SHIFT;
--	else
--		umem_odp->page_shift = PAGE_SHIFT;
-+#endif
- 
- 	umem_odp->tgid = get_task_pid(current->group_leader, PIDTYPE_PID);
- 	ret = ib_init_umem_odp(umem_odp, ops);
--- 
-2.20.0
+considered to be 'unsigned int' and then converted to int64_t,
+which would treat negative 'unsigned int' as big positive 'int64_t'?
+
+thanks,
+jirka
+
+>  
+>  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+>  	c2c_right = container_of(right, struct c2c_hist_entry, he);
+> @@ -629,7 +629,8 @@ __f ## _cmp(struct perf_hpp_fmt *fmt __maybe_unused,			\
+>  									\
+>  	c2c_left  = container_of(left, struct c2c_hist_entry, he);	\
+>  	c2c_right = container_of(right, struct c2c_hist_entry, he);	\
+> -	return c2c_left->stats.__f - c2c_right->stats.__f;		\
+> +	return (uint64_t) c2c_left->stats.__f -				\
+> +	       (uint64_t) c2c_right->stats.__f;				\
+>  }
+>  
+>  #define STAT_FN(__f)		\
+> @@ -682,7 +683,8 @@ ld_llcmiss_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  	c2c_left  = container_of(left, struct c2c_hist_entry, he);
+>  	c2c_right = container_of(right, struct c2c_hist_entry, he);
+>  
+> -	return llc_miss(&c2c_left->stats) - llc_miss(&c2c_right->stats);
+> +	return (uint64_t) llc_miss(&c2c_left->stats) -
+> +	       (uint64_t) llc_miss(&c2c_right->stats);
+>  }
+>  
+>  static uint64_t total_records(struct c2c_stats *stats)
+> -- 
+> 2.25.0.rc1
+> 
 
