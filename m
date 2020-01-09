@@ -2,108 +2,145 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF64FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD9AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3B62073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578613312;
-	bh=V2TU7bmhK2rc0g3gTmxhO+8joHF8QS5c5TW8/rrWMSY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MBXG9Rkol5Oi4Gz5NB9x2Y2+bCSCapCDn1rBWQtr3qRRqgjSCwQZxSGeqkWzWVBjX
-	 X/ca3pecJW/kmhws9W4HEKOtNWiQB2oJnqhQhGTT8gha0goizG4T8JPmdGWj5XclG3
-	 xZofgXmlr4eweIH8YhpET5VBcrpl3ZIBkFz8iD3I=
+	by mail.kernel.org (Postfix) with ESMTP id 8B42D2077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:41:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SSOqtpNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgAIXlv (ORCPT
+        id S1729592AbgAIXlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:41:51 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41259 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgAIXlv (ORCPT
+        Thu, 9 Jan 2020 18:41:55 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:18507 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729544AbgAIXlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:41:51 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so159329ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 15:41:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vfpfB0heb47nMgztDPhE6QVnvLuPdQSEP2b5ktH3qTQ=;
-        b=JMCnPNu2FZKj4HmJcziRUk5O9yUgf94qqHvorN+sh+nwIlFA9njr0QdL7pC3p3/22w
-         aUadfTYO3UAxVMhaO3fZYlehOasRUNSFGYP7qnx2IquOYnp2i+zuuvu6GIdGkOF22lTh
-         KiDNWsr/WehUgh2ES9kDZ/ClZTU0gpsXokVzM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vfpfB0heb47nMgztDPhE6QVnvLuPdQSEP2b5ktH3qTQ=;
-        b=gpwxqskP5reHSvYOWCan1w4p0NjjxBS728gocok8j+pORlHmVuTMHiRy8w/ivEEIkS
-         V06kLFav1mE+RKdo1503NE97ua7y0Q26dxrMTGxz4n2LPawEgxUt7waKNz3YiDlhkGC0
-         zHnfPHKLp0QOGKkjH4uN1oRjujVGSLGeBGBTAfupdmOEsMlxEvjd03/7c5COTZb4XQqF
-         im5UY3a7fIi3CYuQqP4tZlkkLGccX1fPmDN8KA+2n/ncVhrvL9A3kJrqWcfnjfHWQb4C
-         0iLCMoRBrXrkwflwe04N01RsfHiPeNXeZNJfgSKbvNeSdH8gDTCVjnLjxpCUnmOSb2ax
-         3gvQ==
-X-Gm-Message-State: APjAAAUldJnPYeMr76cszxigRPdd91DfXwGuCuirqrdskVIpV46JMfog
-        4HkNolA066WnVpfhTcTJOMRzUd4eHBQ=
-X-Google-Smtp-Source: APXvYqzfaqwDPc7l9guChin11/i0VFJqAbdxFPQ2yBVdoiWc/00PpY20qBIAwVUYR/ii7FSeO5jo+A==
-X-Received: by 2002:a2e:548:: with SMTP id 69mr352956ljf.67.1578613309208;
-        Thu, 09 Jan 2020 15:41:49 -0800 (PST)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id w20sm64349ljo.33.2020.01.09.15.41.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 15:41:48 -0800 (PST)
-Received: by mail-lj1-f178.google.com with SMTP id r19so183900ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 15:41:47 -0800 (PST)
-X-Received: by 2002:a2e:8946:: with SMTP id b6mr367415ljk.1.1578613307533;
- Thu, 09 Jan 2020 15:41:47 -0800 (PST)
+        Thu, 9 Jan 2020 18:41:55 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200109234152epoutp036db192af8c6a6cc7213be0abdde31652~oXHG51JS_3102331023epoutp03g
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 23:41:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200109234152epoutp036db192af8c6a6cc7213be0abdde31652~oXHG51JS_3102331023epoutp03g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578613312;
+        bh=KwyYt9GohRntySXnK1nN8DCmHASlL3/7ZQc7K5hba4g=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=SSOqtpNr99HIA6KIMnl0k16OlC4nU5+z99FQUMDefzRgbAq8HmcQVO785aRQDKUEF
+         mFWvGWxZybFtaDteksIAqctWTYCS1ISxkOnd+s8adUnjjqnDLSm/Ij7ttdKq1eByIi
+         hjo0CoTG0IYfRrpC7eUAKw1apJG2T1CnHR/1H9jc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200109234151epcas1p2177dc9e8d2a0f44d2f4ba639379dcee7~oXHF-vHtE2487224872epcas1p2R;
+        Thu,  9 Jan 2020 23:41:51 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47v2hH1QpMzMqYkg; Thu,  9 Jan
+        2020 23:41:51 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        32.B0.57028.F3AB71E5; Fri, 10 Jan 2020 08:41:51 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200109234150epcas1p2be9eb338c0cdb94ab8c8594cc9e205d6~oXHE3z_uE2487224872epcas1p2Q;
+        Thu,  9 Jan 2020 23:41:50 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200109234150epsmtrp10d10937bf24957fee0833d9ce424a66e~oXHE24gqt2767527675epsmtrp1M;
+        Thu,  9 Jan 2020 23:41:50 +0000 (GMT)
+X-AuditID: b6c32a35-50bff7000001dec4-5a-5e17ba3f9993
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D9.07.10238.E3AB71E5; Fri, 10 Jan 2020 08:41:50 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200109234150epsmtip259f3d7e226ebc814761b3f66dd66cece~oXHEumi0c2087320873epsmtip2a;
+        Thu,  9 Jan 2020 23:41:50 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     =?utf-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <hch@lst.de>,
+        <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>, <tytso@mit.edu>
+In-Reply-To: <47625.1578607455@turing-police>
+Subject: RE: [PATCH v9 09/13] exfat: add misc operations
+Date:   Fri, 10 Jan 2020 08:41:50 +0900
+Message-ID: <002101d5c746$5d69a360$183cea20$@samsung.com>
 MIME-Version: 1.0
-References: <nycvar.YFH.7.76.2001091519080.31058@cbobk.fhfr.pm>
- <CAHk-=wj+zyWsZGhiCiopkrnu1_bkNE1Ax+82sP4Donsv9pUZuw@mail.gmail.com>
- <nycvar.YFH.7.76.2001092032430.31058@cbobk.fhfr.pm> <nycvar.YFH.7.76.2001092137460.31058@cbobk.fhfr.pm>
- <CAHk-=wh_-q=MPtYmcb4gUHtQ2M96BVrzoDo3pauU-Ps9Q5uPtg@mail.gmail.com>
-In-Reply-To: <CAHk-=wh_-q=MPtYmcb4gUHtQ2M96BVrzoDo3pauU-Ps9Q5uPtg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Jan 2020 15:41:31 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wji9frEf=nkfBmekhZs7QofyhDuT7_Lqt=kkjEZVAktzA@mail.gmail.com>
-Message-ID: <CAHk-=wji9frEf=nkfBmekhZs7QofyhDuT7_Lqt=kkjEZVAktzA@mail.gmail.com>
-Subject: Re: [GIT PULL] HID fixes
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwHz+Lr1AtmMBwQCEsM+eAKdGL6aAbsqjWgBsAu59qaDEkNw
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0gUURjtOrMzY7Q1reZ+aNQ2YKGg7bStjqU90GqhInsRKGmTTq60L3ZW
+        ySKSyq1M7IGQrVaW9Fq1DVFzfWCZEpYlFplWFkSBGloZPcxeuztG/jvfuef7zj33fhSmqCKC
+        qUyTTbCaeANDTMXr7oZFRixvUKaoO3/6c4fKXQR3vaLdj3vW/xzjmpo7cO5JQynB1fxuk3F5
+        BWMkV3D1KbGC0rkd/aSu5VwlqWvsyyV0BzvbMV1hjRPpPlfPSSSSDLF6gU8XrCrBlGZOzzRl
+        xDFrN6fGp2qj1GwEG8NFMyoTbxTimIR1iRGrMw2eCzGqbN6Q5aESeVFkFi6LtZqzbIJKbxZt
+        cYxgSTdYWLUlUuSNYpYpIzLNbFzCqtWLtB7lDoP+5aNXfpZccs/pih94LnLL8pE/BfRiaLYP
+        E/loKqWg6xGMlTgnilEEL1pKZFLxFUHbvVo8H1G+liM9GyS+GUFf7YWJjkEExR+6Se9cgo6A
+        3z9bCC8OpBOg53g55hVhdB2Ci/VdvgN/j6hspMeHA2gO3rfdJrwOOB0Kfzo5Ly2nY+D17RtI
+        wjOh4+xb3Isxei7cGi7FpAwqGHt3ReZtDaSToPI6SJJAKDlm99kCPU5A8TfXhD4BjnfnIQkH
+        wNC9GlLCwTB4wk5KIffBp5YJ+VEEA9/iJKyBPtdNnxVGh4GrYaFEzwP3+Dkk2U6HkS8FMmmK
+        HI7aFZIkFAof3/WTcAjkH/lInkSMY1Iux6RcjkkBHP/NyhDuREGCRTRmCCJrYSd/dTXyrWq4
+        th4VPVrXimgKMdPk+gBlikLGZ4s5xlYEFMYEytt7g1IU8nQ+Z69gNadaswyC2Iq0nlc/hQXP
+        SjN7Ft9kS2W1izQaDbc4KjpKq2GUcup793YFncHbhN2CYBGs//r8KP/gXFTUJuYlX3owY4tF
+        WBX6oOowD2HRvV/JpUNKmxnbOP/gFSKlWrmra0GnfrTJ0dhR1T8dz97kzEkoe3g+XHF/wzb7
+        5YFf5bM1Qc3rQwY5bOdWIj5v5YJrA12bhva/dv1on2KsfTKSpFpz4M/IIcKd1oOcpcNR45fd
+        yb3sDkXBmTtvGFzU82w4ZhX5v0JdbcLAAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSvK7dLvE4gxtdmhbNi9ezWaxcfZTJ
+        4vrdW8wWe/aeZLG4vGsOm8WWf0dYLVp7frJb9Cy/yubA4bFz1l12j/1z17B77L7ZwObRdOYo
+        s0ffllWMHp83yQWwRXHZpKTmZJalFunbJXBl3Dl3j6mggb1i0upfLA2MO1m7GDk4JARMJNqv
+        +XcxcnEICexmlLj/7RZzFyMnUFxa4tiJM8wQNcIShw8XQ9Q8Z5RYvG09I0gNm4CuxL8/+9lA
+        bBEBF4lr3YuZQYqYBfYxSjy4eIQZouMck8Tl90tYQao4gToWvLsG1iEsYCHx+sgBNpANLAKq
+        Ev/PWICEeQUsJe4fWMcIYQtKnJz5hAXEZhbQlnh68ymULS+x/e0cqEMVJH4+XQb2jIhAlMSa
+        lRIQJSISszvbmCcwCs9CMmkWkkmzkEyahaRlASPLKkbJ1ILi3PTcYsMCw7zUcr3ixNzi0rx0
+        veT83E2M4PjS0tzBeHlJ/CFGAQ5GJR7eDGHxOCHWxLLiytxDjBIczEoivEdviMUJ8aYkVlal
+        FuXHF5XmpBYfYpTmYFES532adyxSSCA9sSQ1OzW1ILUIJsvEwSnVwKhkeVx18+PWqKYMhYWT
+        mUSuWOwzkJ77y+9Y1AQz7fSlth/9M8NmKJkukJJ0zMvz/PDw4HHTveVCpjybz89/7/mTw1/x
+        7Q4DP4srNdnPTBNiRZg3eRZLzIriSj3qZvN4ttW5pdvkpHVl8zimPFkZ9CeHY6OYgyizlH38
+        xFUfeOQ1FS/ONzzLpsRSnJFoqMVcVJwIAAaOprqrAgAA
+X-CMS-MailID: 20200109234150epcas1p2be9eb338c0cdb94ab8c8594cc9e205d6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+        <CGME20200102082407epcas1p4cf10cd3d0ca2903707ab01b1cc523a05@epcas1p4.samsung.com>
+        <20200102082036.29643-11-namjae.jeon@samsung.com>
+        <20200105165115.37dyrcwtgf6zgc6r@pali> <85woa4jrl2.fsf@collabora.com>
+        <20200107115202.shjpp6g3gsrhhkuy@pali> <47625.1578607455@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 3:36 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Now, good source code presumably notices EPOLLERR and handles it. So
-> it _shouldn't_ matter what the kernel does if an error occurs. I
-> haven't checked what people _actually_ do, tnough. I worry sometimes
-> that user space just looks at EPOLLIN sees it not being set, and gets
-> stuck in a busy loop polling in case of errors.
+> When compiling on a 32-bit system like Raspian on an RPi4, the compile
+> dies:
+> 
+>   CC [M]  fs/exfat/misc.o
+> fs/exfat/misc.c: In function 'exfat_time_unix2fat':
+> fs/exfat/misc.c:157:16: error: 'UNIX_SECS_2108' undeclared (first use in
+> this function); did you mean 'UNIX_SECS_1980'?
+>   if (second >= UNIX_SECS_2108) {
+>                 ^~~~~~~~~~~~~~
+>                 UNIX_SECS_1980
+> fs/exfat/misc.c:157:16: note: each undeclared identifier is reported only
+> once for each function it appears in
+> make[2]: *** [scripts/Makefile.build:266: fs/exfat/misc.o] Error 1
+> 
+> The problem is that the definition of UNIX_SECS_2108  is wrapped:
+> 
+> +#if BITS_PER_LONG == 64
+> +#define UNIX_SECS_2108    4354819200L
+> +#endif
+> 
+> but the usage isn't.
+My mistake, Thanks for your check. I already fixed it on my git through
+the Pali's report.
+It will be in v10 patch.
 
-Googling around for it, I find this, for example:
-
-    https://github.com/scylladb/seastar/issues/309
-
-and yes, I think that's technically a user space bug, but it's very
-much an example of this: they expect to get errors through read() or
-write() calls, and get confused when poll() does not say that the fd
-is readable or writable.
-
-I don't know how common this is, but it didn't take a _lot_ of
-googling for me to find that one..
-
-           Linus
