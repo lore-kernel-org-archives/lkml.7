@@ -2,133 +2,94 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CA0C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8213C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED2242072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:03:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="tavN+wgv"
+	by mail.kernel.org (Postfix) with ESMTP id A5D6B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578600496;
+	bh=Y+JhywZJPjeZXecNv6LWKNVULGN0f/sEbleKkUvLb1w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KGaNf59SQUfT1EgMBWlL/CybmU2LZQLGjVOCFJSym7yWnNBiPKHE3l7t/Q9CWKa/5
+	 acyPT9BYeWu/4Nu0ofVPwzwGZqWkZpevoWGgmYHtQaY57W5L+etQwyDmCKlXTGkCu3
+	 kMfBbxKmcbS9yu2NkO+apkFiyaMEu1fO4mY6+UYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgAIUDN (ORCPT
+        id S1728689AbgAIUIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 15:03:13 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44079 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgAIUDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 15:03:12 -0500
-Received: by mail-oi1-f195.google.com with SMTP id d62so6974900oia.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 12:03:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aEPP3QvZTscWYv3Miihx0fBYyJilXweNv6Guj9B9KD8=;
-        b=tavN+wgvdGNcOGcjKHqkAn5BjiXAReV94+OSH9Ri1PEiPT4LHVwg6b1hXbJyjtNOio
-         yt+3CISS4TMH86U9kKgU8YPArehaT0FusWvpSVefSqnA63GewXNc+iMnr6ZN89GHlxNa
-         I9xtBLZtZiieLaHNV/YWCS5IF2kdx6cBLmi6/YRneC/5UTcL8YKTe0qVGWfehSZnrWv9
-         YsnAn85tdplqslZaJiAyOUvkKc3WlQ6ZG+UvCzJ00JIQxKAKUKINJoyIUTQOONSw3QOj
-         1W72+PiwSitSGIes31XNdQt0P0T6DKzDvCP6YPxL/5GB664MG6OsTA5BfZF4LBGWHzr7
-         Jvig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aEPP3QvZTscWYv3Miihx0fBYyJilXweNv6Guj9B9KD8=;
-        b=hG2Py1k8v1gJPwyGkOlH0BOqNAou3gUZfkBLRkYr/FZEuMMoMISoTHuadigOd3+Jkk
-         TxPyjRMXvOkteIWKsqYj0bcUe81MjKswJeDOYmWYsUmav7+o3Q9TDn3b7kzk5FTiFqjH
-         XhcugbZXp967uoYaOM3zIyxi3y/37aYnuExtDdJJv1UHVWxfVXGLAMpnRjveaWmWA8T/
-         ZPQXuklsNIzi9MoZX0cX/+Njqr7NuuI6TqoDgLeAfoCtVSUkDaktm22pg+G+GwwPv4XV
-         dZqUG19+cq4q8i7iBjZ6nRaycZzoMOIS+9Us9VBQeRSPrQDdax85Ip6BRen6XnYND1oc
-         FziA==
-X-Gm-Message-State: APjAAAVOWrWHsYVkEuWvsyYsxc87RXl7NcRky3s+nkLErws1f5ifRpXX
-        ff99P7As6YmS058EM15AlphpvzYnAMNihU/uGBX1ag==
-X-Google-Smtp-Source: APXvYqy8zIIpMCxwYPaK1lH7NGY047llhJ6X2TGv4+wlxidYTW8JIfkG1ylN1wkgzWx+t/HR+ipJvvJ3iI320Zd/2yQ=
-X-Received: by 2002:a05:6808:a83:: with SMTP id q3mr4809955oij.0.1578600191907;
- Thu, 09 Jan 2020 12:03:11 -0800 (PST)
-MIME-Version: 1.0
-References: <CAPcyv4jGEAbYSJef2zLzgg6Arozsuz7eN_vZL1iTcd1XQuNT4Q@mail.gmail.com>
- <20191216181014.GA30106@redhat.com> <20200107125159.GA15745@infradead.org>
- <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
- <20200107170731.GA472641@magnolia> <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
- <20200107180101.GC15920@redhat.com> <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
- <20200107183307.GD15920@redhat.com> <CAPcyv4ggoS4dWjq-1KbcuaDtroHKEi5Vu19ggJ-qgycs6w1eCA@mail.gmail.com>
- <20200109112447.GG27035@quack2.suse.cz>
-In-Reply-To: <20200109112447.GG27035@quack2.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 9 Jan 2020 12:03:01 -0800
-Message-ID: <CAPcyv4j5Mra8qeLO3=+BYZMeXNAxFXv7Ex7tL9gra1TbhOgiqg@mail.gmail.com>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-To:     Jan Kara <jack@suse.cz>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 Jan 2020 15:08:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbgAIUIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 15:08:15 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C122D20656;
+        Thu,  9 Jan 2020 20:08:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578600495;
+        bh=Y+JhywZJPjeZXecNv6LWKNVULGN0f/sEbleKkUvLb1w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cX6JSyGZn0mXYch169n+4g4cnjO5APGEojHZeXATEDi8m+2K2wPQ6TsVDznT+i/w2
+         WNmqM9CoCGO+8Tfw97F4DO5aJ+ZhJLnP1fP9z77sn4aN1oAOsAEpH0eA8IYXoYXwZk
+         +JC2G8GFHid0QVrvaVe/ZhP5cNI7WYbo9vPOmIjA=
+Date:   Thu, 9 Jan 2020 12:08:14 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 2/2] lib/test_bitmap: Fix address space when test
+ user buffer
+Message-Id: <20200109120814.27198f300bbe209cdc411fc6@linux-foundation.org>
+In-Reply-To: <20200109103601.45929-2-andriy.shevchenko@linux.intel.com>
+References: <20200109103601.45929-1-andriy.shevchenko@linux.intel.com>
+        <20200109103601.45929-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 3:27 AM Jan Kara <jack@suse.cz> wrote:
->
-> On Tue 07-01-20 10:49:55, Dan Williams wrote:
-> > On Tue, Jan 7, 2020 at 10:33 AM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > W.r.t partitioning, bdev_dax_pgoff() seems to be the pain point where
-> > > dax code refers back to block device to figure out partition offset in
-> > > dax device. If we create a dax object corresponding to "struct block_device"
-> > > and store sector offset in that, then we could pass that object to dax
-> > > code and not worry about referring back to bdev. I have written some
-> > > proof of concept code and called that object "dax_handle". I can post
-> > > that code if there is interest.
-> >
-> > I don't think it's worth it in the end especially considering
-> > filesystems are looking to operate on /dev/dax devices directly and
-> > remove block entanglements entirely.
-> >
-> > > IMHO, it feels useful to be able to partition and use a dax capable
-> > > block device in same way as non-dax block device. It will be really
-> > > odd to think that if filesystem is on /dev/pmem0p1, then dax can't
-> > > be enabled but if filesystem is on /dev/mapper/pmem0p1, then dax
-> > > will work.
-> >
-> > That can already happen today. If you do not properly align the
-> > partition then dax operations will be disabled. This proposal just
-> > extends that existing failure domain to make all partitions fail to
-> > support dax.
->
-> Well, I have some sympathy with the sysadmin that has /dev/pmem0 device,
-> decides to create partitions on it for whatever (possibly misguided)
-> reason and then ponders why the hell DAX is not working? And PAGE_SIZE
-> partition alignment is so obvious and widespread that I don't count it as a
-> realistic error case sysadmins would be pondering about currently.
->
-> So I'd find two options reasonably consistent:
-> 1) Keep status quo where partitions are created and support DAX.
-> 2) Stop partition creation altogether, if anyones wants to split pmem
-> device further, he can use dm-linear for that (i.e., kpartx).
->
-> But I'm not sure if the ship hasn't already sailed for option 2) to be
-> feasible without angry users and Linus reverting the change.
+On Thu,  9 Jan 2020 12:36:01 +0200 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-Christoph? I feel myself leaning more and more to the "keep pmem
-partitions" camp.
+> Force address space to avoid the following warning:
+> 
+> lib/test_bitmap.c:461:53: warning: incorrect type in argument 1 (different address spaces)
+> lib/test_bitmap.c:461:53:    expected char const [noderef] <asn:1> *ubuf
+> lib/test_bitmap.c:461:53:    got char const *in
 
-I don't see "drop partition support" effort ending well given the long
-standing "ext4 fails to mount when dax is not available" precedent.
+We did this in
 
-I think the next least bad option is to have a dax_get_by_host()
-variant that passes an offset and length pair rather than requiring a
-later bdev_dax_pgoff() to recall the offset. This also prevents
-needing to add another dax-device object representation.
+commit 17b6753ff08bc47f50da09f5185849172c598315
+Author:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+AuthorDate: Wed Dec 4 16:53:06 2019 -0800
+Commit:     Linus Torvalds <torvalds@linux-foundation.org>
+CommitDate: Wed Dec 4 19:44:14 2019 -0800
+
+    lib/test_bitmap: force argument of bitmap_parselist_user() to proper address space
+
+> --- a/lib/test_bitmap.c
+> +++ b/lib/test_bitmap.c
+> @@ -458,7 +458,8 @@ static void __init __test_bitmap_parse(int is_user)
+>  
+>  			set_fs(KERNEL_DS);
+>  			time = ktime_get();
+> -			err = bitmap_parse_user(test.in, len, bmap, test.nbits);
+> +			err = bitmap_parse_user((__force const char __user *)test.in, len,
+> +						bmap, test.nbits);
+>  			time = ktime_get() - time;
+>  			set_fs(orig_fs);
+>  		} else {
+
+Except your tree has `test' where mainline has `ptest'.  I'm not sure
+what has happened here?
+
