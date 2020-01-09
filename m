@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC36C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E3BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AD32072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC21C20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:57:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZNcg2RhU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eu8wbKMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbgAIO5j (ORCPT
+        id S1727560AbgAIO5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:57:39 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51168 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730326AbgAIO5i (ORCPT
+        Thu, 9 Jan 2020 09:57:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43184 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728737AbgAIO5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:57:38 -0500
+        Thu, 9 Jan 2020 09:57:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578581857;
+        s=mimecast20190719; t=1578581860;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gDGiLHLaS/+Io2Phnnfgd/F37FeteIfvFFEQMfXM9RA=;
-        b=ZNcg2RhUM+bkWQhtWq71Vb+UtJYXGnHaRvCUQpWOXKZjCRbtXIGjUpDgp5JcF7iO+a/yEC
-        A0kC3dp2o+kCM3Qw1aFuKuTrWqcFRHnBbaBXVxKl4ZlVKjfOiEzL5hqSvm3IK522QOLT4Q
-        g+MWpFpKFwBttkMt5hFwLBZ7nYMcjbo=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-4eRYJZdnO5Gx667P3eHuaQ-1; Thu, 09 Jan 2020 09:57:36 -0500
-X-MC-Unique: 4eRYJZdnO5Gx667P3eHuaQ-1
-Received: by mail-qt1-f197.google.com with SMTP id l5so4360295qte.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:35 -0800 (PST)
+        bh=UEeMY0L9h1cGjmSmJRSArJW3guXbSNp3v29BbhovZjg=;
+        b=Eu8wbKMzvp6p2BuPxNtnWI8QpSYlLuM5zBH1ErhZju51aqRtOj8NWLoczScZeLvSNuLx4s
+        pL/HES5j9emHteSTIZ8KCVIm5B3zN02eDovnTlJiswSaw+hFmSevRnBsOUkrI5R+NqbFRL
+        pOxSG/BU+teF1cQej8tComDMTJMkHbg=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-1JOHk5uJMq2dGQulJ485mA-1; Thu, 09 Jan 2020 09:57:39 -0500
+X-MC-Unique: 1JOHk5uJMq2dGQulJ485mA-1
+Received: by mail-qk1-f199.google.com with SMTP id a73so4321234qkg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:57:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gDGiLHLaS/+Io2Phnnfgd/F37FeteIfvFFEQMfXM9RA=;
-        b=Pgc2aTJbfxy+DCV+W43oDUrRBrtRoCtqxiLQt+rZZ2LW9Ecb//OvlfLFzyIHosrbhu
-         mgSLuwsujukTnRiO7MVTBhIrab7jxBH5TRkw0827R53+flJ+76O0C3a2M55KRIpj45HH
-         +ukPjU5+n8q63MfANAwyfbUJ3Zpj9/16OYKPpqojCXYeThu4FXHZ4xdFucdLCaxPZhc2
-         7GhiyzEvaW0+6jvr5JsgIhWbiny0HKSLd4JkuBfm3mx5dFxXy4Sllppr2cuy/vG93Gfb
-         P07VVc/JQrpfo/8QjWFU1Ygpv+pbwIvUjYCeGDI8V6un7paufsoaWQb0J/AhWUEnMzZn
-         3FVA==
-X-Gm-Message-State: APjAAAVaghKcdQpjlGjN/ITtawu40PNGyHgnShx0NWW5EZwGMj7r5bgG
-        QIzZ7uwHg3XcScgQKFlwNhtgTxC1w4IdyDFCe+eE37Fcz2pP5Xow4G0hFS6eoETcUW0kM2Gazdl
-        MPN+4/mM5m9xz/uYGhprbpaXv
-X-Received: by 2002:a05:620a:102e:: with SMTP id a14mr9510825qkk.159.1578581855560;
-        Thu, 09 Jan 2020 06:57:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw9fW22cpWNa0ej5q9Tvxem01vg3v97AmZT7K2M9MRr1qsTUoG9MFfgUMx1bfEecySbeqsNlQ==
-X-Received: by 2002:a05:620a:102e:: with SMTP id a14mr9510799qkk.159.1578581855290;
-        Thu, 09 Jan 2020 06:57:35 -0800 (PST)
+        bh=UEeMY0L9h1cGjmSmJRSArJW3guXbSNp3v29BbhovZjg=;
+        b=CFyBr9Kd3rVLQCSbx7RBrGmarwYqrU5TSOOhjipmpJAXWrAXI7wGpYcva8eDUEyd5H
+         TYcE62yig5aXfFfImdwLZ2n/DkhfBE/ZsepzZBgeh5TkIJinfS5gFnekrFfp1l9Nr5e/
+         JTapVv2mplKi6T3FvFHQa5LAe4Qs5X+6rEb6c4+oNg9nEJU/NkVriG4EBt+f9WDAC1OF
+         HjB9Nt9X4pI/xrn5DqFQ0/KizLWAg59MZtd+lg6T77nN7/bBLqUuv6od6GiTkqQZKbz+
+         WfQGt4CTcCo/bpzhmctxGp3wRx7/fQ/w29/vRexdURS27hA879U+DxvrBWX6JffElu7y
+         1IMw==
+X-Gm-Message-State: APjAAAWyAvufAXKTtuX31VedILaB2xWsMc00iIOvI9gaDMZ435TlTjmA
+        PC/67AiZnUM08PQG7vVd6ZIm2mMlkiqkH0b6UTiB1xzK3il8KXCbkROP+hfbuWwEH+DjKfl820q
+        llOWEaS10QprJ4J+FD+/YLfsf
+X-Received: by 2002:a37:9ed1:: with SMTP id h200mr10197426qke.390.1578581858650;
+        Thu, 09 Jan 2020 06:57:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxyTk3NXqX9G3kGKxoo4ojyuQTBdPfBxO21UKAMm33TtYTFwDUkwRRvpBGjneEqklTgj8BP9w==
+X-Received: by 2002:a37:9ed1:: with SMTP id h200mr10197404qke.390.1578581858408;
+        Thu, 09 Jan 2020 06:57:38 -0800 (PST)
 Received: from xz-x1.yyz.redhat.com ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.32
+        by smtp.gmail.com with ESMTPSA id q2sm3124179qkm.5.2020.01.09.06.57.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 06:57:33 -0800 (PST)
+        Thu, 09 Jan 2020 06:57:36 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Christophe de Dinechin <dinechin@redhat.com>,
@@ -74,9 +74,9 @@ Cc:     Christophe de Dinechin <dinechin@redhat.com>,
         Kevin Kevin <kevin.tian@intel.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>, peterx@redhat.com,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v3 01/21] vfio: introduce vfio_iova_rw to read/write a range of IOVAs
-Date:   Thu,  9 Jan 2020 09:57:09 -0500
-Message-Id: <20200109145729.32898-2-peterx@redhat.com>
+Subject: [PATCH v3 02/21] drm/i915/gvt: subsitute kvm_read/write_guest with vfio_iova_rw
+Date:   Thu,  9 Jan 2020 09:57:10 -0500
+Message-Id: <20200109145729.32898-3-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200109145729.32898-1-peterx@redhat.com>
 References: <20200109145729.32898-1-peterx@redhat.com>
@@ -89,207 +89,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yan Zhao <yan.y.zhao@intel.com>
 
-vfio_iova_rw will read/write a range of userspace memory (starting form
-device iova to iova + len -1) into a kenrel buffer without pinning the
-userspace memory.
+As a device model, it is better to read/write guest memory using vfio
+interface, so that vfio is able to maintain dirty info of device IOVAs.
 
-TODO: vfio needs to mark the iova dirty if vfio_iova_rw(write) is
-called.
+Compared to CPU side interfaces kvm_read/write_guest(), vfio_iova_rw()
+has ~600 cycles more overhead on average.
+-------------------------------------
+|    interface     | avg cpu cycles |
+|-----------------------------------|
+| kvm_write_guest  |     1546       |
+| ----------------------------------|
+| kvm_read_guest   |     686        |
+|-----------------------------------|
+| vfio_iova_rw(w)  |     2233       |
+|-----------------------------------|
+| vfio_iova_rw(r)  |     1262       |
+-------------------------------------
+
+Comparison of benchmarks scores are as blow:
+---------------------------------------------------------
+|  avg score  | kvm_read/write_guest   | vfio_iova_rw   |
+---------------------------------------------------------
+|   Glmark2   |         1132           |      1138.2    |
+---------------------------------------------------------
+|  Lightsmark |        61.558          |      61.538    |
+|--------------------------------------------------------
+|  OpenArena  |        142.77          |      136.6     |
+---------------------------------------------------------
+|   Heaven    |         698            |      686.8     |
+--------------------------------------------------------
+No obvious performance downgrade found.
 
 Cc: Kevin Tian <kevin.tian@intel.com>
 Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+[peterx: pass in "write" to vfio_iova_rw(), suggested by Paolo]
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- drivers/vfio/vfio.c             | 45 ++++++++++++++++++
- drivers/vfio/vfio_iommu_type1.c | 81 +++++++++++++++++++++++++++++++++
- include/linux/vfio.h            |  5 ++
- 3 files changed, 131 insertions(+)
+ drivers/gpu/drm/i915/gvt/kvmgt.c | 25 ++++++-------------------
+ 1 file changed, 6 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index c8482624ca34..36e91e647ed5 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -1961,6 +1961,51 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
+diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+index 3259a1fa69e1..5fb82f285b98 100644
+--- a/drivers/gpu/drm/i915/gvt/kvmgt.c
++++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+@@ -1968,31 +1968,18 @@ static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
+ 			void *buf, unsigned long len, bool write)
+ {
+ 	struct kvmgt_guest_info *info;
+-	struct kvm *kvm;
+-	int idx, ret;
+-	bool kthread = current->mm == NULL;
++	int ret;
++	struct intel_vgpu *vgpu;
++	struct device *dev;
+ 
+ 	if (!handle_valid(handle))
+ 		return -ESRCH;
+ 
+ 	info = (struct kvmgt_guest_info *)handle;
+-	kvm = info->kvm;
+-
+-	if (kthread) {
+-		if (!mmget_not_zero(kvm->mm))
+-			return -EFAULT;
+-		use_mm(kvm->mm);
+-	}
+-
+-	idx = srcu_read_lock(&kvm->srcu);
+-	ret = write ? kvm_write_guest(kvm, gpa, buf, len) :
+-		      kvm_read_guest(kvm, gpa, buf, len);
+-	srcu_read_unlock(&kvm->srcu, idx);
++	vgpu = info->vgpu;
++	dev = mdev_dev(vgpu->vdev.mdev);
+ 
+-	if (kthread) {
+-		unuse_mm(kvm->mm);
+-		mmput(kvm->mm);
+-	}
++	ret = vfio_iova_rw(dev, gpa, buf, len, write);
+ 
+ 	return ret;
  }
- EXPORT_SYMBOL(vfio_unpin_pages);
- 
-+/*
-+ * Read/Write a range of userspace IOVAs for a device into/from a kernel
-+ * buffer without pinning the userspace memory
-+ * @dev [in]  : device
-+ * @iova [in] : base IOVA of a userspace buffer
-+ * @data [in] : pointer to kernel buffer
-+ * @len [in]  : kernel buffer length
-+ * @write     : indicate read or write
-+ * Return error on failure or 0 on success.
-+ */
-+int vfio_iova_rw(struct device *dev, unsigned long iova, void *data,
-+		   unsigned long len, bool write)
-+{
-+	struct vfio_container *container;
-+	struct vfio_group *group;
-+	struct vfio_iommu_driver *driver;
-+	int ret = 0;
-+
-+	if (!dev || !data || len <= 0)
-+		return -EINVAL;
-+
-+	group = vfio_group_get_from_dev(dev);
-+	if (!group)
-+		return -ENODEV;
-+
-+	ret = vfio_group_add_container_user(group);
-+	if (ret)
-+		goto out;
-+
-+	container = group->container;
-+	driver = container->iommu_driver;
-+
-+	if (likely(driver && driver->ops->iova_rw))
-+		ret = driver->ops->iova_rw(container->iommu_data,
-+					   iova, data, len, write);
-+	else
-+		ret = -ENOTTY;
-+
-+	vfio_group_try_dissolve_container(group);
-+out:
-+	vfio_group_put(group);
-+	return ret;
-+}
-+EXPORT_SYMBOL(vfio_iova_rw);
-+
- static int vfio_register_iommu_notifier(struct vfio_group *group,
- 					unsigned long *events,
- 					struct notifier_block *nb)
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 2ada8e6cdb88..aee191077235 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -27,6 +27,7 @@
- #include <linux/iommu.h>
- #include <linux/module.h>
- #include <linux/mm.h>
-+#include <linux/mmu_context.h>
- #include <linux/rbtree.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/mm.h>
-@@ -2326,6 +2327,85 @@ static int vfio_iommu_type1_unregister_notifier(void *iommu_data,
- 	return blocking_notifier_chain_unregister(&iommu->notifier, nb);
- }
- 
-+static int next_segment(unsigned long len, int offset)
-+{
-+	if (len > PAGE_SIZE - offset)
-+		return PAGE_SIZE - offset;
-+	else
-+		return len;
-+}
-+
-+static int vfio_iommu_type1_rw_iova_seg(struct vfio_iommu *iommu,
-+					  unsigned long iova, void *data,
-+					  unsigned long seg_len,
-+					  unsigned long offset,
-+					  bool write)
-+{
-+	struct mm_struct *mm;
-+	unsigned long vaddr;
-+	struct vfio_dma *dma;
-+	bool kthread = current->mm == NULL;
-+	int ret = 0;
-+
-+	dma = vfio_find_dma(iommu, iova, PAGE_SIZE);
-+	if (!dma)
-+		return -EINVAL;
-+
-+	mm = get_task_mm(dma->task);
-+
-+	if (!mm)
-+		return -ENODEV;
-+
-+	if (kthread)
-+		use_mm(mm);
-+	else if (current->mm != mm) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	vaddr = dma->vaddr + iova - dma->iova + offset;
-+
-+	ret = write ? __copy_to_user((void __user *)vaddr,
-+			data, seg_len) :
-+		__copy_from_user(data, (void __user *)vaddr,
-+				seg_len);
-+	if (ret)
-+		ret = -EFAULT;
-+
-+	if (kthread)
-+		unuse_mm(mm);
-+out:
-+	mmput(mm);
-+	return ret;
-+}
-+
-+static int vfio_iommu_type1_iova_rw(void *iommu_data, unsigned long iova,
-+				    void *data, unsigned long len, bool write)
-+{
-+	struct vfio_iommu *iommu = iommu_data;
-+	int offset = iova & ~PAGE_MASK;
-+	int seg_len;
-+	int ret = 0;
-+
-+	iova = iova & PAGE_MASK;
-+
-+	mutex_lock(&iommu->lock);
-+	while ((seg_len = next_segment(len, offset)) > 0) {
-+		ret = vfio_iommu_type1_rw_iova_seg(iommu, iova, data,
-+						   seg_len, offset, write);
-+		if (ret)
-+			break;
-+
-+		offset = 0;
-+		len -= seg_len;
-+		data += seg_len;
-+		iova += PAGE_SIZE;
-+	}
-+
-+	mutex_unlock(&iommu->lock);
-+	return ret;
-+}
-+
- static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
- 	.name			= "vfio-iommu-type1",
- 	.owner			= THIS_MODULE,
-@@ -2338,6 +2418,7 @@ static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
- 	.unpin_pages		= vfio_iommu_type1_unpin_pages,
- 	.register_notifier	= vfio_iommu_type1_register_notifier,
- 	.unregister_notifier	= vfio_iommu_type1_unregister_notifier,
-+	.iova_rw		= vfio_iommu_type1_iova_rw,
- };
- 
- static int __init vfio_iommu_type1_init(void)
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index e42a711a2800..7bf18a31bbcf 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -82,6 +82,8 @@ struct vfio_iommu_driver_ops {
- 					     struct notifier_block *nb);
- 	int		(*unregister_notifier)(void *iommu_data,
- 					       struct notifier_block *nb);
-+	int		(*iova_rw)(void *iommu_data, unsigned long iova,
-+				   void *data, unsigned long len, bool write);
- };
- 
- extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
-@@ -107,6 +109,9 @@ extern int vfio_pin_pages(struct device *dev, unsigned long *user_pfn,
- extern int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn,
- 			    int npage);
- 
-+extern int vfio_iova_rw(struct device *dev, unsigned long iova, void *data,
-+			unsigned long len, bool write);
-+
- /* each type has independent events */
- enum vfio_notify_type {
- 	VFIO_IOMMU_NOTIFY = 0,
 -- 
 2.24.1
 
