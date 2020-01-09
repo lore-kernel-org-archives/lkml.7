@@ -2,165 +2,412 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62ABC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC0EC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6082073A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA262072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fla/iTcE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="liRSIkRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgAIXgr (ORCPT
+        id S1729503AbgAIXhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:36:47 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:27496 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgAIXgr (ORCPT
+        Thu, 9 Jan 2020 18:37:41 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44334 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727876AbgAIXhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:36:47 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200109233644epoutp01f47b48a33fa4fe8d43efcb934ac22ae6~oXCnejIrV1215112151epoutp01a
-        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 23:36:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200109233644epoutp01f47b48a33fa4fe8d43efcb934ac22ae6~oXCnejIrV1215112151epoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578613004;
-        bh=WiKz/Fx6wAw2jEhCCjWyRhWqfPx9MgmbZWS9fsOk5dc=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Fla/iTcEEQvnl4PzH055NEk8F5qacNDsHOwP2Qj9YFtFz5qxLyWLk9mfK7YS0OUJi
-         evf5HLLOAWMWjZ340+fgo8+74i69QXo16jenpJAd6JCICOf7iw4y/5NybnS3LxeRyY
-         oq+3n7d1NpY7KdpddQXvStc0UJniVIaD5WbFdLJg=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200109233643epcas1p30d2b0803d2d56b112432a4ba9cccb409~oXCm7bWxw0751607516epcas1p3k;
-        Thu,  9 Jan 2020 23:36:43 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47v2ZL4j3XzMqYm0; Thu,  9 Jan
-        2020 23:36:42 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DA.1D.52419.A09B71E5; Fri, 10 Jan 2020 08:36:42 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200109233642epcas1p4561e344300482cc472a3d4d0171b548a~oXCllQuVR2080120801epcas1p4N;
-        Thu,  9 Jan 2020 23:36:42 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200109233642epsmtrp1047e920b3fde36def05112c30169adc7~oXClkeygN2101021010epsmtrp1d;
-        Thu,  9 Jan 2020 23:36:42 +0000 (GMT)
-X-AuditID: b6c32a37-5b7ff7000001ccc3-55-5e17b90adba2
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.D6.10238.A09B71E5; Fri, 10 Jan 2020 08:36:42 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200109233641epsmtip27e654c8c40a9b395ad6cb6e032cdeab7~oXClVahlk1016610166epsmtip2f;
-        Thu,  9 Jan 2020 23:36:41 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Arnd Bergmann'" <arnd@arndb.de>
-Cc:     <linux-kernel@vger.kernel.org>,
-        "'Linux FS-devel Mailing List'" <linux-fsdevel@vger.kernel.org>,
-        "'gregkh'" <gregkh@linuxfoundation.org>,
-        "'Valdis Kletnieks'" <valdis.kletnieks@vt.edu>,
-        "'Christoph Hellwig'" <hch@lst.de>, <sj1557.seo@samsung.com>,
-        <linkinjeon@gmail.com>
-In-Reply-To: <CAK8P3a1wcrKzhhODwoQTu=WHorkd+dQThk+G9w77QSgJ=LnR4A@mail.gmail.com>
-Subject: RE: [PATCH v8 02/13] exfat: add super block operations
-Date:   Fri, 10 Jan 2020 08:36:41 +0900
-Message-ID: <002001d5c745$a57b4dd0$f071e970$@samsung.com>
+        Thu, 9 Jan 2020 18:37:40 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so5372wrm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 15:37:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OkiBfAyiea+S3QYPk/Iz+JDLkJR3ttkyrtVdPCTuhPU=;
+        b=liRSIkRr92KeTEDlG3OAm2rxJYDe8R3yhU4n/ZHZ/Xu+iUF1C108LnzEMAbElWR9qY
+         2+sO7+5psgBa5wVqZ6oFv46a1HPldDhgcy/nbRF+Uc1TchWpufTVJRpTbeepL8MiswEj
+         O3iR99E1MiV7eaN9CTTbG2pmTDvMLmbCbwqUmqbg2rZK4zg3A+aCxI/fqYJ6hUAiXpzK
+         +IeTJSXR4zChB0mdyFO14eqpYZ8b394x04dmFsGasRMusgzyay6dOsKvdbvK+4xxUIcb
+         E3HZtcHrD2gZyhxa0qMmj+LhvjzQ98IzV4K2zXz2W0F5zHXzJkaETm1Z6P2vfdDcuGLq
+         itAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=OkiBfAyiea+S3QYPk/Iz+JDLkJR3ttkyrtVdPCTuhPU=;
+        b=MFGxIJ6R85aMjMgh6XQdeZu3zeL0JmgmjZ0/BNnteuH+lxVbg3QXG15b8mpXsfxlJi
+         xcenHNkqn2fVLFoktaIe1kfqkP9DhD9XefkCR6zDhr2jSlvmD3fY2Sh+xPH58iGZYbh/
+         E2wcYUaAlOfD4I5CgGq6LGXlmKJWSs4IwHzsYV6wo7rsm4BrrxxJIuGEtV68cpxEfYIp
+         PZ7NeysjtXyNva9UelHqE92CSd9sB3en1uWqE0v147/E2k1fkopC+HqVdEksUT3tfa7s
+         6iYURpGwL6rqukxed7R+ThSOGW2Ak3Z45g32nwdYsJJzjHfw8+5zZdY/nFbsfCkk26/w
+         raZA==
+X-Gm-Message-State: APjAAAV/b5gI7o9YHeeUfPL32D1doYkUhj27HBHUMc8Yd8j486YOOw0o
+        BiCjtXaq3xQpsEfbMwLmbwrQNQ==
+X-Google-Smtp-Source: APXvYqxYFvaY2WIoXqwERtNEGQgr9xw+D8IkqdN3f8YSzogYduorqlUgKM/WxxqJ1p8IglsT7NaFVw==
+X-Received: by 2002:adf:f5cf:: with SMTP id k15mr269443wrp.182.1578613057624;
+        Thu, 09 Jan 2020 15:37:37 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
+        by smtp.googlemail.com with ESMTPSA id t5sm124922wrr.35.2020.01.09.15.37.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 15:37:37 -0800 (PST)
+Subject: Re: [RESEND][PATCH] thermal: mediatek: add suspend/resume callback
+To:     Michael Kao <michael.kao@mediatek.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
+        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Louis Yu <louis.yu@mediatek.com>
+References: <20191219092431.8935-1-michael.kao@mediatek.com>
+ <20191219092431.8935-2-michael.kao@mediatek.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7e3506e3-a99e-eb01-ee42-5876b542fe38@linaro.org>
+Date:   Fri, 10 Jan 2020 00:37:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQEpoQLVeCzgpkP5O8EfgqcyF1wLQwHsN8nXAH0AW2oCoNSnnqkS+JFw
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TWUwTYRDO393uLkjJUhAmKFpX0aBWW2phMdaLaqrwgNEnE8ENbCixl92W
-        iLwQTCrihb5QqxCkRgVMiooIHkFaj5goCjwoJBov4gFq8bYoWroYeftm5vvmm/kPCpNfIpKp
-        EouDt1s4E0NE4+2BNKUyujMpX+Vrmsf+PnqbZPd4fQTb1HJLwj56Moix167fxdn+KycItm38
-        ppTt+xjEV1OGsdBRZOj0PCENXXXnSMPVgQrCcKitGRk+X5hl8F8eIfLIraYVRp4r4u0K3lJo
-        LSqxFOuYnM0F2QXaDJVaqc5iMxmFhTPzOkafm6dcX2IKT8UoSjmTM5zK4wSBWbpyhd3qdPAK
-        o1Vw6BjeVmSyqVW2JQJnFpyW4iWFVvNytUqVrg0zt5uMtcEqwlYZs+vL+XGyAh2kqlEUBfQy
-        GAndwKpRNCWnOxCcdPdLxeATgobX7RIx+Iagzu0m/knaa/aSYuE6gqrmU0gM3iIYcgXwCRZB
-        K2H8V1dEkUCnwrtXVyMKjHZLoG6kMVKIojfBse4OcgLH06ug9eFFyQTGw4IXTf2RvIzOgh+h
-        50jEcXD32KuIAUYvgtMnhzFxJAX8HDotFc3WQ+8ZLyZyEuD4PldkO6D/EDAUGJSIAj00jjaS
-        Io6Hd3faJnEyvD3sCmMqjMthtGuyfxWCN991ItbAgK9VOkHB6DTwXVkqpudA51gdEm1j4cPX
-        A1KxiwyqXHKRkgqH+gKTA8yA6r1BsgYxnimLeaYs5pmygOe/WQPCm1EibxPMxbygtmmm3vYF
-        FHmyCzM7UGtPrh/RFGJiZMb4pHy5lCsVysx+BBTGJMhuPU7Ml8uKuLLdvN1aYHeaeMGPtOFz
-        P4IlTy+0hj+AxVGg1qZrNBp2WUZmhlbDJMmoH73b5HQx5+B38LyNt//TSaio5AqUcur7/viz
-        H7xpoffndjXqhL4tZfO5dYm9NzMWeFY/SJc/+Joq5LzMhIHD2Sk7E5wBv7He9dFlGH4a2uBu
-        W1Ne02OZ+2mxwzujB/c9q10czKG7p92nK5+RM9/fG+69w/pb9Ce64wZrY7yV23NLg5dnF9YL
-        m16O8rGz8ZKNsWv36xlcMHLqhZhd4P4CSsQUMMgDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsWy7bCSvC7XTvE4g+lH2C3+TjrGbtG8eD2b
-        xcrVR5ksrt+9xWyxZ+9JFovLu+awWWz5d4TV4tL7DywOHB6/f01i9Ng56y67x/65a9g9dt9s
-        YPPo27KK0ePzJjmPQ9vfsAWwR3HZpKTmZJalFunbJXBl3Ho+ibHgPnfFhdvzmBoYn7B3MXJy
-        SAiYSGyb0A5kc3EICexmlNj2Yh0zREJa4tiJM0A2B5AtLHH4cDFEzXNGiSvNL8Bq2AR0Jf79
-        2c8GYosIqEq8erIbbBCzwDwmiakrF7NAdLQwSay4uJoRpIpTIFBi5sEdYKuFBewlNlzYzARi
-        swB1P1p5GSzOK2Ap8ePXQ0YIW1Di5MwnLCA2s4C2xNObT+HsZQtfQ12qIPHz6TJWiCvcJC4u
-        X8wMUSMiMbuzjXkCo/AsJKNmIRk1C8moWUhaFjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L
-        10vOz93ECI43Lc0djJeXxB9iFOBgVOLhzRAWjxNiTSwrrsw9xCjBwawkwnv0hlicEG9KYmVV
-        alF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NTC1KLYLJMHJxSDYyJVz4WTE/P+21UMumS
-        Yh4L+9kLHCvvL+udf6tIyib6x+LisMy3DPen68dyr1HZICJVZl/8or5znvMdRQn+g67/9xhy
-        /d71x/OTAMeTrfOvibYXuVW8MlKf2Pg84rWr0qm+mdYmix6JqdSs/16Xdfv+m7Mm+t3rXmtd
-        uPMkIKMuJFGzNNV7v6QSS3FGoqEWc1FxIgA0uLVmswIAAA==
-X-CMS-MailID: 20200109233642epcas1p4561e344300482cc472a3d4d0171b548a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73
-References: <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
-        <20191220062419.23516-1-namjae.jeon@samsung.com>
-        <20191220062419.23516-3-namjae.jeon@samsung.com>
-        <CAK8P3a1wcrKzhhODwoQTu=WHorkd+dQThk+G9w77QSgJ=LnR4A@mail.gmail.com>
+In-Reply-To: <20191219092431.8935-2-michael.kao@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +static int exfat_fill_super(struct super_block *sb, struct fs_context
-> > +*fc) =7B
-> > +       struct exfat_sb_info *sbi =3D sb->s_fs_info;
-> > +       struct exfat_mount_options *opts =3D &sbi->options;
-> > +       struct inode *root_inode;
-> > +       int err;
-> > +
-> > +       if (opts->allow_utime =3D=3D (unsigned short)-1)
-> > +               opts->allow_utime =3D =7Eopts->fs_dmask & 0022;
-> > +
-> > +       if (opts->utf8 && strcmp(opts->iocharset,
-> exfat_iocharset_with_utf8)) =7B
-> > +               exfat_msg(sb, KERN_WARNING,
-> > +                       =22utf8 enabled, =5C=22iocharset=3D%s=5C=22 is =
-recommended=22,
-> > +                       exfat_iocharset_with_utf8);
-> > +       =7D
-> > +
-> > +       if (opts->discard) =7B
-> > +               struct request_queue *q =3D bdev_get_queue(sb->s_bdev);
-> > +
-> > +               if (=21blk_queue_discard(q))
-> > +                       exfat_msg(sb, KERN_WARNING,
-> > +                               =22mounting with =5C=22discard=5C=22 op=
-tion, but the
-> device does not support discard=22);
-> > +               opts->discard =3D 0;
-> > +       =7D
-> > +
-> > +       sb->s_flags =7C=3D SB_NODIRATIME;
-> > +       sb->s_magic =3D EXFAT_SUPER_MAGIC;
-> > +       sb->s_op =3D &exfat_sops;
->=20
-> I don't see you set up s_time_gran, s_time_min and s_time_max anywhere.
-> Please fill those to get the correct behavior. That also lets you drop th=
-e
-> manual truncation of the values.
-Okay=21
+On 19/12/2019 10:24, Michael Kao wrote:
+> From: Louis Yu <louis.yu@mediatek.com>
+> 
+> Add suspend/resume callback to disable/enable Mediatek thermal sensor
+> respectively. Since thermal power domain is off in suspend, thermal driver
+> needs re-initialization during resume.
+> 
+> Signed-off-by: Louis Yu <louis.yu@mediatek.com>
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> ---
+>  drivers/thermal/mtk_thermal.c | 134 +++++++++++++++++++++++++++++++---
+>  1 file changed, 125 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+> index acf4854cbb8b..2bb8b13591aa 100644
+> --- a/drivers/thermal/mtk_thermal.c
+> +++ b/drivers/thermal/mtk_thermal.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/thermal.h>
+>  #include <linux/reset.h>
+>  #include <linux/types.h>
+> +#include <linux/iopoll.h>
+>  
+>  /* AUXADC Registers */
+>  #define AUXADC_CON1_SET_V	0x008
+> @@ -31,6 +32,8 @@
+>  
+>  #define APMIXED_SYS_TS_CON1	0x604
+>  
+> +#define APMIXED_SYS_TS_CON1_BUFFER_OFF	0x30
+> +
+>  /* Thermal Controller Registers */
+>  #define TEMP_MONCTL0		0x000
+>  #define TEMP_MONCTL1		0x004
+> @@ -38,6 +41,7 @@
+>  #define TEMP_MONIDET0		0x014
+>  #define TEMP_MONIDET1		0x018
+>  #define TEMP_MSRCTL0		0x038
+> +#define TEMP_MSRCTL1		0x03c
+>  #define TEMP_AHBPOLL		0x040
+>  #define TEMP_AHBTO		0x044
+>  #define TEMP_ADCPNP0		0x048
+> @@ -87,6 +91,9 @@
+>  #define TEMP_ADCVALIDMASK_VALID_HIGH		BIT(5)
+>  #define TEMP_ADCVALIDMASK_VALID_POS(bit)	(bit)
+>  
+> +#define TEMP_MSRCTL1_BUS_STA	(BIT(0) | BIT(7))
+> +#define TEMP_MSRCTL1_SENSING_POINTS_PAUSE	0x10E
+> +
+>  /* MT8173 thermal sensors */
+>  #define MT8173_TS1	0
+>  #define MT8173_TS2	1
+> @@ -250,6 +257,10 @@ struct mtk_thermal_data {
+>  struct mtk_thermal {
+>  	struct device *dev;
+>  	void __iomem *thermal_base;
+> +	void __iomem *apmixed_base;
+> +	void __iomem *auxadc_base;
+> +	u64 apmixed_phys_base;
+> +	u64 auxadc_phys_base;
+>  
+>  	struct clk *clk_peri_therm;
+>  	struct clk *clk_auxadc;
+> @@ -746,6 +757,42 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
+>  	mtk_thermal_put_bank(bank);
+>  }
+>  
+> +static int mtk_thermal_disable_sensing(struct mtk_thermal *mt, int num)
+> +{
+> +	struct mtk_thermal_bank *bank = &mt->banks[num];
+> +	u32 val;
+> +	unsigned long timeout;
+> +	void __iomem *addr;
+> +	int ret = 0;
+> +
+> +	bank->id = num;
+> +	bank->mt = mt;
 
-Thanks=21
->=20
->        Arnd
+Can you explain why this is done?
+
+> +	mtk_thermal_get_bank(bank);
+
+I'm not comfortable with this call. The underlying code is calling
+mutex_lock, I suspect it can potentially deadlock the board.
+
+Why do you need a mutex? Isn't a spin_lock enough?
+
+Please take also the opportunity to rename to lock_bank / unlock_bank.
+get and put are usually for refcounting.
+
+> +	val = readl(mt->thermal_base + TEMP_MSRCTL1);
+> +	/* pause periodic temperature measurement for sensing points */
+> +	writel(val | TEMP_MSRCTL1_SENSING_POINTS_PAUSE,
+> +	       mt->thermal_base + TEMP_MSRCTL1);
+> +
+> +	/* wait until temperature measurement bus idle */
+> +	timeout = jiffies + HZ;
+> +	addr = mt->thermal_base + TEMP_MSRCTL1;
+> +
+> +	ret = readl_poll_timeout(addr, val, (val & TEMP_MSRCTL1_BUS_STA) == 0x0,
+> +				 0, timeout);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	/* disable periodic temperature meausrement on sensing points */
+
+s/meausrement/measurement/
+
+> +	writel(0x0, mt->thermal_base + TEMP_MONCTL0);
+> +
+> +out:
+> +	mtk_thermal_put_bank(bank);
+> +
+> +	return ret;
+> +}
+> +
+>  static u64 of_get_phys_base(struct device_node *np)
+>  {
+>  	u64 size64;
+> @@ -868,7 +915,6 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>  	struct device_node *auxadc, *apmixedsys, *np = pdev->dev.of_node;
+>  	struct mtk_thermal *mt;
+>  	struct resource *res;
+> -	u64 auxadc_phys_base, apmixed_phys_base;
+>  	struct thermal_zone_device *tzdev;
+>  
+>  	mt = devm_kzalloc(&pdev->dev, sizeof(*mt), GFP_KERNEL);
+> @@ -904,11 +950,11 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	auxadc_phys_base = of_get_phys_base(auxadc);
+> +	mt->auxadc_phys_base = of_get_phys_base(auxadc);
+>  
+>  	of_node_put(auxadc);
+>  
+> -	if (auxadc_phys_base == OF_BAD_ADDR) {
+> +	if (mt->auxadc_phys_base == OF_BAD_ADDR) {
+>  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+>  		return -EINVAL;
+>  	}
+> @@ -919,11 +965,12 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	apmixed_phys_base = of_get_phys_base(apmixedsys);
+> +	mt->apmixed_phys_base = of_get_phys_base(apmixedsys);
+> +	mt->apmixed_base = of_iomap(apmixedsys, 0);
+>  
+>  	of_node_put(apmixedsys);
+>  
+> -	if (apmixed_phys_base == OF_BAD_ADDR) {
+> +	if (mt->apmixed_phys_base == OF_BAD_ADDR) {
+>  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+>  		return -EINVAL;
+>  	}
+> @@ -935,19 +982,19 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>  	ret = clk_prepare_enable(mt->clk_auxadc);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
+> -		return ret;
+> +		goto err_disable_clk_auxadc;
+>  	}
+>  
+>  	ret = clk_prepare_enable(mt->clk_peri_therm);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
+> -		goto err_disable_clk_auxadc;
+> +		goto err_disable_clk_peri_therm;
+>  	}
+>  
+>  	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
+>  		for (i = 0; i < mt->conf->num_banks; i++)
+> -			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
+> -					      auxadc_phys_base, ctrl_id);
+> +			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
+> +					      mt->auxadc_phys_base, ctrl_id);
+>  
+>  	platform_set_drvdata(pdev, mt);
+>  
+> @@ -978,11 +1025,80 @@ static int mtk_thermal_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int __maybe_unused mtk_thermal_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
+> +	int i, ret;
+> +
+> +	for (i = 0; i < mt->conf->num_banks; i++) {
+> +		ret = mtk_thermal_disable_sensing(mt, i);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	/* disable buffer */
+> +	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
+> +	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
+> +	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
+> +
+> +	clk_disable_unprepare(mt->clk_peri_therm);
+> +	clk_disable_unprepare(mt->clk_auxadc);
+> +
+> +	return 0;
+> +
+> +out:
+> +	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused mtk_thermal_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
+> +	int i, ret, ctrl_id;
+> +
+> +	ret = device_reset(&pdev->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(mt->clk_auxadc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
+> +		goto err_disable_clk_auxadc;
+> +	}
+> +
+> +	ret = clk_prepare_enable(mt->clk_peri_therm);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
+> +		goto err_disable_clk_peri_therm;
+> +	}
+> +
+> +	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
+> +		for (i = 0; i < mt->conf->num_banks; i++)
+> +			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
+> +					      mt->auxadc_phys_base, ctrl_id);
+> +
+> +	return 0;
+> +
+> +err_disable_clk_peri_therm:
+> +	clk_disable_unprepare(mt->clk_peri_therm);
+> +err_disable_clk_auxadc:
+> +	clk_disable_unprepare(mt->clk_auxadc);
+> +
+> +	return ret;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
+> +			 mtk_thermal_suspend, mtk_thermal_resume);
+> +
+>  static struct platform_driver mtk_thermal_driver = {
+>  	.probe = mtk_thermal_probe,
+>  	.remove = mtk_thermal_remove,
+>  	.driver = {
+>  		.name = "mtk-thermal",
+> +		.pm = &mtk_thermal_pm_ops,
+>  		.of_match_table = mtk_thermal_of_match,
+>  	},
+>  };
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
