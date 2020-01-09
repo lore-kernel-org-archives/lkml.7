@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C51CC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83600C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3033F206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9602073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:08:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="pDcMswX2"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="TBrGHwgd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgAIHI2 (ORCPT
+        id S1728279AbgAIHId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:08:28 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37910 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgAIHI1 (ORCPT
+        Thu, 9 Jan 2020 02:08:33 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35135 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgAIHIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:08:27 -0500
-Received: by mail-pl1-f196.google.com with SMTP id f20so2182606plj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 23:08:26 -0800 (PST)
+        Thu, 9 Jan 2020 02:08:31 -0500
+Received: by mail-pj1-f67.google.com with SMTP id s7so754926pjc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Jan 2020 23:08:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=axtens.net; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2sxbAlXpABK/W64yfjeUTt7MDV8jfwT8E3maFR+CaL8=;
-        b=pDcMswX2WqLuZ2zwtGNOX8ZMSnngOYELKXS2rxZtVn2Hc7xWg66Hj5z15rqh53IES9
-         o+F/RvS9jzIeAGvcVkvywdpJF6qGZZY3AO4H6XlhPLZt4Lb11wRasFUfONJEfbCg/DRL
-         B9pVhEjhJZcdZlwBqFEQch+Xg35ywvGnsJSZk=
+        bh=jwvqhmbLPpvanCf4CYPj6H756JJZayFM0Q320MsSZZo=;
+        b=TBrGHwgdiHUWcFzu5YWy2q+sBvAdh+cIpcnaPnFCmgw5aVB/ZjS6/zor5S/EXHzFEr
+         wDya8GXeYBXfG6P/X2ma89hl/VywtdWGv25aTH8MdRCR5scwi5TKkHCADSFPVP/AHpvc
+         O2u2y7VA5kPvTHcOc9AWdaIXo61AuIafawnq8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2sxbAlXpABK/W64yfjeUTt7MDV8jfwT8E3maFR+CaL8=;
-        b=cjiR9paymBmisodYWgWdGgxoHzHJlfJKwI1c+/4DsQLnUDKTkwdTj3AtX9RAdL1yZi
-         oYpavNgdylwPHeLv2hqrCSPLB5mWW6ybzo++xKs+bOqsviXTeCTVD+uRsIMZP1obR58G
-         DpwCnUH0E/EOPfXGDOoJE1VHxhSKv77m0mELxsYqi64LlDecRF8Ge3CGvU28jnBbb35z
-         aMdSzCqXev+9TAueaP2wbLd9pL/0GzRvyvxkHevhXUXv8GLSn32j8Mgbqu8yWuM2/2Gu
-         yjHtAnGTfSoioxDplmwsOvvrfWUY/3CG2HuDvDq9xOwO+Cs8E5g9LufPVkUOVQ8QXIdF
-         Lxsg==
-X-Gm-Message-State: APjAAAUvq5A7ZdcXmVSRoZeLQlnaOpKiDb4VjQWdbq/aDRjWnM9VaCeO
-        t3q4HBtBEoxcCP+vSW0ZU8JmaaiJ6ys=
-X-Google-Smtp-Source: APXvYqywxIqFoOPGMvB9RVsdlu3xJm9YODiUa7+jEutjKdj6cX8j6hc+1jzmzD4D81WIsNdHfBK2iw==
-X-Received: by 2002:a17:902:788d:: with SMTP id q13mr9716939pll.210.1578553705849;
-        Wed, 08 Jan 2020 23:08:25 -0800 (PST)
+        bh=jwvqhmbLPpvanCf4CYPj6H756JJZayFM0Q320MsSZZo=;
+        b=EgCZ1jDw6fqWoWoM6XBlXOhgtXuuYgnjufHQF6hiKtSs6bWcV7Q3Ni7dQAAvNnoSdU
+         2n+IDgTrVJ+PWTnG34oYNekzDTeor+JKwRGuF2oixUKIJNiQPljpWmedeyMIaMQGm0Z7
+         OjP9lz72iHCkrRjEwu6r86kS/PfV+vL1ieHy9ViB8cX9lTp9phynwHb86WjWx02O9+sZ
+         5cBWA17xaKsdNj7gKmC3WYn1y2Lc6JrVNndbCBz1MHLNazonVr+rLAXcQS1Gtyiu5OoY
+         W4mnB57h579d0nLXmZSBNWctLCOykI9zDAaLJ7vNE7HjBW9UAhEjvFQm7VtAI3cw1qxg
+         gM7w==
+X-Gm-Message-State: APjAAAWn6MHa0MXMyVZ8UB/xx+Xi4mvYErbq30ViAEYRBngcAL2xQQUo
+        WzAic6k6uwwHqka8tAkyV+59OqVISkI=
+X-Google-Smtp-Source: APXvYqwON3PZ7E29ypePrEmq0EIeeuv7pvxpkaaOGrcITDNPQdZ5KASM0AslhPi3zjBdfUq5zbE/Wg==
+X-Received: by 2002:a17:90a:3643:: with SMTP id s61mr3623176pjb.44.1578553709799;
+        Wed, 08 Jan 2020 23:08:29 -0800 (PST)
 Received: from localhost (2001-44b8-1113-6700-5cb3-ebc3-7dc6-a17b.static.ipv6.internode.on.net. [2001:44b8:1113:6700:5cb3:ebc3:7dc6:a17b])
-        by smtp.gmail.com with ESMTPSA id 3sm6228356pfi.13.2020.01.08.23.08.24
+        by smtp.gmail.com with ESMTPSA id e2sm6363942pfh.84.2020.01.08.23.08.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 23:08:25 -0800 (PST)
+        Wed, 08 Jan 2020 23:08:29 -0800 (PST)
 From:   Daniel Axtens <dja@axtens.net>
 To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linuxppc-dev@lists.ozlabs.org, kasan-dev@googlegroups.com,
         christophe.leroy@c-s.fr, aneesh.kumar@linux.ibm.com,
         bsingharora@gmail.com
 Cc:     Daniel Axtens <dja@axtens.net>
-Subject: [PATCH v5 2/4] kasan: Document support on 32-bit powerpc
-Date:   Thu,  9 Jan 2020 18:08:09 +1100
-Message-Id: <20200109070811.31169-3-dja@axtens.net>
+Subject: [PATCH v5 3/4] powerpc/mm/kasan: rename kasan_init_32.c to init_32.c
+Date:   Thu,  9 Jan 2020 18:08:10 +1100
+Message-Id: <20200109070811.31169-4-dja@axtens.net>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200109070811.31169-1-dja@axtens.net>
 References: <20200109070811.31169-1-dja@axtens.net>
@@ -72,49 +72,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN is supported on 32-bit powerpc and the docs should reflect this.
+kasan is already implied by the directory name, we don't need to
+repeat it.
 
 Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Daniel Axtens <dja@axtens.net>
 ---
- Documentation/dev-tools/kasan.rst |  3 ++-
- Documentation/powerpc/kasan.txt   | 12 ++++++++++++
- 2 files changed, 14 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/powerpc/kasan.txt
+ arch/powerpc/mm/kasan/Makefile                       | 2 +-
+ arch/powerpc/mm/kasan/{kasan_init_32.c => init_32.c} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename arch/powerpc/mm/kasan/{kasan_init_32.c => init_32.c} (100%)
 
-diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-index e4d66e7c50de..4af2b5d2c9b4 100644
---- a/Documentation/dev-tools/kasan.rst
-+++ b/Documentation/dev-tools/kasan.rst
-@@ -22,7 +22,8 @@ global variables yet.
- Tag-based KASAN is only supported in Clang and requires version 7.0.0 or later.
+diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
+index 6577897673dd..36a4e1b10b2d 100644
+--- a/arch/powerpc/mm/kasan/Makefile
++++ b/arch/powerpc/mm/kasan/Makefile
+@@ -2,4 +2,4 @@
  
- Currently generic KASAN is supported for the x86_64, arm64, xtensa and s390
--architectures, and tag-based KASAN is supported only for arm64.
-+architectures. It is also supported on 32-bit powerpc kernels. Tag-based KASAN
-+is supported only on arm64.
+ KASAN_SANITIZE := n
  
- Usage
- -----
-diff --git a/Documentation/powerpc/kasan.txt b/Documentation/powerpc/kasan.txt
-new file mode 100644
-index 000000000000..a85ce2ff8244
---- /dev/null
-+++ b/Documentation/powerpc/kasan.txt
-@@ -0,0 +1,12 @@
-+KASAN is supported on powerpc on 32-bit only.
-+
-+32 bit support
-+==============
-+
-+KASAN is supported on both hash and nohash MMUs on 32-bit.
-+
-+The shadow area sits at the top of the kernel virtual memory space above the
-+fixmap area and occupies one eighth of the total kernel virtual memory space.
-+
-+Instrumentation of the vmalloc area is not currently supported, but modules
-+are.
+-obj-$(CONFIG_PPC32)           += kasan_init_32.o
++obj-$(CONFIG_PPC32)           += init_32.o
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/init_32.c
+similarity index 100%
+rename from arch/powerpc/mm/kasan/kasan_init_32.c
+rename to arch/powerpc/mm/kasan/init_32.c
 -- 
 2.20.1
 
