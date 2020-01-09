@@ -2,146 +2,87 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3544C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821E1C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A9D20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F26E20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHKWV1aB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VupQPDUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbgAILyD (ORCPT
+        id S1730122AbgAILz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:54:03 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43456 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728614AbgAILyD (ORCPT
+        Thu, 9 Jan 2020 06:55:26 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38985 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbgAILzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:54:03 -0500
-Received: by mail-ot1-f65.google.com with SMTP id p8so6924932oth.10;
-        Thu, 09 Jan 2020 03:54:03 -0800 (PST)
+        Thu, 9 Jan 2020 06:55:25 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so7091537wrt.6;
+        Thu, 09 Jan 2020 03:55:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YAYlgekTsgeaDBrXoU9WxGkm6w3XRr6iefPrtixbA8A=;
-        b=YHKWV1aBrhNBhz2E/XVEn/wt4cD3aId1ecW4kj5mawS1frC/t8F7HRqmmrWdbNnitF
-         +bmQbKI1t6QOqXCh9jkI6LbitusrKuQQOxrHieNhcNlDu72ZQVX984mNV/fx3OlE+Bm5
-         Y8J2XxP0ywtFzUL5GLnRwCQ/BSZH7K1myVtoSuW8bk51/08B3Y5KPZz/7822pw7fJbxI
-         FhZJO7yeUiclL5RS1Zg6vOVBw/GPmWLE81VMgy2yetf8b09ZSvLXUlhZLZR3nNokpxgm
-         fV/YtF2PixMXYBzBEwUURJ0o96W7E9iMzSrCgoAQaeO2+zeRI5al2DmWtwiZIHkej/ad
-         O7LA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mFkJFYkrFDlWwhK3VKXDGs8jHD7xXTyu7e9TssfROcw=;
+        b=VupQPDUFRW6nGI/fzWa+ImG6XxRsc/hamERXHTC1dosaWxKNgdAbWQDk0HOMqzR66F
+         +2dhGR+dnG6oMn7gR22cxPsacp8CL5RP63fJFGXzFeQ+4apuOHZL+lHxNifRs8OQnJg1
+         E+otA/VR0s0acLtclp9GbEySjXdImnzLwESx+PL/+SoIpENiFYmczifnTPlZgwr9MYDc
+         SZC7aUgd7yxZif/HC4+zpmRUYOQMviQpQdqPK/fgF4hlQ5W7tl7ZCE5iOxkoOyWA01c1
+         s7/jp7cpF86j/jZ2mjNHNi8TPPegY78m8Q2gbP0afcYMGZZ05ADgKsoX1OtyxB4Bxkjg
+         gUZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YAYlgekTsgeaDBrXoU9WxGkm6w3XRr6iefPrtixbA8A=;
-        b=EihKP2ni9IoP+Z9YKsoAQVmZEvv8f1/9YJTcYc3MJWc74oDe+zfKVMjfT9NNBSVqcT
-         n5BHWxyetZZouvP56GAFuzhAfk9E+SzPpMVi52o1B/D7F4ImetMB/l9H5cqEx5HNqZWF
-         vdQzX4vATlOkX2aBNVkz2N8/0lbqKHxdPWgR3L4Tjk099b8ysojjKU0CsGASvf6GYnfh
-         uHY+VZ6tWgNdDDE9CeWuU+xb2Per7Ubv2hE0qdG4JDEmgqIrjRb9d01S+yGuboaB+iFE
-         iHLtdKYQwRhhB2hYlSm0kfw6BzLaMpuN/CLCVUmQDS7/iy3uE/7b5gfk6SE+NQoxSvh4
-         2DtQ==
-X-Gm-Message-State: APjAAAUMVBAjmdwPslYuwQ54DQaT9Ly/GF8GQY4fr8FsoLrGI/UmtaTM
-        6XgMArbint1XOifU3FFHjc5HnWwOOJV3GWlMXJ8=
-X-Google-Smtp-Source: APXvYqxswygfqzeBQ4CGKjqCe6uJyWSYn3MyJVi4AKzKxHuNg7HVG4MrBpHY7EGm6wAY5GaaU2reJAo1aYyppRfoV8I=
-X-Received: by 2002:a05:6830:120b:: with SMTP id r11mr7574574otp.254.1578570842868;
- Thu, 09 Jan 2020 03:54:02 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mFkJFYkrFDlWwhK3VKXDGs8jHD7xXTyu7e9TssfROcw=;
+        b=IBx+/0OQxcLiYOYI43+yn5aArRtLY50ckQ1ZRtV6OJ0D6oageu/+DHbaVU0D5NESQ4
+         PLJwfYD5EmHSs390pxrzvaxcIiW/0/IOUQeKGJK3lhqc1+s1sHeRVrbt3XR+SksuukX+
+         PlXwIqafvC9nS8mjmsHCnWwaGHil3NINsm/REFCx8v50yi1jNQ8Q5GXVPc/bGw+/Aph+
+         fZxgQxlUWxBjBDZ6A91+Uij+rL4t7VZfXlxC8yxOpL/WKSHgAAy2BP7El3LFZfNVPM+h
+         EFpiqSK2EGGr76CsqTziwSIRMXO5q+pR7sSu//j2l5JDC4bD0tRve0iBP97Ek4B35Jql
+         Cc0g==
+X-Gm-Message-State: APjAAAUF+qnB8B6Jc1rVf+E9Wtxi1to/VZCLh2bMWh6XuLz8l4bMFK9u
+        sx9C6kiRhtgISLZ/E+8IWcZQwhGf6+w=
+X-Google-Smtp-Source: APXvYqzZdiDmnWeIjKl6Zs3UBhHThSKFOQFbH9wX9X39v5aH1m8oz0pIqOBHZJxJHGAj4woPe0HMbQ==
+X-Received: by 2002:adf:d0c1:: with SMTP id z1mr10906394wrh.371.1578570923526;
+        Thu, 09 Jan 2020 03:55:23 -0800 (PST)
+Received: from lorien (lorien.valinor.li. [2a01:4f8:192:61d5::2])
+        by smtp.gmail.com with ESMTPSA id g25sm3634075wmh.3.2020.01.09.03.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 03:55:22 -0800 (PST)
+Date:   Thu, 9 Jan 2020 12:55:21 +0100
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     StableKernel <stable@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: What happend to 5.4.9??? Kernel.org showing 5.4.10!!
+Message-ID: <20200109115514.GA1270@lorien.valinor.li>
+References: <20200109114330.GC19235@Gentoo>
 MIME-Version: 1.0
-References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
- <20200108155040.GB2827@hirez.programming.kicks-ass.net> <00d884a7-d463-74b4-82cf-9deb0aa70971@redhat.com>
-In-Reply-To: <00d884a7-d463-74b4-82cf-9deb0aa70971@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 9 Jan 2020 19:53:51 +0800
-Message-ID: <CANRm+Cx0LMK1b2mJiU7edCDoRfPfGLzY1Zqr5paBEPcWFFALhQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes mwait/hlt
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        KarimAllah <karahmed@amazon.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ankur Arora <ankur.a.arora@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109114330.GC19235@Gentoo>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peterz,
-On Thu, 9 Jan 2020 at 01:15, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 08/01/20 16:50, Peter Zijlstra wrote:
-> > On Wed, Jan 08, 2020 at 09:50:01AM +0800, Wanpeng Li wrote:
-> >> From: Wanpeng Li <wanpengli@tencent.com>
-> >>
-> >> To deliver all of the resources of a server to instances in cloud, there are no
-> >> housekeeping cpus reserved. libvirtd, qemu main loop, kthreads, and other agent/tools
-> >> etc which can't be offloaded to other hardware like smart nic, these stuff will
-> >> contend with vCPUs even if MWAIT/HLT instructions executed in the guest.
->
-> ^^ this is the problem statement:
->
-> He has VCPU threads which are being pinned 1:1 to physical CPUs.  He
-> needs to have various housekeeping threads preempting those vCPU
-> threads, but he'd rather preempt vCPU threads that are doing HLT/MWAIT
-> than those that are keeping the CPU busy.
+Hi,
 
-Indeed, thank you Paolo.
+On Thu, Jan 09, 2020 at 05:13:32PM +0530, Bhaskar Chowdhury wrote:
+> I am wondering, it might be lack of morning coffee for Greg  :)
 
->
-> >> The is no trap and yield the pCPU after we expose mwait/hlt to the guest [1][2],
-> >> the top command on host still observe 100% cpu utilization since qemu process is
-> >> running even though guest who has the power management capability executes mwait.
-> >> Actually we can observe the physical cpu has already enter deeper cstate by
-> >> powertop on host.
-> >>
-> >> For virtualization, there is a HLT activity state in CPU VMCS field which indicates
-> >> the logical processor is inactive because it executed the HLT instruction, but
-> >> SDM 24.4.2 mentioned that execution of the MWAIT instruction may put a logical
-> >> processor into an inactive state, however, this VMCS field never reflects this
-> >> state.
-> >
-> > So far I think I can follow, however it does not explain who consumes
-> > this VMCS state if it is set and how that helps. Also, this:
->
-> I think what Wanpeng was saying is: "KVM could gather this information
-> using the activity state field in the VMCS.  However, when the guest
-> does MWAIT the processor can go into an inactive state without updating
-> the VMCS."  Hence looking at the APERFMPERF ratio.
+5.4.10 contains one followup, backport of 6f4679b95674 ("powerpc/pmem:
+Fix kernel crash due to wrong range value usage in
+flush_dcache_range") which fixes a regression introduced in 5.4.9 via
+backport of 076265907cf9 ("powerpc: Chunk calls to flush_dcache_range
+in arch_*_memory").
 
-Ditto. :)
-
->
-> >> This patch avoids fine granularity intercept and reschedule vCPU if MWAIT/HLT
-> >> instructions executed, because it can worse the message-passing workloads which
-> >> will switch between idle and running frequently in the guest. Lets penalty the
-> >> vCPU which is long idle through tick-based sampling and preemption.
-> >
-> > is just complete gibberish. And I have no idea what problem you're
-> > trying to solve how.
->
-> This is just explaining why MWAIT and HLT is not being trapped in his
-> setup.  (Because vmexit on HLT or MWAIT is awfully expensive).
-
-Ditto. Peterz, do you have nicer solution for this?
-
-    Wanpeng
-
->
-> > Also, I don't think the TSC/MPERF ratio is architected, we can't assume
-> > this is true for everything that has APERFMPERF.
->
-> Right, you have to look at APERF/MPERF, not TSC/MPERF.  My scheduler-fu
-> is zero so I can't really help with a nicer solution.
->
-> Paolo
->
+Regards,
+Salvatore
