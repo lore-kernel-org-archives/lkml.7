@@ -2,93 +2,98 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3529C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225F4C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A7D206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE91206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oA97qXMR"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eIbJKF6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387858AbgAIQrv (ORCPT
+        id S1731449AbgAIQtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:47:51 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:42460 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730602AbgAIQrv (ORCPT
+        Thu, 9 Jan 2020 11:49:01 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46966 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgAIQtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:47:51 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id EDBF720B4798;
-        Thu,  9 Jan 2020 08:47:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EDBF720B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1578588470;
-        bh=LW9r8q2BLTAvuoOoNc++KjWmbMuRSSbPiPkebfGA588=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=oA97qXMRNlJuZjxe0Nn1daIjBuYzhdOG1OJvN7g0EzxuxWeoCW6nIrStONG+aznMH
-         q/DbK0L09y2WFd2MW5EFetlXbbV8A6pCEB5w3PfvU9W+6sjySx26clkWylY5Poy80b
-         3Hf8Cq88+nKDl5wUrhzbwk8fNCxJKg2L8a0NpkeQ=
-Subject: Re: [PATCH v8 0/3] IMA: Deferred measurement of keys
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     dhowells@redhat.com, arnd@arndb.de, matthewgarrett@google.com,
-        sashal@kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-References: <20200109024359.3410-1-nramas@linux.microsoft.com>
- <1578546442.5147.37.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <259affae-d579-d7b8-7fff-ff6ef440ac29@linux.microsoft.com>
-Date:   Thu, 9 Jan 2020 08:47:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 11:49:00 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6441652F;
+        Thu,  9 Jan 2020 17:48:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1578588539;
+        bh=yONddjLSYota6AvrpXAgXZCWsos9UwRKP1EcW8PTQNs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eIbJKF6xQZX4rFczwQSOtXSVdImZkRqNmXZOv1xd3AVKQFaklLMPrGX5vU8qBaxv5
+         DyI0nWmpOUiLKaeLmwuwq+lwnwdS6I7KJnt9rr0U4uZxz9KXWE/rZQyn1xO5U10TTX
+         +fU4XpBOEQeF8K73jOTv2ZZg/3Rrv8YDwozE1dTU=
+Date:   Thu, 9 Jan 2020 18:48:47 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     mchehab@kernel.org, hyun.kwon@xilinx.com, vkoul@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] media: xilinx: Use dma_request_chan() instead
+ dma_request_slave_channel()
+Message-ID: <20200109164847.GF31792@pendragon.ideasonboard.com>
+References: <20191217104235.23771-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1578546442.5147.37.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191217104235.23771-1-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/8/20 9:07 PM, Mimi Zohar wrote:
+Hi Peter,
 
-> On Wed, 2020-01-08 at 18:43 -0800, Lakshmi Ramasubramanian wrote:
+Thank you for the patch.
+
+On Tue, Dec 17, 2019 at 12:42:35PM +0200, Peter Ujfalusi wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
 > 
->> Changelog:
->>
->>    v8
->>
->>    => Rebased the changes to linux-next
->>    => Need to apply the following patch first
->>    https://lore.kernel.org/linux-integrity/20200108160508.5938-1-nramas@linux.microsoft.com/
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
 > 
-> Unless you made some other changes, the previous version of this patch
-> set is already in next-integrity-testing.  There's no reason to re-
-> post these patches again, and definitely not against linux-next.
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Vinod, could you please pick this up ?
+
+> ---
+>  drivers/media/platform/xilinx/xilinx-dma.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> Mimi
-> 
+> diff --git a/drivers/media/platform/xilinx/xilinx-dma.c b/drivers/media/platform/xilinx/xilinx-dma.c
+> index b211380a11f2..9ce515ff9c0a 100644
+> --- a/drivers/media/platform/xilinx/xilinx-dma.c
+> +++ b/drivers/media/platform/xilinx/xilinx-dma.c
+> @@ -725,10 +725,10 @@ int xvip_dma_init(struct xvip_composite_device *xdev, struct xvip_dma *dma,
+>  
+>  	/* ... and the DMA channel. */
+>  	snprintf(name, sizeof(name), "port%u", port);
+> -	dma->dma = dma_request_slave_channel(dma->xdev->dev, name);
+> -	if (dma->dma == NULL) {
+> +	dma->dma = dma_request_chan(dma->xdev->dev, name);
+> +	if (IS_ERR(dma->dma)) {
+>  		dev_err(dma->xdev->dev, "no VDMA channel found\n");
+> -		ret = -ENODEV;
+> +		ret = PTR_ERR(dma->dma);
+>  		goto error;
+>  	}
+>  
 
-The change was to integrate the changes from the patch for the CONFIG issue:
+-- 
+Regards,
 
-https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/commit/?h=next-integrity-testing&id=50a2506e069fc71f4be1bbcc2c5534bf58ed94ab
-
-The following commit needs to be updated to use the new config 
-CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS instead of 
-CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-
-https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/commit/?h=next-integrity-testing&id=e164a1695a5705c24c897b0bc7e9b97abb0830c8
-
-Please let me know if I can clone next-integrity-testing and make the 
-above update. I'll post the updated patch today.
-
-thanks,
-  -lakshmi
+Laurent Pinchart
