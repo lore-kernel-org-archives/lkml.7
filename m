@@ -2,213 +2,155 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFC8C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0041C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AC720721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:58:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="ArJM0kfn"
+	by mail.kernel.org (Postfix) with ESMTP id 6DC2F2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:58:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578596330;
+	bh=cwzOlpolsyjBXs3ou4mRbgq2o7/+Zuozro2rXSrWd+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k00U8xYYUu5TKwObZoKcW4OO2ATfvNiIZoNsNNMXw+dOKQAwIuwlx056TXFWP0EEy
+	 /6A2UFmJHq0VxsOopSWd81V33j+2pBiziXmW/z4Nb+n3YEyUdlRHv+V7X8c7c82tE+
+	 DB/Vg0/zY64IAjFOjUVsTqcpuCAXuhgxuHKstFp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732241AbgAIS6j (ORCPT
+        id S2388613AbgAIS6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:58:39 -0500
-Received: from USFB19PA36.eemsg.mail.mil ([214.24.26.199]:7387 "EHLO
-        USFB19PA36.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729054AbgAIS6j (ORCPT
+        Thu, 9 Jan 2020 13:58:49 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39576 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729054AbgAIS6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:58:39 -0500
-X-EEMSG-check-017: 42691197|USFB19PA36_ESA_OUT06.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.69,414,1571702400"; 
-   d="scan'208";a="42691197"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by USFB19PA36.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 09 Jan 2020 18:58:34 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1578596315; x=1610132315;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=ZPmZF83oIB329lW4as9cdr4MSFrWPuk7yQcwDUdxaTs=;
-  b=ArJM0kfnQmQfIveCnEnGnxsVm0ApRvfR6Bfs+PTei5RwobTwdfDVcbjL
-   kw9U1xSY3iFWsQVsYzVVG2KnzuIq/Tszv3Celfr3JpY7b9x9OV0GFSxob
-   wyWjQbQ3bd7JYN4EBjishM66J/j2Y5U/dvqc85cAzMBoU4Io4DQSbGsvT
-   Ldv6lUEF7fuIa7LwXs7IbUql33d6ppuY5Zti/Dha3lh7760uT1jpWVhTd
-   90HoLqibmPCnRO8iIaMJpz4G1ilYZG4UnFArJPkjcd4AvIhSIFl/ZidE+
-   J7WJe/P9UZ+2AP2HV2/i/HT6aB11p0hHhpGyM+UDEXzuWVYrC/IZo6IUe
-   w==;
-X-IronPort-AV: E=Sophos;i="5.69,414,1571702400"; 
-   d="scan'208";a="31783925"
-IronPort-PHdr: =?us-ascii?q?9a23=3ApTpPtBcddllUzr+Pmi3P4rINlGMj4u6mDksu8p?=
- =?us-ascii?q?Mizoh2WeGdxc6/ZhON2/xhgRfzUJnB7Loc0qyK6vumAzJZqsbY+Fk5M7V0Hy?=
- =?us-ascii?q?cfjssXmwFySOWkMmbcaMDQUiohAc5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFR?=
- =?us-ascii?q?rwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/IAi4oAnLqMUbgJZuJqkyxx?=
- =?us-ascii?q?fUv3BFZ/lYyWR0KFyJgh3y/N2w/Jlt8yRRv/Iu6ctNWrjkcqo7ULJVEi0oP3?=
- =?us-ascii?q?g668P3uxbDSxCP5mYHXWUNjhVIGQnF4wrkUZr3ryD3q/By2CiePc3xULA0RT?=
- =?us-ascii?q?Gv5LplRRP0lCsKMSMy/XrJgcJskq1UvBOhpwR+w4HKZoGVKOF+db7Zcd8DWG?=
- =?us-ascii?q?ZNQtpdWylHD4yydYsPC/cKM/heoYfzulACqQKyCAmoCe/qzDJDm3340rAg0+?=
- =?us-ascii?q?k5DA/IwgIgEdINvnraotr6O6UdXvy6wqTT0TXObelb1Svh5IXGcB0sp+yHU7?=
- =?us-ascii?q?JqccrWzEkiDx7LjkmOpoz9PzOayOINuHWG4eplT+2vj2onpB9xozOywcoskZ?=
- =?us-ascii?q?TGhpkOx1DY9SR23IY1JdqiRE59et6rCoFcty6dN4toW84vRXxjtiUiyrAepJ?=
- =?us-ascii?q?K2cycHxI4nyhLCcfCLbYeF7gz5WOqMJzpzmWhrd6ilhxmo9Eit0uj8Vs6p31?=
- =?us-ascii?q?lUtidFidzMtmwV1xzU98iHVuNx/ke/1jaL0ADe8v1ELloularaNp4h2aQ8lp?=
- =?us-ascii?q?sVsUTNGS/2g1v5g7OMekU4+umn9+TnYrL8qp+aK4B0kR3xPr4rmsy+BeQ0Kg?=
- =?us-ascii?q?kOX26F9uSgzLDv4EL0TbpQgvA2j6XVqo7WKMsFqqKjHgNZyoMj5Ay+Dzei3t?=
- =?us-ascii?q?QYh34HLFdddRKckofpIErDIOz4DPijg1Ssly1nx/bdPrL7GJnNIX/DkKn5cb?=
- =?us-ascii?q?Zn90Fc0BYzzcxY559MCLEBJfXzWlXrtNzZFR80KAq0zPziCNpj14MSQ2WPAr?=
- =?us-ascii?q?WWMKnKq1+H+vovI/WQZI8SoDv9KOYq6OD1jXAlnl8deqqp0IALZ3C4BPRmJE?=
- =?us-ascii?q?CZYXvxgtcEC2sKuRA+TOPygl2YTTFTf2qyX7475jwjC4KmFZzDRoGrgLyO3C?=
- =?us-ascii?q?e2BYFZZmBcClCLFHfodpiEW/IWZCKVOM9hnSQOVaK9RI85yRGuqAj6xqJ7Ie?=
- =?us-ascii?q?XO4S0Xq5Li2cNu5+LPlRE97yF0D8qZ026TVWF4h38HSCUs0K9jpkx9z0+J0b?=
- =?us-ascii?q?JkjPxACdxT+/RJXx8+NZ7dyex6Ft/zVhvCftiXUlamRMupATUqQ9IvzN8BfV?=
- =?us-ascii?q?x9F8+hjh/dxSqqBaEal7iRCJwz6KLc0GD7J9xhxHbeyKkhk14mT9NUOm2+iK?=
- =?us-ascii?q?5y7BbTB4HXnEWDjaqqdroT3DTL9GidyWqCpkZYUBR/Ua/dR3AQelPWrcjl5k?=
- =?us-ascii?q?PFV7KuDbUnMg1cyc+NM6dKccPmgklbRPf5OdTef2Kwl361BRaP27yMcY7qdH?=
- =?us-ascii?q?sG0SXDB0gLjRoT8WyFNQcgHCehpXzRDDh0GVLoeUPs/vF0qGmnQU8s0wGKc0?=
- =?us-ascii?q?ph2qKv9R4OmfyRUPAT0aweuCcntTp0GEyx39XMC9qPvwBhZrlTYcsh4Fdb0m?=
- =?us-ascii?q?LUrxFyMYamL6BjmFEedx96v0Lp1xV4FIpPi9Iqo2gtzAt9M66Y1k1Ody+A15?=
- =?us-ascii?q?DqJrLXMnXy/Ayoa6POxlHe0NmW9b0V6PQ+qlXsohqkGVYi83V91NlV1nqc5o?=
- =?us-ascii?q?jPDAYIVpLxSEk3/QBgp77Geik9+5/U1Xp0PKmxsj/NwdYpC/c/yhancdZSK6?=
- =?us-ascii?q?yEFAj1E80VA8ihNvYmlESubhIBJOpS7rI7P9u6d/ua366mJP5gnDC6jWlc74?=
- =?us-ascii?q?B91UWM9yV4SuHWxZoK3/aY3g6fXTfmkFihqtz3mZxDZTwKBWW/0zbrBIhMaa?=
- =?us-ascii?q?Joe4YHE3qhL9e4xtVkmZHtVHFY+UWsB1MDwsCpeB6SY0bh0g1X0EQduWanlj?=
- =?us-ascii?q?egzzxojzEpqbKS3C7UzOTkchoHOnVGRGZljVfrLoi0i84VUFK0YAgukRuv/V?=
- =?us-ascii?q?z6yLRDpKRjM2nTRl9Ffy30L2FtUqa9sqGPY8FI6JMvviVXVPqzbUqGRb76ph?=
- =?us-ascii?q?sQyznjEHdGxDAnazGqvY30kAB6iGKHLXZzt2bZecBqyhfZ/9HTXuRR0SAbRC?=
- =?us-ascii?q?l+lzbXHEKwP9iu/d+MjZfMrvi+V369Vp1UaSTryIKAuzeg6GJ3AB2/kPGzmt?=
- =?us-ascii?q?7gEQcnyyP70cdlVTnQphbmfobrz7i6Mf5gfkRwHl/z9dR6FZ9lkossn5wfxX?=
- =?us-ascii?q?gaho+S/XoCkGfzLNBb1bj5bHoXSj4B28TV7xT92E1/MnKJwJr0VneHzcR9ZN?=
- =?us-ascii?q?m6Z3kZ2iQm4M1RFKiU7KZEnSxwolq5sALRZOJxnjAHyfsh8HQamf0GuBIxzi?=
- =?us-ascii?q?WBBbAfBUpYMjbilxuS7tCzt6tXa321fbes00p+mMirDKuerQFERHb5ZpAiED?=
- =?us-ascii?q?dr7sV4NlLM33nz6oD5eNbLd9IcrAOUkxbGj+haM58xmOEFiTB7NmL6uH0v0/?=
- =?us-ascii?q?Q7ggB23ZGmoIiHLH1g/aK5Ah5DLTD1adgc9ivxgqZZm8acx5qvEYl5GjUXQJ?=
- =?us-ascii?q?voSuqlECkMuvT9OAaBDiYxqneBFrrbGQ+e6EFmo2jTHJCsMnGdPGMZwsl6RB?=
- =?us-ascii?q?mBOExfhxgZXDAmkZ45CA+qxNbuf1x+6jAK/FH4rwBMyv9uNxnwSWrfpxmnai?=
- =?us-ascii?q?0ySJeBKBpa9AZC513aMcaG9OJ8AzlY/oG9rAyKMmGUeh5HDX8XVUyBHF3sI6?=
- =?us-ascii?q?Oh5cfe/OidAuq+KPXOYamUpexYSfiI2Yql0pF68DaUKsWPIn5iAuU02kpZQ3?=
- =?us-ascii?q?95FMfZmzUURiwTliLNadObpRiy+i1ws8C/9unkVxjz5YuODLtSN89j+xesga?=
- =?us-ascii?q?eML+SQnjp2KS5E1pMQwn/F0L4f3F8OhCFpczmiC68AuTTDTK3OgK9XFQAUZj?=
- =?us-ascii?q?h2NMtJ8608xA5NNtLbitP0zr50lOI6C1BAVVb5gMGmedQKI32hNFPAHEuLL6?=
- =?us-ascii?q?mJJTPQzsH4ZqO8TrJQjOFKuBGqpTmbFErjNCyZlzb1TxCvLf1MjCaDMRxHpY?=
- =?us-ascii?q?GybBBtCXTiTNLgcBG7Ndh3jTswwbIqmnPHLmgcPiZgc0NXqb2Q6yRYgvBhFG?=
- =?us-ascii?q?Bb8nVlKuyEkT6D7+bEMpYWredrAiNsmuJA/Xs6zaFa4TpKRPNugifdstluo1?=
- =?us-ascii?q?S+mOmV1jVnSAZOqipMhI+Tv0ViPrvW+4JOWHne+hIC8H+cCxIUqNt5ENHvva?=
- =?us-ascii?q?FRwMDVlK3vMDdC787U/cwECsjMMs2HLX4hPAHxGDHOEQsFSSenNWTYh0xaiv?=
- =?us-ascii?q?Gd6GeZoYQ9qpjpy9IyTep5XVk4Dbs/DV5/HcdKdJVyWSk+kKWziscN6Hv4qw?=
- =?us-ascii?q?PeEpZ0pJfCA8mODO3vJTDRtrxNYx8F0PusNogIHpHq0ExlLF9hlcLFHFSGDo?=
- =?us-ascii?q?MFmTFocgJh+BYFy3N5VGBmnhu4Ow4=3D?=
-X-IPAS-Result: =?us-ascii?q?A2DWBACbdhde/wHyM5BlHQEBAQkBEQUFAYF7gX2BbAEgE?=
- =?us-ascii?q?oQziQOGYQEBAQEBAQaBN4lukUgJAQEBAQEBAQEBNwEBhEACghM4EwIQAQEBB?=
- =?us-ascii?q?AEBAQEBBQMBAWyFCwgwgjspAYJ5AQEBAQIBIxVBBQsLDgoCAiYCAlcGDQgBA?=
- =?us-ascii?q?YJjP4JXBSCqfnWBMoVJgz6BPYEOKIlQgmN5gQeBEScPgl0+h1mCXgSNT4I7h?=
- =?us-ascii?q?xVGl0eCQIJFk1wGG4JHjEGLXKtVIoFYKwgCGAghD4MoTxgNgRSaYiMDkUUBA?=
- =?us-ascii?q?Q?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 09 Jan 2020 18:58:33 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 009IvkX8259016;
-        Thu, 9 Jan 2020 13:57:48 -0500
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-To:     James Morris <jmorris@namei.org>
-Cc:     Kees Cook <keescook@chromium.org>, KP Singh <kpsingh@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        Paul Moore <paul@paul-moore.com>
-References: <20191220154208.15895-1-kpsingh@chromium.org>
- <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com>
- <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com>
- <201912301112.A1A63A4@keescook>
- <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
- <alpine.LRH.2.21.2001090551000.27794@namei.org>
- <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100437550.21515@namei.org>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <e90e03e3-b92f-6e1a-132f-1b648d9d2139@tycho.nsa.gov>
-Date:   Thu, 9 Jan 2020 13:58:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 9 Jan 2020 13:58:49 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 20so4018496wmj.4;
+        Thu, 09 Jan 2020 10:58:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MLlNWsBXrOryBNtAajsP6p+tnqNK4xK0vs1yNExUT74=;
+        b=dXpGQDDRjIlA+gLoIO93LYwxU1Y3f0diNv9ORZMRHK7jKbQTMTjT5D1ewnvkK6Nhu2
+         Kb3xIZ3ErRMeqoKcXC7X20g/E6GtJnb/yzGcNVgNLIVnzSHiR9fUCfNk9cezky0hmtrK
+         fhMH1A7xwmRNHLYewxSACECZVg0jx0QwpOVyN8Wg916K449RG4nstfu2o9GtJQL2Qol5
+         LehQ319GGwSoRsobCfNAPYfZvWy07RCock6CgXNnORwve13m+1zagA5oLZmjVIZ9rFU0
+         ZOaB8wGfVEN5kZvlWEFYBWRZwGZwL9q6X6nPIQ2nUA/kPIBAE6zZ8VVCj89DrUjyVb3J
+         L17w==
+X-Gm-Message-State: APjAAAVH89ZqYZKg2fsw8gWARow2VdL/H8/IuqDvJ+NWtnepSLCAFTOM
+        d9kBbTYxQoKgCCu56VvO/AU=
+X-Google-Smtp-Source: APXvYqxJvw5/CUhjdAN8kmCIJe1AG6KRvRw2pvb/+xrKwKH1l+cWQxudUwXlSn+EWHzV35YjdU4xBA==
+X-Received: by 2002:a7b:cd0a:: with SMTP id f10mr6730175wmj.56.1578596327589;
+        Thu, 09 Jan 2020 10:58:47 -0800 (PST)
+Received: from localhost (ip-37-188-146-105.eurotel.cz. [37.188.146.105])
+        by smtp.gmail.com with ESMTPSA id q19sm3631897wmc.12.2020.01.09.10.58.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 10:58:46 -0800 (PST)
+Date:   Thu, 9 Jan 2020 19:58:44 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
+        alexander.duyck@gmail.com, rientjes@google.com
+Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200109185844.GW4951@dhcp22.suse.cz>
+References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.2001100437550.21515@namei.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109143054.13203-1-richardw.yang@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 1:11 PM, James Morris wrote:
-> On Wed, 8 Jan 2020, Stephen Smalley wrote:
+On Thu 09-01-20 22:30:54, Wei Yang wrote:
+> As all the other places, we grab the lock before manipulate the defer list.
+> Current implementation may face a race condition.
 > 
->> The cover letter subject line and the Kconfig help text refer to it as a
->> BPF-based "MAC and Audit policy".  It has an enforce config option that
->> enables the bpf programs to deny access, providing access control. IIRC, in
->> the earlier discussion threads, the BPF maintainers suggested that Smack and
->> other LSMs could be entirely re-implemented via it in the future, and that
->> such an implementation would be more optimal.
+> For example, the potential race would be:
 > 
-> In this case, the eBPF code is similar to a kernel module, rather than a
-> loadable policy file.  It's a loadable mechanism, rather than a policy, in
-> my view.
+>     CPU1                      CPU2
+>     mem_cgroup_move_account   split_huge_page_to_list
+>       !list_empty
+>                                 lock
+>                                 !list_empty
+>                                 list_del
+>                                 unlock
+>       lock
+>       # !list_empty might not hold anymore
+>       list_del_init
+>       unlock
+> 
+> When this sequence happens, the list_del_init() in
+> mem_cgroup_move_account() would crash if CONFIG_DEBUG_LIST since the
+> page is already been removed by list_del in split_huge_page_to_list().
+> 
+> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+> 
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> Acked-by: David Rientjes <rientjes@google.com>
 
-I thought you frowned on dynamically loadable LSMs for both security and 
-correctness reasons? And a traditional security module would necessarily 
-fall under GPL; is the eBPF code required to be likewise?  If not, KRSI 
-is a gateway for proprietary LSMs...
+Thanks a lot for the changelog approvements!
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-> This would be similar to the difference between iptables rules and
-> loadable eBPF networking code.  I'd be interested to know how the
-> eBPF networking scenarios are handled wrt kernel ABI.
 > 
+> ---
+> v2:
+>   * move check on compound outside suggested by Alexander
+>   * an example of the race condition, suggested by Michal
+> ---
+>  mm/memcontrol.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
 > 
->> Again, not arguing for or against, but wondering if people fully understand
->> the implications.  If it ends up being useful, people will build access
->> control systems with it, and it directly exposes a lot of kernel internals to
->> userspace.  There was a lot of concern originally about the LSM hook interface
->> becoming a stable ABI and/or about it being misused.  Exposing that interface
->> along with every kernel data structure exposed through it to userspace seems
->> like a major leap.
-> 
-> Agreed this is a leap, although I'm not sure I'd characterize it as
-> exposure to userspace -- it allows dynamic extension of the LSM API from
-> userland, but the code is executed in the kernel.
-> 
-> KP: One thing I'd like to understand better is the attack surface
-> introduced by this.  IIUC, the BTF fields are read only, so the eBPF code
-> should not be able to modify any LSM parameters, correct?
-> 
-> 
->>   Even if the mainline kernel doesn't worry about any kind
->> of stable interface guarantees for it, the distros might be forced to provide
->> some kABI guarantees for it to appease ISVs and users...
-> 
-> How is this handled currently for other eBPF use-cases?
-> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index bc01423277c5..1492eefe4f3c 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5368,10 +5368,12 @@ static int mem_cgroup_move_account(struct page *page,
+>  	}
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -	if (compound && !list_empty(page_deferred_list(page))) {
+> +	if (compound) {
+>  		spin_lock(&from->deferred_split_queue.split_queue_lock);
+> -		list_del_init(page_deferred_list(page));
+> -		from->deferred_split_queue.split_queue_len--;
+> +		if (!list_empty(page_deferred_list(page))) {
+> +			list_del_init(page_deferred_list(page));
+> +			from->deferred_split_queue.split_queue_len--;
+> +		}
+>  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>  	}
+>  #endif
+> @@ -5385,11 +5387,13 @@ static int mem_cgroup_move_account(struct page *page,
+>  	page->mem_cgroup = to;
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -	if (compound && list_empty(page_deferred_list(page))) {
+> +	if (compound) {
+>  		spin_lock(&to->deferred_split_queue.split_queue_lock);
+> -		list_add_tail(page_deferred_list(page),
+> -			      &to->deferred_split_queue.split_queue);
+> -		to->deferred_split_queue.split_queue_len++;
+> +		if (list_empty(page_deferred_list(page))) {
+> +			list_add_tail(page_deferred_list(page),
+> +				      &to->deferred_split_queue.split_queue);
+> +			to->deferred_split_queue.split_queue_len++;
+> +		}
+>  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+>  	}
+>  #endif
+> -- 
+> 2.17.1
 
+-- 
+Michal Hocko
+SUSE Labs
