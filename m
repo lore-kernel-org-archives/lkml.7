@@ -2,112 +2,95 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97007C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD15AC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79286206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FA82072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YtRa8QvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbgAIReC (ORCPT
+        id S2388207AbgAIReF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:34:02 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55129 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbgAIReC (ORCPT
+        Thu, 9 Jan 2020 12:34:05 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39660 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731954AbgAIReD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:34:02 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipbgz-00005T-Fi; Thu, 09 Jan 2020 18:33:57 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 134BE1C2CEF;
-        Thu,  9 Jan 2020 18:33:57 +0100 (CET)
-Date:   Thu, 09 Jan 2020 17:33:56 -0000
-From:   "tip-bot2 for Paul Cercueil" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] time/sched_clock: Disable interrupts in
- sched_clock_register()
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200107010630.954648-1-paul@crapouillou.net>
-References: <20200107010630.954648-1-paul@crapouillou.net>
+        Thu, 9 Jan 2020 12:34:03 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c16so6735471qko.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 09:34:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nLZ40X4AYSx/4IufI5neDGOXIt1DrkaYWqpJijj50lU=;
+        b=YtRa8QvPTdA4j+IGrYzf5ipFgbr/DCJAJVWKc8q8BT+ICZP0hiqMU61CEmmNrt9Kor
+         1IedsTdhwZO2biCYk5RspEZKHbssaZuGMTwt1u/nTHu5kT5nnZ8RqSpE8QD/CJybCbMQ
+         60ASxWqybxd7rDSd1T7Q9LX9QjO3f0AB9nP/g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nLZ40X4AYSx/4IufI5neDGOXIt1DrkaYWqpJijj50lU=;
+        b=X2hXbCU7UR3rXzVJzI+/xnaBpbk8zN+fbEctLJbFKIMIfQwgngtfbXJkmEGnN2NLoy
+         OLxRsrxPYMrjqY6xw59qYWZVbXBbxzknyQApjhhotF021PWUluuzhrKG+jySraClr/wE
+         w9GX7PrsKLIULNNFfoQHiaBmDTQi4+6b0zqoa0QtpIBngrfn8/hDteEKQ4shbeCVgtaO
+         3XIKPmn5dbrIVG7KXG4LjBJrG6YLRKgdfDuyLNhQpuV4peR4H1hy0Kip7grU3vKkD/jS
+         3lYhycN7X2UJHJF+wwI6HNmc8/rYuRBIf4fWK+Jf5FRDEBwNj+hQW5Ssl5Wg9aFRIA9I
+         Y8Ew==
+X-Gm-Message-State: APjAAAVAHx1WVhVEo2uKlyCzHu74hyAOanhKl6N97BUR2Z76Bg47f/TW
+        ev8K8LVPTuC20O9sw8Ptod3Rksv+K4k=
+X-Google-Smtp-Source: APXvYqwN6O8tOThmPKTSZR4qawJG3Elb9gq9Sm5BytfrAKXaHgkBFXVZyGAhkfrSySX44IygFW2p9Q==
+X-Received: by 2002:ae9:ef50:: with SMTP id d77mr10333623qkg.71.1578591241930;
+        Thu, 09 Jan 2020 09:34:01 -0800 (PST)
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com. [209.85.222.176])
+        by smtp.gmail.com with ESMTPSA id i90sm3595329qtd.49.2020.01.09.09.34.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 09:34:01 -0800 (PST)
+Received: by mail-qk1-f176.google.com with SMTP id j9so6776518qkk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 09:34:00 -0800 (PST)
+X-Received: by 2002:ae9:e40d:: with SMTP id q13mr10878417qkc.2.1578591240318;
+ Thu, 09 Jan 2020 09:34:00 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157859123687.30329.9990387106834700222.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20191227174055.4923-1-sashal@kernel.org> <20191227174055.4923-8-sashal@kernel.org>
+ <CA+ASDXM6UvVCDYGq7gMEai_v3d79Pi_ZH=UFs1gfw_pL_BLMJg@mail.gmail.com> <20200109152925.GF1706@sasha-vm>
+In-Reply-To: <20200109152925.GF1706@sasha-vm>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Thu, 9 Jan 2020 09:33:49 -0800
+X-Gmail-Original-Message-ID: <CA+ASDXPy+K2DGYAy+8pXbDQ3e87Vd+KazsS7JneCc5CHa_NaKA@mail.gmail.com>
+Message-ID: <CA+ASDXPy+K2DGYAy+8pXbDQ3e87Vd+KazsS7JneCc5CHa_NaKA@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.4 008/187] mwifiex: fix possible heap overflow
+ in mwifiex_process_country_ie()
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        huangwen <huangwenabc@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+On Thu, Jan 9, 2020 at 7:29 AM Sasha Levin <sashal@kernel.org> wrote:
+> On Mon, Jan 06, 2020 at 02:51:28PM -0800, Brian Norris wrote:
+> >I'd recommend holding off until that gets landed somewhere. (Same for
+> >the AUTOSEL patches sent to other kernel branches.)
+>
+> I'll drop it for now, just ping us when the fix is in and we'll get both
+> patches queued back up.
 
-Commit-ID:     479c296303e8d29711a5153f0fc4b67faa6d9866
-Gitweb:        https://git.kernel.org/tip/479c296303e8d29711a5153f0fc4b67faa6d9866
-Author:        Paul Cercueil <paul@crapouillou.net>
-AuthorDate:    Tue, 07 Jan 2020 02:06:29 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 09 Jan 2020 18:28:34 +01:00
+I'll try to do that. The maintainer is seemingly busy (likely
+vacation), but I'll try to keep this in mind when they get back to me.
 
-time/sched_clock: Disable interrupts in sched_clock_register()
-
-Instead of issueing a warning if sched_clock_register() is called from a
-context where IRQs are enabled, the code now ensures that IRQs are indeed
-disabled.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200107010630.954648-1-paul@crapouillou.net
-
----
- kernel/time/sched_clock.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index dbd6905..e4332e3 100644
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -169,14 +169,15 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
- {
- 	u64 res, wrap, new_mask, new_epoch, cyc, ns;
- 	u32 new_mult, new_shift;
--	unsigned long r;
-+	unsigned long r, flags;
- 	char r_unit;
- 	struct clock_read_data rd;
- 
- 	if (cd.rate > rate)
- 		return;
- 
--	WARN_ON(!irqs_disabled());
-+	/* Cannot register a sched_clock with interrupts on */
-+	local_irq_save(flags);
- 
- 	/* Calculate the mult/shift to convert counter ticks to ns. */
- 	clocks_calc_mult_shift(&new_mult, &new_shift, rate, NSEC_PER_SEC, 3600);
-@@ -233,6 +234,8 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
- 	if (irqtime > 0 || (irqtime == -1 && rate >= 1000000))
- 		enable_sched_clock_irqtime();
- 
-+	local_irq_restore(flags);
-+
- 	pr_debug("Registered %pS as sched_clock source\n", read);
- }
- 
+Thanks,
+Brian
