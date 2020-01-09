@@ -2,287 +2,85 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1362C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF4BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D78F20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:53:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nbsjGP0t"
+	by mail.kernel.org (Postfix) with ESMTP id 17733206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388655AbgAISxY (ORCPT
+        id S1730811AbgAIS5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:53:24 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43627 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729054AbgAISxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:53:24 -0500
-Received: by mail-oi1-f195.google.com with SMTP id p125so6773701oif.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 10:53:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LjrsEf49wxN7nbgg0ejb27fYAdliJCmtVPCHpdH/qLw=;
-        b=nbsjGP0t5XsrJ4fFUnDPSRHA8/sLBXsgAlK+wM5pdnHzsZM29HqyVrjtamseVopALT
-         r2jEHn31JnXHEnK5T4XuQl4kxmJpsXHEWdtsceXMEqBGBX9PlCkx6uYxDeq+PvvzbMxW
-         mHnATg+LU3VBWvmENF9PfPxgBDlMri/JFVHitDKZX3aLhFeiHua0N0hTPT6TwYTJ5cn2
-         FxJh2s3Vlog8YwAYxR0aKCjpCaj+owJwnfZp8Os9I5khGXNf5u2v1oyhTixr7Exx14Zf
-         Pz21n6JKf98cj1vqaZVvtrlTLY7U1lNoYT6air52s64WpvewD9zgNl7sbp7U4qocyt9j
-         JPRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LjrsEf49wxN7nbgg0ejb27fYAdliJCmtVPCHpdH/qLw=;
-        b=AYhckl4kdvON+n4LRtLN+a4V0rIw6OSKMpM7sk79FQKJtxPPRHUGFOmK8diSQJ7a37
-         Zy+6UnlwakRHr7GouVsPwzsVrUfV387p8XemgwGYwv5FWAlxNCNc3OrkIv7oMA23n+sb
-         T3dQ4nlJ1dmhQ+eKLm8hexKieY0xyYWwyThBFAtQZiEWp6L/hcPP7D/tESHWZrjaLGGe
-         FJJ5FsABW2EozR9vqJNOHYH2pSKiMyogEF883SsmxmAxV+S8qC0GK5K/1U9MkyPeSV3i
-         2J/t5K+3JHhomH/TfndbC2A0bWAz/U8VhtQBRWb1G2rL8coxQeFUr/V2LXY/KKIcbomP
-         sqPA==
-X-Gm-Message-State: APjAAAUyx9BJ/DSXHfMYhQJIV3sL/orJSwl3kyv40gdXNEuIuxh8NPCX
-        Mr3zEuPmUd7jf+Kgc6d9wbEZpPSr3ypctiaDMpCLxA==
-X-Google-Smtp-Source: APXvYqzPmxBE+erUn0sSaFoHQdBFQrRk5ky8t4eEE9fAiXhM2jvamfjvIymet2QmHKnSAf9++E4OLUyK5Hq/WohYoto=
-X-Received: by 2002:aca:ea43:: with SMTP id i64mr4481440oih.30.1578596002690;
- Thu, 09 Jan 2020 10:53:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20191224044146.232713-1-saravanak@google.com> <CAKv+Gu_yDWhvR80Wg1-bzpD1aGwGC-UA+obcgn8CEKKjMdR7rQ@mail.gmail.com>
-In-Reply-To: <CAKv+Gu_yDWhvR80Wg1-bzpD1aGwGC-UA+obcgn8CEKKjMdR7rQ@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 9 Jan 2020 10:52:46 -0800
-Message-ID: <CAGETcx9iA_irfpO2yJSPszeNrfwfYAV0KkZ+AyB7gcDo0v8p1g@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: arm: defer probe of PCIe backed efifb on DT systems
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 Jan 2020 13:57:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58202 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729054AbgAIS5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 13:57:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 48396B1EC;
+        Thu,  9 Jan 2020 18:57:35 +0000 (UTC)
+Date:   Thu, 09 Jan 2020 19:57:34 +0100
+Message-ID: <s5h36comp9d.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Sriram Periyasamy <sriram.oqensourz@gmail.com>
+Cc:     Jeff Chang <richtek.jeff.chang@gmail.com>, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.com, jeff_chang@richtek.com, broonie@kernel.org,
+        matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [alsa-devel] [PATCH v4] ASoC: Add MediaTek MT6660 Speaker Amp Driver
+In-Reply-To: <20200109171833.GA2709@sriram-VirtualBox>
+References: <1578366545-30251-1-git-send-email-richtek.jeff.chang@gmail.com>
+        <20200109171833.GA2709@sriram-VirtualBox>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 6:06 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->
-> On Tue, 24 Dec 2019 at 05:41, Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > The new of_devlink support breaks PCIe probing on ARM platforms booting
-> > via UEFI if the firmware exposes a EFI framebuffer that is backed by a
-> > PCI device. The reason is that the probing order gets reversed,
-> > resulting in a resource conflict on the framebuffer memory window when
-> > the PCIe probes last, causing it to give up entirely.
-> >
-> > Given that we rely on PCI quirks to deal with EFI framebuffers that get
-> > moved around in memory, we cannot simply drop the memory reservation, so
-> > instead, let's use the device link infrastructure to register this
-> > dependency, and force the probing to occur in the expected order.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > Co-developed-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >
-> > Hi Ard,
-> >
-> > I compile tested it and I think it should work. If you can actually run
-> > and test it, that'd be nice.
-> >
-> > You can also optimize find_pci_overlap_node() by caching the result if
-> > you think that's necessary.
-> >
-> > Right now this code will run always just like your code did. But once I
-> > rename of_devlink to fw_devlink, this code won't be run if fw_devlink is
-> > disabled.
-> >
-> > v1 -> v2:
-> > - Rewrote the device linking part to not depend on initcall ordering
-> >
-> >  drivers/firmware/efi/arm-init.c | 106 ++++++++++++++++++++++++++++++--
-> >  1 file changed, 102 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
-> > index 904fa09e6a6b..8b789ff83af0 100644
-> > --- a/drivers/firmware/efi/arm-init.c
-> > +++ b/drivers/firmware/efi/arm-init.c
-> > @@ -10,10 +10,12 @@
-> >  #define pr_fmt(fmt)    "efi: " fmt
-> >
-> >  #include <linux/efi.h>
-> > +#include <linux/fwnode.h>
-> >  #include <linux/init.h>
-> >  #include <linux/memblock.h>
-> >  #include <linux/mm_types.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_address.h>
-> >  #include <linux/of_fdt.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/screen_info.h>
-> > @@ -276,15 +278,111 @@ void __init efi_init(void)
-> >                 efi_memmap_unmap();
-> >  }
-> >
-> > +static bool efifb_overlaps_pci_range(const struct of_pci_range *range)
-> > +{
-> > +       u64 fb_base = screen_info.lfb_base;
+On Thu, 09 Jan 2020 18:18:36 +0100,
+Sriram Periyasamy wrote:
+> 
+> On Tue, Jan 07, 2020 at 11:09:05AM +0800, Jeff Chang wrote:
+> > From: Jeff Chang <jeff_chang@richtek.com>
+> > 
+> > The MT6660 is a boosted BTL class-D amplifier with V/I sensing.
+> > A built-in DC-DC step-up converter is used to provide efficient
+> > power for class-D amplifier with multi-level class-G operation.
+> > The digital audio interface supports I2S, left-justified,
+> > right-justified, TDM and DSP A/B format for audio in with a data
+> > out used for chip information like voltage sense and current
+> > sense, which are able to be monitored via DATAO through proper
+> > 
+> > diff --git a/sound/soc/codecs/mt6660.c b/sound/soc/codecs/mt6660.c
+> > new file mode 100644
+> > index 0000000..b8fc53b
+> > --- /dev/null
+> > +++ b/sound/soc/codecs/mt6660.c
+> > @@ -0,0 +1,628 @@
+> 
 > > +
-> > +       if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> > +               fb_base |= (u64)(unsigned long)screen_info.ext_lfb_base << 32;
-> > +
-> > +       return fb_base >= range->cpu_addr &&
-> > +              fb_base < (range->cpu_addr + range->size);
-> > +}
-> > +
-> > +static struct device_node *find_pci_overlap_node(void)
-> > +{
-> > +       struct device_node *np;
-> > +
-> > +       for_each_node_by_type(np, "pci") {
-> > +               struct of_pci_range_parser parser;
-> > +               struct of_pci_range range;
-> > +               int err;
-> > +
-> > +               err = of_pci_range_parser_init(&parser, np);
-> > +               if (err) {
-> > +                       pr_warn("of_pci_range_parser_init() failed: %d\n", err);
-> > +                       continue;
-> > +               }
-> > +
-> > +               for_each_of_pci_range(&parser, &range)
-> > +                       if (efifb_overlaps_pci_range(&range))
-> > +                               return np;
-> > +       }
-> > +       return NULL;
-> > +}
-> > +
-> > +/*
-> > + * If the efifb framebuffer is backed by a PCI graphics controller, we have
-> > + * to ensure that this relation is expressed using a device link when
-> > + * running in DT mode, or the probe order may be reversed, resulting in a
-> > + * resource reservation conflict on the memory window that the efifb
-> > + * framebuffer steals from the PCIe host bridge.
-> > + */
-> > +static int efifb_add_links(const struct fwnode_handle *fwnode,
-> > +                          struct device *dev)
-> > +{
-> > +       struct device_node *sup_np;
-> > +       struct device *sup_dev;
-> > +
-> > +       sup_np = find_pci_overlap_node();
-> > +
-> > +       /*
-> > +        * If there's no PCI graphics controller backing the efifb, we are
-> > +        * done here.
-> > +        */
-> > +       if (!sup_np)
-> > +               return 0;
-> > +
-> > +       sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
-> > +       of_node_put(sup_np);
-> > +
-> > +       /*
-> > +        * Return -ENODEV if the PCI graphics controller device hasn't been
-> > +        * registered yet.  This ensures that efifb isn't allowed to probe
-> > +        * and this function is retried again when new devices are
-> > +        * registered.
-> > +        */
-> > +       if (!sup_dev)
-> > +               return -ENODEV;
-> > +
-> > +       /*
-> > +        * If this fails, retrying this function at a later point won't
-> > +        * change anything. So, don't return an error after this.
-> > +        */
-> > +       if (!device_link_add(dev, sup_dev, 0))
-> > +               dev_warn(dev, "device_link_add() failed\n");
-> > +
-> > +       put_device(sup_dev);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static struct fwnode_operations efifb_fwnode_ops = {
->
-> Please make this const
-
-Ack
-
-> > +       .add_links = efifb_add_links,
+> > +struct codec_reg_val {
+> > +	u32 addr;
+> > +	u32 mask;
+> > +	u32 data;
 > > +};
-> > +
-> > +static struct fwnode_handle efifb_fwnode = {
-> > +       .ops = &efifb_fwnode_ops,
-> > +};
-> > +
-> >  static int __init register_gop_device(void)
-> >  {
-> > -       void *pd;
-> > +       struct platform_device *pd;
-> > +       int err;
-> >
-> >         if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI)
-> >                 return 0;
-> >
-> > -       pd = platform_device_register_data(NULL, "efi-framebuffer", 0,
-> > -                                          &screen_info, sizeof(screen_info));
-> > -       return PTR_ERR_OR_ZERO(pd);
-> > +       pd = platform_device_alloc("efi-framebuffer", 0);
-> > +       if (!pd)
-> > +               return -ENOMEM;
-> > +
->
-> Add
->
->   if (IS_ENABLED(CONFIG_PCI))
->
-> here
+> 
+> packed structures could have been better.
 
-As in around the line below where I set the fwnode? Then it's going to
-warn about unused variable. Maybe I should just do the if
-(IS_ENABLED(CONFIG_PCI)) inside the add_links() function to short
-circuit it.
+It depends.  Packing may break alignment and the performance may
+suffer from it.  So, in general, __packed is recommended when the size
+matters (e.g. lots of objects / arrays are created) or it's about ABI
+that needs the fixed consistent size.
 
-Responding to your other email here. Adding ifdef CONFIG_PCI was my
-first inclination, but then those 2 functions are defined if
-CONFIG_OF_ADDRESS are defined and if not the stubs are always there.
-There's no #ifdef CONFIG_PCI around any of them AFAICT. So I'm
-confused about what's going on.
 
-> > +       pd->dev.fwnode = &efifb_fwnode;
-> > +
-> > +       err = platform_device_add_data(pd, &screen_info, sizeof(screen_info));
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       return platform_device_add(pd);
-> >  }
-> >  subsys_initcall(register_gop_device);
-> > --
-> > 2.24.1.735.g03f4e72817-goog
-> >
->
-> With the changes above
+thanks,
 
-Yeah, will make them all.
-
->
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
->
-
-Thanks!
-
--Saravana
+Takashi
