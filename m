@@ -2,206 +2,113 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B14C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEC2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8DA920661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0EC20661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:03:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZJ6DV7q4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387812AbgAIRBd convert rfc822-to-8bit (ORCPT
+        id S2387953AbgAIRDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:01:33 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:50081 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729533AbgAIRBc (ORCPT
+        Thu, 9 Jan 2020 12:03:52 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37958 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387821AbgAIRDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:01:32 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E5541240004;
-        Thu,  9 Jan 2020 17:01:29 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 18:01:28 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org,
-        bbrezillon@kernel.org, computersforpeace@gmail.com,
-        vigneshr@ti.com, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] mtd: rawnand: Add support Macronix deep power
- down mode
-Message-ID: <20200109180128.0f3e7b99@xps13>
-In-Reply-To: <1572256527-5074-5-git-send-email-masonccyang@mxic.com.tw>
-References: <1572256527-5074-1-git-send-email-masonccyang@mxic.com.tw>
-        <1572256527-5074-5-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 12:03:51 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l9so6471703oii.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 09:03:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bMx6vW+NjpB+ZzfdSbqjjcW3Neq3wFHEeHMe7FuFhBA=;
+        b=ZJ6DV7q423gDjoUKdWM66o5EZrOhvSX8oOMpMmT+dLghf3n7rzhh+vOP32D1eEbaVa
+         FiYDULBwfXGcRDVApzeNu9cMg0lfapFl6Nc8UtuPs7XS8QrBJPHqo3inUA6UjdTU3/bs
+         KZszkXMdHRa35yZR2l8ZbeANUnzSVaM4SGcHjLFMHRd++8DM54Bm1reCZff+sA4HJUFn
+         p1wg8+YMkwEO+BBTRG6lAUbhhIIhy+UlqSPTympsM9GULVhyFLohm3YoXdEj0Ido8eao
+         KPHscMdOTLSUSS2oorJACsr3i2ExrD4FxY3PU7uGX+l4CLZp4yQk6esay5Yng+P3TaJj
+         M/kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bMx6vW+NjpB+ZzfdSbqjjcW3Neq3wFHEeHMe7FuFhBA=;
+        b=O2DfKzPRapahfJxRFBkX7u9e3lqv06Mle5bBFCUIWJz9UKNLqgpq3dM7AfSEENiJpj
+         HYyj68hm/oAXQglLxM5cel8pV1/Kr/E5EN85cKLfosmmj7gYGVONCDy5N4WDb1XWIwwy
+         5dKHhybUKO/2+tt+odgBA0VieUuIELQ9Zpjy3DxfCuslkTx+9WER40PPI0zoP0WytlJG
+         C9rYmRg6rTRiWKc6ak/uASrWZmMoWVMACpijM8tpwA6hrCtclMx+mZ+/gfJwDbj6Dl8P
+         AbBimPqBNfRJuS1yM9vo20ID+ymV8qOG5fztjghITWxCP3f8Q3buvwz5VdcSPwx1sGHv
+         PLeQ==
+X-Gm-Message-State: APjAAAXnNpyS60lp4vhOQJW+EiiYxfoWUVDzQS+4rI58kaaONmam84In
+        cn4MryehazywDbRZ0kgPp/mqCXdpEJE8m6FEegHVZg==
+X-Google-Smtp-Source: APXvYqyFE4T3xhLKLwqwclKWaKNgQE4HgnkiPzxpoEpcdhDJKNeue00EFINCnoe8AXO4FyU2wAGpr1fJXb/cZ5NOSRo=
+X-Received: by 2002:aca:d4c1:: with SMTP id l184mr4065405oig.172.1578589430440;
+ Thu, 09 Jan 2020 09:03:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200109152322.104466-1-elver@google.com> <20200109162739.GS13449@paulmck-ThinkPad-P72>
+In-Reply-To: <20200109162739.GS13449@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 9 Jan 2020 18:03:39 +0100
+Message-ID: <CANpmjNOR4oT+yuGsjajMjWduKjQOGg9Ybd97L2jwY2ZJN8hgqg@mail.gmail.com>
+Subject: Re: [PATCH -rcu 0/2] kcsan: Improvements to reporting
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+On Thu, 9 Jan 2020 at 17:27, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Thu, Jan 09, 2020 at 04:23:20PM +0100, Marco Elver wrote:
+> > Improvements to KCSAN data race reporting:
+> > 1. Show if access is marked (*_ONCE, atomic, etc.).
+> > 2. Rate limit reporting to avoid spamming console.
+> >
+> > Marco Elver (2):
+> >   kcsan: Show full access type in report
+> >   kcsan: Rate-limit reporting per data races
+>
+> Queued and pushed, thank you!  I edited the commit logs a bit, so could
+> you please check to make sure that I didn't mess anything up?
 
-Mason Yang <masonccyang@mxic.com.tw> wrote on Mon, 28 Oct 2019 17:55:27
-+0800:
+Looks good to me, thank you.
 
-> Macronix AD series support deep power down mode for a minimum
-> power consumption state.
-> 
-> Patch nand_suspend() & nand_resume() by Macronix specific
-> deep power down mode command and exit it.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  drivers/mtd/nand/raw/nand_macronix.c | 72 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 70 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-> index 13929bf..3098bc0 100644
-> --- a/drivers/mtd/nand/raw/nand_macronix.c
-> +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> @@ -15,6 +15,8 @@
->  #define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
->  #define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
->  
-> +#define NAND_CMD_POWER_DOWN 0xB9
+> At some point, boot-time-allocated per-CPU arrays might be needed to
+> avoid contention on large systems, but one step at a time.  ;-)
 
-I suppose this value is Macronix specific, and hence should have a
-MACRONIX_ or MXIC_ prefix instead of NAND_.
-
-> +
->  struct nand_onfi_vendor_macronix {
->  	u8 reserved;
->  	u8 reliability_func;
-> @@ -137,13 +139,66 @@ static int mxic_nand_unlock(struct nand_chip *chip, loff_t ofs, uint64_t len)
->  	return ret;
->  }
->  
-> +int nand_power_down_op(struct nand_chip *chip)
-> +{
-> +	int ret;
-> +
-> +	if (nand_has_exec_op(chip)) {
-> +		struct nand_op_instr instrs[] = {
-> +			NAND_OP_CMD(NAND_CMD_POWER_DOWN, 0),
-> +		};
-> +
-> +		struct nand_operation op = NAND_OPERATION(chip->cur_cs, instrs);
-> +
-> +		ret = nand_exec_op(chip, &op);
-> +		if (ret)
-> +			return ret;
-> +
-> +	} else {
-> +		chip->legacy.cmdfunc(chip, NAND_CMD_POWER_DOWN, -1, -1);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mxic_nand_suspend(struct nand_chip *chip)
-> +{
-> +	int ret;
-> +
-> +	nand_select_target(chip, 0);
-> +	ret = nand_power_down_op(chip);
-> +	if (ret < 0)
-> +		pr_err("%s called for chip into suspend failed\n", __func__);
-
-What about something more specific?
-
-       "Suspending MXIC NAND chip failed (%)\n", ret
-
-> +	nand_deselect_target(chip);
-> +
-> +	return ret;
-> +}
-> +
-> +static void mxic_nand_resume(struct nand_chip *chip)
-> +{
-> +	/*
-> +	 * Toggle #CS pin to resume NAND device and don't care
-> +	 * of the others CLE, #WE, #RE pins status.
-> +	 * Here sending power down command to toggle #CS line.
-
-The first sentence seems right, the second could be upgraded:
-
-           The purpose of doing a power down operation is just to
-           ensure some bytes will be sent over the NAND bus so that #CS
-           gets toggled because this is why the chip is woken up.
-	   The content of the bytes sent on the NAND bus are not
-	   relevant at this time. Sending bytes on the bus is mandatory
-	   for a lot of NAND controllers otherwise they are not able to
-	   just assert/de-assert #CS.
-
-> +	 */
-> +	nand_select_target(chip, 0);
-> +	nand_power_down_op(chip);
-
-Are you sure sending a power_down_op will not be interpreted by the
-chip?
-
-I would expect a sleeping delay here, even small.
-
-> +	nand_deselect_target(chip);
-> +}
-> +
->  /*
-> - * Macronix NAND AC series support Block Protection by SET_FEATURES
-> + * Macronix NAND AC & AD series support Block Protection by SET_FEATURES
->   * to lock/unlock blocks.
->   */
->  static int macronix_nand_init(struct nand_chip *chip)
->  {
-> -	bool blockprotected = false;
-> +	unsigned int i;
-> +	bool blockprotected = false, powerdown = false;
-> +	static const char * const power_down_dev[] = {
-> +		"MX30LF1G28AD",
-> +		"MX30LF2G28AD",
-> +		"MX30LF4G28AD",
-> +	};
->  
->  	if (nand_is_slc(chip))
->  		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
-> @@ -153,6 +208,14 @@ static int macronix_nand_init(struct nand_chip *chip)
->  
->  	macronix_nand_onfi_init(chip);
->  
-> +	for (i = 0; i < ARRAY_SIZE(power_down_dev); i++) {
-> +		if (!strcmp(power_down_dev[i], chip->parameters.model)) {
-> +			blockprotected = true;
-> +			powerdown = true;
-> +			break;
-> +		}
-> +	}
-> +
->  	if (blockprotected) {
->  		bitmap_set(chip->parameters.set_feature_list,
->  			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
-> @@ -163,6 +226,11 @@ static int macronix_nand_init(struct nand_chip *chip)
->  		chip->_unlock = mxic_nand_unlock;
->  	}
->  
-> +	if (powerdown) {
-> +		chip->_suspend = mxic_nand_suspend;
-> +		chip->_resume = mxic_nand_resume;
-> +	}
-
-See my comment on patch 2.
-
-> +
->  	return 0;
->  }
->  
+I certainly hope the rate of fixing/avoiding data races will not be
+eclipsed by the rate at which new ones are introduced. :-)
 
 Thanks,
-Miquèl
+-- Marco
+
+>                                                         Thanx, Paul
+>
+> >  kernel/kcsan/core.c   |  15 +++--
+> >  kernel/kcsan/kcsan.h  |   2 +-
+> >  kernel/kcsan/report.c | 153 +++++++++++++++++++++++++++++++++++-------
+> >  lib/Kconfig.kcsan     |  10 +++
+> >  4 files changed, 148 insertions(+), 32 deletions(-)
+> >
+> > --
+> > 2.25.0.rc1.283.g88dfdc4193-goog
+> >
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200109162739.GS13449%40paulmck-ThinkPad-P72.
