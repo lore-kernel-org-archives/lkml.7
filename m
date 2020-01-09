@@ -2,118 +2,122 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644FAC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8A0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4469F20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5565220661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 16:54:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rNYxP1oi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387916AbgAIQxZ convert rfc822-to-8bit (ORCPT
+        id S2387921AbgAIQyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:53:25 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:53723 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729572AbgAIQxY (ORCPT
+        Thu, 9 Jan 2020 11:54:01 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47004 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgAIQyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 11:53:24 -0500
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 00206100014;
-        Thu,  9 Jan 2020 16:53:19 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 17:53:18 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org,
-        bbrezillon@kernel.org, computersforpeace@gmail.com,
-        vigneshr@ti.com, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 3/4] mtd: rawnand: Add support manufacturer specific
- suspend/resume operation
-Message-ID: <20200109175318.73ab8bd7@xps13>
-In-Reply-To: <1572256527-5074-4-git-send-email-masonccyang@mxic.com.tw>
-References: <1572256527-5074-1-git-send-email-masonccyang@mxic.com.tw>
-        <1572256527-5074-4-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 11:54:01 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C5D3F52F;
+        Thu,  9 Jan 2020 17:53:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1578588839;
+        bh=sOC8mik59yBJH+Ojdmaq5uVi1sLgq4RG29ymvZmJjzc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rNYxP1oi3fClt3LDl93WQ3Ybt5/HuHty+5P/KtrXWipsEjipStzncldV5Lnv8yY7V
+         dXPT/rRRo9HGE6n9p2GqEXsV5fT/gbPwMVy5dP+Bw4GdDvHlxmB0vyBrbqMnTvhEL/
+         jTXO9KrEe06aGTp0a0YjBqU3DcGp3uwUcVo35U6Q=
+Date:   Thu, 9 Jan 2020 18:53:48 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     mchehab@kernel.org, hyun.kwon@xilinx.com, vkoul@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] media: xilinx: Use dma_request_chan() instead
+ dma_request_slave_channel()
+Message-ID: <20200109165348.GG31792@pendragon.ideasonboard.com>
+References: <20191217104235.23771-1-peter.ujfalusi@ti.com>
+ <20200109164847.GF31792@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200109164847.GF31792@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+Hello again,
 
-Mason Yang <masonccyang@mxic.com.tw> wrote on Mon, 28 Oct 2019 17:55:26
-+0800:
-
-> Patch nand_suspend() & nand_resume() for manufacturer specific
-> suspend/resume operation.
+On Thu, Jan 09, 2020 at 06:48:47PM +0200, Laurent Pinchart wrote:
+> On Tue, Dec 17, 2019 at 12:42:35PM +0200, Peter Ujfalusi wrote:
+> > dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> > eating up the error code.
+> > 
+> > By using dma_request_chan() directly the driver can support deferred
+> > probing against DMA.
+> > 
+> > Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  drivers/mtd/nand/raw/nand_base.c | 9 +++++++--
->  include/linux/mtd/rawnand.h      | 2 ++
->  2 files changed, 9 insertions(+), 2 deletions(-)
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > 
-> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> index 5e318ff..2a9c5bb 100644
-> --- a/drivers/mtd/nand/raw/nand_base.c
-> +++ b/drivers/mtd/nand/raw/nand_base.c
-> @@ -4323,6 +4323,8 @@ static int nand_suspend(struct mtd_info *mtd)
->  	struct nand_chip *chip = mtd_to_nand(mtd);
->  
->  	mutex_lock(&chip->lock);
-> +	if (chip->_suspend)
-> +		chip->_suspend(chip);
+> Vinod, could you please pick this up ?
 
-Return value should be checked!
+I spoke too fast.
 
->  	chip->suspended = 1;
->  	mutex_unlock(&chip->lock);
->  
-> @@ -4338,11 +4340,14 @@ static void nand_resume(struct mtd_info *mtd)
->  	struct nand_chip *chip = mtd_to_nand(mtd);
->  
->  	mutex_lock(&chip->lock);
-> -	if (chip->suspended)
-> +	if (chip->suspended) {
-> +		if (chip->_resume)
-> +			chip->_resume(chip);
->  		chip->suspended = 0;
-> -	else
-> +	} else {
->  		pr_err("%s called for a chip which is not in suspended state\n",
->  			__func__);
-> +	}
->  	mutex_unlock(&chip->lock);
->  }
->  
-> diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-> index 2430ecd..6b14041 100644
-> --- a/include/linux/mtd/rawnand.h
-> +++ b/include/linux/mtd/rawnand.h
-> @@ -1117,6 +1117,8 @@ struct nand_chip {
->  
->  	struct mutex lock;
->  	unsigned int suspended : 1;
-> +	int (*_suspend)(struct nand_chip *chip);
-> +	void (*_resume)(struct nand_chip *chip);
+> > ---
+> >  drivers/media/platform/xilinx/xilinx-dma.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/xilinx/xilinx-dma.c b/drivers/media/platform/xilinx/xilinx-dma.c
+> > index b211380a11f2..9ce515ff9c0a 100644
+> > --- a/drivers/media/platform/xilinx/xilinx-dma.c
+> > +++ b/drivers/media/platform/xilinx/xilinx-dma.c
+> > @@ -725,10 +725,10 @@ int xvip_dma_init(struct xvip_composite_device *xdev, struct xvip_dma *dma,
+> >  
+> >  	/* ... and the DMA channel. */
+> >  	snprintf(name, sizeof(name), "port%u", port);
+> > -	dma->dma = dma_request_slave_channel(dma->xdev->dev, name);
+> > -	if (dma->dma == NULL) {
+> > +	dma->dma = dma_request_chan(dma->xdev->dev, name);
+> > +	if (IS_ERR(dma->dma)) {
+> >  		dev_err(dma->xdev->dev, "no VDMA channel found\n");
+> > -		ret = -ENODEV;
+> > +		ret = PTR_ERR(dma->dma);
+> >  		goto error;
 
-Please don't forget the kdoc!
+At the error label, we have
 
->  
->  	uint8_t *oob_poi;
->  	struct nand_controller *controller;
+error:
+	xvip_dma_cleanup(dma);
+	return ret;
 
-With this fixed,
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+and xvip_dma_cleanup() contains
 
+	if (dma->dma)
+		dma_release_channel(dma->dma);
 
-Thanks,
-Miquèl
+You need to turn this into
+
+	if (!IS_ERR_OR_NULL(dma->dma))
+
+or add a
+
+		dma->dma = NULL;
+
+in the error case in xvip_dma_init().
+
+> >  	}
+> >  
+
+-- 
+Regards,
+
+Laurent Pinchart
