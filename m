@@ -2,117 +2,89 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7BCC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33E6C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1342D2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BC02072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578594210;
-	bh=dd8EZ98uqK9j/Oi18ACAq5NTaNf++Pvoytvm/sNE+kA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XQgVChFidJZOW21riuviSrlCvULK0KLSsfci4vU12m3xrvEMW0eQxUpwSZilRqU0M
-	 JPkPYZXGY9S8gTFzSDbXg12/26Tcrg7cmUH8uYdjXPaRh/lYD8qypGZlMSAcfnW7oJ
-	 ElQG0AMpAAsVqgvg7RZgmW2Cx5dauwESoz7hPu68=
+	s=default; t=1578594217;
+	bh=TYSYJuiJnxFUF6CsQMjqkB8W/GhMj9NMoeGBvL4s6lA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Rsyymo14FUnX8UmxpgGipnF0H+WxX3Yg2OXdpfKVuXF29VZf/mJY40CoMzDlpq1fL
+	 2xe7sbP+kOGTavMfNmiZXYSEe7+xxbg/jz+jHWarQji/aGnK8hA8T3BvDpCkzmoLlv
+	 w1pXwdtALXVsrbhV7fqus5nADD6dYmlo6i3Z9Vco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388464AbgAISX3 (ORCPT
+        id S2388477AbgAISXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:23:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38614 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 13:23:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730290AbgAISX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:23:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730290AbgAISXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 13:23:36 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1498E2067D;
-        Thu,  9 Jan 2020 18:23:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 209FD2072A;
+        Thu,  9 Jan 2020 18:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578594207;
-        bh=dd8EZ98uqK9j/Oi18ACAq5NTaNf++Pvoytvm/sNE+kA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t6jaL5GY6Q8j7Hix4nuqr0SocWjFn9qv6xxpg7JI2qICGbUi8ugQenpQMkEfSfC/D
-         A3B2kTbzWuDV6E/gYyk0YrAUdgUT0fgqFUUu39awk4gAAVsSkpT9W+FkBbkqqYi/k0
-         fykNo+rcgdgxZwYRTdjkrs0P3gPVYw2cPDOOCrxw=
-Date:   Thu, 9 Jan 2020 19:23:24 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     James Morris <jmorris@namei.org>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200109182324.GC591973@kroah.com>
-References: <20191220154208.15895-1-kpsingh@chromium.org>
- <95036040-6b1c-116c-bd6b-684f00174b4f@schaufler-ca.com>
- <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com>
- <201912301112.A1A63A4@keescook>
- <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
- <alpine.LRH.2.21.2001090551000.27794@namei.org>
- <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100437550.21515@namei.org>
+        s=default; t=1578594215;
+        bh=TYSYJuiJnxFUF6CsQMjqkB8W/GhMj9NMoeGBvL4s6lA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bAjHJV+yNW8CaPIMOR3CGaOr/6NavzY8U42j0xV/hIm+5w6DR+647oWb+qAlLMg2K
+         d0b+h68Ci/u/XOM8EnRUUO+KSoWo8gHWZjwomjtTXwyEUqfhjrTfI4mgPa/LixLwcz
+         iA5IGoH0FsugZBbeOn3SwRiZdV8+SnSOJtS6QqSo=
+Date:   Thu, 9 Jan 2020 12:23:33 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     David Engraf <david.engraf@sysgo.com>, thierry.reding@gmail.com,
+        andrew.murray@arm.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: Re: [PATCH v2] PCI: tegra: Fix return value check of
+ pm_runtime_get_sync
+Message-ID: <20200109182333.GA252736@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.2001100437550.21515@namei.org>
+In-Reply-To: <20200109121309.GB10919@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 05:11:38AM +1100, James Morris wrote:
-> On Wed, 8 Jan 2020, Stephen Smalley wrote:
+On Thu, Jan 09, 2020 at 12:13:09PM +0000, Lorenzo Pieralisi wrote:
+> On Tue, Dec 17, 2019 at 08:36:32AM -0600, Bjorn Helgaas wrote:
+> > On Mon, Dec 16, 2019 at 12:18:25PM +0100, David Engraf wrote:
+> > > pm_runtime_get_sync() returns the device's usage counter. This might
+> > > be >0 if the device is already powered up or CONFIG_PM is disabled.
+> > > 
+> > > Abort probe function on real error only.
+> > > 
+> > > Fixes: da76ba50963b ("PCI: tegra: Add power management support")
+> > > Signed-off-by: David Engraf <david.engraf@sysgo.com>
+> > 
+> > I added Andrew's ack and a stable tag for v4.17+.  Also cc'd
+> > Manikanta, author of da76ba50963b.
+> > 
+> > I put this on my pci/host-tegra branch for v5.6 for now.  Lorenzo may
+> > move this when he returns.
 > 
-> > The cover letter subject line and the Kconfig help text refer to it as a
-> > BPF-based "MAC and Audit policy".  It has an enforce config option that
-> > enables the bpf programs to deny access, providing access control. IIRC, in
-> > the earlier discussion threads, the BPF maintainers suggested that Smack and
-> > other LSMs could be entirely re-implemented via it in the future, and that
-> > such an implementation would be more optimal.
+> Hi Bjorn,
 > 
-> In this case, the eBPF code is similar to a kernel module, rather than a 
-> loadable policy file.  It's a loadable mechanism, rather than a policy, in 
-> my view.
-> 
-> This would be similar to the difference between iptables rules and 
-> loadable eBPF networking code.  I'd be interested to know how the 
-> eBPF networking scenarios are handled wrt kernel ABI.
+> I could not find pci/host-tegra in your public repo, have you deleted it
+> in the meanwhile ?
 
-I already know of some people who pre-compile ebpf programs based on a
-number of "supported" kernel versions and then load the needed one at
-runtime.
+Welcome back, Lorenzo!  Sorry, I forgot to push the pci/host-tegra
+branch.  It has been in -next for a while, though.  I pushed it now.
+Happy to drop the branch if you want to add more Tegra stuff, just let
+me know.
 
-Messy, yes, but you are right, ebpf code is much more similiar to a
-kernel module than userspace code at the moment.
-
-thanks,
-
-greg k-h
+Bjorn
