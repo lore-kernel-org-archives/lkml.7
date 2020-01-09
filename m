@@ -2,323 +2,177 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA17C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7E5C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB28D20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578611961;
-	bh=HCgmQ1WzVQLOjZpoxHNkOJizzTgXg/SztobyQ6cL1E8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=MM8qIGo7+RzbRijWQGbxEqsNLH/+xHZ158YpEOsiysTABCe3kd5eOvBfmgtnuIMzD
-	 8dY0LgSqNZ6HLZcpX12rRBx4cPBlyfJXR1gJVu1zwdLf+YcC82DVhpHYvhlOe+uKBo
-	 kBoZL20/1MBpVX3q2B81cVa0KHv5hSRy1k/2vAOI=
+	by mail.kernel.org (Postfix) with ESMTP id B2EE220882
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:21:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y89hp8wX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgAIXTU (ORCPT
+        id S1728909AbgAIXVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:19:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgAIXTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:19:19 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66C6C20656;
-        Thu,  9 Jan 2020 23:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578611958;
-        bh=HCgmQ1WzVQLOjZpoxHNkOJizzTgXg/SztobyQ6cL1E8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=y+AYt70TzTPhLSPjEUuWoltZIZR0ikL9mI7VBKs+feFiuEQ17WZy+ugNJcNwUBWjX
-         mKwVBLurHhmEcD1M5CEzO/z1gLHZTpGd5RezQ6FOFF7VAVYPXv9niWUJECjCd9uzbT
-         v5DP8ansTMODTeLW044nZ+E3t/HsrTepbPVhncn4=
-Subject: Re: [PATCH v2] selftests/lkdtm: Add tests for LKDTM targets
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Popov <alex.popov@linux.com>,
-        linux-kselftest@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        shuah <shuah@kernel.org>
-References: <201912301453.19D686EE6@keescook>
-From:   shuah <shuah@kernel.org>
-Message-ID: <8591d8b8-969a-bd6a-8ef5-3fd908ac16c7@kernel.org>
-Date:   Thu, 9 Jan 2020 16:19:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 18:21:40 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:38732 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgAIXVk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 18:21:40 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200109232137epoutp02e91d067134bb08170d61ef9fd8d01938~oW1bGtBsl2509225092epoutp02T
+        for <linux-kernel@vger.kernel.org>; Thu,  9 Jan 2020 23:21:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200109232137epoutp02e91d067134bb08170d61ef9fd8d01938~oW1bGtBsl2509225092epoutp02T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578612097;
+        bh=T+CeYd6IFZglOI4g+diQBYqoYYrYS/DvRp1wf9ehhSs=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=Y89hp8wXi3HKHGbnfbukvhKOGw0y6ZIwjNpfEuMTenrcuONm8E7Y9aALJfH9Gg2Gv
+         EXZXbYYfyR+4AXid68qxUrZ4dAoY2+gWiZzQagaD0HI6v3whYsVnYAPz4JRMkIhLoN
+         U468v4hMl1AZOlN05yWnwJWzblo4K9WoTKji7sZc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200109232137epcas1p4e338856c504cd9f67eadc4b1600deba4~oW1asrb5-0706907069epcas1p4I;
+        Thu,  9 Jan 2020 23:21:37 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47v2Dw1YPYzMqYkg; Thu,  9 Jan
+        2020 23:21:36 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7C.FA.48498.085B71E5; Fri, 10 Jan 2020 08:21:36 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200109232135epcas1p31123857fc9cec29067aafda53561683b~oW1ZbZY1t0707807078epcas1p3i;
+        Thu,  9 Jan 2020 23:21:35 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200109232135epsmtrp10c9724d2abb16adff1ebe63cb7e3fd4d~oW1ZasjBv1664216642epsmtrp1k;
+        Thu,  9 Jan 2020 23:21:35 +0000 (GMT)
+X-AuditID: b6c32a36-a3dff7000001bd72-b3-5e17b580f5cb
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        59.46.10238.F75B71E5; Fri, 10 Jan 2020 08:21:35 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200109232135epsmtip139602e5d66cf9aabfc8b266346cb88c9~oW1ZRA59Z1335813358epsmtip1c;
+        Thu,  9 Jan 2020 23:21:35 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Christoph Hellwig'" <hch@lst.de>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
+        <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>,
+        <pali.rohar@gmail.com>
+In-Reply-To: <20200108172135.GC13388@lst.de>
+Subject: RE: [PATCH v9 02/13] exfat: add super block operations
+Date:   Fri, 10 Jan 2020 08:21:35 +0900
+Message-ID: <001701d5c743$8945ffe0$9bd1ffa0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <201912301453.19D686EE6@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJSGi/S1M7UFBjz5N3SW71o+eawLwKPpVYaAeKSrnsCTHWGIqa0Uqbw
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLJsWRmVeSWpSXmKPExsWy7bCmgW7DVvE4g/f97BbNi9ezWaxcfZTJ
+        4vrdW8wWe/aeZLG4vGsOm8XE07+ZLLb8O8Jqcen9BxYHDo+ds+6ye+yfu4bdY/fNBjaPvi2r
+        GD0+b5LzOLT9DVsAW1SOTUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqt
+        kotPgK5bZg7QQUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XUgpScAkODAr3ixNzi0rx0
+        veT8XCtDAwMjU6DKhJyMZU0rWAuu8FRsXDqZuYHxIWcXIyeHhICJxL+/85m6GLk4hAR2MEq8
+        PXyKESQhJPCJUeLFLEEI+xujxN8pojANza9WM0I07GWUuLihkQ3Ceckose/QFFaQKjYBXYl/
+        f/azgdgiAmoSZ362sYMUMQucYpT4v3UiWIJTQEfi+LUZQAkODmEBe4mODZIgYRYBVYkDvd3s
+        IDavgKXEotdPoGxBiZMzn7CA2MwC8hLb385hhrhIQeLn02WsELvcJFa1TWCDqBGRmN3Zxgyy
+        V0KgnV1iwuzjTBANLhKHm0+wQdjCEq+Ob2GHsKUkXva3gd0jIVAt8XE/1PwOYEh8t4WwjSVu
+        rt/AClLCLKApsX6XPkRYUWLn77mMEGv5JN597WGFmMIr0dEmBFGiKtF36TDUAdISXe0f2Ccw
+        Ks1C8tgsJI/NQvLALIRlCxhZVjGKpRYU56anFhsWGCFH9SZGcFLVMtvBuOiczyFGAQ5GJR7e
+        DGHxOCHWxLLiytxDjBIczEoivEdviMUJ8aYkVlalFuXHF5XmpBYfYjQFhvtEZinR5Hxgws8r
+        iTc0NTI2NrYwMTM3MzVWEufl+HExVkggPbEkNTs1tSC1CKaPiYNTqoGxqdGDlfvuha75z0Ju
+        SbXkTK7/WF4/4+HcH1ZXyi7+CWO+Nu39msIzL3Zcmf8/uvFD0iHH5RaPxXR+/UwMXdlz5/T6
+        hVsfXF7hdNj13qOXmotCfHqvbUoV2xjv+ip/5vX2YA2jjq7Um37bc5ncBbfULNeu+xzJfuz2
+        FZVLH2V+uiS/SVfhkY06qMRSnJFoqMVcVJwIAM5KO+/AAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsWy7bCSnG79VvE4gwfd+hbNi9ezWaxcfZTJ
+        4vrdW8wWe/aeZLG4vGsOm8XE07+ZLLb8O8Jqcen9BxYHDo+ds+6ye+yfu4bdY/fNBjaPvi2r
+        GD0+b5LzOLT9DVsAWxSXTUpqTmZZapG+XQJXxrKmFawFV3gqNi6dzNzA+JCzi5GTQ0LARKL5
+        1WrGLkYuDiGB3YwSiy5PYoRISEscO3GGuYuRA8gWljh8uBgkLCTwnFHi4nlBEJtNQFfi35/9
+        bCC2iICaxJmfbewgc5gFLjFKTOhtYoYYep9RYv+BmSwgVZwCOhLHr81gBxkqLGAv0bFBEiTM
+        IqAqcaC3mx3E5hWwlFj0+gmULShxcuYTFpByZgE9ibaNYKcxC8hLbH87hxniTAWJn0+XsULc
+        4Caxqm0CG0SNiMTszjbmCYzCs5BMmoUwaRaSSbOQdCxgZFnFKJlaUJybnltsWGCYl1quV5yY
+        W1yal66XnJ+7iREcXVqaOxgvL4k/xCjAwajEw5shLB4nxJpYVlyZe4hRgoNZSYT36A2xOCHe
+        lMTKqtSi/Pii0pzU4kOM0hwsSuK8T/OORQoJpCeWpGanphakFsFkmTg4pRoY45N7Mw4/ez0r
+        3O/D4ZbP/f+mWD5z7Gi1l7934/2nn99P/fK8eoV7V+6T4PisGfvfOX56cPHHkeT5ooYfrNvd
+        JnvGl1o3rtpkcvSW1ZQJgZHPD+1acP5+1U0Zof0tpff3/z5Y0rgqkP3glZ2HTr2rz5ysHlLM
+        M2FpMKfDpeaSqZmxmnYlgXc6JyqxFGckGmoxFxUnAgA7vmGHqgIAAA==
+X-CMS-MailID: 20200109232135epcas1p31123857fc9cec29067aafda53561683b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200102082401epcas1p2f33f3c11ecedabff2165ba216854d8fe
+References: <20200102082036.29643-1-namjae.jeon@samsung.com>
+        <CGME20200102082401epcas1p2f33f3c11ecedabff2165ba216854d8fe@epcas1p2.samsung.com>
+        <20200102082036.29643-3-namjae.jeon@samsung.com>
+        <20200108172135.GC13388@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/30/19 3:57 PM, Kees Cook wrote:
-> This adds a basic framework for running all the "safe" LKDTM tests. This
-> will allow easy introspection into any selftest logs to examine the
-> results of most LKDTM tests.
+> Looks good, modulo a few nitpicks below:
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: refreshed for v5.5, added new tests since v1
-> v1: https://lore.kernel.org/lkml/201905091013.E228F0F0BE@keescook/
-> ---
->   MAINTAINERS                             |  1 +
->   tools/testing/selftests/Makefile        |  1 +
->   tools/testing/selftests/lkdtm/Makefile  | 12 ++++
->   tools/testing/selftests/lkdtm/config    |  1 +
->   tools/testing/selftests/lkdtm/run.sh    | 91 +++++++++++++++++++++++++
->   tools/testing/selftests/lkdtm/tests.txt | 70 +++++++++++++++++++
->   6 files changed, 176 insertions(+)
->   create mode 100644 tools/testing/selftests/lkdtm/Makefile
->   create mode 100644 tools/testing/selftests/lkdtm/config
->   create mode 100755 tools/testing/selftests/lkdtm/run.sh
->   create mode 100644 tools/testing/selftests/lkdtm/tests.txt
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+Thanks!
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cc0a4a8ae06a..eacc00c6cfd5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9578,6 +9578,7 @@ LINUX KERNEL DUMP TEST MODULE (LKDTM)
->   M:	Kees Cook <keescook@chromium.org>
->   S:	Maintained
->   F:	drivers/misc/lkdtm/*
-> +F:	tools/testing/selftests/lkdtm/*
->   
->   LINUX KERNEL MEMORY CONSISTENCY MODEL (LKMM)
->   M:	Alan Stern <stern@rowland.harvard.edu>
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index b001c602414b..f0b02a12ba39 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -26,6 +26,7 @@ TARGETS += kexec
->   TARGETS += kvm
->   TARGETS += lib
->   TARGETS += livepatch
-> +TARGETS += lkdtm
->   TARGETS += membarrier
->   TARGETS += memfd
->   TARGETS += memory-hotplug
-> diff --git a/tools/testing/selftests/lkdtm/Makefile b/tools/testing/selftests/lkdtm/Makefile
-> new file mode 100644
-> index 000000000000..1bcc9ee990eb
-> --- /dev/null
-> +++ b/tools/testing/selftests/lkdtm/Makefile
-> @@ -0,0 +1,12 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Makefile for LKDTM regression tests
-> +
-> +include ../lib.mk
-> +
-> +# NOTE: $(OUTPUT) won't get default value if used before lib.mk
-> +TEST_FILES := tests.txt
-> +TEST_GEN_PROGS = $(patsubst %,$(OUTPUT)/%.sh,$(shell awk '{print $$1}' tests.txt | sed -e 's/\#//'))
-> +all: $(TEST_GEN_PROGS)
-> +
-> +$(OUTPUT)/%: run.sh tests.txt
-> +	install -m 0744 run.sh $@
-> diff --git a/tools/testing/selftests/lkdtm/config b/tools/testing/selftests/lkdtm/config
-> new file mode 100644
-> index 000000000000..d874990e442b
-> --- /dev/null
-> +++ b/tools/testing/selftests/lkdtm/config
-> @@ -0,0 +1 @@
-> +CONFIG_LKDTM=y
-> diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-> new file mode 100755
-> index 000000000000..793ee0d5d5a3
-> --- /dev/null
-> +++ b/tools/testing/selftests/lkdtm/run.sh
-> @@ -0,0 +1,91 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# This reads tests.txt for the list of LKDTM tests to invoke. Any marked
-> +# with a leading "#" are skipped. The rest of the line after the
-> +# test name is either the text to look for in dmesg for a "success",
-> +# or the rationale for why a test is marked to be skipped.
-> +#
-> +set -e
-> +TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
-> +
-> +# Verify we have LKDTM available in the kernel.
-> +if [ ! -r $TRIGGER ] ; then
-> +	/sbin/modprobe -q lkdtm || true
-> +	if [ ! -r $TRIGGER ] ; then
-> +		echo "Cannot find $TRIGGER (missing CONFIG_LKDTM?)"
-> +	else
-> +		echo "Cannot write $TRIGGER (need to run as root?)"
-> +	fi
-> +	# Skip this test
-> +	exit 4
-
-Please add a define for this to indicate that this the kselftest
-skip code.
-
-> +fi
-> +
-> +# Figure out which test to run from our script name.
-> +test=$(basename $0 .sh)
-> +# Look up details about the test from master list of LKDTM tests.
-> +line=$(egrep '^#?'"$test"'\b' tests.txt)
-> +if [ -z "$line" ]; then
-> +	echo "Skipped: missing test '$test' in tests.txt"
-> +	exit 4
-> +fi
-> +# Check that the test is known to LKDTM.
-> +if ! egrep -q '^'"$test"'$' "$TRIGGER" ; then
-> +	echo "Skipped: test '$test' missing in $TRIGGER!"
-> +	exit 4
-> +fi
-
-Same here
-
-> +
-> +# Extract notes/expected output from test list.
-> +test=$(echo "$line" | cut -d" " -f1)
-> +if echo "$line" | grep -q ' ' ; then
-> +	expect=$(echo "$line" | cut -d" " -f2-)
-> +else
-> +	expect=""
-> +fi
-> +
-> +# If the test is commented out, report a skip
-> +if echo "$test" | grep -q '^#' ; then
-> +	test=$(echo "$test" | cut -c2-)
-> +	if [ -z "$expect" ]; then
-> +		expect="crashes entire system"
-> +	fi
-> +	echo "Skipping $test: $expect"
-> +	exit 4
-
-Same here
-
-> +fi
-> +
-> +# If no expected output given, assume an Oops with back trace is success.
-> +if [ -z "$expect" ]; then
-> +	expect="call trace:"
-> +fi
-> +
-> +# Clear out dmesg for output reporting
-> +dmesg -c >/dev/null
-> +
-> +# Prepare log for report checking
-> +LOG=$(mktemp --tmpdir -t lkdtm-XXXXXX)
-> +cleanup() {
-> +	rm -f "$LOG"
-> +}
-> +trap cleanup EXIT
-> +
-> +# Most shells yell about signals and we're expecting the "cat" process
-> +# to usually be killed by the kernel. So we have to run it in a sub-shell
-> +# and silence errors.
-> +($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
-> +
-> +# Record and dump the results
-> +dmesg -c >"$LOG"
-> +cat "$LOG"
-> +# Check for expected output
-> +if egrep -qi "$expect" "$LOG" ; then
-> +	echo "$test: saw '$expect': ok"
-> +	exit 0
-> +else
-> +	if egrep -qi XFAIL: "$LOG" ; then
-> +		echo "$test: saw 'XFAIL': [SKIP]"
-> +		exit 4
-> +	else
-> +		echo "$test: missing '$expect': [FAIL]"
-> +		exit 1
-> +	fi
-> +fi
-> diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-> new file mode 100644
-> index 000000000000..fc55f8ef8bee
-> --- /dev/null
-> +++ b/tools/testing/selftests/lkdtm/tests.txt
-> @@ -0,0 +1,70 @@
-> +#PANIC
-> +BUG kernel BUG at
-> +WARNING WARNING:
-> +WARNING_MESSAGE message trigger
-> +EXCEPTION
-> +#LOOP Hangs the system
-> +#EXHAUST_STACK Corrupts memory on failure
-> +#CORRUPT_STACK Crashes entire system on success
-> +#CORRUPT_STACK_STRONG Crashes entire system on success
-> +CORRUPT_LIST_ADD list_add corruption
-> +CORRUPT_LIST_DEL list_del corruption
-> +CORRUPT_USER_DS Invalid address limit on user-mode return
-> +STACK_GUARD_PAGE_LEADING
-> +STACK_GUARD_PAGE_TRAILING
-> +UNSET_SMEP CR4 bits went missing
-> +UNALIGNED_LOAD_STORE_WRITE
-> +#OVERWRITE_ALLOCATION Corrupts memory on failure
-> +#WRITE_AFTER_FREE Corrupts memory on failure
-> +READ_AFTER_FREE
-> +#WRITE_BUDDY_AFTER_FREE Corrupts memory on failure
-> +READ_BUDDY_AFTER_FREE
-> +SLAB_FREE_DOUBLE
-> +SLAB_FREE_CROSS
-> +SLAB_FREE_PAGE
-> +#SOFTLOCKUP Hangs the system
-> +#HARDLOCKUP Hangs the system
-> +#SPINLOCKUP Hangs the system
-> +#HUNG_TASK Hangs the system
-> +EXEC_DATA
-> +EXEC_STACK
-> +EXEC_KMALLOC
-> +EXEC_VMALLOC
-> +EXEC_RODATA
-> +EXEC_USERSPACE
-> +EXEC_NULL
-> +ACCESS_USERSPACE
-> +ACCESS_NULL
-> +WRITE_RO
-> +WRITE_RO_AFTER_INIT
-> +WRITE_KERN
-> +REFCOUNT_INC_OVERFLOW
-> +REFCOUNT_ADD_OVERFLOW
-> +REFCOUNT_INC_NOT_ZERO_OVERFLOW
-> +REFCOUNT_ADD_NOT_ZERO_OVERFLOW
-> +REFCOUNT_DEC_ZERO
-> +REFCOUNT_DEC_NEGATIVE Negative detected: saturated
-> +REFCOUNT_DEC_AND_TEST_NEGATIVE Negative detected: saturated
-> +REFCOUNT_SUB_AND_TEST_NEGATIVE Negative detected: saturated
-> +REFCOUNT_INC_ZERO
-> +REFCOUNT_ADD_ZERO
-> +REFCOUNT_INC_SATURATED Saturation detected: still saturated
-> +REFCOUNT_DEC_SATURATED Saturation detected: still saturated
-> +REFCOUNT_ADD_SATURATED Saturation detected: still saturated
-> +REFCOUNT_INC_NOT_ZERO_SATURATED
-> +REFCOUNT_ADD_NOT_ZERO_SATURATED
-> +REFCOUNT_DEC_AND_TEST_SATURATED Saturation detected: still saturated
-> +REFCOUNT_SUB_AND_TEST_SATURATED Saturation detected: still saturated
-> +#REFCOUNT_TIMING timing only
-> +#ATOMIC_TIMING timing only
-> +USERCOPY_HEAP_SIZE_TO
-> +USERCOPY_HEAP_SIZE_FROM
-> +USERCOPY_HEAP_WHITELIST_TO
-> +USERCOPY_HEAP_WHITELIST_FROM
-> +USERCOPY_STACK_FRAME_TO
-> +USERCOPY_STACK_FRAME_FROM
-> +USERCOPY_STACK_BEYOND
-> +USERCOPY_KERNEL
-> +USERCOPY_KERNEL_DS
-> +STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
-> +CFI_FORWARD_PROTO
+> On Thu, Jan 02, 2020 at 04:20:25PM +0800, Namjae Jeon wrote:
+> > +static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf) {
+> > +	struct super_block *sb = dentry->d_sb;
+> > +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+> > +	unsigned long long id = huge_encode_dev(sb->s_bdev->bd_dev);
 > 
+> > +	if (sbi->used_clusters == ~0u) {
+> 
+> Various other places use UINT_MAX here instead.  Maybe it makes sense to
+> add a EXFAT_CLUSTERS_UNTRACKED or similar define and use that in all
+> places?
+Okay.
+> 
+> > +	if ((new_flag == VOL_DIRTY) && (!buffer_dirty(sbi->pbr_bh)))
+> 
+> No need for both sets of inner braces.
+Yep.
+> 
+> > +static bool is_exfat(struct pbr *pbr) {
+> > +	int i = MUST_BE_ZERO_LEN;
+> > +
+> > +	do {
+> > +		if (pbr->bpb.f64.res_zero[i - 1])
+> > +			break;
+> > +	} while (--i);
+> > +	return i ? false : true;
+> > +}
+> 
+> I find the MUST_BE_ZERO_LEN a little weird here.  Maybe that should be
+> something like PBP64_RESERVED_LEN?
+Okay.
 
-Rest looks good. I can pull the v3 for 5.6-rc1
+> 
+> Also I think this could be simplified by just using memchr_inv in the
+> caller
+> 
+> 	if (memchr_inv(pbr->bpb.f64.res_zero, 0,
+> 			sizeof(pbr->bpb.f64.res_zero)))
+> 		ret = -EINVAL;
+> 		goto free_bh;
+> 	}
+Okay.
+> 
+> > +	/* set maximum file size for exFAT */
+> > +	sb->s_maxbytes = 0x7fffffffffffffffLL;
+> 
+> That this is setting the max size is pretty obvious.  Maybe the comment
+> should be updated to mention how this max file size is calculated?
+I will add the comment.
 
-thanks,
--- Shuah
+Thanks for your review!
+
