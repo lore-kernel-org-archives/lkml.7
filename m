@@ -2,197 +2,112 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE9FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47998C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD06E2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB4C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="iGd7gBdl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A+1qXt2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgAIXmf (ORCPT
+        id S1729426AbgAIXr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:42:35 -0500
-Received: from mail-mw2nam10on2044.outbound.protection.outlook.com ([40.107.94.44]:38073
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728241AbgAIXmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:42:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GQGSA46BrxGsUvRJPhYtUVQhmV6MxHCLepVMxjLgkkaqR2vr4vhGPpveCCdr4Bvn3Vmd5eFPQo9vOFE+lW/Ia6ikzCg/1XLz0hnzrrRa9nAalO8Ox0uOSSgxG7FyMxJ2N9i55BHIKc3VQ4k0KC+x281ZLHjL8nkWgAQa5O8dWaIDDExICiiTUh+Zu+8Yz47sdUKUos2Aq9Tzk9u0Ic5jrU/+ZssrdkKBrodl0p5RU1Epy52gKgSIR18Di6f2unIvw+7M1ST0y5tYTbnpek6tR9BlLQukAPrTjCQKG8OT0SBY9yEuNFhmlHhSQmVgWaK/FSvaPQav+6OcW27XjuAjkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Z3/3+BVYq85rJ6I5WQv1t0AeYjwClFb1bFylfI1Ljo=;
- b=MhF+C54QfsLmIOkNbdww4xEy15n2KdQm5VffstWrLozOFYNtK+5LLOIzUEpU08cH8KYf0mwdMwreO0TOr+iv27nauZ37hzL19lsYTLgSWu7l5K+ectXPt6b3bvdVFLfOvWCvLVa1uyISSOLTNfheRrXroP8ip3kiXPj+pAJGIcZsNGg+MijWqPKne7+9zPI3woHfb/HH967wlfOW5488b7i4AFgw+58HH0RzBV9chW+6HPiWxFi691XWTXbdvvZnApeJinHzgf6AtzqdncVWwFITr3NCahsiVlA//1BX0vEBUZHpkGEaofjKTxZyrQLCeBjRs5u75W5BuO3Mt17qMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Z3/3+BVYq85rJ6I5WQv1t0AeYjwClFb1bFylfI1Ljo=;
- b=iGd7gBdlD8cmo8rSTTPidnZLGjwPiAH2Vp7MIFJvC7GltTKpalZoRFnlAp6rp8mq+eVPXNgUSzfd1nhhPJo5PH6x3IrCG2UX3nCrETFfEe1A6muAdkplBdiwWEbHGPp4GGcmVcKj9ubR2OPat3hGTu21j+Vu90QVqNaSFDRsDik=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from BN8PR12MB3154.namprd12.prod.outlook.com (20.179.67.74) by
- BN8PR12MB3028.namprd12.prod.outlook.com (20.178.210.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Thu, 9 Jan 2020 23:42:30 +0000
-Received: from BN8PR12MB3154.namprd12.prod.outlook.com
- ([fe80::19c8:ed30:f4ea:a010]) by BN8PR12MB3154.namprd12.prod.outlook.com
- ([fe80::19c8:ed30:f4ea:a010%3]) with mapi id 15.20.2623.011; Thu, 9 Jan 2020
- 23:42:30 +0000
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: [PATCH v4] KVM: SVM: Override default MMIO mask if memory encryption is enabled
-Date:   Thu,  9 Jan 2020 17:42:16 -0600
-Message-Id: <4021c4be45a62e5382e81c22cb130dfeea32bc5f.1578613335.git.thomas.lendacky@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0701CA0042.namprd07.prod.outlook.com
- (2603:10b6:803:2d::16) To BN8PR12MB3154.namprd12.prod.outlook.com
- (2603:10b6:408:6d::10)
+        Thu, 9 Jan 2020 18:47:29 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35242 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgAIXr2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 18:47:28 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 009NccQb003715;
+        Thu, 9 Jan 2020 23:46:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=nRKnwHomok/PpPFwHMvZtyTJWnTH8Av6uYkXPJFr5L0=;
+ b=A+1qXt2wKxmM3O0bCR4wk11/+OHX6zPymnH2xGsRDPxDOgPP36J7gWvT50+GAborHaRr
+ orzlH4nhv17YJJZ1HUyBcRJBd5lQoRsr+SW68bga+0ez4jaFItUmrfPRU+7hOnoPk877
+ Zi4WLc7wwbvqV/f4UCx80CugqpR9UEx7Hs5Cr0JynkTioE453a2Dw7u9+iijqk7AGlP4
+ S7kclCvN7Tfb9M9TKQIyH+WXWGlb7G9rbVVJGssLyMxgGJ1dCgU+F9py4/iHPta9u/nl
+ fs3NAZrv+JwM/acsSR+todj4Km0Ok/PckbiUPQC+IhFyH+1Sp5ISntCzDbNM1aJZvbQF WA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xaj4ue8qa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Jan 2020 23:46:23 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 009Nd1pj089807;
+        Thu, 9 Jan 2020 23:46:23 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2xdms0b9ew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 09 Jan 2020 23:46:22 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 009NkKGp001333;
+        Thu, 9 Jan 2020 23:46:20 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Jan 2020 15:46:20 -0800
+Subject: Re: [RFC PATCH V2 01/11] xen/manage: keep track of the on-going
+ suspend mode
+To:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        kamatam@amazon.com, sstabellini@kernel.org, konrad.wilk@oracle.co,
+        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
+        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
+        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com,
+        dwmw@amazon.co.uk, fllinden@amaozn.com
+References: <20200107233720.GA17906@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <88721569-d425-8df3-2ab2-3aa9155b326c@oracle.com>
+Date:   Thu, 9 Jan 2020 18:46:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Received: from tlendack-t1.amd.com (165.204.77.1) by SN4PR0701CA0042.namprd07.prod.outlook.com (2603:10b6:803:2d::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8 via Frontend Transport; Thu, 9 Jan 2020 23:42:29 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 33ebf1b2-5398-4b3e-b25e-08d7955d9737
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3028:|BN8PR12MB3028:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR12MB30280F52F4915D4C78E8F0CBEC390@BN8PR12MB3028.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 02778BF158
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39850400004)(346002)(136003)(199004)(189003)(956004)(186003)(6486002)(81156014)(52116002)(66476007)(66556008)(7696005)(16526019)(54906003)(316002)(26005)(2906002)(2616005)(36756003)(8936002)(66946007)(4326008)(81166006)(5660300002)(8676002)(478600001)(86362001)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR12MB3028;H:BN8PR12MB3154.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kqC0bf5tLdyjsOr+gHJUPXiK91Zc0Ufxo8NksrB6inyXY2Mxa9BkLz/b7EuRAU4wTEai8lJ6GmYFGaZYHUJuXuzxjkayuiR0ouoVDUWmpBAQUjy8vXb/zYRnao0WNaa0MWMtKSpUjYk4YnP9Sg0OjpFYuQcJVtapHZenERc7K4YBIPSA8GdEvxoMmDAP+KruKmgySbX9KOpM/PHWAfo4VGETzl5kTIIGnwZ5Ec1U/lTDtiDg+EoHFw5bMIzZ0oLFlL/JP3P8Moa2JQhEJxuJKCC1NZuLbsV1vjV+c7vhFWNdsLCfCewemPUioFmwtoQKXzxioJtYyVkN11Lmvo482oSRimmRP+sn543urFbEGt44vxi0Hg9xYMul9+DcID3y0wgcVM69zLu/rZDVxh1Sx45H98V7xQ8PvZH2UKH10rZkf0ZxEo52RGgY/eh5BQr1
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33ebf1b2-5398-4b3e-b25e-08d7955d9737
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2020 23:42:29.9320
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yqpxh5OQfEu1sEQYxerbJMdMwIaQ3QYAevRxihve+8Z9jA02a5FvkDfQxyj4gDmg0LYAJR6UY2w43tKIcatwEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3028
+In-Reply-To: <20200107233720.GA17906@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001090198
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001090198
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
-faults when a guest performs MMIO. The AMD memory encryption support uses
-a CPUID function to define the encryption bit position. Given this, it is
-possible that these bits can conflict.
 
-Use svm_hardware_setup() to override the MMIO mask if memory encryption
-support is enabled. Various checks are performed to ensure that the mask
-is properly defined and rsvd_bits() is used to generate the new mask (as
-was done prior to the change that necessitated this patch).
 
-Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+On 1/7/20 6:37 PM, Anchal Agarwal wrote:
+> +
+> +static int xen_setup_pm_notifier(void)
+> +{
+> +	if (!xen_hvm_domain())
+> +		return -ENODEV;
 
----
+ARM guests are also HVM domains. Is it OK for them to register the 
+notifier? The diffstat suggests that you are supporting ARM.
 
-Changes in v4:
-- Use an MMIO mask of all zeroes if no reserved bits are available.
-- Use the PT_PRESENT_MASK define instead of hardcoding the bit
-  position.
+-boris
 
-Changes in v3:
-- Add additional checks to ensure there are no conflicts between the
-  encryption bit position and physical address setting.
-- Use rsvd_bits() generated mask (as was previously used) instead of
-  setting a single bit.
-
-Changes in v2:
-- Use of svm_hardware_setup() to override MMIO mask rather than adding an
-  override callback routine.
----
- arch/x86/kvm/svm.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 122d4ce3b1ab..9612364267fb 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1307,6 +1307,47 @@ static void shrink_ple_window(struct kvm_vcpu *vcpu)
- 	}
- }
- 
-+/*
-+ * The default MMIO mask is a single bit (excluding the present bit),
-+ * which could conflict with the memory encryption bit. Check for
-+ * memory encryption support and override the default MMIO mask if
-+ * memory encryption is enabled.
-+ */
-+static __init void svm_adjust_mmio_mask(void)
-+{
-+	unsigned int enc_bit, mask_bit;
-+	u64 msr, mask;
-+
-+	/* If there is no memory encryption support, use existing mask */
-+	if (cpuid_eax(0x80000000) < 0x8000001f)
-+		return;
-+
-+	/* If memory encryption is not enabled, use existing mask */
-+	rdmsrl(MSR_K8_SYSCFG, msr);
-+	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
-+		return;
-+
-+	enc_bit = cpuid_ebx(0x8000001f) & 0x3f;
-+	mask_bit = boot_cpu_data.x86_phys_bits;
-+
-+	/* Increment the mask bit if it is the same as the encryption bit */
-+	if (enc_bit == mask_bit)
-+		mask_bit++;
-+
-+	/*
-+	 * If the mask bit location is below 52, then some bits above the
-+	 * physical addressing limit will always be reserved, so use the
-+	 * rsvd_bits() function to generate the mask. This mask, along with
-+	 * the present bit, will be used to generate a page fault with
-+	 * PFER.RSV = 1.
-+	 *
-+	 * If the mask bit location is 52 (or above), then clear the mask.
-+	 */
-+	mask = (mask_bit < 52) ? rsvd_bits(mask_bit, 51) | PT_PRESENT_MASK : 0;
-+
-+	kvm_mmu_set_mmio_spte_mask(mask, mask, PT_WRITABLE_MASK | PT_USER_MASK);
-+}
-+
- static __init int svm_hardware_setup(void)
- {
- 	int cpu;
-@@ -1361,6 +1402,8 @@ static __init int svm_hardware_setup(void)
- 		}
- 	}
- 
-+	svm_adjust_mmio_mask();
-+
- 	for_each_possible_cpu(cpu) {
- 		r = svm_cpu_init(cpu);
- 		if (r)
--- 
-2.17.1
+> +
+> +	return register_pm_notifier(&xen_pm_notifier_block);
+> +}
+>
 
