@@ -2,182 +2,197 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485B3C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59AFC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B802072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38282075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eWFENu74"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OUi6Oeca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgAILkJ (ORCPT
+        id S1728223AbgAILkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:40:09 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34520 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgAILkJ (ORCPT
+        Thu, 9 Jan 2020 06:40:21 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:32846 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgAILkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:40:09 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so7095016wrr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 03:40:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7/mjyhxM7gq+Cp30EVB/yitP0pZyaPqlt7ZkHe5xow8=;
-        b=eWFENu7403CSLGQqfZ0fZn8loTgL7UwEhERjHy7tQaIisKhJohLFro8zQK6iCHgGdX
-         cWLRXPLXcLrptRSvVZvJQMNFu4BKD8ShuYRhFZakl0lpMo2764ntAODk8Y2ZotusbxdG
-         Tqe5bdiRe0Tz8QslOl8ZiosqzncuRlknayGmQAZodWuKGE+9tv5eexd+0r3PYtv4sJh4
-         STxjn5r8ku0XvcBkVwH80Q7fgB+WDR49xvkHWiUTBMfJxoobwazYBc77O37FL9oVvWX1
-         elb5aJvGh/wPwJu+fQmEYhjM7t7Q0xSjJPxKR3Q6aDr/j3IlYqTcTy6xT9BznShbXNog
-         r4Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=7/mjyhxM7gq+Cp30EVB/yitP0pZyaPqlt7ZkHe5xow8=;
-        b=QGf3ryL5vkq7Xgk+y5yztwGzOUMzZwRf4HPyTUu1g5g3B3SNFToX9aaoxXJZK5hkWS
-         PU7a+OKzo68K7Fg87m023GcAQ4rNsAexmWNVBPJSAiE/cfMoQPLgvCV20TXj2UIQozv0
-         rf5le9AA7kot3jCx2NvC5+0kxsGydVGPtMCco9874WI5YMUJ0j5MRf2VhNBTmS1iNm8p
-         0RWo8CMRqUSqk1Wjl8Mjfe2x5bkd25oAqv0Q62mA51hQtxRF1TyUrOCv+q+YoFPiwvIY
-         pg4N1RPoqVdrSHAntLQuV/QoMaHYYsa2YVgt9w/n0Yq2Px2kMMbytvdhyfunTPWh/lI2
-         qXGw==
-X-Gm-Message-State: APjAAAUvMYL2dDqgrr0FqpQ9kiaG8mgEu7r0t1rL0WVQSokQRMB8yFzV
-        LR9ApkrfjHZqLJN+/Adhne58bw==
-X-Google-Smtp-Source: APXvYqxFXPR4AGqkO3JuLREUP3IvLj7TW0wt2Iewv8pbCMBNXut5tFAMvwgryQu5qObn7biQD/ar7w==
-X-Received: by 2002:adf:ebc1:: with SMTP id v1mr10153773wrn.351.1578570006986;
-        Thu, 09 Jan 2020 03:40:06 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
-        by smtp.googlemail.com with ESMTPSA id u18sm7249971wrt.26.2020.01.09.03.40.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 03:40:06 -0800 (PST)
-Subject: Re: [PATCH 0/2] clocksource/hyperv: Miscellaneous changes
-To:     Andrea Parri <parri.andrea@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>
-References: <20191210093054.32230-1-parri.andrea@gmail.com>
- <20200108133344.GA8179@andrea>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7069f7ce-4ff7-3569-0d7e-615d1399283a@linaro.org>
-Date:   Thu, 9 Jan 2020 12:40:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 06:40:21 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 009BeADg130591;
+        Thu, 9 Jan 2020 05:40:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578570010;
+        bh=Cu4eyh0A9jxWfcjHOeLDmeCMBzCRubt5Z+/kuTU79Ps=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OUi6OecaQFvcx95eewNrsUrydDelMSKwWkYa9Wro3ArlLEG+THkF5kHvNkgK9Kz3q
+         BjX3yWzjPydHC7L4DG+dqWXW5szKEuLWh35Vhp/PzKvgRlEVFe5fuOSEZ9M6T7Rmwm
+         blwlgEgJ6st6E07eiC6qv8oFvrgia0j789jB+nQE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 009BeAlk120926;
+        Thu, 9 Jan 2020 05:40:10 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
+ 2020 05:40:08 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Jan 2020 05:40:08 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 009Be6Kp019653;
+        Thu, 9 Jan 2020 05:40:06 -0600
+Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>, <jic23@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Olivier MOYSAN <olivier.moysan@st.com>
+References: <20200107114532.6697-1-peter.ujfalusi@ti.com>
+ <eade6657-8470-0d70-b3c1-fcdddf891c6c@st.com>
+ <4c0b7e3e-cd98-860a-e931-c216f1bc6e7a@ti.com>
+ <698d9dec-4486-f70a-b8e0-dfd6b4bb907f@st.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <45195b31-70fa-39c9-e109-eeb33d6a2663@ti.com>
+Date:   Thu, 9 Jan 2020 13:40:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200108133344.GA8179@andrea>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <698d9dec-4486-f70a-b8e0-dfd6b4bb907f@st.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/2020 14:33, Andrea Parri wrote:
-> Thomas, Daniel,
-> 
-> On Tue, Dec 10, 2019 at 10:30:52AM +0100, Andrea Parri wrote:
->> Provide some refactoring and adjustments to the Hyper-V clocksources
->> code.  Applies to -rc1 plus Boqun's:
+
+
+On 09/01/2020 13.29, Fabrice Gasnier wrote:
+> On 1/9/20 11:32 AM, Peter Ujfalusi wrote:
 >>
->>   https://lkml.kernel.org/r/20191126021723.4710-1-boqun.feng@gmail.com
 >>
->> Thanks,
->>   Andrea
+>> On 09/01/2020 11.13, Fabrice Gasnier wrote:
+>>> On 1/7/20 12:45 PM, Peter Ujfalusi wrote:
+>>>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>>>> eating up the error code.
+>>>>
+>>>> By using dma_request_chan() directly the driver can support deferred
+>>>> probing against DMA.
+>>>>
+>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>>> ---
+>>>> Hi,
+>>>>
+>>>> Changes since v1:
+>>>> - Fall back to IRQ mode for ADC only in case of ENODEV
+>>>
+>>> Hi Peter,
+>>>
+>>> Thanks for the patch,
+>>>
+>>> Please find a minor comment here after. Apart from that, you can add my:
+>>>
+>>> Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>
+>>>
+>>>>
+>>>> Regards,
+>>>> Peter
+>>>>
+>>>>  drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++++++++----
+>>>>  1 file changed, 17 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+>>>> index e493242c266e..74a2211bdff4 100644
+>>>> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+>>>> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+>>>> @@ -1383,9 +1383,13 @@ static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
+>>>>  {
+>>>>  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+>>>>  
+>>>> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+>>>> -	if (!adc->dma_chan)
+>>>> -		return -EINVAL;
+>>>> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
+>>>> +	if (IS_ERR(adc->dma_chan)) {
+>>>> +		int ret = PTR_ERR(adc->dma_chan);
+>>>> +
+>>>> +		adc->dma_chan = NULL;
+>>>> +		return ret;
+>>>
+>>> You may "return PTR_ERR(adc->dma_chan);" directly here.
 >>
->> Andrea Parri (2):
->>   clocksource/hyperv: Untangle stimers and timesync from clocksources
->>   clocksource/hyperv: Set TSC clocksource as default w/ InvariantTSC
+>> I don't make decision here on behalf of the adc path on to go forward w/
+>> or w/o DMA support and if we go ahead the stm32_dfsdm_dma_release()
+>> needs the dma_chan to be NULL in case we don't use DMA.
+>>
+>> It is much cleaner to set dma_chan to NULL here than doing it in other
+>> paths.
 > 
-> I'm wondering if you could route these patches via tip; for reference,
+> Hi Peter,
+
+Hi Fabrice,
+
+> Sorry I wasn't clear enough. I agree with you. I was suggesting only,
+> talking about the 'ret' variable. It may be removed to spare a few lines
+> :-).
+> 	if (IS_ERR(adc->dma_chan)) {
+> 		adc->dma_chan = NULL;
+> 		return PTR_ERR(adc->dma_chan);
+> 	}
+> I'm okay both ways.
+
+PTR_ERR(NULL); will return 0
+I need to retrieve the actual error code before NULLing dma_chan.
+
 > 
->    https://lkml.kernel.org/r/20191210093054.32230-1-parri.andrea@gmail.com
-> 
-> Both patches got Reviewed-by: Michael (even though I can't find his replies
-> on lore ATM).
-> 
-> Also, I realized that this series has a minor conflict with Dexuan's:
-> 
->   https://lkml.kernel.org/r/1578350617-130430-1-git-send-email-decui@microsoft.com
-> 
-> (added to Cc:); please let me know if a rebase/resend is needed.
+>>
+>>>
+>>> Best Regards,
+>>> Fabrice
+>>>
+>>>> +	}
+>>>>  
+>>>>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
+>>>>  					 DFSDM_DMA_BUFFER_SIZE,
+>>>> @@ -1509,7 +1513,16 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
+>>>>  	init_completion(&adc->completion);
+>>>>  
+>>>>  	/* Optionally request DMA */
+>>>> -	if (stm32_dfsdm_dma_request(indio_dev)) {
+>>>> +	ret = stm32_dfsdm_dma_request(indio_dev);
+>>>> +	if (ret) {
+>>>> +		if (ret != -ENODEV) {
+>>>> +			if (ret != -EPROBE_DEFER)
+>>>> +				dev_err(&indio_dev->dev,
+>>>> +					"DMA channel request failed with %d\n",
+>>>> +					ret);
+>>>> +			return ret;
+>>>> +		}
+>>>> +
+>>>>  		dev_dbg(&indio_dev->dev, "No DMA support\n");
+>>>>  		return 0;
+>>>>  	}
+>>>>
+>>
+>> - Péter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
 
-Yes please based on:
+- Péter
 
-https://git.linaro.org/people/daniel.lezcano/linux.git timers/drivers/next
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
