@@ -2,79 +2,174 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A5EC33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFE9C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8712067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661432075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 03:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BOV8vx+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgAIDHq (ORCPT
+        id S1727864AbgAIDKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 22:07:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:53016 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgAIDHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 22:07:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F353131B;
-        Wed,  8 Jan 2020 19:07:45 -0800 (PST)
-Received: from [10.162.40.138] (p8cg001049571a15.blr.arm.com [10.162.40.138])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B53F93F534;
-        Wed,  8 Jan 2020 19:07:41 -0800 (PST)
-Subject: Re: [PATCH 0/1] arm/arm64: add support for folded p4d page tables
-To:     Mike Rapoport <rppt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <20191230082734.28954-1-rppt@kernel.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <19fc0640-2b7e-a06f-a4c8-2736d54dd565@arm.com>
-Date:   Thu, 9 Jan 2020 08:38:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 8 Jan 2020 22:10:14 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:23258 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726913AbgAIDKN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 22:10:13 -0500
+X-UUID: ae2f3c26cc324f2490964a65b6847c34-20200109
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=CvLcLmQtEQDCFrVxh2k8LuEaR4ksyAkc5R169z2PTA0=;
+        b=BOV8vx+ReKxBKjksHc50rHJ2C95agoVwYmtbD9qjoMKD1CokJ5KlNSl75Ce39DJGo4HHnk3CwigmY5LyvtpHaBbEKm8ViHR+laYJGY/QB9f4RcBF6FtB2Iqnebtpc0BPZyKOW7qu2Tpy7iRlBTltzpmcg+GuE1VZOW9VMiBBqk4=;
+X-UUID: ae2f3c26cc324f2490964a65b6847c34-20200109
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.liang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 620868315; Thu, 09 Jan 2020 11:10:06 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 9 Jan
+ 2020 11:08:18 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 9 Jan 2020 11:10:21 +0800
+Message-ID: <1578539400.20923.10.camel@mhfsdcap03>
+Subject: Re: [PATCH v10 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
+From:   Yong Liang <yong.liang@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Jiaxin Yu =?UTF-8?Q?=28=E4=BF=9E=E5=AE=B6=E9=91=AB=29?= 
+        <Jiaxin.Yu@mediatek.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Chang-An Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B6=E5=AE=89=29?= 
+        <Chang-An.Chen@mediatek.com>,
+        Freddy Hsin =?UTF-8?Q?=28=E8=BE=9B=E6=81=92=E8=B1=90=29?= 
+        <Freddy.Hsin@mediatek.com>,
+        Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= 
+        <Yingjoe.Chen@mediatek.com>, Stephen Boyd <sboyd@kernel.org>
+Date:   Thu, 9 Jan 2020 11:10:00 +0800
+In-Reply-To: <CANMq1KCrDX+svufQEeqHYgAFmFaBS0paEz0EBBte73ehA5PiGw@mail.gmail.com>
+References: <1578280296-18946-1-git-send-email-jiaxin.yu@mediatek.com>
+         <1578280296-18946-2-git-send-email-jiaxin.yu@mediatek.com>
+         <CANMq1KCrDX+svufQEeqHYgAFmFaBS0paEz0EBBte73ehA5PiGw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20191230082734.28954-1-rppt@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: D25EFC5CE1DF3AC4CFAAAEB2CCCF1058B998E9A6793A7E0B87C17B3A807A55C52000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+T24gV2VkLCAyMDIwLTAxLTA4IGF0IDE3OjIzICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
+DQo+IE9uIE1vbiwgSmFuIDYsIDIwMjAgYXQgMTE6MTEgQU0gSmlheGluIFl1IDxqaWF4aW4ueXVA
+bWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFkZCAjcmVzZXQtY2VsbHMgcHJvcGVydHkg
+YW5kIHVwZGF0ZSBleGFtcGxlDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiB5b25nLmxpYW5nIDx5
+b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKaWF4aW4gWXUgPGpp
+YXhpbi55dUBtZWRpYXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFlpbmdqb2UgQ2hlbiA8eWlu
+Z2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogUGhpbGlwcCBaYWJlbCA8
+cC56YWJlbEBwZW5ndXRyb25peC5kZT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQgIHwgMTAgKysrKysrLS0tDQo+ID4gIC4uLi9yZXNl
+dC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaCAgICAgICAgICB8IDIyICsrKysrKysrKysrKysr
+KysrKysNCj4gPiAgLi4uL3Jlc2V0LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oICAgICAgICAg
+IHwgMTcgKysrKysrKysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA0NiBpbnNlcnRpb25z
+KCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1i
+aW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaA0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0
+LnR4dA0KPiA+IGluZGV4IDkyMTgxYjY0OGY1Mi4uNWE3NmFjMjYyZjhkIDEwMDY0NA0KPiA+IC0t
+LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4
+dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9t
+dGstd2R0LnR4dA0KPiA+IEBAIC00LDYgKzQsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+
+DQo+ID4gIC0gY29tcGF0aWJsZSBzaG91bGQgY29udGFpbjoNCj4gPiAgICAgICAgICJtZWRpYXRl
+ayxtdDI3MDEtd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQyNzAxDQo+ID4gKyAg
+ICAgICAibWVkaWF0ZWssbXQyNzEyLXdkdCIsICJtZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1U
+MjcxMg0KPiANCj4gRG9lc24ndCBsb29rIHJlbGF0ZWQ/DQogIFdlIHByZWZlciB0byBzZW5kIG10
+MjcxMiBhbmQgbXQ4MTgzIHRvZ2V0aGVyLg0KPiANCj4gPiAgICAgICAgICJtZWRpYXRlayxtdDY1
+ODktd2R0IjogZm9yIE1UNjU4OQ0KPiA+ICAgICAgICAgIm1lZGlhdGVrLG10Njc5Ny13ZHQiLCAi
+bWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDY3OTcNCj4gPiAgICAgICAgICJtZWRpYXRlayxt
+dDc2MjItd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ3NjIyDQo+ID4gQEAgLTE0
+LDExICsxNSwxNCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+DQo+ID4gIE9wdGlvbmFsIHBy
+b3BlcnRpZXM6DQo+ID4gIC0gdGltZW91dC1zZWM6IGNvbnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1l
+b3V0IGluIHNlY29uZHMuDQo+ID4gKy0gI3Jlc2V0LWNlbGxzOiBTaG91bGQgYmUgMS4NCj4gPg0K
+PiA+ICBFeGFtcGxlOg0KPiA+DQo+ID4gLXdkdDogd2F0Y2hkb2dAMTAwMDAwMDAgew0KPiA+IC0g
+ICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY1ODktd2R0IjsNCj4gPiAtICAgICAgIHJl
+ZyA9IDwweDEwMDAwMDAwIDB4MTg+Ow0KPiA+ICt3YXRjaGRvZzogd2F0Y2hkb2dAMTAwMDcwMDAg
+ew0KPiA+ICsgICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtd2R0IiwNCj4gDQo+
+IFdlbGwgbXQ4MTgzLXdkdCBjb21wYXRpYmxlIGlzIG5vdCB5ZXQgdXBzdHJlYW0sIGRvIHlvdSB3
+YW50IHRvIHdvcmsNCj4gd2l0aCBZb25nIExpYW5nIHRvIHNlbmQgYm90aCB0aGVzZSBiaW5kaW5n
+cyBpbiB0aGUgc2FtZSBzZXJpZXM/ICh5b3UNCj4gY2FuIGFkZCBtdDI3MTIgaW4gdGhlIHNhbWUg
+cGF0Y2ggYXMgbXQ4MTgzIGJpbmRpbmcgbWF5YmU/KQ0KDQogIFdlIHByZWZlciB0byBzZW5kIG10
+MjcxMiBhbmQgbXQ4MTgzIHRvZ2V0aGVyLiBBbmQgd2Ugd2FudCB0byBzZW5kIHRoaXMNCnBhdGNo
+IHByaW9yaXR5Lg0KDQogIFlvbmcuTGlhbmcNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+Im1lZGlhdGVrLG10NjU4OS13ZHQiOw0KPiA+ICsgICAgICAgcmVnID0gPDAgMHgxMDAwNzAwMCAw
+IDB4MTAwPjsNCj4gPiAgICAgICAgIHRpbWVvdXQtc2VjID0gPDEwPjsNCj4gPiArICAgICAgICNy
+ZXNldC1jZWxscyA9IDwxPjsNCj4gPiAgfTsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1i
+aW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmlu
+ZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDI3MTItcmVzZXRzLmgNCj4gPiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uOWU3ZWU3NjJmMDc2DQo+ID4gLS0tIC9k
+ZXYvbnVsbA0KPiA+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9t
+dDI3MTItcmVzZXRzLmgNCj4gPiBAQCAtMCwwICsxLDIyIEBADQo+ID4gKy8qIFNQRFgtTGljZW5z
+ZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQo+ID4gKy8qDQo+ID4gKyAqIENvcHlyaWdodCAoYykg
+MjAxOSBNZWRpYVRlayBJbmMuDQo+ID4gKyAqIEF1dGhvcjogWW9uZyBMaWFuZyA8eW9uZy5saWFu
+Z0BtZWRpYXRlay5jb20+DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2lmbmRlZiBfRFRfQklORElO
+R1NfUkVTRVRfQ09OVFJPTExFUl9NVDI3MTINCj4gPiArI2RlZmluZSBfRFRfQklORElOR1NfUkVT
+RVRfQ09OVFJPTExFUl9NVDI3MTINCj4gPiArDQo+ID4gKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9J
+TkZSQV9TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDANCj4gPiArI2RlZmluZSBN
+VDI3MTJfVE9QUkdVX01NX1NXX1JTVCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAxDQo+ID4gKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9NRkdfU1dfUlNUICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIDINCj4gPiArI2RlZmluZSBNVDI3MTJfVE9QUkdVX1ZFTkNfU1df
+UlNUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMw0KPiA+ICsjZGVmaW5lIE1UMjcxMl9U
+T1BSR1VfVkRFQ19TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA0DQo+ID4gKyNk
+ZWZpbmUgTVQyNzEyX1RPUFJHVV9JTUdfU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDUNCj4gPiArI2RlZmluZSBNVDI3MTJfVE9QUkdVX0lORlJBX0FPX1NXX1JTVCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgOA0KPiA+ICsjZGVmaW5lIE1UMjcxMl9UT1BSR1VfVVNCX1NXX1JT
+VCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA5DQo+ID4gKyNkZWZpbmUgTVQyNzEyX1RP
+UFJHVV9BUE1JWEVEX1NXX1JTVCAgICAgICAgICAgICAgICAgICAgICAgICAgIDEwDQo+ID4gKw0K
+PiA+ICsjZGVmaW5lIE1UMjcxMl9UT1BSR1VfU1dfUlNUX05VTSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAxMQ0KPiA+ICsNCj4gPiArI2VuZGlmICAvKiBfRFRfQklORElOR1NfUkVTRVRf
+Q09OVFJPTExFUl9NVDI3MTIgKi8NCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5n
+cy9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3Mv
+cmVzZXQtY29udHJvbGxlci9tdDgxODMtcmVzZXRzLmgNCj4gPiBpbmRleCA4ODA0ZTM0ZWJkZDQu
+LmExYmJkNDFlMGQxMiAxMDA2NDQNCj4gPiAtLS0gYS9pbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0
+LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oDQo+ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5n
+cy9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaA0KPiA+IEBAIC03OCw0ICs3OCwyMSBA
+QA0KPiA+ICAjZGVmaW5lIE1UODE4M19JTkZSQUNGR19BT19JMkM3X1NXX1JTVCAgICAgICAgICAg
+ICAgICAgICAgICAgICAxMjYNCj4gPiAgI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfQU9fSTJDOF9T
+V19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgMTI3DQo+ID4NCj4gPiArI2RlZmluZSBNVDgx
+ODNfSU5GUkFDRkdfU1dfUlNUX05VTSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTI4DQo+
+ID4gKw0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfTU1fU1dfUlNUICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDENCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdVX01G
+R19TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMg0KPiA+ICsjZGVmaW5lIE1U
+ODE4M19UT1BSR1VfVkVOQ19TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzDQo+
+ID4gKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9WREVDX1NXX1JTVCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIDQNCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdVX0lNR19TV19SU1QgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgNQ0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfTURf
+U1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDcNCj4gPiArI2Rl
+ZmluZSBNVDgxODNfVE9QUkdVX0NPTk5fU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgOQ0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfQ09OTl9NQ1VfU1dfUlNUICAgICAgICAg
+ICAgICAgICAgICAgICAgICAxMg0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfSVBVMF9TV19S
+U1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNA0KPiA+ICsjZGVmaW5lIE1UODE4M19U
+T1BSR1VfSVBVMV9TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNQ0KPiA+ICsj
+ZGVmaW5lIE1UODE4M19UT1BSR1VfQVVESU9fU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAxNw0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfQ0FNU1lTX1NXX1JTVCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAxOA0KPiA+ICsNCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdV
+X1NXX1JTVF9OVU0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTkNCj4gPiArDQo+ID4g
+ICNlbmRpZiAgLyogX0RUX0JJTkRJTkdTX1JFU0VUX0NPTlRST0xMRVJfTVQ4MTgzICovDQo+ID4g
+LS0NCj4gPiAyLjE4LjANCg0K
 
-
-On 12/30/2019 01:57 PM, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> Hi,
-
-Hello Mike,
-
-> 
-> This is a part of clean up of the page table manipulation code that aims to
-> remove asm-generic/5level-fixup.h and asm-generic/pgtable-nop4d-hack.h
-> 
-> There is a single patch for both arm and arm64 because doing the conversion
-> separately would mean breaking the shared mmu bits in virt/kvm/arm.
-> 
-> The patch is build tested and boot tested on qemu-system-{arm,aarch64}.
-
-There are lots of code changes here for a single patch but as you have
-mentioned shared KVM bits would have prevented splitting arm and arm64
-changes into separate patches. Just curious, are you planning to respin
-this patch sooner after fixing the reported build problems caused by
-missing p4d_offset_kimg() and p4d_sect() definitions ?
-
-- Anshuman
