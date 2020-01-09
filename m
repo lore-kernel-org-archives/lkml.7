@@ -2,58 +2,108 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77777C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112D8C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51FB220705
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA802067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 00:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M2JjPQus"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbgAIAHg (ORCPT
+        id S1727564AbgAIAKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:07:36 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:50074 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgAIAHg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 19:07:36 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6D5301539F83E;
-        Wed,  8 Jan 2020 16:07:35 -0800 (PST)
-Date:   Wed, 08 Jan 2020 16:07:34 -0800 (PST)
-Message-Id: <20200108.160734.1737202371253374740.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     doshir@vmware.com, pv-drivers@vmware.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] vmxnet3: Remove always false conditional
- statement
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200108140822.47016-1-yuehaibing@huawei.com>
-References: <20200108140822.47016-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 08 Jan 2020 16:07:35 -0800 (PST)
+        Wed, 8 Jan 2020 19:10:54 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50473 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgAIAKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 19:10:53 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47tRNC0Vcfz9sRW;
+        Thu,  9 Jan 2020 11:10:50 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578528651;
+        bh=TIL2BzsbLT37ukoZt3FF9QagMGrIFtxVOy965LicdpA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M2JjPQusn/oSk7nO3x8OHAfLfiD7dA3xyxZNcajNlW09KGAoEvxq7WnVV3hHBrk/a
+         yU1Iif4TN7nUnebSEuWGtg/MwxOT6OwXu4/ZNK67PpcrFg9iv9D0Ddg9CtzKgNPSut
+         UqCJt+d+Y9Uj7rq7bhDuzGOKhYgf205Fw6uU4nw71RxxDmcoVfTOqD54hEMbeOARMt
+         cemZNZK+6tQfGrUJ4q0Hb+7+lyyU5zIrxAhISQTS3Gj9vm+6IPpz4dSsVr6Imo7iSJ
+         Ka7/J6/4c6i1BfYhcdpVpG768kB8ZDDNOHP21k7K7nmstnFA8SccSuQOXdZnL/gyFP
+         cn+Dpa8xzcHuw==
+Date:   Thu, 9 Jan 2020 11:10:50 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: linux-next: manual merge of the v4l-dvb tree with the v4l-dvb-fixes
+ tree
+Message-ID: <20200109111050.3a547549@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/JunZ+6IJb61MvYi9+Mu9cD9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Wed, 8 Jan 2020 22:08:22 +0800
+--Sig_/JunZ+6IJb61MvYi9+Mu9cD9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> From: yuehaibing <yuehaibing@huawei.com>
-> 
-> param->rx_mini_pending is __u32 variable, it will never
-> be less than zero.
-> 
-> Signed-off-by: yuehaibing <yuehaibing@huawei.com>
+Hi all,
 
-Applied, thanks.
+Today's linux-next merge of the v4l-dvb tree got a conflict in:
+
+  drivers/media/usb/pulse8-cec/pulse8-cec.c
+
+between commit:
+
+  21d116949e95 ("Revert "media: pulse8-cec: fix lost cec_transmit_attempt_d=
+one() call"")
+
+from the v4l-dvb-fixes tree and commit:
+
+  c4e8f760581b ("media: pulse8-cec: fix lost cec_transmit_attempt_done() ca=
+ll")
+
+and some other commits from the v4l-dvb tree.  The conflicts arise
+mostly because the above commit was cherry-picked into Linus' tree
+(before being reverted above).
+
+I fixed it up (I just used the vl4-dvb tree version on the assumption that
+you will fix it up properly) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/JunZ+6IJb61MvYi9+Mu9cD9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4Wb4oACgkQAVBC80lX
+0GynDggAh2qebxW1/g9EcK9cjOd3v6+WSNb/FDnKOJx0ixLDDcJo7adAjpAv/h/0
+Uw3gainwMbTl2cEJuDG3iRWA8aWY6VbkZEYIrU59EVCuf0D385XjYOcVAZJeNePZ
+HEoxVMSfC1b06x+W0V6pQFhNbivuonajm0wmfyOArIhk8rrpw1dAXZJkaz//TefR
+wgX6/6llXzqzxxfaG5GiaxtmkQqQuXg6K+bGHChg+hF4bq3t9c3GkyV4pmxkrZQ3
+0kELJsC6CfNmWgzVxXVp9/OiHzFbvegqXF9qVt0oW6DfWKVqjOLZ3e09L1wFSzIL
+26Rzmgjmq0LN2MfH8w/YBrKFJaeqgg==
+=F3xr
+-----END PGP SIGNATURE-----
+
+--Sig_/JunZ+6IJb61MvYi9+Mu9cD9--
