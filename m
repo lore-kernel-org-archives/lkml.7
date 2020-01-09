@@ -2,153 +2,151 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C94C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33561C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0459A20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0517620656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PXIZJXWg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WxtF6rMh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbgAIK7i (ORCPT
+        id S1730503AbgAIK7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:59:38 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35001 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbgAIK7h (ORCPT
+        Thu, 9 Jan 2020 05:59:52 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38230 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728635AbgAIK7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:59:37 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z76so5558174qka.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:59:37 -0800 (PST)
+        Thu, 9 Jan 2020 05:59:51 -0500
+Received: by mail-io1-f65.google.com with SMTP id v3so6644377ioj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:59:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dCNOcIvcdKs5VnegyeyX0voUYsS8MT1fv2QnGIGtFeg=;
-        b=PXIZJXWgB9pqyWBTYsCQeatEYlOikQeEY2u3jun0UEbnKKJjr4NnNjKXhN0t++c/k9
-         rrNyekbDvEj0z9SWw05LZ3nc1LeunA6+iNV4dQtAV0q5ijf/2Ko/QpfIkLNbkFdFPJnG
-         scLo5fdzuNAeHRU78GoSa5uYRjFLF3oHqrRnecdB8JYHlWUwkZRAS6LLq0E3N3M53ZKg
-         0+oCwW+s2kdo6mG6pd2Amdas9nyYlA5MTehIi4eAlsxawfSB5Hkt6HajPMf1cn71qEI6
-         KrtVDzQdjayB+dNoXdUdFoKSOWGKw3/2Lh2IHscwRIwS/voDXKAHvdLn+gSvMF52yxbx
-         GaFA==
+        bh=QPi6QnVXghXv8TY7JMc2BuYgut9DZveS4sz8HSAzzAE=;
+        b=WxtF6rMhat0yOMYOkIGw1PZioR964EQ0WGOdDWYoA4+TwrtGwcvF471ZdqnxorH+R6
+         JEi1bKDztJVqWgCIWLQ5bH80cEw5JZJak2XTFCVGavFicQZFC0I57NcUbrKpmb6LMCQn
+         Ho8KowQTK6vAx+J2SE9zTNXGo9yBrJlC0mrEXy3/BVPRJ4DQf73YsijLrIt2W1mKC36m
+         1PsZ1RQk+yUVF1o3TrbcEtAyMCbPu5DHnO0G5bj4WPRbOMOcwwFVcIqYPfeUGYJuwM6E
+         0RkxNn+bxdnC4UEb7Xa8B18mFIv4FyhYRvMzcTnft+1mPcfXVyjRGHYpwzd36Gc/cpzW
+         FTJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dCNOcIvcdKs5VnegyeyX0voUYsS8MT1fv2QnGIGtFeg=;
-        b=LO5TAdKYidEFxXSUwot2HFXb2Ic+CGcYGTVThysG7XWqmeqDvUfB5zt0cB3tueST+s
-         7KaxRDuOIT8C8zt371A9jUCuswvVYpNL/G8kJ9cZrAHXkM0zWgt3t8e+YqIKB4WfanTm
-         WDj58/3213YXRAAisuLnhEnc3+WgrxtcRturyWviGR48BueVgCVA2AhPx8uv93b1fITX
-         AstVu0l2ZCjfhxCXROU6NLNnn/+iFQyX1UXJsU8RqjruUaHKdS6SPNSd/nhhB6PqmFnN
-         Y7I8tC4sOo79WzvstRHpqiNhh4ldG4elmTQoixr1sU0kXQLLjo0Cyyjzku/6b/wKZUPU
-         KuWQ==
-X-Gm-Message-State: APjAAAVtHA7qhlLcgQUTOKOJSBpvmUTIcCwmkVBWpPCkpO03QUJUwtRk
-        vhXC+wbd5Xo+GDMeaPZDJLp7hJk8+UJ9XK0ZPuUbKQ==
-X-Google-Smtp-Source: APXvYqxCy9yDe3ceogRt2g5I1KXrmKwVZZ2Ot53tqeDlGj1eolEGmxHyyCEhqetjz5bZepQwdUDGehh124dz9QxD+AM=
-X-Received: by 2002:a37:5841:: with SMTP id m62mr8705070qkb.256.1578567576238;
- Thu, 09 Jan 2020 02:59:36 -0800 (PST)
+        bh=QPi6QnVXghXv8TY7JMc2BuYgut9DZveS4sz8HSAzzAE=;
+        b=Q7ccUlDmk7z60qcHZspGGtRULSqHmIsgkb7XggBPo5PdewOAacH384hMxOgGXnNl+U
+         bzGKtiEpVybYDUni9NqmRJidyBSQS50ye53NR6PyZupYoNYDLHaISxYgpb8h/pbvWUNR
+         5BIifzix4jbMjPpDCLQ7DtZNs6Im4O1GMjVQCrQhbz8bDBnVJjdiItx80avg8qFLvuNi
+         j7LwP41cF9i/rLwdVZHjEC7k6K5ViiuNjFrBLd93gnZ0XBErDEPREFVFW56n2MAAVYaD
+         08SO0ock8M+psMzI+j7lAimsbmfDNv0lx/hVuBO3NRPakBBebQH+0lSmjm4FN/Xt6jD6
+         j2gw==
+X-Gm-Message-State: APjAAAUPDnWdgdRmr5tmQyhV78jbXlleCPGZyRpAbRts+SDTeW4dprOs
+        Dw1z/FeIXk5DOAQdC5m7WeqClagpW67DQFsHqHUPQA==
+X-Google-Smtp-Source: APXvYqy5YRToV4ho+1HZN01NgOpFCbr14jsvMrxynyarJaFUyY1ek05rytw4zulCXWiF5tX1rdl3nX75mbjlAFbZqhc=
+X-Received: by 2002:a6b:8f41:: with SMTP id r62mr7053509iod.140.1578567590321;
+ Thu, 09 Jan 2020 02:59:50 -0800 (PST)
 MIME-Version: 1.0
-References: <0000000000007523a60576e80a47@google.com> <CACT4Y+b3AmVQMjPNsPHOXRZS4tNYb6Z9h5-c=1ZwZk0VR-5J5Q@mail.gmail.com>
- <20180928070042.GF3439@hirez.programming.kicks-ass.net> <CACT4Y+YFmSmXjs5EMNRPvsR-mLYeAYKypBppYq_M_boTi8a9uQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+YFmSmXjs5EMNRPvsR-mLYeAYKypBppYq_M_boTi8a9uQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 9 Jan 2020 11:59:25 +0100
-Message-ID: <CACT4Y+ZBYYUiJejNbPcZWS+aHehvkgKkTKm0gvuviXGGcirJ5g@mail.gmail.com>
-Subject: Re: BUG: MAX_LOCKDEP_CHAINS too low!
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     syzbot <syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <CGME20200108115027eucas1p1d3645ba53703780679c662921efbca78@eucas1p1.samsung.com>
+ <20200108115007.31095-1-m.szyprowski@samsung.com> <20200108115007.31095-2-m.szyprowski@samsung.com>
+ <CA+Px+wXkFE5b_8bLz7-c95TvEdqHGD5s-XKRYMVr40xQkqTWxQ@mail.gmail.com>
+In-Reply-To: <CA+Px+wXkFE5b_8bLz7-c95TvEdqHGD5s-XKRYMVr40xQkqTWxQ@mail.gmail.com>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Thu, 9 Jan 2020 18:59:39 +0800
+Message-ID: <CA+Px+wWVhZn+UrX04bGMnR8J0XeR0+Oy1r0DD4Spm+i1WPZKqQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ASoC: max98090: fix lockdep warning
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     ALSA development <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Dylan Reid <dgreid@google.com>,
+        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 9:56 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> >> > Hello,
-> >> >
-> >> > syzbot found the following crash on:
-> >> >
-> >> > HEAD commit:    c307aaf3eb47 Merge tag 'iommu-fixes-v4.19-rc5' of git://gi..
-> >> > git tree:       upstream
-> >> > console output: https://syzkaller.appspot.com/x/log.txt?x=13810df1400000
-> >> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dfb440e26f0a6f6f
-> >> > dashboard link: https://syzkaller.appspot.com/bug?extid=aaa6fa4949cc5d9b7b25
-> >> > compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
-> >> >
-> >> > Unfortunately, I don't have any reproducer for this crash yet.
-> >> >
-> >> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >> > Reported-by: syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com
-> >>
-> >> +LOCKDEP maintainers,
-> >>
-> >> What does this BUG mean? And how should it be fixed?
-> >>
-> >> Thanks
-> >>
-> >> > BUG: MAX_LOCKDEP_CHAINS too low!
-> >
-> > Is the his result of endlessly loading and unloading modules?
-> >
-> > In which case, the fix is: don't do that then.
->
-> No modules involved, we don't have any modules in the image. Must be
-> something else.
-> Perhaps syzkaller just produced a workload so diverse that nobody ever produced.
+On Thu, Jan 9, 2020 at 1:36 PM Tzung-Bi Shih <tzungbi@google.com> wrote:
+> On Wed, Jan 8, 2020 at 7:50 PM Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+> > This fixes the following lockdep warning observed on Exynos4412-based
+> > Odroid U3 board:
+> > ======================================================
+> > -> #1 (&card->controls_rwsem){++++}:
+> >        snd_ctl_add_replace+0x3c/0x84
+> >        dapm_create_or_share_kcontrol+0x24c/0x2e0
+> >        snd_soc_dapm_new_widgets+0x308/0x594
+> >        snd_soc_bind_card+0x80c/0xad4
+> >        devm_snd_soc_register_card+0x34/0x6c
+> >        odroid_audio_probe+0x288/0x34c
+> >        platform_drv_probe+0x6c/0xa4
 
-Peter, Ingo,
+I noticed the stack is a little different than the last time
+(odroid_audio_probe vs. asoc_simple_probe).  Did you use the same
+machine to test?
+>        asoc_simple_probe+0x244/0x4a0
+>        platform_drv_probe+0x6c/0xa4
+(https://mailman.alsa-project.org/pipermail/alsa-devel/2019-December/160142.html)
 
-This really plagues syzbot testing for more than a year now. These four:
+> I would like to spend some time to find the root cause.  It would be a
+> little challenging though (I have no real runtime to test...).
 
-BUG: MAX_LOCKDEP_KEYS too low!
-https://syzkaller.appspot.com/bug?id=8a18efe79140782a88dcd098808d6ab20ed740cc
+After a few hours of study, I failed to find the reason to cause the
+possible circular locking.  And would need more of your input.
 
-BUG: MAX_LOCKDEP_ENTRIES too low!
-https://syzkaller.appspot.com/bug?id=3d97ba93fb3566000c1c59691ea427370d33ea1b
+Followed the information provided in the message
+(https://mailman.alsa-project.org/pipermail/alsa-devel/2019-December/160535.html).
+As the message said "snd_soc_of_get_dai_link_codecs() return
+-EPROBE_DEFER".  The snd_soc_of_get_dai_link_codecs( ) is before
+devm_snd_soc_register_card( ), and I didn't find any side effects in
+odroid_audio_probe( ).
 
-BUG: MAX_LOCKDEP_CHAINS too low!
-https://syzkaller.appspot.com/bug?id=bf037f4725d40a8d350b2b1b3b3e0947c6efae85
+Only a very minor issue: snd_soc_of_put_dai_link_codecs(codec_link)
+will be called twice.  One in snd_soc_of_get_dai_link_codecs( ) when
+return -EPROBE_DEFER; another one is under the label
+"err_put_cpu_dai".
+(https://elixir.bootlin.com/linux/v5.5-rc5/source/sound/soc/samsung/odroid.c#L328)
+ The code doesn't generate any side effects because of
+snd_soc_of_put_dai_link_codecs( )'s robustness.
 
-BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-https://syzkaller.appspot.com/bug?id=381cb436fe60dc03d7fd2a092b46d7f09542a72a
+Another minor thing: odroid_card_dais is not immutable but
+odroid_audio_probe( ) would try to modify it
+(https://elixir.bootlin.com/linux/v5.5-rc5/source/sound/soc/samsung/odroid.c#L295).
+Again, I don't think it would produce any troubles.  I guess no
+machine would have multiple sound cards, share the same machine
+driver, and unbind/bind in runtime.
+
+> It is weird: userspace should not see things (e.g. no controlC0) until
+> snd_card_register( ).
+
+(based on today's broonie/sound.git/for-next) I would like to provide
+you more information about this statement to help you find further
+information.
+When userspace can see the control device?  Ideally,
+snd_soc_bind_card( ) -> snd_card_register( ) ->
+snd_device_register_all( ) -> __snd_device_register( ) ->
+snd_ctl_dev_register( ) -> snd_register_device( ).
+If you look at the calling stack of possible circular locking,
+snd_soc_dapm_new_widgets( ) is before snd_card_register( ).  That's
+why we think userspace should not see control devices (i.e. controlC0,
+controlC1, ...) and should not be able to set mixer control via ioctl(
+).
 
 
-Now running testing I only see a stream of different lockdep bugs mostly:
-
-2020/01/09 11:41:51 vm-13: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
-2020/01/09 11:43:09 vm-9: crash: INFO: task hung in register_netdevice_notifier
-2020/01/09 11:44:00 vm-26: crash: no output from test machine
-2020/01/09 11:44:11 vm-8: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
-2020/01/09 11:44:28 vm-19: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
-2020/01/09 11:46:20 vm-27: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
-2020/01/09 11:46:41 vm-15: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-2020/01/09 11:46:45 vm-28: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
-2020/01/09 11:46:47 vm-29: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-2020/01/09 11:46:49 vm-22: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
-2020/01/09 11:46:50 vm-10: crash: no output from test machine
-2020/01/09 11:46:52 vm-18: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-2020/01/09 11:46:53 vm-23: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-2020/01/09 11:47:17 vm-20: crash: lost connection to test machine
-2020/01/09 11:47:48 vm-5: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-2020/01/09 11:47:56 vm-14: crash: WARNING in restore_regulatory_settings
-2020/01/09 11:48:19 vm-2: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
-2020/01/09 11:48:21 vm-7: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
-2020/01/09 11:48:22 vm-3: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-2020/01/09 11:48:40 vm-25: crash: BUG: MAX_LOCKDEP_CHAINS too low!
-
-Should we just bump the limits there?
-
-Or are there some ID leaks in lockdep? syzbot has a bunch of very
-simple reproducers for these bugs, so not really a maximally diverse
-load. And I think I saw these bugs massively when testing just a
-single subsystem too, e.g. netfilter.
+As this may not directly be related to the issue, could you share the
+init script of alsactl in your system?  Does it follow the convention?
+ (i.e. sound card is ready when receives controlC* changed event in
+udev rule 78-sound-card.rules)
+> 6. when userspace init scripts (alsactl) enumerates devices
+(https://mailman.alsa-project.org/pipermail/alsa-devel/2019-December/160535.html)
