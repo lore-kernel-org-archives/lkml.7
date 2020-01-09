@@ -2,116 +2,92 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF384C33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FB2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBEC92067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0574206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:51:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="HhawAe0d";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NPkzPNo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgAIBnL (ORCPT
+        id S1727809AbgAIBvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 20:43:11 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53410 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726913AbgAIBnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 20:43:11 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 860306547382F741E094;
-        Thu,  9 Jan 2020 09:43:09 +0800 (CST)
-Received: from huawei.com (10.175.113.25) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 9 Jan 2020
- 09:43:00 +0800
-From:   Wang ShaoBo <bobo.shaobowang@huawei.com>
-To:     <mark.rutland@arm.com>, <hch@infradead.org>
-CC:     <cj.chengjian@huawei.com>, <huawei.libin@huawei.com>,
-        <xiexiuqi@huawei.com>, <yangyingliang@huawei.com>,
-        <bobo.shaobowang@huawei.com>, <guohanjun@huawei.com>,
-        <wcohen@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <mtk.manpages@gmail.com>, <wezhang@redhat.com>
-Subject: [PATCH] sys_personality: Add a optional arch hook arch_check_personality() for common sys_personality()
-Date:   Thu, 9 Jan 2020 09:38:46 +0800
-Message-ID: <20200109013846.174796-1-bobo.shaobowang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Wed, 8 Jan 2020 20:51:37 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:35225 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726913AbgAIBvh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 20:51:37 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id AE5D99B3;
+        Wed,  8 Jan 2020 20:51:35 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 08 Jan 2020 20:51:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to
+        :subject:content-type; s=fm1; bh=INrQczsxRVeplZbqXtrfLCVklXpA8YI
+        m9Wl7iloiOdU=; b=HhawAe0dt3VweQT6qHrXNP1ZSkPljYrSelvC7ilR4GMUb3a
+        jgAxXhZB3mQ5RU36n0gAomx55Pou5sBdrhZ21jvxvnnrVefWcRP2FnphsTsIb9tO
+        g1QYz3TkyH4NX/nFItjlMv6eRKkubAvnYfXhE1H3kxXx+HBofgA/Hk4M/FS0pyeg
+        XB8Hfjif9rtxh7bTVBGntvhwNEhSay6JKHo0fvK2YVCW7hUjnn55C9ygNhgNh4wp
+        zhUNat1wi1usZqPOWRN6Mb5WyTbrAQGaofT47XdLldaL2EdQP7HRnFz3TH9vdQDt
+        YYHtMzzMeFfKm/PLRKNj6ZIYnyttuSQmc2trlJg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=INrQcz
+        sxRVeplZbqXtrfLCVklXpA8YIm9Wl7iloiOdU=; b=NPkzPNo3vXx0BFVsVInI9b
+        ZrJ8p4t1Bad6m+l4Il0iH6JrHJjYBE4X3RbswTWgD8FMBoHm0lTaOCIPdB93a16s
+        kDIor4EMVpRi2pfT5Ckl4QzxwT6fYW7ndZBbdrriY5BPfUjvlq/WiIbtuPVeu0w1
+        B769QYtTXCicO6hOT1jhHgV7QgMkzp0Y7y6txomyRIjOtHGxQSDZPTWnxAnVvWPr
+        b+nMt95+XJK+ymtOEBNVDdf8UY5s6E0as860cHOMFwLkWNu8ydUGFr2/6GaGLLWy
+        kHrH1ddHkwyKQ5QcxDPkZNsf12RzphBCDa4FiknEFNb5l50Wfp3MUGsoPexJwz0A
+        ==
+X-ME-Sender: <xms:JocWXux7bDeAvG3jS9Bh2t_9UUjKfMOvuUv5qNmmuhV5rUU92i0wFg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdehledgfeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:JocWXnzDiMIeKUQfypNqgS8HaCY-IizfGQayAcN83yjccJiD2es4_A>
+    <xmx:JocWXmpkGcAWz6FSIs_5wuSDbmN8ktpyEY1zrH6HnpdKKtV289JV8A>
+    <xmx:JocWXrokrz_BkKts3uJpuIak45JS92JBZRoBft8gpECbZH76_FRi-Q>
+    <xmx:J4cWXjh2ymWQgJd1bgMz_VkV0kbeWE4v1-5q8bNS6PYD_VHQXRnAWQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 12408E00A2; Wed,  8 Jan 2020 20:51:34 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-731-g1812a7f-fmstable-20200106v2
+Mime-Version: 1.0
+Message-Id: <f93bd92d-e509-4825-a4bf-00f5b7c6ff7d@www.fastmail.com>
+In-Reply-To: <20191228190631.26777-1-tiny.windzz@gmail.com>
+References: <20191228190631.26777-1-tiny.windzz@gmail.com>
+Date:   Thu, 09 Jan 2020 12:23:32 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Yangtao Li" <tiny.windzz@gmail.com>,
+        "Jeremy Kerr" <jk@ozlabs.org>, "Joel Stanley" <joel@jms.id.au>,
+        "Alistair Popple" <alistair@popple.id.au>,
+        "Eddie James" <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fsi: aspeed: convert to devm_platform_ioremap_resource
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-currently arm64 use __arm64_sys_arm64_personality() as its default
-syscall. But using a normal hook arch_check_personality() can reject
-personality settings for special case of different archs.
 
-Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
----
- arch/arm64/kernel/sys.c |  7 +++----
- kernel/exec_domain.c    | 14 ++++++++++----
- 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
-index d5ffaaab31a7..5c01816d7a77 100644
---- a/arch/arm64/kernel/sys.c
-+++ b/arch/arm64/kernel/sys.c
-@@ -28,12 +28,13 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
- 	return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
- }
- 
--SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
-+int arch_check_personality(unsigned int personality)
- {
- 	if (personality(personality) == PER_LINUX32 &&
- 		!system_supports_32bit_el0())
- 		return -EINVAL;
--	return ksys_personality(personality);
-+
-+	return 0;
- }
- 
- asmlinkage long sys_ni_syscall(void);
-@@ -46,8 +47,6 @@ asmlinkage long __arm64_sys_ni_syscall(const struct pt_regs *__unused)
- /*
-  * Wrappers to pass the pt_regs argument.
-  */
--#define __arm64_sys_personality		__arm64_sys_arm64_personality
--
- #undef __SYSCALL
- #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
- #include <asm/unistd.h>
-diff --git a/kernel/exec_domain.c b/kernel/exec_domain.c
-index 33f07c5f2515..d1d5d14441e2 100644
---- a/kernel/exec_domain.c
-+++ b/kernel/exec_domain.c
-@@ -35,12 +35,18 @@ static int __init proc_execdomains_init(void)
- module_init(proc_execdomains_init);
- #endif
- 
-+int __weak arch_check_personality(unsigned int personality)
-+{
-+	return 0;
-+}
-+
- SYSCALL_DEFINE1(personality, unsigned int, personality)
- {
--	unsigned int old = current->personality;
-+	int check;
- 
--	if (personality != 0xffffffff)
--		set_personality(personality);
-+	check = arch_check_personality(personality);
-+	if (check)
-+		return check;
- 
--	return old;
-+	return ksys_personality(personality);
- }
--- 
-2.20.1
+On Sun, 29 Dec 2019, at 05:36, Yangtao Li wrote:
+> Use devm_platform_ioremap_resource() to simplify code.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
