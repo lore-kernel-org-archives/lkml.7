@@ -2,70 +2,178 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D87C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF73C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB04206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578567371;
-	bh=CVoVzIKw0x3G9IXLdrus5Zspkz3FD6tHvezgywdNuIM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1bNA53eB1UDetTD0JeEKyTxoPwHTlwXt7NyMtOe24p4aIoYPKKGR9c4czuU95TSqR
-	 8N3RDfEgSRbX2Zb7R06rqMXkLxq5l0/utOE8FCEgvMO5MyYmv26ZMnWoRlNktvrcrB
-	 PYFi9V8vvsZHGBWUeE0XNr9f7wp/AGTZsG7UI+KI=
+	by mail.kernel.org (Postfix) with ESMTP id AF83020656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgAIK4K (ORCPT
+        id S1730474AbgAIK5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:56:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43812 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 05:57:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:57036 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbgAIK4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:56:08 -0500
-Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3A4F20673;
-        Thu,  9 Jan 2020 10:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578567367;
-        bh=CVoVzIKw0x3G9IXLdrus5Zspkz3FD6tHvezgywdNuIM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f2hoVVGc1ZDBO9v7R82ULszeZil1O9gIki5/aOwclQ8MVARULm6KJOXSp9SapMKR3
-         ApyITRYcWS0zNByv8v8fS37gzV/+bSSB9l1HwDg/wApJr+yQIebDWokZ2KMQC3dkaI
-         nWj/54dijvGdHTn7Hp4UvJO9hB4JqF1T+2DuTrmc=
-Date:   Thu, 9 Jan 2020 18:55:58 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, daniel.baluta@nxp.com,
-        leonard.crestez@nxp.com, shengjiu.wang@nxp.com, ping.bai@nxp.com,
-        jun.li@nxp.com, aford173@gmail.com, peng.fan@nxp.com,
-        abel.vesa@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm: Memory node should be in board DT
-Message-ID: <20200109105558.GT4456@T480>
-References: <1578468329-9983-1-git-send-email-Anson.Huang@nxp.com>
+        id S1728635AbgAIK5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 05:57:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAB9C31B;
+        Thu,  9 Jan 2020 02:57:08 -0800 (PST)
+Received: from [10.37.12.111] (unknown [10.37.12.111])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DA023F703;
+        Thu,  9 Jan 2020 02:57:05 -0800 (PST)
+Subject: Re: [PATCH v2 02/11] PM / devfreq: Remove
+ devfreq_get_devfreq_by_phandle function
+To:     Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        krzk@kernel.org, heiko@sntech.de, leonard.crestez@nxp.com
+Cc:     mark.rutland@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+References: <20191220002430.11995-1-cw00.choi@samsung.com>
+ <CGME20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0@epcas1p4.samsung.com>
+ <20191220002430.11995-3-cw00.choi@samsung.com>
+ <b9a1ebe5-e114-3a6b-6081-c794e1341329@arm.com>
+ <22cde618-d51e-2d4d-461e-e2d2c1b52af2@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <3cb1e237-84b2-f110-4eb3-6394151cecc4@arm.com>
+Date:   Thu, 9 Jan 2020 10:57:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578468329-9983-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <22cde618-d51e-2d4d-461e-e2d2c1b52af2@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 03:25:28PM +0800, Anson Huang wrote:
-> Memory address/size depends on board design, so memory node should
-> be in board DT.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied both, thanks.
+
+On 1/9/20 10:54 AM, Chanwoo Choi wrote:
+> On 1/9/20 7:37 PM, Lukasz Luba wrote:
+>> Hi Chanwoo,
+>>
+>> On 12/20/19 12:24 AM, Chanwoo Choi wrote:
+>>> Previously, devfreq core support 'devfreq' property in order to get
+>>> the devfreq device by phandle. But, 'devfreq' property name is not proper
+>>> on devicetree binding because this name doesn't mean the any h/w attribute.
+>>>
+>>> The devfreq core hand over the right to decide the property name
+>>> for getting the devfreq device on devicetree. Each devfreq driver
+>>> will decide the property name on devicetree binding and then get
+>>> the devfreq device by using devfreq_get_devfreq_by_node().
+>>>
+>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>> ---
+>>>    drivers/devfreq/devfreq.c    | 35 -----------------------------------
+>>>    drivers/devfreq/exynos-bus.c | 12 +++++++++++-
+>>>    include/linux/devfreq.h      |  8 --------
+>>>    3 files changed, 11 insertions(+), 44 deletions(-)
+>>>
+>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>> index cb8ca81c8973..c3d3c7c802a0 100644
+>>> --- a/drivers/devfreq/devfreq.c
+>>> +++ b/drivers/devfreq/devfreq.c
+>>> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>>>          return ERR_PTR(-ENODEV);
+>>>    }
+>>> -
+>>> -/*
+>>> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
+>>> - * @dev - instance to the given device
+>>> - * @index - index into list of devfreq
+>>> - *
+>>> - * return the instance of devfreq device
+>>> - */
+>>> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+>>> -{
+>>> -    struct device_node *node;
+>>> -    struct devfreq *devfreq;
+>>> -
+>>> -    if (!dev)
+>>> -        return ERR_PTR(-EINVAL);
+>>> -
+>>> -    if (!dev->of_node)
+>>> -        return ERR_PTR(-EINVAL);
+>>> -
+>>> -    node = of_parse_phandle(dev->of_node, "devfreq", index);
+>>> -    if (!node)
+>>> -        return ERR_PTR(-ENODEV);
+>>> -
+>>> -    devfreq = devfreq_get_devfreq_by_node(node);
+>>> -    of_node_put(node);
+>>> -
+>>> -    return devfreq;
+>>> -}
+>>> -
+>>>    #else
+>>>    struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>>>    {
+>>>        return ERR_PTR(-ENODEV);
+>>>    }
+>>> -
+>>> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+>>> -{
+>>> -    return ERR_PTR(-ENODEV);
+>>> -}
+>>>    #endif /* CONFIG_OF */
+>>>    EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);
+>>> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
+>>>      /**
+>>>     * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
+>>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>>> index 7f5917d59072..1bc4e3c81115 100644
+>>> --- a/drivers/devfreq/exynos-bus.c
+>>> +++ b/drivers/devfreq/exynos-bus.c
+>>> @@ -86,6 +86,16 @@ static int exynos_bus_get_event(struct exynos_bus *bus,
+>>>        return ret;
+>>>    }
+>>>    +static struct devfreq *exynos_bus_get_parent_devfreq(struct device_node *np)
+>>> +{
+>>> +    struct device_node *node = of_parse_phandle(np, "devfreq", 0);
+>>> +
+>>> +    if (!node)
+>>> +        return ERR_PTR(-ENODEV);
+>>> +
+>>> +    return devfreq_get_devfreq_by_node(node);
+>>> +}
+>>> +
+>>>    /*
+>>>     * devfreq function for both simple-ondemand and passive governor
+>>>     */
+>>> @@ -353,7 +363,7 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>>>        profile->exit = exynos_bus_passive_exit;
+>>>          /* Get the instance of parent devfreq device */
+>>> -    parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+>>> +    parent_devfreq = exynos_bus_get_parent_devfreq(dev->of_node);
+>>>        if (IS_ERR(parent_devfreq))
+>>>            return -EPROBE_DEFER;
+>>>    
+>>
+>> These changes won't apply, probably I need some base for it.
+> 
+> I developed it on devfreq-next branch[1]
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-next
+> 
+> And I try to apply these patchset to linux-next[2] with tags/next-20200109.
+> But, patch10/11 of deviceetree has some merge conflict
+> because patch[3] related to exynos-bus was merged.
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/
+> [3] https://patchwork.kernel.org/cover/11303235/
+>      - [v2,0/2] Exynos5422: fix bus related OPPs for Odroid XU3/XU4/HC1
+> 
+> On next version, I'll rebase it on latest patches.
+
+Thank you for the information. I will update the base and continue the
+review.
+
+Lukasz
