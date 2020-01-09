@@ -2,412 +2,356 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC0EC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D77C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA262072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC7E2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 23:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="liRSIkRr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajnibXV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgAIXhl (ORCPT
+        id S1729528AbgAIXif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 18:37:41 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44334 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbgAIXhk (ORCPT
+        Thu, 9 Jan 2020 18:38:35 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43455 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgAIXif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 18:37:40 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q10so5372wrm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 15:37:38 -0800 (PST)
+        Thu, 9 Jan 2020 18:38:35 -0500
+Received: by mail-qk1-f194.google.com with SMTP id t129so264670qke.10;
+        Thu, 09 Jan 2020 15:38:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OkiBfAyiea+S3QYPk/Iz+JDLkJR3ttkyrtVdPCTuhPU=;
-        b=liRSIkRr92KeTEDlG3OAm2rxJYDe8R3yhU4n/ZHZ/Xu+iUF1C108LnzEMAbElWR9qY
-         2+sO7+5psgBa5wVqZ6oFv46a1HPldDhgcy/nbRF+Uc1TchWpufTVJRpTbeepL8MiswEj
-         O3iR99E1MiV7eaN9CTTbG2pmTDvMLmbCbwqUmqbg2rZK4zg3A+aCxI/fqYJ6hUAiXpzK
-         +IeTJSXR4zChB0mdyFO14eqpYZ8b394x04dmFsGasRMusgzyay6dOsKvdbvK+4xxUIcb
-         E3HZtcHrD2gZyhxa0qMmj+LhvjzQ98IzV4K2zXz2W0F5zHXzJkaETm1Z6P2vfdDcuGLq
-         itAA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z+fP9LDxEwzW2I4/onD1G2Z+ZF+S8K1st8xslhotzbI=;
+        b=ajnibXV2i9c2UHbBDNi0EhliNEOYv2E1YxhJJjxflYx8hdHOzKHb0dxwmlwLiHn4q5
+         dT4/eRzsTGcUsJSO8R7E2V6ukj2gdfgRUXVG9rfYRDKZghI1omGFPsVTty4eY4adYD61
+         wFhSBFfp81S5YDMoBeLxoOu575gSUoEOblHJ3UkRZEAaDiZ4M27EbEb2QqJWH7f6gz6r
+         /PwiS60ehB++1sdxPi2yNj3IrIkjosny7naRdUml/DneJde+6g0H/PwHmtQS3gXsghzh
+         aWBEHkU9DOwFuSE0QE+aW8O5M7yjFcqXpLOZYschatc3hHGmT6gUqg4/Tfh+ayhjqt1b
+         T2Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=OkiBfAyiea+S3QYPk/Iz+JDLkJR3ttkyrtVdPCTuhPU=;
-        b=MFGxIJ6R85aMjMgh6XQdeZu3zeL0JmgmjZ0/BNnteuH+lxVbg3QXG15b8mpXsfxlJi
-         xcenHNkqn2fVLFoktaIe1kfqkP9DhD9XefkCR6zDhr2jSlvmD3fY2Sh+xPH58iGZYbh/
-         E2wcYUaAlOfD4I5CgGq6LGXlmKJWSs4IwHzsYV6wo7rsm4BrrxxJIuGEtV68cpxEfYIp
-         PZ7NeysjtXyNva9UelHqE92CSd9sB3en1uWqE0v147/E2k1fkopC+HqVdEksUT3tfa7s
-         6iYURpGwL6rqukxed7R+ThSOGW2Ak3Z45g32nwdYsJJzjHfw8+5zZdY/nFbsfCkk26/w
-         raZA==
-X-Gm-Message-State: APjAAAV/b5gI7o9YHeeUfPL32D1doYkUhj27HBHUMc8Yd8j486YOOw0o
-        BiCjtXaq3xQpsEfbMwLmbwrQNQ==
-X-Google-Smtp-Source: APXvYqxYFvaY2WIoXqwERtNEGQgr9xw+D8IkqdN3f8YSzogYduorqlUgKM/WxxqJ1p8IglsT7NaFVw==
-X-Received: by 2002:adf:f5cf:: with SMTP id k15mr269443wrp.182.1578613057624;
-        Thu, 09 Jan 2020 15:37:37 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
-        by smtp.googlemail.com with ESMTPSA id t5sm124922wrr.35.2020.01.09.15.37.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 15:37:37 -0800 (PST)
-Subject: Re: [RESEND][PATCH] thermal: mediatek: add suspend/resume callback
-To:     Michael Kao <michael.kao@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Louis Yu <louis.yu@mediatek.com>
-References: <20191219092431.8935-1-michael.kao@mediatek.com>
- <20191219092431.8935-2-michael.kao@mediatek.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <7e3506e3-a99e-eb01-ee42-5876b542fe38@linaro.org>
-Date:   Fri, 10 Jan 2020 00:37:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z+fP9LDxEwzW2I4/onD1G2Z+ZF+S8K1st8xslhotzbI=;
+        b=f5iv8ixazwcht/2yvLih16HP52UkfqorKp4TxINQqKmGq//FabBIxjEr395auolnqC
+         hSyxw4vkthjrUZEriZTwRC1Jq7bUj7Dr6f1eRw1NTwqBeuLqGCI4leRghNcW1PnjbMzb
+         F7UkUWch/WYexOayosvegMlZz1I6RAOV1YctoaRZVezg6rO2agQDnN6I+AA3fzH00H1p
+         Eak+6iMH3HNDfzJSCSD8ailT4MjYwtwFfHlLQcJkuXMB+jguMM6IuaxvAoe8/9K2AsqH
+         56/uIyIaVxUehP+5AhZauHJH+M2TESDJfx7HKYCIbKMq87+kOv1FIrMNDH9ZFBVAq8w5
+         ZZog==
+X-Gm-Message-State: APjAAAXStrok0+VizOmjFR265Sb+FrkBsqssj/Vfchjk9SaYV+PjMJ+y
+        Ym3QvMaW+GjD+Zn7h6eiug8=
+X-Google-Smtp-Source: APXvYqxoXGQIYxib/+yzkgOj4je4pw+qEm9qQGymXToeMJfwFmoqPJntdhANaN2ZNW1LY8LT3+lgKA==
+X-Received: by 2002:a05:620a:14a4:: with SMTP id x4mr392171qkj.493.1578613113870;
+        Thu, 09 Jan 2020 15:38:33 -0800 (PST)
+Received: from localhost.localdomain ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
+        by smtp.gmail.com with ESMTPSA id w20sm111483qtj.4.2020.01.09.15.38.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 15:38:33 -0800 (PST)
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+X-Google-Original-From: Daniel W. S. Almeida
+To:     mchehab@kernel.org, sean@mess.org, tglx@linutronix.de,
+        gregkh@linuxfoundation.org
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v2] media: dvb_dummy_tuner: implement driver skeleton
+Date:   Thu,  9 Jan 2020 20:37:57 -0300
+Message-Id: <20200109233757.734008-1-dwlsalmeida@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20191219092431.8935-2-michael.kao@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/12/2019 10:24, Michael Kao wrote:
-> From: Louis Yu <louis.yu@mediatek.com>
-> 
-> Add suspend/resume callback to disable/enable Mediatek thermal sensor
-> respectively. Since thermal power domain is off in suspend, thermal driver
-> needs re-initialization during resume.
-> 
-> Signed-off-by: Louis Yu <louis.yu@mediatek.com>
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> ---
->  drivers/thermal/mtk_thermal.c | 134 +++++++++++++++++++++++++++++++---
->  1 file changed, 125 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-> index acf4854cbb8b..2bb8b13591aa 100644
-> --- a/drivers/thermal/mtk_thermal.c
-> +++ b/drivers/thermal/mtk_thermal.c
-> @@ -22,6 +22,7 @@
->  #include <linux/thermal.h>
->  #include <linux/reset.h>
->  #include <linux/types.h>
-> +#include <linux/iopoll.h>
->  
->  /* AUXADC Registers */
->  #define AUXADC_CON1_SET_V	0x008
-> @@ -31,6 +32,8 @@
->  
->  #define APMIXED_SYS_TS_CON1	0x604
->  
-> +#define APMIXED_SYS_TS_CON1_BUFFER_OFF	0x30
-> +
->  /* Thermal Controller Registers */
->  #define TEMP_MONCTL0		0x000
->  #define TEMP_MONCTL1		0x004
-> @@ -38,6 +41,7 @@
->  #define TEMP_MONIDET0		0x014
->  #define TEMP_MONIDET1		0x018
->  #define TEMP_MSRCTL0		0x038
-> +#define TEMP_MSRCTL1		0x03c
->  #define TEMP_AHBPOLL		0x040
->  #define TEMP_AHBTO		0x044
->  #define TEMP_ADCPNP0		0x048
-> @@ -87,6 +91,9 @@
->  #define TEMP_ADCVALIDMASK_VALID_HIGH		BIT(5)
->  #define TEMP_ADCVALIDMASK_VALID_POS(bit)	(bit)
->  
-> +#define TEMP_MSRCTL1_BUS_STA	(BIT(0) | BIT(7))
-> +#define TEMP_MSRCTL1_SENSING_POINTS_PAUSE	0x10E
-> +
->  /* MT8173 thermal sensors */
->  #define MT8173_TS1	0
->  #define MT8173_TS2	1
-> @@ -250,6 +257,10 @@ struct mtk_thermal_data {
->  struct mtk_thermal {
->  	struct device *dev;
->  	void __iomem *thermal_base;
-> +	void __iomem *apmixed_base;
-> +	void __iomem *auxadc_base;
-> +	u64 apmixed_phys_base;
-> +	u64 auxadc_phys_base;
->  
->  	struct clk *clk_peri_therm;
->  	struct clk *clk_auxadc;
-> @@ -746,6 +757,42 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
->  	mtk_thermal_put_bank(bank);
->  }
->  
-> +static int mtk_thermal_disable_sensing(struct mtk_thermal *mt, int num)
-> +{
-> +	struct mtk_thermal_bank *bank = &mt->banks[num];
-> +	u32 val;
-> +	unsigned long timeout;
-> +	void __iomem *addr;
-> +	int ret = 0;
-> +
-> +	bank->id = num;
-> +	bank->mt = mt;
+From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-Can you explain why this is done?
+Implement a dummy DVB tuner as part of ongoing work
+on a virtual DVB test driver under the 2020 Spring Linux
+Kernel Mentorship Program.
 
-> +	mtk_thermal_get_bank(bank);
+The virtual DVB test driver serves as a reference DVB driver and helps
+validate the existing APIs in the media subsystem. It can also aid developers
+ working on userspace applications.
 
-I'm not comfortable with this call. The underlying code is calling
-mutex_lock, I suspect it can potentially deadlock the board.
+This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
+ISDB-T and ATSC when completed.
 
-Why do you need a mutex? Isn't a spin_lock enough?
+For now, only a basic skeleton is available, most functions do nothing
+whatsoever.
 
-Please take also the opportunity to rename to lock_bank / unlock_bank.
-get and put are usually for refcounting.
+Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+-----------------------------------------------------------
 
-> +	val = readl(mt->thermal_base + TEMP_MSRCTL1);
-> +	/* pause periodic temperature measurement for sensing points */
-> +	writel(val | TEMP_MSRCTL1_SENSING_POINTS_PAUSE,
-> +	       mt->thermal_base + TEMP_MSRCTL1);
-> +
-> +	/* wait until temperature measurement bus idle */
-> +	timeout = jiffies + HZ;
-> +	addr = mt->thermal_base + TEMP_MSRCTL1;
-> +
-> +	ret = readl_poll_timeout(addr, val, (val & TEMP_MSRCTL1_BUS_STA) == 0x0,
-> +				 0, timeout);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	/* disable periodic temperature meausrement on sensing points */
+Changes in v2:
+	Commit message was rewritten
+	Added better description in KConfig
+	Added better description in .h and .c
+	Added copyright notice in .h and .c
+	Kconfig dummy tuner option now defaults to 'n'
+	Removed calls to pr_err, pr_debug
+Not addressed in v2:
+	attach()/release() calls:
+		I would appreciate some clarification on this, since some
+		tuners implement only probe()/remove(), some implement
+		only attach()/release() and some implement both (e.g. mt2060.c).
+		Furthermore, in mt2060.c, both attach() and probe()  copy 
+		struct dvb_tuner_ops into fe->ops->tuner_ops.
 
-s/meausrement/measurement/
+-------------------------------------------------------------
 
-> +	writel(0x0, mt->thermal_base + TEMP_MONCTL0);
-> +
-> +out:
-> +	mtk_thermal_put_bank(bank);
-> +
-> +	return ret;
-> +}
-> +
->  static u64 of_get_phys_base(struct device_node *np)
->  {
->  	u64 size64;
-> @@ -868,7 +915,6 @@ static int mtk_thermal_probe(struct platform_device *pdev)
->  	struct device_node *auxadc, *apmixedsys, *np = pdev->dev.of_node;
->  	struct mtk_thermal *mt;
->  	struct resource *res;
-> -	u64 auxadc_phys_base, apmixed_phys_base;
->  	struct thermal_zone_device *tzdev;
->  
->  	mt = devm_kzalloc(&pdev->dev, sizeof(*mt), GFP_KERNEL);
-> @@ -904,11 +950,11 @@ static int mtk_thermal_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> -	auxadc_phys_base = of_get_phys_base(auxadc);
-> +	mt->auxadc_phys_base = of_get_phys_base(auxadc);
->  
->  	of_node_put(auxadc);
->  
-> -	if (auxadc_phys_base == OF_BAD_ADDR) {
-> +	if (mt->auxadc_phys_base == OF_BAD_ADDR) {
->  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
->  		return -EINVAL;
->  	}
-> @@ -919,11 +965,12 @@ static int mtk_thermal_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> -	apmixed_phys_base = of_get_phys_base(apmixedsys);
-> +	mt->apmixed_phys_base = of_get_phys_base(apmixedsys);
-> +	mt->apmixed_base = of_iomap(apmixedsys, 0);
->  
->  	of_node_put(apmixedsys);
->  
-> -	if (apmixed_phys_base == OF_BAD_ADDR) {
-> +	if (mt->apmixed_phys_base == OF_BAD_ADDR) {
->  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
->  		return -EINVAL;
->  	}
-> @@ -935,19 +982,19 @@ static int mtk_thermal_probe(struct platform_device *pdev)
->  	ret = clk_prepare_enable(mt->clk_auxadc);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
-> -		return ret;
-> +		goto err_disable_clk_auxadc;
->  	}
->  
->  	ret = clk_prepare_enable(mt->clk_peri_therm);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
-> -		goto err_disable_clk_auxadc;
-> +		goto err_disable_clk_peri_therm;
->  	}
->  
->  	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
->  		for (i = 0; i < mt->conf->num_banks; i++)
-> -			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
-> -					      auxadc_phys_base, ctrl_id);
-> +			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
-> +					      mt->auxadc_phys_base, ctrl_id);
->  
->  	platform_set_drvdata(pdev, mt);
->  
-> @@ -978,11 +1025,80 @@ static int mtk_thermal_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int __maybe_unused mtk_thermal_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-> +	int i, ret;
-> +
-> +	for (i = 0; i < mt->conf->num_banks; i++) {
-> +		ret = mtk_thermal_disable_sensing(mt, i);
-> +		if (ret)
-> +			goto out;
-> +	}
-> +
-> +	/* disable buffer */
-> +	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
-> +	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
-> +	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
-> +
-> +	clk_disable_unprepare(mt->clk_peri_therm);
-> +	clk_disable_unprepare(mt->clk_auxadc);
-> +
-> +	return 0;
-> +
-> +out:
-> +	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused mtk_thermal_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
-> +	int i, ret, ctrl_id;
-> +
-> +	ret = device_reset(&pdev->dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(mt->clk_auxadc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n", ret);
-> +		goto err_disable_clk_auxadc;
-> +	}
-> +
-> +	ret = clk_prepare_enable(mt->clk_peri_therm);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Can't enable peri clk: %d\n", ret);
-> +		goto err_disable_clk_peri_therm;
-> +	}
-> +
-> +	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ; ctrl_id++)
-> +		for (i = 0; i < mt->conf->num_banks; i++)
-> +			mtk_thermal_init_bank(mt, i, mt->apmixed_phys_base,
-> +					      mt->auxadc_phys_base, ctrl_id);
-> +
-> +	return 0;
-> +
-> +err_disable_clk_peri_therm:
-> +	clk_disable_unprepare(mt->clk_peri_therm);
-> +err_disable_clk_auxadc:
-> +	clk_disable_unprepare(mt->clk_auxadc);
-> +
-> +	return ret;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
-> +			 mtk_thermal_suspend, mtk_thermal_resume);
-> +
->  static struct platform_driver mtk_thermal_driver = {
->  	.probe = mtk_thermal_probe,
->  	.remove = mtk_thermal_remove,
->  	.driver = {
->  		.name = "mtk-thermal",
-> +		.pm = &mtk_thermal_pm_ops,
->  		.of_match_table = mtk_thermal_of_match,
->  	},
->  };
-> 
+ drivers/media/tuners/Kconfig           |   9 ++
+ drivers/media/tuners/Makefile          |   1 +
+ drivers/media/tuners/dvb_dummy_tuner.c | 160 +++++++++++++++++++++++++
+ drivers/media/tuners/dvb_dummy_tuner.h |  31 +++++
+ 4 files changed, 201 insertions(+)
+ create mode 100644 drivers/media/tuners/dvb_dummy_tuner.c
+ create mode 100644 drivers/media/tuners/dvb_dummy_tuner.h
 
-
+diff --git a/drivers/media/tuners/Kconfig b/drivers/media/tuners/Kconfig
+index e104bb7766e1..d433dc7e68b1 100644
+--- a/drivers/media/tuners/Kconfig
++++ b/drivers/media/tuners/Kconfig
+@@ -296,4 +296,13 @@ config MEDIA_TUNER_QM1D1B0004
+ 	default m if !MEDIA_SUBDRV_AUTOSELECT
+ 	help
+ 	  Sharp QM1D1B0004 ISDB-S tuner driver.
++
++config MEDIA_TUNER_DVB_DUMMY_TUNER
++	tristate "Dummy tuner"
++	depends on MEDIA_SUPPORT && I2C
++	default n
++	help
++	  The virtual DVB test driver serves as a reference DVB driver and helps
++	  validate the existing APIs in the media subsystem. It can also aid
++	  developers working on userspace applications.
+ endmenu
+diff --git a/drivers/media/tuners/Makefile b/drivers/media/tuners/Makefile
+index 7b4f8423501e..f98de1cf2e19 100644
+--- a/drivers/media/tuners/Makefile
++++ b/drivers/media/tuners/Makefile
+@@ -44,5 +44,6 @@ obj-$(CONFIG_MEDIA_TUNER_QM1D1C0042) += qm1d1c0042.o
+ obj-$(CONFIG_MEDIA_TUNER_QM1D1B0004) += qm1d1b0004.o
+ obj-$(CONFIG_MEDIA_TUNER_M88RS6000T) += m88rs6000t.o
+ obj-$(CONFIG_MEDIA_TUNER_TDA18250) += tda18250.o
++obj-$(CONFIG_MEDIA_TUNER_DVB_DUMMY_TUNER) += dvb_dummy_tuner.o
+ 
+ ccflags-y += -I$(srctree)/drivers/media/dvb-frontends
+diff --git a/drivers/media/tuners/dvb_dummy_tuner.c b/drivers/media/tuners/dvb_dummy_tuner.c
+new file mode 100644
+index 000000000000..8aed5d583eeb
+--- /dev/null
++++ b/drivers/media/tuners/dvb_dummy_tuner.c
+@@ -0,0 +1,160 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * A dummy DVB tuner as part of ongoing work
++ * on a virtual DVB test driver under the 2020 Spring Linux
++ * Kernel Mentorship Program.
++ *
++ * The virtual DVB test driver serves as a reference DVB driver and helps
++ * validate the existing APIs in the media subsystem. It can also aid developers
++ * working on userspace applications.
++ *
++ * This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
++ * ISDB-T and ATSC when completed.
++ *
++ * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
++ */
++
++#include <linux/errno.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <media/dvb_frontend.h>
++#include "dvb_dummy_tuner.h"
++
++struct dvb_dummy_tuner_dev {
++	struct dvb_frontend *fe;
++};
++
++static void dvb_dummy_tuner_release(struct dvb_frontend *fe)
++{
++}
++
++static int dvb_dummy_tuner_init(struct dvb_frontend *fe)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_sleep(struct dvb_frontend *fe)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_suspend(struct dvb_frontend *fe)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_resume(struct dvb_frontend *fe)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_set_params(struct dvb_frontend *fe)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_set_config(struct dvb_frontend *fe, void *priv_cfg)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_get_frequency(struct dvb_frontend *fe,
++					 u32 *frequency)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_get_bandwidth(struct dvb_frontend *fe,
++					 u32 *bandwidth)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_get_if_frequency(struct dvb_frontend *fe,
++					    u32 *frequency)
++{
++	return 0;
++}
++
++static int dvb_dummy_tuner_get_status(struct dvb_frontend *fe, u32 *status)
++{
++	return 0;
++}
++
++static const struct dvb_tuner_ops dvb_dummy_tuner_ops = {
++	.release = dvb_dummy_tuner_release,
++	.init = dvb_dummy_tuner_init,
++	.sleep = dvb_dummy_tuner_sleep,
++	.suspend = dvb_dummy_tuner_suspend,
++	.resume = dvb_dummy_tuner_resume,
++	.set_params = dvb_dummy_tuner_set_params,
++	.set_config = dvb_dummy_tuner_set_config,
++	.get_bandwidth = dvb_dummy_tuner_get_bandwidth,
++	.get_frequency = dvb_dummy_tuner_get_frequency,
++	.get_if_frequency = dvb_dummy_tuner_get_if_frequency,
++	.get_status = dvb_dummy_tuner_get_status,
++};
++
++static const struct i2c_device_id dvb_dummy_tuner_i2c_id_table[] = {
++	{"dvb_dummy_tuner", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, dvb_dummy_tuner_i2c_id_table);
++
++static int dvb_dummy_tuner_i2c_probe(struct i2c_client *client,
++				     const struct i2c_device_id *id)
++{
++	int ret = 0;
++	struct dvb_dummy_tuner_config *config = client->dev.platform_data;
++	struct dvb_frontend *fe = config->fe;
++	struct dvb_dummy_tuner_dev *tuner_dev = NULL;
++
++	tuner_dev = kzalloc(sizeof(*tuner_dev), GFP_KERNEL);
++	if (!tuner_dev) {
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	i2c_set_clientdata(client, tuner_dev);
++	tuner_dev->fe = config->fe;
++
++	memcpy(&fe->ops.tuner_ops,
++	       &dvb_dummy_tuner_ops,
++	       sizeof(struct dvb_tuner_ops));
++
++	fe->tuner_priv = client;
++
++	return ret;
++
++err:
++	return ret;
++}
++
++static int dvb_dummy_tuner_i2c_remove(struct i2c_client *client)
++{
++	struct dvb_dummy_tuner_dev *tuner_dev = i2c_get_clientdata(client);
++	struct dvb_frontend *fe = tuner_dev->fe;
++
++	memset(&fe->ops.tuner_ops, 0, sizeof(struct dvb_tuner_ops));
++	fe->tuner_priv = NULL;
++	kfree(tuner_dev);
++
++	return 0;
++}
++
++static struct i2c_driver dvb_dummy_tuner_i2c_driver = {
++	.driver = {
++		.name = "dvb_dummy_tuner",
++		.suppress_bind_attrs = true,
++	},
++	.probe		= dvb_dummy_tuner_i2c_probe,
++	.remove		= dvb_dummy_tuner_i2c_remove,
++	.id_table	= dvb_dummy_tuner_i2c_id_table,
++};
++module_i2c_driver(dvb_dummy_tuner_i2c_driver);
++
++MODULE_DESCRIPTION("DVB Dummy Tuner");
++MODULE_AUTHOR("Daniel W. S. Almeida");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/media/tuners/dvb_dummy_tuner.h b/drivers/media/tuners/dvb_dummy_tuner.h
+new file mode 100644
+index 000000000000..3569bbc3716e
+--- /dev/null
++++ b/drivers/media/tuners/dvb_dummy_tuner.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * A dummy DVB tuner as part of ongoing work
++ * on a virtual DVB test driver under the 2020 Spring Linux
++ * Kernel Mentorship Program.
++ *
++ * The virtual DVB test driver serves as a reference DVB driver and helps
++ * validate the existing APIs in the media subsystem. It can also aid developers
++ * working on userspace applications.
++ *
++ * This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
++ * ISDB-T and ATSC when completed.
++ *
++ * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
++ */
++
++#ifndef __TUNER_DVB_DUMMY_TUNER_H__
++#define __TUNER_DVB_DUMMY_TUNER_H__
++
++#include <media/dvb_frontend.h>
++/**
++ * struct dvb_dummy_tuner_config - configuration parameters for the dummy tuner
++ *
++ * @fe:
++ *	frontend returned by driver
++ */
++struct dvb_dummy_tuner_config {
++	struct dvb_frontend *fe;
++};
++
++#endif /*__TUNER_DVB_DUMMY_TUNER_H__ */
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.24.1
 
