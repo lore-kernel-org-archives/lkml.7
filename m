@@ -2,138 +2,126 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06B7C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28BBC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB36B2077B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06422053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgAILNq (ORCPT
+        id S1730544AbgAILQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:13:46 -0500
-Received: from mga14.intel.com ([192.55.52.115]:39780 "EHLO mga14.intel.com"
+        Thu, 9 Jan 2020 06:16:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:57266 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728918AbgAILNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:13:44 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 03:13:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
-   d="scan'208";a="272088379"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jan 2020 03:13:42 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipVl1-0007Kb-Ps; Thu, 09 Jan 2020 13:13:43 +0200
-Date:   Thu, 9 Jan 2020 13:13:43 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/2] pinctrl: intel: Pass irqchip when adding gpiochip
-Message-ID: <20200109111343.GN32742@smile.fi.intel.com>
-References: <20200109075329.398347-1-linus.walleij@linaro.org>
- <20200109075329.398347-2-linus.walleij@linaro.org>
+        id S1728918AbgAILQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 06:16:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C138031B;
+        Thu,  9 Jan 2020 03:16:29 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A71DD3F703;
+        Thu,  9 Jan 2020 03:16:27 -0800 (PST)
+Date:   Thu, 9 Jan 2020 11:16:25 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Quentin Perret <qperret@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        valentin.schneider@arm.com,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
+Message-ID: <20200109111624.5qxfidhvqa5vylcw@e107158-lin.cambridge.arm.com>
+References: <20191220164838.31619-1-qais.yousef@arm.com>
+ <20200107134234.GA158998@google.com>
+ <8bb17e84-d43f-615f-d04d-c36bb6ede5e0@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200109075329.398347-2-linus.walleij@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8bb17e84-d43f-615f-d04d-c36bb6ede5e0@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 08:53:29AM +0100, Linus Walleij wrote:
-> We need to convert all old gpio irqchips to pass the irqchip
-> setup along when adding the gpio_chip. For more info see
-> drivers/gpio/TODO.
+On 01/07/20 20:30, Dietmar Eggemann wrote:
+> On 07/01/2020 14:42, Quentin Perret wrote:
+> > Hi Qais,
+> > 
+> > On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
 > 
-> For chained irqchips this is a pretty straight-forward conversion.
+> [...]
 > 
-
-Pushed to my review and testing queue, thanks!
-
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Please apply this to the Intel pinctrl tree when you are
-> happy with the result!
-> ---
->  drivers/pinctrl/intel/pinctrl-intel.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
+> >> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> >> index e591d40fd645..19572dfc175b 100644
+> >> --- a/kernel/sched/rt.c
+> >> +++ b/kernel/sched/rt.c
+> >> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
+> >>   */
+> >>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
+> >>  {
+> >> +	/*
+> >> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
+> >> +	 * we apply any new value on the next wakeup, which is here.
+> >> +	 */
+> >> +	uclamp_rt_sync_default_util_min(p);
+> > 
+> > The task has already been enqueued and sugov has been called by then I
+> > think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
 > 
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-> index b479bcf1e246..ffacd77861f7 100644
-> --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> @@ -1224,6 +1224,7 @@ static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
->  static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
->  {
->  	int ret;
-> +	struct gpio_irq_chip *girq;
->  
->  	pctrl->chip = intel_gpio_chip;
->  
-> @@ -1244,16 +1245,9 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
->  	pctrl->irqchip.irq_set_wake = intel_gpio_irq_wake;
->  	pctrl->irqchip.flags = IRQCHIP_MASK_ON_SUSPEND;
->  
-> -	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
-> -	if (ret) {
-> -		dev_err(pctrl->dev, "failed to register gpiochip\n");
-> -		return ret;
-> -	}
-> -
->  	/*
-> -	 * We need to request the interrupt here (instead of providing chip
-> -	 * to the irq directly) because on some platforms several GPIO
-> -	 * controllers share the same interrupt line.
-> +	 * On some platforms several GPIO controllers share the same interrupt
-> +	 * line.
->  	 */
->  	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
->  			       IRQF_SHARED | IRQF_NO_THREAD,
-> @@ -1263,14 +1257,20 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
->  		return ret;
->  	}
->  
-> -	ret = gpiochip_irqchip_add(&pctrl->chip, &pctrl->irqchip, 0,
-> -				   handle_bad_irq, IRQ_TYPE_NONE);
-> +	girq = &pctrl->chip.irq;
-> +	girq->chip = &pctrl->irqchip;
-> +	/* This will let us handle the IRQ in the driver */
-> +	girq->parent_handler = NULL;
-> +	girq->num_parents = 0;
-> +	girq->default_type = IRQ_TYPE_NONE;
-> +	girq->handler = handle_bad_irq;
-> +
-> +	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
->  	if (ret) {
-> -		dev_err(pctrl->dev, "failed to add irqchip\n");
-> +		dev_err(pctrl->dev, "failed to register gpiochip\n");
->  		return ret;
->  	}
->  
-> -	gpiochip_set_chained_irqchip(&pctrl->chip, &pctrl->irqchip, irq, NULL);
->  	return 0;
->  }
->  
-> -- 
-> 2.23.0
+> That's probably better.
+> Just to be sure ...we want this feature (an existing rt task gets its
+> UCLAMP_MIN value set when the sysctl changes) because there could be rt
+> tasks running before the sysctl is set?
+
+Yes. If the default value changes this sync will propagate it to all current RT
+task to reflect the new value. It is done in a lazy way though, so there will
+be a window where the RT task runs with the old value.
+
 > 
+> >> +
+> >>  	if (!task_running(rq, p) &&
+> >>  	    !test_tsk_need_resched(rq->curr) &&
+> >>  	    p->nr_cpus_allowed > 1 &&
+> >> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> >> index 280a3c735935..337bf17b1a9d 100644
+> >> --- a/kernel/sched/sched.h
+> >> +++ b/kernel/sched/sched.h
+> >> @@ -2300,6 +2300,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+> >>  #endif /* CONFIG_CPU_FREQ */
+> >>  
+> >>  #ifdef CONFIG_UCLAMP_TASK
+> >> +void uclamp_rt_sync_default_util_min(struct task_struct *p);
+> >> +
+> >>  unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+> >>  
+> >>  static __always_inline
+> >> @@ -2330,6 +2332,8 @@ static inline unsigned int uclamp_util(struct rq *rq, unsigned int util)
+> >>  	return uclamp_util_with(rq, util, NULL);
+> >>  }
+> >>  #else /* CONFIG_UCLAMP_TASK */
+> >> +void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
+> 
+> -void uclamp_rt_sync_default_util_min(struct task_struct *p) {}
+> +static inline void uclamp_rt_sync_default_util_min(struct task_struct
+> *p) {}
 
--- 
-With Best Regards,
-Andy Shevchenko
++1
 
+Thanks!
 
+--
+Qais Yousef
