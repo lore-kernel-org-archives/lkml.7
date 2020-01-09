@@ -2,72 +2,132 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF103C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01831C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97666206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32DD206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732654AbgAIPx7 convert rfc822-to-8bit (ORCPT
+        id S1732664AbgAIPyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:53:59 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:52949 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732594AbgAIPx7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:53:59 -0500
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 62AEE200003;
-        Thu,  9 Jan 2020 15:53:57 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 16:53:56 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mtd: rawnand: denali: add missed pci_release_regions
-Message-ID: <20200109165356.24a54351@xps13>
-In-Reply-To: <CAK7LNAQsK5JD-qeBugp9mn8DgW+SYttp5AwZ_ht5KY2MhPe-Ew@mail.gmail.com>
-References: <20191206075432.18412-1-hslester96@gmail.com>
-        <CAK7LNAQsK5JD-qeBugp9mn8DgW+SYttp5AwZ_ht5KY2MhPe-Ew@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 10:54:05 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2241 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732573AbgAIPyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:54:04 -0500
+Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id EAEA9FEA2FA6E372B4D1;
+        Thu,  9 Jan 2020 15:54:02 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 9 Jan 2020 15:54:02 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 9 Jan 2020
+ 15:54:02 +0000
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+To:     <broonie@kernel.org>, <marek.vasut@gmail.com>,
+        <tudor.ambarus@microchip.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>,
+        <chenxiang66@hisilicon.com>
+References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
+ <1575900490-74467-3-git-send-email-john.garry@huawei.com>
+Message-ID: <0dc5cb2e-b765-9e13-b05e-9e3c835c5985@huawei.com>
+Date:   Thu, 9 Jan 2020 15:54:00 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1575900490-74467-3-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+On 09/12/2019 14:08, John Garry wrote:
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (op->data.dir == SPI_MEM_DATA_IN)
+> +		hisi_sfc_v3xx_read_databuf(host, op->data.buf.in, len);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_sfc_v3xx_exec_op(struct spi_mem *mem,
+> +				 const struct spi_mem_op *op)
+> +{
+> +	struct hisi_sfc_v3xx_host *host;
+> +	struct spi_device *spi = mem->spi;
+> +	u8 chip_select = spi->chip_select;
+> +
+> +	host = spi_controller_get_devdata(spi->master);
+> +
+> +	return hisi_sfc_v3xx_generic_exec_op(host, op, chip_select);
+> +}
+> +
+> +static const struct spi_controller_mem_ops hisi_sfc_v3xx_mem_ops = {
+> +	.adjust_op_size = hisi_sfc_v3xx_adjust_op_size,
+> +	.exec_op = hisi_sfc_v3xx_exec_op,
+> +};
+> +
+> +static int hisi_sfc_v3xx_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct hisi_sfc_v3xx_host *host;
+> +	struct spi_controller *ctlr;
+> +	u32 version;
+> +	int ret;
+> +
+> +	ctlr = spi_alloc_master(&pdev->dev, sizeof(*host));
+> +	if (!ctlr)
+> +		return -ENOMEM;
+> +
 
-Masahiro Yamada <masahiroy@kernel.org> wrote on Fri, 6 Dec 2019
-19:32:03 +0900:
 
-> Hi.
-> 
-> On Fri, Dec 6, 2019 at 4:54 PM Chuhong Yuan <hslester96@gmail.com> wrote:
-> >
-> > The driver forgets to call pci_release_regions() in probe failure
-> > and remove.
-> > Add the missed calls to fix it.
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---  
-> 
-> This patch looks equivalent to what I submitted,
-> then was rejected a couple of years ago.
-> https://lists.gt.net/linux/kernel/2557740
+Hi Mark,
 
-Thanks for the reminder, otherwise I would have applied it too.
+> +	ctlr->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD |
+> +			  SPI_TX_DUAL | SPI_TX_QUAD;
 
-Thanks,
-Miquèl
+I have an issue with dual/quad support. I naively thought that setting 
+these bits would give me the highest protocol available.
+
+However, now I notice that spi_device.mode needs to be set for supported 
+protocols for the slave - I'm using the generic spi mem ops to check if 
+protocols are supported based on this value.
+
+ From checking acpi_spi_add_resource() or anywhere else, I cannot see 
+how SPI_RX_DUAL or the others are set for spi_device.mode. What am I 
+missing? Are these just not supported yet for ACPI? Or should the 
+spi-nor code not be relying on this since we should be able to get this 
+info from the SPI NOR part?
+
+Cheers,
+John
+
+> +
+> +	host = spi_controller_get_devdata(ctlr);
+> +	host->dev = dev;
+> +
+> +	platform_set_drvdata(pdev, host);
+> +
+> +	host->regbase = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(host->regbase)) {
+> +		ret = PTR_ERR(host->regbase);
+> +		goto err_put_master;
+
