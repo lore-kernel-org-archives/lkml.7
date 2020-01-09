@@ -2,129 +2,97 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A682BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90292C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8372A20661
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 673C620661
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 13:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbgAINn7 (ORCPT
+        id S1731222AbgAINrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:43:59 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41206 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgAINn7 (ORCPT
+        Thu, 9 Jan 2020 08:47:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54364 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731186AbgAINrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:43:59 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: alyssa)
-        with ESMTPSA id E424428DB47
-Date:   Thu, 9 Jan 2020 08:43:51 -0500
-From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] drm/panfrost: Remove core stack power management
-Message-ID: <20200109134351.GA3053@kevin>
-References: <20200109133104.11661-1-steven.price@arm.com>
+        Thu, 9 Jan 2020 08:47:40 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ipY9w-00033a-5t; Thu, 09 Jan 2020 14:47:36 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 552461C2CE2;
+        Thu,  9 Jan 2020 14:47:35 +0100 (CET)
+Date:   Thu, 09 Jan 2020 13:47:34 -0000
+From:   "tip-bot2 for Julia Lawall" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/crash: Use resource_size()
+Cc:     Julia Lawall <Julia.Lawall@inria.fr>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1577900990-8588-10-git-send-email-Julia.Lawall@inria.fr>
+References: <1577900990-8588-10-git-send-email-Julia.Lawall@inria.fr>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Content-Disposition: inline
-In-Reply-To: <20200109133104.11661-1-steven.price@arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Message-ID: <157857765487.30329.12185541615823835729.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/cleanups branch of tip:
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     1429b568ad71943a374aa4a8d3772d5a8816ddba
+Gitweb:        https://git.kernel.org/tip/1429b568ad71943a374aa4a8d3772d5a8816ddba
+Author:        Julia Lawall <Julia.Lawall@inria.fr>
+AuthorDate:    Wed, 01 Jan 2020 18:49:49 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 09 Jan 2020 14:40:03 +01:00
 
-A-b
+x86/crash: Use resource_size()
 
-On Thu, Jan 09, 2020 at 01:31:04PM +0000, Steven Price wrote:
-> Explict management of the GPU's core stacks is only necessary in the
-> case of a broken integration with the PDC. Since there are no known
-> platforms which have such a broken integration let's remove the explict
-> control from the driver since this apparently causes problems on other
-> platforms and will have a small performance penality.
->=20
-> The out of tree mali_kbase driver contains this text regarding
-> controlling the core stack (CONFIGMALI_CORESTACK):
->=20
->   Enabling this feature on supported GPUs will let the driver powering
->   on/off the GPU core stack independently without involving the Power
->   Domain Controller. This should only be enabled on platforms which
->   integration of the PDC to the Mali GPU is known to be problematic.
->   This feature is currently only supported on t-Six and t-HEx GPUs.
->=20
->   If unsure, say N.
->=20
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_gpu.c | 5 -----
->  1 file changed, 5 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/pa=
-nfrost/panfrost_gpu.c
-> index 8822ec13a0d6..460fc190de6e 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> @@ -309,10 +309,6 @@ void panfrost_gpu_power_on(struct panfrost_device *p=
-fdev)
->  	ret =3D readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
->  		val, val =3D=3D pfdev->features.l2_present, 100, 1000);
-> =20
-> -	gpu_write(pfdev, STACK_PWRON_LO, pfdev->features.stack_present);
-> -	ret |=3D readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
-> -		val, val =3D=3D pfdev->features.stack_present, 100, 1000);
-> -
->  	gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
->  	ret |=3D readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
->  		val, val =3D=3D pfdev->features.shader_present, 100, 1000);
-> @@ -329,7 +325,6 @@ void panfrost_gpu_power_off(struct panfrost_device *p=
-fdev)
->  {
->  	gpu_write(pfdev, TILER_PWROFF_LO, 0);
->  	gpu_write(pfdev, SHADER_PWROFF_LO, 0);
-> -	gpu_write(pfdev, STACK_PWROFF_LO, 0);
->  	gpu_write(pfdev, L2_PWROFF_LO, 0);
->  }
-> =20
-> --=20
-> 2.20.1
->=20
+Use resource_size() rather than a verbose computation on
+the end and start fields.
 
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
+The semantic patch that makes this change is as follows:
+(http://coccinelle.lip6.fr/)
 
------BEGIN PGP SIGNATURE-----
+<smpl>
+@@ struct resource ptr; @@
+- (ptr.end - ptr.start + 1)
++ resource_size(&ptr)
+</smpl>
 
-iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl4XLgoACgkQ/v5QWgr1
-WA3VcA//cEcrQwxrlJ8ndUPseWUHj3sldo778/VRcu6Z6yHCW21o8/xZVa0xQdHX
-GQuCTw0vDldVAPmxzKhnt41khOHBtYCqeppjYUdC8BQm7IIe+AbN0DoxYR5xRDaB
-Bo8NcZ7ytOSkzI6Ww91jZVx5jq2k8l5Tj628QbWrDa2t1RP2xzUuet9zWH+9IAyE
-IjNYszKjYk9MloCyt3AwPSDkHuyKXb9Zc970qHGNAWZC868wIktaQVI6aUl79+uE
-UeHzGimWKPVPQnIkuQxCS6MaG0sLdcgRjjsTtfIS6TllYLZ/0mWhbE/6smFmmXIb
-EPfuBVjrK9q4WcXy3DhJHrUnpiDdWm/I7xoy8neKbEb4UHJ0qlsi46NRbYv1fge4
-fF0fyWw6VHnti9JRkuqsYWdJ052FEvFEqg3+Dal1oC4HG3Rta+rD72mvmsJtZ1sW
-JGOXycotJAvQP2U86S7Oml3PcJG9jy4bLvpOk+jU/kTdW12eLhvdouWko/JsCTNI
-s7x3AvY5Lj7MgNpPt9AKu1GRLHlEPqvG3jVAztc5i1QxaKKhRtYGyb++fBHpBA8B
-PyrJfcHNckWLgF1kY2cfrIeCZcI9yYSM0Oq2+LpOoTJjFTGbq4te0P5pJR0O0nj3
-dAY5fKG3kpp7ObzRhho4ANxt1gpZ41AZvT7NMK6zn98i/xYh0Bw=
-=nFTn
------END PGP SIGNATURE-----
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/1577900990-8588-10-git-send-email-Julia.Lawall@inria.fr
+---
+ arch/x86/kernel/crash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---jRHKVT23PllUwdXP--
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 00fc55a..fd87b59 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -370,7 +370,7 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	/* Add crashk_low_res region */
+ 	if (crashk_low_res.end) {
+ 		ei.addr = crashk_low_res.start;
+-		ei.size = crashk_low_res.end - crashk_low_res.start + 1;
++		ei.size = resource_size(&crashk_low_res);
+ 		ei.type = E820_TYPE_RAM;
+ 		add_e820_entry(params, &ei);
+ 	}
