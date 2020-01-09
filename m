@@ -2,94 +2,98 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D1C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C635C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F03205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308DB20678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nTeh8Vkr"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="ZGdO3bXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388305AbgAIRuv (ORCPT
+        id S2388350AbgAIRu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:50:51 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:36508 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728724AbgAIRuv (ORCPT
+        Thu, 9 Jan 2020 12:50:57 -0500
+Received: from mail1.fiberby.net ([193.104.135.124]:40390 "EHLO
+        mail1.fiberby.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730326AbgAIRu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:50:51 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8DEDF2007679;
-        Thu,  9 Jan 2020 09:50:50 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8DEDF2007679
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1578592250;
-        bh=cu2JveRyQuDPFRB2esVGRwjQJkbQO22sfT40nDoRZYU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nTeh8VkrEkVm/QzF3jvtCpMXBK7fCmy9Mp3wGWQwB1xdwwI/Aq2lmLu7o56vZtOkg
-         96UFm1ZHE/ZNLdwREKjAsrn3TxtHagf3g/asHM8jdwI24I1FtZ3Mm5mPH7TJMnHsMd
-         MgU9mjSmW3xtvahE/H32fn6tRwD+DYzqAwTjDw7s=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     dhowells@redhat.com, arnd@arndb.de, matthewgarrett@google.com,
-        sashal@kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org
-Subject: [PATCH] IMA: fix measuring early boot asymmetric keys
-Date:   Thu,  9 Jan 2020 09:50:46 -0800
-Message-Id: <20200109175046.4024-1-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 Jan 2020 12:50:56 -0500
+X-Greylist: delayed 554 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 12:50:55 EST
+Received: from x201s.roaming.asbjorn.biz (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+        by mail1.fiberby.net (Postfix) with ESMTPSA id A759A6010C;
+        Thu,  9 Jan 2020 17:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+        s=201905; t=1578591697;
+        bh=aO90ZkWcNxvVfMQ699FY54Oi71pyX/FoCIGUYqP1+0U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZGdO3bXag3oQlpfK+0ry+F2q+jK9NIvMoyCTZ+8g9s+A5xN6ZwndRz+s0AzM6Hjri
+         vJT0o0qp16Oooy5k36E16sHSREKf2SpYLk9WYAvXLgDD3Td2OBAqG/oGyh6Woxe45k
+         irwutle4gtBzSVE4jfjejfDbJxyt1hg9bhjwymFPIh68o9032/zKqmSOQuYI/ly/Zx
+         4EWS9aTpVexV78lZonSKKVul6ey7gZofKsCB1Q7ocC89MNvl3Ar2fS/7Wn3OpB2t4D
+         aa6nMdpgdh89WFlMINxTgHHCo6ZSVzFTtGr7B2KcwudgJilzAt9zEnqlfE9EZY9aDG
+         V5wfaYA+QQ33A==
+Received: from x201s.roaming.asbjorn.biz (localhost [127.0.0.1])
+        by x201s.roaming.asbjorn.biz (Postfix) with ESMTP id 0AC5020023E;
+        Thu,  9 Jan 2020 17:41:34 +0000 (UTC)
+Subject: Re: [Bridge] [RFC net-next Patch 0/3] net: bridge: mrp: Add support
+ for Media Redundancy Protocol(MRP)
+To:     Stephen Hemminger <stephen@networkplumber.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     andrew@lunn.ch, jakub.kicinski@netronome.com,
+        nikolay@cumulusnetworks.com, netdev@vger.kernel.org,
+        roopa@cumulusnetworks.com, bridge@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, vivien.didelot@gmail.com,
+        UNGLinuxDriver@microchip.com, anirudh.venkataramanan@intel.com,
+        jiri@mellanox.com, jeffrey.t.kirsher@intel.com, dsahern@gmail.com,
+        olteanv@gmail.com, davem@davemloft.net,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+References: <20200109150640.532-1-horatiu.vultur@microchip.com>
+ <20200109081907.06281c0f@hermes.lan>
+From:   =?UTF-8?Q?Asbj=c3=b8rn_Sloth_T=c3=b8nnesen?= <ast@fiberby.net>
+Message-ID: <da02006c-dc9d-ce1a-861e-4fc1c1dc2830@fiberby.net>
+Date:   Thu, 9 Jan 2020 17:41:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200109081907.06281c0f@hermes.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a result of the asymmetric public keys subtype being defined as a
-tristate, with the existing IMA Makefile, ima_asymmetric_keys.c could
-be built as a kernel module. To prevent this from happening,
-an intermediate Kconfig boolean option named
-IMA_MEASURE_ASYMMETRIC_KEYS has been defined.
+Hi Horatiu and Stephen,
 
-This patch uses this new config CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
-to declare the early boot key measurement functions.
+Horatiu, thanks for giving this a try. I am looking forward to maybe someday
+be able to run ERPS on white box switches.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Reported-by: kbuild test robot <lkp@intel.com> # redefinition of
-ima_init_key_queue() function.
-Suggested-by: James.Bottomley <James.Bottomley@HansenPartnership.com>
-Fixes: e164a1695a57 ("IMA: Define workqueue for early boot key measurements")
-Fixes: 1df595b4e120 ("IMA: Defined timer to free queued keys")
----
- security/integrity/ima/ima.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 1/9/20 4:19 PM, Stephen Hemminger wrote:
+> Can this be implemented in userspace?
+> 
+> Putting STP in the kernel was a mistake (even original author says so).
+> Adding more control protocols in kernel is a security and stability risk.
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index c483215a9ee5..6bb3152b3e24 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -205,7 +205,7 @@ extern const char *const func_tokens[];
- 
- struct modsig;
- 
--#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-+#ifdef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
- /*
-  * To track keys that need to be measured.
-  */
-@@ -220,7 +220,7 @@ void ima_init_key_queue(void);
- #else
- static inline void ima_process_queued_keys(void) {}
- static inline void ima_init_key_queue(void) {}
--#endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
-+#endif /* CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS */
- 
- /* LIM API function definitions */
- int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
+Another case is VRRP, ERPS (ITU-T G.8032), VRRP group.
+
+My use-case might not be common, but I have machines with about 10k net_dev (QinQ),
+I would like to be able to do VRRP group on the outer VLANs, which are only a few
+hundred instances without excessive context switching. I would then keep the the
+normal keep-alive state machine in kernel, basically a BPF-based timed periodic
+packet emitter facility and a XDP recieve hook. So only setup and event handling
+has to context switched to user-space.
+
+Unfortunately I haven't had time to explore this yet, but I think such an approach
+could solve a few of the reasons that scalable bridge/ring/ha protocols have to wait
+20 years before being implemented in Linux.
+
 -- 
-2.17.1
-
+Best regards
+Asbjørn Sloth Tønnesen
+Network Engineer
+Fiberby ApS - AS42541
