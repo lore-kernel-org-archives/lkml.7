@@ -2,112 +2,111 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ED7C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928D4C32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FD52072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600E22072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hg6MqCx3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KdgOUrwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbgAIITE (ORCPT
+        id S1728410AbgAIIUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:19:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24976 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728349AbgAIITD (ORCPT
+        Thu, 9 Jan 2020 03:20:12 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35584 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728331AbgAIIUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:19:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578557942;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+jC2Bp1qn6bLQ3vA2T/zmebaTYNwmfqXn+CX9gTxrZM=;
-        b=Hg6MqCx3lDeTGaaAm2YkD4le5ewVAK8qKh5C8pp540yzkxzsVUUuBG604+yFttoMIqmVoD
-        +COB60yG/zuvICSs7jjDoiBczUtGIjzLCMINaJSPQHXPoKweoQh5XPsviOoKd0B6NI3PwN
-        Y48N01MF5f5Ouwhn58hDJWGw8yDqg9s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-28-SqfnLCrIMLeF42RDHVY7rQ-1; Thu, 09 Jan 2020 03:18:59 -0500
-X-MC-Unique: SqfnLCrIMLeF42RDHVY7rQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E0AE1005512;
-        Thu,  9 Jan 2020 08:18:56 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8EE838060D;
-        Thu,  9 Jan 2020 08:18:54 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 09:18:52 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 8/9] perf top: Add --all-cgroups option
-Message-ID: <20200109081852.GB52936@krava>
-References: <20200107133501.327117-1-namhyung@kernel.org>
- <20200107133501.327117-9-namhyung@kernel.org>
- <20200108222458.GF12995@krava>
- <CAM9d7ch7t9GDu=emb9MYdTSB8hPb0adAy1iOdjyXSXVXTpGBFg@mail.gmail.com>
+        Thu, 9 Jan 2020 03:20:12 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z76so5238855qka.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 00:20:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nntsi3ZIZ4YTnCqpslNwLZBauzhg9rC3/Kr5lCbJGLM=;
+        b=KdgOUrwoRKlKyIE48pG0Q85YWMdko0UhJ3v9AUQZA+pZbJDrWSoKhtRH/VQ9ciedjL
+         ILNhwIl8z1+CRUhbtdsD6Do8LlF3d2HyXjIR0IF8tWIuUDas3ywLzAtctwmz+vrh78Z2
+         FPzdEctv1OfekncziNGDIdVn5fe2oFpxWSMrtOqccbbFaAYCZ6XLAYGuLRXZN8aW4cpk
+         XMzQbpcGJKn6i2oA+l8xMxM50n9QE6GfR0AOnhfT956t/iBKJuXwuGDqhdo7ON9BU1Xp
+         holnkaReSd5if7w+vcnpx9ouY8BKQ3dkX1V2wj9babO1CPJxkDRNdu/5bcnPe7IObTpp
+         npxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nntsi3ZIZ4YTnCqpslNwLZBauzhg9rC3/Kr5lCbJGLM=;
+        b=EiSJMwP9J8cpd/1gBrEhkv3zmOkns3oBecVkR6kzk0lKNaZKpab7oK4NDF+EjCPlS4
+         AsKdJ7qZ4oEL4r9L6ZqHyxLtTVDsLK+mF1QvXwljGWhxVAyT9JhLiypKYJYE7tDy3tv0
+         K6aMtALR48QFpg3tGLSRh1PjQGyHSKaSOTLTJwhG1nXuN0hUEkdcc+D/S90WsZwugMih
+         dje9Nn0WaSm+jj2xkCUJv4K7u08gUmiYGVHFi1MAOV/v8+cC5AtsMyJhBnnXCiu+mtYa
+         C3RVdKfeBBQflsiTZaOzS1RM60+kgjpuqWwV4XLzJatowNZPvgiMauuDARVI+/3E+Q9E
+         u38Q==
+X-Gm-Message-State: APjAAAX0Q62xFYmEK4VsuukEiXY2fYSkwgchk5E30z7WCmd68F0e0izB
+        3oNrY+FJrYYLbu84wsuKYOlRUlz+O6LOH8+2BANrsA==
+X-Google-Smtp-Source: APXvYqzoYusFp/63zWLhSXi9P7Xfz0t1A3k1UMy8zAE33t/cJkEETydSd7vAVohcF5cxg22g94He62lLgUDDNqy+mfI=
+X-Received: by 2002:a37:e312:: with SMTP id y18mr8541800qki.250.1578558008734;
+ Thu, 09 Jan 2020 00:20:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7ch7t9GDu=emb9MYdTSB8hPb0adAy1iOdjyXSXVXTpGBFg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <00000000000036decf0598c8762e@google.com> <CACT4Y+YVMUxeLcFMray9n0+cXbVibj5X347LZr8YgvjN5nC8pw@mail.gmail.com>
+ <CACT4Y+asdED7tYv462Ui2OhQVKXVUnC+=fumXR3qM1A4d6AvOQ@mail.gmail.com>
+ <f7758e0a-a157-56a2-287e-3d4452d72e00@schaufler-ca.com> <87a787ekd0.fsf@dja-thinkpad.axtens.net>
+ <87h81zax74.fsf@dja-thinkpad.axtens.net> <CACT4Y+b+Vx1FeCmhMAYq-g3ObHdMPOsWxouyXXUr7S5OjNiVGQ@mail.gmail.com>
+ <0b60c93e-a967-ecac-07e7-67aea1a0208e@I-love.SAKURA.ne.jp> <6d009462-74d9-96e9-ab3f-396842a58011@schaufler-ca.com>
+In-Reply-To: <6d009462-74d9-96e9-ab3f-396842a58011@schaufler-ca.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 9 Jan 2020 09:19:57 +0100
+Message-ID: <CACT4Y+bURugCpLm5TG37-7voFEeEoXo_Gb=3sy75_RELZotXHw@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in sys_kill
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot <syzbot+de8d933e7d153aa0c1bb@syzkaller.appspotmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 04:55:21PM +0900, Namhyung Kim wrote:
-> On Thu, Jan 9, 2020 at 7:25 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Tue, Jan 07, 2020 at 10:35:00PM +0900, Namhyung Kim wrote:
-> > > The --all-cgroups option is to enable cgroup profiling support.  It
-> > > tells kernel to record CGROUP events in the ring buffer so that perf
-> > > report can identify task/cgroup association later.
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/Documentation/perf-top.txt | 4 ++++
-> > >  tools/perf/builtin-top.c              | 9 +++++++++
-> > >  2 files changed, 13 insertions(+)
-> > >
-> > > diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-> > > index 5596129a71cf..c75507f50071 100644
-> > > --- a/tools/perf/Documentation/perf-top.txt
-> > > +++ b/tools/perf/Documentation/perf-top.txt
-> > > @@ -266,6 +266,10 @@ Default is to monitor all CPUS.
-> > >       Record events of type PERF_RECORD_NAMESPACES and display it with the
-> > >       'cgroup_id' sort key.
-> > >
-> > > +--cgroup::
-> > > +     Record events of type PERF_RECORD_CGROUP and display it with the
-> > > +     'cgroup' sort key.
-> >
-> > should be '--all-cgroups' ?
-> 
-> Oops, you're right.
-> 
-> >
-> > anyway, we dont have '--cgroups', why not use just this?
-> 
-> I chose it for consistency since perf record has '--cgroup' option.
+On Wed, Jan 8, 2020 at 6:19 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+>
+> On 1/8/2020 2:25 AM, Tetsuo Handa wrote:
+> > On 2020/01/08 15:20, Dmitry Vyukov wrote:
+> >> I temporarily re-enabled smack instance and it produced another 50
+> >> stalls all over the kernel, and now keeps spewing a dozen every hour.
+>
+> Do I have to be using clang to test this? I'm setting up to work on this,
+> and don't want to waste time using my current tool chain if the problem
+> is clang specific.
 
-I see.. and we have that substring recognition so I suppose --cgroups
-would screw the existing --cgroup option, ok
+Humm, interesting. Initially I was going to say that most likely it's
+not clang-related. Bug smack instance is actually the only one that
+uses clang as well (except for KMSAN of course). So maybe it's indeed
+clang-related rather than smack-related. Let me try to build a kernel
+with clang.
 
-jirka
-
+> > Since we can get stall reports rather easily, can we try modifying
+> > kernel command line (e.g. lsm=smack) and/or kernel config (e.g. no kasan) ?
+> >
+> >> I've mailed 3 new samples, you can see them here:
+> >> https://syzkaller.appspot.com/bug?extid=de8d933e7d153aa0c1bb
+> >>
+> >> The config is provided, command line args are here:
+> >> https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-smack.cmdline
+> >> Some non-default sysctls that syzbot sets are here:
+> >> https://github.com/google/syzkaller/blob/master/dashboard/config/upstream.sysctl
+> >> Image can be downloaded from here:
+> >> https://github.com/google/syzkaller/blob/master/docs/syzbot.md#crash-does-not-reproduce
+> >> syzbot uses GCE VMs with 2 CPUs and 7.5GB memory, but this does not
+> >> look to be virtualization-related (?) so probably should reproduce in
+> >> qemu too.
+> > Is it possible to add instance for linux-next.git that uses these configs?
+> > If yes, we could try adding some debug printk() under CONFIG_DEBUG_AID_FOR_SYZBOT=y .
