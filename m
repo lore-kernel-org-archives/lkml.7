@@ -2,75 +2,100 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3ADC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4143DC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0026020880
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E05B2073A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="o8hyLvww"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qw4ugtVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgAIUuu (ORCPT
+        id S1728647AbgAIUv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 15:50:50 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:60770 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbgAIUuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 15:50:50 -0500
-Received: from zn.tnic (p200300EC2F0C57004DD84C0E473AA3AE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5700:4dd8:4c0e:473a:a3ae])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0A72D1EC0CAD;
-        Thu,  9 Jan 2020 21:50:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578603049;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=XCRML0Cx0Cx5kYs7V7J7wBoduSfA5eUznn1aXx4A2M0=;
-        b=o8hyLvwwD7oXavXJt1E6gwf4KFTqynRv/IHPls1+Pl5+0TqyDiyfESW1Mesb9DL5dIGUG6
-        aFxxnoY6rZsMFY7fsYyIdByRjwGaX5bfIl2CI5WSQIA8X5ne2Xl+8tpfB09PZrLO0Mby6k
-        Zl5sWaCenVU6qCYHPE2KcWz+NVxgsE8=
-Date:   Thu, 9 Jan 2020 21:50:41 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v2] x86/boot/KASLR: Fix unused variable warning
-Message-ID: <20200109205041.GJ5603@zn.tnic>
-References: <20200103033929.4956-1-zhenzhong.duan@gmail.com>
- <20200109184055.GI5603@zn.tnic>
- <20200109204638.GA523773@rani.riverdale.lan>
+        Thu, 9 Jan 2020 15:51:26 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37434 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgAIUv0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 15:51:26 -0500
+Received: by mail-qt1-f196.google.com with SMTP id w47so13724qtk.4;
+        Thu, 09 Jan 2020 12:51:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=r8+PNHuHVYhO/9L0NgizQ0DPv9kkAS8uxlfxmczMuUs=;
+        b=qw4ugtVaC6xnbnftjvIJFcCrXVrzd9ZuL6nubS64+2uc1FK5WtpHD8Y2NRCrKtv5td
+         djdGWXbyqaDsGAtasuUyc6QDk06/XjfT104M+RVhFCPaZ7qSy7UT1FoFPqECaPbFjfGy
+         LCqzkqjOdSA2V9FDFm/s69Q3pGSHKgQWw4E9QbJ7S82IamCX/hcdH9lGuCgwh+cZbLhE
+         TNxhXFYpMOMiOQMq97/JxjDIgrG8ELLGnM5BTQNFXiE6KqCwv5uZPidQqrgE/e6BX46h
+         5GbOguWylANbfu0iwzBlydzg79iWAuySiFY3SktZaUOXE+kaaEumPNRSeEpWsDp+NTF2
+         oeHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=r8+PNHuHVYhO/9L0NgizQ0DPv9kkAS8uxlfxmczMuUs=;
+        b=Kgdr6apPXwV9CAbe815w5j8LvyxKeJYRCJDsMT4RBUrkqwQlJlTBa6x+v79js8gVuR
+         4MDfPXF7o6b3IMl72kH1bwrq4aIECMCrlihOd8VlOqer9q2DCl4z1KQN5VtsNtzOP1Hs
+         TchnXWFoYOrwDIZ1F0980KjSTy+Kb8Is4jk3z8IcVvNwIrSU4BG6uFKSD9onx5exaftz
+         z0/vmtF6my25x33SPiy1XhVDYNgVOZ9Ft3fLP2vMRSIGamL+gaoMfKxsBgxcGJN76Gdy
+         0y12mAxFgsoZgaSQUfn43cZnwsOtSUNfXpU+VXEQpf9tYF8FBz+5eitJb4AspSVx4iIU
+         7QHA==
+X-Gm-Message-State: APjAAAXVeyA3L74db4L9W+zTzwKhcsw7LKX3KBwGnWd6zOtSGjj+pu4i
+        e3T9U/JqR5lKv0WIaH7FD1E=
+X-Google-Smtp-Source: APXvYqxuq+Jd+nWt/TrkJDmldrGG25HleKXAUbyKuI0EseL0XUXFC3Xq9Wq6SD6HMQ8/qorIQEuDng==
+X-Received: by 2002:ac8:4657:: with SMTP id f23mr8387874qto.378.1578603084671;
+        Thu, 09 Jan 2020 12:51:24 -0800 (PST)
+Received: from ?IPv6:2804:14d:72b1:8920:a2ce:f815:f14d:bfac? ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id s91sm3846706qtd.50.2020.01.09.12.51.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 12:51:24 -0800 (PST)
+Subject: Re: [PATCH 0/1] Implement a DVB Dummy Tuner
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     sean@mess.org, tglx@linutronix.de, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200109152408.919325-1-dwlsalmeida@gmail.com>
+ <20200109170750.12746fcc@kernel.org>
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Message-ID: <aedc52d8-db98-eeac-c519-a4eeb21fa9dd@gmail.com>
+Date:   Thu, 9 Jan 2020 17:51:20 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200109204638.GA523773@rani.riverdale.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109170750.12746fcc@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop fanc.fnst@cn.fujitsu.com from Cc because it bounces.
+Hi Mauro!
 
-On Thu, Jan 09, 2020 at 03:46:41PM -0500, Arvind Sankar wrote:
-> The boot/compressed Makefile resets KBUILD_CFLAGS.  Following hack and
-> building with W=1 shows it, or just add -Wunused in there.
 
-I'm interested in how he reproduced it on the stock tree, without
-additional hacks or changes.
+> No need for a patch 0/1. If you want to send just one patch, just sent it
+> directly as:
+>
+> 	[PATCH] foo
 
--- 
-Regards/Gruss,
-    Boris.
+I planned on adding more commits to this series in v2, v3 and so forth 
+so they would be applied in order, since they would be touching the same 
+file. Likewise, the changes could be reviewed in a piecemeal fashion 
+making it easier for reviewers. Is this not advisable?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Anyway, thanks for the heads up.
+
+
+- Daniel.
+
+
