@@ -2,223 +2,161 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C520C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AAAC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D732072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A6820656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:51:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="y0zf90SH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BMFuya7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgAILuo (ORCPT
+        id S1729373AbgAILvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:50:44 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55570 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgAILuU (ORCPT
+        Thu, 9 Jan 2020 06:51:33 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55770 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728618AbgAILvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:50:20 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so2561717wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 03:50:19 -0800 (PST)
+        Thu, 9 Jan 2020 06:51:32 -0500
+Received: by mail-wm1-f66.google.com with SMTP id q9so2565814wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 03:51:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FA3+2VP5jAU36J2OH+8r6uyx7DpqKu5B6mxuwntNrmg=;
-        b=y0zf90SH/xz46Ta5Z+ipALrxGQSFFIUJRsJTjVK2piTWKeLB9vzcdCQr1Kwzwmc+8j
-         T6z2lD3TbAbS34SiyDT06Tup2pQGOAwwYakLxgcUFXN0Pq1j6RcF14eEKKY5i1bEaPxE
-         FAMZpgOTj3VJNOeKSeH/hekuZgfqdjQjggdaJnrcpNNckqWAl1RSyRirM/TDJCgvWdFk
-         Ma3MifhS8C2LiHKgBCRjhL2fhMJNrhgtu+krUnd2vwbO3N3IeR3WKnhySnvD86GFYAhq
-         OaNcNFuMvFVV8a9JXDnfMJ2x6QlmDvozTVji4405hb5xNGqiHw0C/HmgvFhxuDNGqKpS
-         g0/A==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kl2MTIeJMU1iQBgeRNaRu3TA7s6vXGZZw5P4CMy8fhI=;
+        b=BMFuya7MEsXMazjcNdJZ9J1GwzMeTkVvtUi+75T8Ao1dOpZVB1nESH4srZNCTPWlb1
+         Wdd+bsR2/L6iIfqqQLa0flhZ+TIsW4pW6bxihiKwDlRWXqNzgx0YyO7wCanglTaAZ5kA
+         YdvnC//DGV9UUbcvliEdERxJYfmcpxwGjbddx6OvhEBDw4MczcNlnetE1+WP2vwEPMdF
+         lkg/auFUngS2NfDGf+FKhiOUOdkssvVrtFWGf3DP1OJGWT/gSNUAOMGA/acsDvUfv0MU
+         fs3vZVQNooB1YmbBPm/3dmHJ6u76Xg/YIN7xFSQHrD13JZPIygDm69VbyRz5Podinwe6
+         Cfow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FA3+2VP5jAU36J2OH+8r6uyx7DpqKu5B6mxuwntNrmg=;
-        b=fF8TC0MDRPMFocZDQFrwE5K65/zx3C/QyikC1RXJ14ycENyDE5Sk0w+kTLjAP8x0oC
-         0cvMW2R3FUd/LOyt8cTwae1RqUDZSaBbNhquRo8HCfhNEQ/78T+aghjz3v2RWjL/p/rA
-         tTD0F2wiqwXgVaEsrVuGm2VEIGGYiuW3jboFklfNhDVnnu2s39SaLpMl+1jqPR/svdzY
-         jTgHmvxhVVofL4taIj+QSk/tzBP3w2zwUK4GehG9OKjw4Iz46PasIw7o6l4jgmSLPuWw
-         hcEoA+NMnUOajwLeSKPljqkhLAxeuBIn2/quy0i4kp/fn8L4Kh0V1meg+kQDbHhMyuDt
-         XIKA==
-X-Gm-Message-State: APjAAAUZmAsaXKRdsCl0Pjusju5XMcyrUC3OP6mVCJAaIYvLkkd9Z/HE
-        VIhhebvE+oAeNKuDl0cxQQ4dbA==
-X-Google-Smtp-Source: APXvYqxv8DiI2j/pEwy6D48Ut1X97xSOn0Ai9KBCq84xPYr1GFVwPbZNpfD6u2vecLPzx+W5vx2ybg==
-X-Received: by 2002:a05:600c:290f:: with SMTP id i15mr4513441wmd.115.1578570618381;
-        Thu, 09 Jan 2020 03:50:18 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id u16sm2574979wmj.41.2020.01.09.03.50.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 03:50:17 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v5 3/7] gpiolib: rework the locking mechanism for lineevent kfifo
-Date:   Thu,  9 Jan 2020 12:50:06 +0100
-Message-Id: <20200109115010.27814-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200109115010.27814-1-brgl@bgdev.pl>
-References: <20200109115010.27814-1-brgl@bgdev.pl>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kl2MTIeJMU1iQBgeRNaRu3TA7s6vXGZZw5P4CMy8fhI=;
+        b=lnYAkrVqi6nCffbiQe9+MFvVqfLzSSt0Du4WgOynvWN/zlyADc/X/pKgBB/TMJElXC
+         JDhcsxlMPM2uEUJbh+TpXMdEX+tdC78iZYqE5TYl9/gnl0dTj9rz5F7PbaSdNXuZcEC6
+         jBGQC6agy7miphA2r8NqM3oA8CA6DCg6f9y7IJFFy7e2To65D2pzIfjTc7Nyum1N9tEP
+         3oQOMezM4XDE6mSeODxl8YiIhjAB1SHo6y37+FcaZqTKY7RC3o9X+shfuQfLtwkK3jW0
+         XMZklnFa/v7xV6jxzNvDlRemTN7idd4HgAysEHyeUtMigpFM6wpTxdVSnMKkFgTm0CAn
+         u5Ow==
+X-Gm-Message-State: APjAAAXxXlWgYJFxFQYWJsr/JYm9gY4qAgkJfYEIeT/IU4jKROjd//+G
+        myhNs6WdfvcilqQStaaMZk68BA==
+X-Google-Smtp-Source: APXvYqwTshqSv9A6F8d2MMvmoqOT+WHhze5YCGY0HK5n2ufql7Ypp2c07THfNFJhHXamz2mfr9BbaA==
+X-Received: by 2002:a05:600c:54b:: with SMTP id k11mr4363524wmc.63.1578570689468;
+        Thu, 09 Jan 2020 03:51:29 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
+        by smtp.googlemail.com with ESMTPSA id s128sm2686191wme.39.2020.01.09.03.51.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 03:51:28 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
+ thermal zones
+To:     Maxime Ripard <mripard@kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        anarsoul@gmail.com, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, megous@megous.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200106174639.20862-1-tiny.windzz@gmail.com>
+ <20200106174639.20862-2-tiny.windzz@gmail.com>
+ <20200107075816.ly6exfd4qtvfxxua@gilmour.lan>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
+Date:   Thu, 9 Jan 2020 12:51:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20200107075816.ly6exfd4qtvfxxua@gilmour.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 07/01/2020 08:58, Maxime Ripard wrote:
+> On Mon, Jan 06, 2020 at 05:46:39PM +0000, Yangtao Li wrote:
+>> There are two sensors, sensor0 for CPU, sensor1 for GPU.
+>>
+>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+>> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+>> Tested-on: sun8i-r40-bananapi-m2-ultra
+> 
+> As far as I know, tested-on is not documented anywhere (and isn't
+> really used either). I've removed it and applied, thanks!
 
-The read_lock mutex is supposed to prevent collisions between reading
-and writing to the line event kfifo but it's actually only taken when
-the events are being read from it.
+I think this patch should go through my tree as it refers to a commit in
+my branch.
 
-Drop the mutex entirely and reuse the spinlock made available to us in
-the waitqueue struct. Take the lock whenever the fifo is modified or
-inspected. Drop the call to kfifo_to_user() and instead first extract
-the new element from kfifo when the lock is taken and only then pass
-it on to the user after the spinlock is released.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 64 +++++++++++++++++++++++-------------------
- 1 file changed, 35 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ee5ab39d7ab7..43c96e7cdc48 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -796,8 +796,6 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
-  * @irq: the interrupt that trigger in response to events on this GPIO
-  * @wait: wait queue that handles blocking reads of events
-  * @events: KFIFO for the GPIO events
-- * @read_lock: mutex lock to protect reads from colliding with adding
-- * new events to the FIFO
-  * @timestamp: cache for the timestamp storing it between hardirq
-  * and IRQ thread, used to bring the timestamp close to the actual
-  * event
-@@ -810,7 +808,6 @@ struct lineevent_state {
- 	int irq;
- 	wait_queue_head_t wait;
- 	DECLARE_KFIFO(events, struct gpioevent_data, 16);
--	struct mutex read_lock;
- 	u64 timestamp;
- };
- 
-@@ -826,7 +823,7 @@ static __poll_t lineevent_poll(struct file *filep,
- 
- 	poll_wait(filep, &le->wait, wait);
- 
--	if (!kfifo_is_empty(&le->events))
-+	if (!kfifo_is_empty_spinlocked_noirqsave(&le->events, &le->wait.lock))
- 		events = EPOLLIN | EPOLLRDNORM;
- 
- 	return events;
-@@ -839,43 +836,52 @@ static ssize_t lineevent_read(struct file *filep,
- 			      loff_t *f_ps)
- {
- 	struct lineevent_state *le = filep->private_data;
--	unsigned int copied;
-+	struct gpioevent_data event;
-+	ssize_t bytes_read = 0;
- 	int ret;
- 
--	if (count < sizeof(struct gpioevent_data))
-+	if (count < sizeof(event))
- 		return -EINVAL;
- 
- 	do {
-+		spin_lock(&le->wait.lock);
- 		if (kfifo_is_empty(&le->events)) {
--			if (filep->f_flags & O_NONBLOCK)
-+			if (bytes_read) {
-+				spin_unlock(&le->wait.lock);
-+				return bytes_read;
-+			}
-+
-+			if (filep->f_flags & O_NONBLOCK) {
-+				spin_unlock(&le->wait.lock);
- 				return -EAGAIN;
-+			}
- 
--			ret = wait_event_interruptible(le->wait,
-+			ret = wait_event_interruptible_locked(le->wait,
- 					!kfifo_is_empty(&le->events));
--			if (ret)
-+			if (ret) {
-+				spin_unlock(&le->wait.lock);
- 				return ret;
-+			}
- 		}
- 
--		if (mutex_lock_interruptible(&le->read_lock))
--			return -ERESTARTSYS;
--		ret = kfifo_to_user(&le->events, buf, count, &copied);
--		mutex_unlock(&le->read_lock);
--
--		if (ret)
--			return ret;
--
--		/*
--		 * If we couldn't read anything from the fifo (a different
--		 * thread might have been faster) we either return -EAGAIN if
--		 * the file descriptor is non-blocking, otherwise we go back to
--		 * sleep and wait for more data to arrive.
--		 */
--		if (copied == 0 && (filep->f_flags & O_NONBLOCK))
--			return -EAGAIN;
-+		ret = kfifo_out(&le->events, &event, 1);
-+		spin_unlock(&le->wait.lock);
-+		if (ret != 1) {
-+			/*
-+			 * This should never happen - we were holding the lock
-+			 * from the moment we learned the fifo is no longer
-+			 * empty until now.
-+			 */
-+			ret = -EIO;
-+			break;
-+		}
- 
--	} while (copied == 0);
-+		if (copy_to_user(buf + bytes_read, &event, sizeof(event)))
-+			return -EFAULT;
-+		bytes_read += sizeof(event);
-+	} while (count >= bytes_read + sizeof(event));
- 
--	return copied;
-+	return bytes_read;
- }
- 
- static int lineevent_release(struct inode *inode, struct file *filep)
-@@ -977,7 +983,8 @@ static irqreturn_t lineevent_irq_thread(int irq, void *p)
- 		return IRQ_NONE;
- 	}
- 
--	ret = kfifo_put(&le->events, ge);
-+	ret = kfifo_in_spinlocked_noirqsave(&le->events, &ge,
-+					    1, &le->wait.lock);
- 	if (ret)
- 		wake_up_poll(&le->wait, EPOLLIN);
- 
-@@ -1092,7 +1099,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 
- 	INIT_KFIFO(le->events);
- 	init_waitqueue_head(&le->wait);
--	mutex_init(&le->read_lock);
- 
- 	/* Request a thread to read the events */
- 	ret = request_threaded_irq(le->irq,
 -- 
-2.23.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
