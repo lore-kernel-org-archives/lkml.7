@@ -2,189 +2,93 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B966CC33CA3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D409BC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0812072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79132072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgAILhC (ORCPT
+        id S1727916AbgAILh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:37:02 -0500
-Received: from mga01.intel.com ([192.55.52.88]:55961 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbgAILhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:37:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 03:37:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
-   d="scan'208";a="216275607"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 09 Jan 2020 03:36:59 -0800
-Received: from [10.125.253.127] (abudanko-mobl.ccr.corp.intel.com [10.125.253.127])
-        by linux.intel.com (Postfix) with ESMTP id 2707C58043A;
-        Thu,  9 Jan 2020 03:36:50 -0800 (PST)
-Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
- privileged process
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
- <20200108160713.GI2844@hirez.programming.kicks-ass.net>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
-Date:   Thu, 9 Jan 2020 14:36:50 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 9 Jan 2020 06:37:27 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53970 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgAILh1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 06:37:27 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ipW7s-00087p-M5; Thu, 09 Jan 2020 12:37:20 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EA3FD1C2C9C;
+        Thu,  9 Jan 2020 12:37:19 +0100 (CET)
+Date:   Thu, 09 Jan 2020 11:37:19 -0000
+From:   "tip-bot2 for Jan Beulich" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/entry/64: Add instruction suffix to SYSRET
+Cc:     Jan Beulich <jbeulich@suse.com>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <038a7c35-062b-a285-c6d2-653b56585844@suse.com>
+References: <038a7c35-062b-a285-c6d2-653b56585844@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <20200108160713.GI2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <157856983975.30329.1296701997365239549.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/asm branch of tip:
 
-On 08.01.2020 19:07, Peter Zijlstra wrote:
-> On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
->>
->> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
->> processes. For backward compatibility reasons access to perf_events
->> subsystem remains open for CAP_SYS_ADMIN privileged processes but
->> CAP_SYS_ADMIN usage for secure perf_events monitoring is discouraged
->> with respect to CAP_SYS_PERFMON capability.
->>
->> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->> ---
->>  include/linux/perf_event.h | 6 +++---
->>  kernel/events/core.c       | 6 +++---
->>  2 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 34c7c6910026..f46acd69425f 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -1285,7 +1285,7 @@ static inline int perf_is_paranoid(void)
->>  
->>  static inline int perf_allow_kernel(struct perf_event_attr *attr)
->>  {
->> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
->> +	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
->>  		return -EACCES;
->>  
->>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
->> @@ -1293,7 +1293,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
->>  
->>  static inline int perf_allow_cpu(struct perf_event_attr *attr)
->>  {
->> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
->> +	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
->>  		return -EACCES;
->>  
->>  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
->> @@ -1301,7 +1301,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
->>  
->>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
->>  {
->> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
->> +	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
->>  		return -EPERM;
->>  
->>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
-> 
-> These are OK I suppose.
-> 
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 059ee7116008..d9db414f2197 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
->>  	if (event->attr.type != perf_kprobe.type)
->>  		return -ENOENT;
->>  
->> -	if (!capable(CAP_SYS_ADMIN))
->> +	if (!perfmon_capable())
->>  		return -EACCES;
->>  
->>  	/*
-> 
-> This one only allows attaching to already extant kprobes, right? It does
-> not allow creation of kprobes.
+Commit-ID:     b2b1d94cdfd4e906d3936dab2850096a4a0c2017
+Gitweb:        https://git.kernel.org/tip/b2b1d94cdfd4e906d3936dab2850096a4a0c2017
+Author:        Jan Beulich <jbeulich@suse.com>
+AuthorDate:    Mon, 16 Dec 2019 11:40:03 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 09 Jan 2020 12:33:43 +01:00
 
-This unblocks creation of local trace kprobes and uprobes by CAP_SYS_PERFMON 
-privileged process, exactly the same as for CAP_SYS_ADMIN privileged process.
+x86/entry/64: Add instruction suffix to SYSRET
 
-> 
->> @@ -9116,7 +9116,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
->>  	if (event->attr.type != perf_uprobe.type)
->>  		return -ENOENT;
->>  
->> -	if (!capable(CAP_SYS_ADMIN))
->> +	if (!perfmon_capable())
->>  		return -EACCES;
->>  
->>  	/*
-> 
-> Idem, I presume.
-> 
->> @@ -11157,7 +11157,7 @@ SYSCALL_DEFINE5(perf_event_open,
->>  	}
->>  
->>  	if (attr.namespaces) {
->> -		if (!capable(CAP_SYS_ADMIN))
->> +		if (!perfmon_capable())
->>  			return -EACCES;
->>  	}
-> 
-> And given we basically make the entire kernel observable with this CAP,
-> busting namespaces shoulnd't be a problem either.
-> 
-> So yeah, I suppose that works.
-> 
+ignore_sysret() contains an unsuffixed SYSRET instruction. gas correctly
+interprets this as SYSRETL, but leaving it up to gas to guess when there
+is no register operand that implies a size is bad practice, and upstream
+gas is likely to warn about this in the future. Use SYSRETL explicitly.
+This does not change the assembled output.
+
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/038a7c35-062b-a285-c6d2-653b56585844@suse.com
+---
+ arch/x86/entry/entry_64.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 76942cb..f2bb91e 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1728,7 +1728,7 @@ SYM_CODE_END(nmi)
+ SYM_CODE_START(ignore_sysret)
+ 	UNWIND_HINT_EMPTY
+ 	mov	$-ENOSYS, %eax
+-	sysret
++	sysretl
+ SYM_CODE_END(ignore_sysret)
+ #endif
+ 
