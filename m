@@ -2,95 +2,134 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15903C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92DFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D762067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S0pffzvI"
+	by mail.kernel.org (Postfix) with ESMTP id 67C992072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732939AbgAIT7E (ORCPT
+        id S1727786AbgAIUCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:59:04 -0500
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:51401 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732624AbgAIT7D (ORCPT
+        Thu, 9 Jan 2020 15:02:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55534 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgAIUCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:59:03 -0500
-Received: by mail-qk1-f202.google.com with SMTP id 194so4895793qkh.18
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:59:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Jf5B4EbQ+30kjad3rYjf3nQGksGo1BPEiNIOzLgULXA=;
-        b=S0pffzvIDcM3Erqu+B6kTPNDcpFqNGr5Lgn1Fru3tO/n7DHI2gxYrjybPEJWWCh8qJ
-         Pq0rgh1x4T67aJo9Y/zOOMYHmaBy/jb6Su0M5dUAAiR9WjHyU+YkuKRtnzHYWGCyWKyE
-         MqwTw1DzPgVrFVIXrMNlxC3ecz6b3un5RTrwDgI00pOnvxkf6Wy1J5pEUYd0lVc4izWr
-         VWOj3Nyud4Ev6G1bkQDxfDiynv0ORLWJeBXNAAy1Xa4s5vRAYDSYRYx6SXZbxDu/s+fy
-         17QqQeerEc+n7g0sUmMtpqMYLtTi71Zc7Mkp0zM6VJIhpvpLIV8t7L68BkFDNQTCyWfp
-         85Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Jf5B4EbQ+30kjad3rYjf3nQGksGo1BPEiNIOzLgULXA=;
-        b=SNgLNO0bwT72BdmQcyg9Lq3X/MFWE6W34LedwXhF6nMDcau5/AkF/vCeI9HLUzw0EQ
-         iX7Df+L346XFIZ2s8pfQdois2m3I4kDl+LOFOTsAp3v2M/sp1bnBDNRUJfXh3SkhmEHj
-         WbSGv19/9UVlEYoV6aL4hygkx4nkhlKv+14cClPyW25dlbZU0mC6qwVFolLTU6Ag4cjy
-         XWSAHXC4N29kUkC+vktD/uKpA0gwrc7eLs9Y1+jwLPJ7u+gn1C4TmEH3gXwCVZv4D2r7
-         pLpIGsOS0wGBdQTtgqoFmhgGJBd24ITPEz5T02vJJm/oH5LOWWwVjH1BC3Q+TmK/53eb
-         18zA==
-X-Gm-Message-State: APjAAAWjuGkJxUcmkCQsBH6UD53yeUjP6dapyuKaR3iYBTXA6xIjL51c
-        FW8zkYKhbeOSBS1tWOiMvd3BtXcl
-X-Google-Smtp-Source: APXvYqyFkOSjGrU2IETPDfcC3pAk3kZTILvTb6+kfTasc242E8aC+Ee9MsLPq6k3SOTw1KCiopXNnjnf
-X-Received: by 2002:a37:e507:: with SMTP id e7mr11506262qkg.358.1578599942496;
- Thu, 09 Jan 2020 11:59:02 -0800 (PST)
-Date:   Thu,  9 Jan 2020 14:58:55 -0500
-Message-Id: <20200109195855.17353-1-brho@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-Subject: [PATCH] KVM: squelch uninitialized variable warning
-From:   Barret Rhoden <brho@google.com>
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 Jan 2020 15:02:24 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ipe0b-0007HG-KY; Thu, 09 Jan 2020 21:02:21 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 20AA7105BCE; Thu,  9 Jan 2020 21:02:20 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ming Lei <ming.lei@redhat.com>, Peter Xu <peterx@redhat.com>
+Cc:     Juri Lelli <juri.lelli@redhat.com>, Ming Lei <minlei@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Kernel-managed IRQ affinity (cont)
+In-Reply-To: <20191219161115.GA18672@ming.t460p>
+References: <20191216195712.GA161272@xz-x1> <20191219082819.GB15731@ming.t460p> <20191219143214.GA50561@xz-x1> <20191219161115.GA18672@ming.t460p>
+Date:   Thu, 09 Jan 2020 21:02:20 +0100
+Message-ID: <87eew8l7oz.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If gfn_to_hva_many() fails, __kvm_gfn_to_hva_cache_init() will return an
-error.  Before it does, it might use nr_pages_avail, which my compiler
-complained about:
+Ming,
 
-	virt/kvm/kvm_main.c:2193:13: warning: 'nr_pages_avail' may be
-	used uninitialized in this function [-Wmaybe-uninitialized]
+Ming Lei <ming.lei@redhat.com> writes:
 
-	   start_gfn += nr_pages_avail;
+> On Thu, Dec 19, 2019 at 09:32:14AM -0500, Peter Xu wrote:
+>> ... this one seems to be more appealing at least to me.
+>
+> OK, please try the following patch:
+>
+>
+> diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+> index 6c8512d3be88..0fbcbacd1b29 100644
+> --- a/include/linux/sched/isolation.h
+> +++ b/include/linux/sched/isolation.h
+> @@ -13,6 +13,7 @@ enum hk_flags {
+>  	HK_FLAG_TICK		= (1 << 4),
+>  	HK_FLAG_DOMAIN		= (1 << 5),
+>  	HK_FLAG_WQ		= (1 << 6),
+> +	HK_FLAG_MANAGED_IRQ	= (1 << 7),
+>  };
+>  
+>  #ifdef CONFIG_CPU_ISOLATION
+> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> index 1753486b440c..0a75a09cc4e8 100644
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/sched/task.h>
+>  #include <uapi/linux/sched/types.h>
+>  #include <linux/task_work.h>
+> +#include <linux/sched/isolation.h>
+>  
+>  #include "internals.h"
+>  
+> @@ -212,12 +213,33 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+>  {
+>  	struct irq_desc *desc = irq_data_to_desc(data);
+>  	struct irq_chip *chip = irq_data_get_irq_chip(data);
+> +	const struct cpumask *housekeeping_mask =
+> +		housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
+>  	int ret;
+> +	cpumask_var_t tmp_mask;
+>  
+>  	if (!chip || !chip->irq_set_affinity)
+>  		return -EINVAL;
+>  
+> -	ret = chip->irq_set_affinity(data, mask, force);
+> +	if (!zalloc_cpumask_var(&tmp_mask, GFP_KERNEL))
+> +		return -EINVAL;
 
-Signed-off-by: Barret Rhoden <brho@google.com>
----
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's wrong. This code is called with interrupts disabled, so
+GFP_KERNEL is wrong. And NO, we won't do a GFP_ATOMIC allocation here.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index d9aced677ddd..f8249b153d33 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2172,7 +2172,7 @@ static int __kvm_gfn_to_hva_cache_init(struct kvm_memslots *slots,
- 	gfn_t start_gfn = gpa >> PAGE_SHIFT;
- 	gfn_t end_gfn = (gpa + len - 1) >> PAGE_SHIFT;
- 	gfn_t nr_pages_needed = end_gfn - start_gfn + 1;
--	gfn_t nr_pages_avail;
-+	gfn_t nr_pages_avail = 0;
- 	int r = start_gfn <= end_gfn ? 0 : -EINVAL;
- 
- 	ghc->gpa = gpa;
--- 
-2.25.0.rc1.283.g88dfdc4193-goog
+> +	/*
+> +	 * Userspace can't change managed irq's affinity, make sure
+> +	 * that isolated CPU won't be selected as the effective CPU
+> +	 * if this irq's affinity includes both isolated CPU and
+> +	 * housekeeping CPU.
+> +	 *
+> +	 * This way guarantees that isolated CPU won't be interrupted
+> +	 * by IO submitted from housekeeping CPU.
+> +	 */
+> +	if (irqd_affinity_is_managed(data) &&
+> +			cpumask_intersects(mask, housekeeping_mask))
+> +		cpumask_and(tmp_mask, mask, housekeeping_mask);
+
+This is duct tape engineering with absolutely no semantics. I can't even
+figure out the intent of this 'managed_irq' parameter.
+
+If the intent is to keep managed device interrupts away from isolated
+cores then you really want to do that when the interrupts are spread and
+not in the middle of the affinity setter code.
+
+But first you need to define how that mask should work:
+
+ 1) Exclude CPUs from managed interrupt spreading completely
+
+ 2) Exclude CPUs only when the resulting spreading contains
+    housekeeping CPUs
+
+ 3) Whatever ...
+
+Thanks,
+
+        tglx
+
 
