@@ -2,95 +2,134 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D198C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690D0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507A92064C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:21:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghO3EugB"
+	by mail.kernel.org (Postfix) with ESMTP id 3C9022072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578579794;
+	bh=NNCzD1lmxUFsxcsEkZYkrNX1RV1NIrNRacx8C8F8324=;
+	h=Date:From:To:cc:Subject:List-ID:From;
+	b=bW4qwYtioY/V8mjHZd2YMw3y46mivB+oM+yk4aLV3bCfLhgMpJas9ivoYCRGLj+1d
+	 a4HUkuOajuyMOjvKBkutTMGDYTIU3BkWiFYmfbM73SbXlK6KfxmBWpIyokUBxfe1Tb
+	 mQvc6+ktT/MUaDpovJ4OcbytkKd3ollJsrFCDPD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731615AbgAIOVH (ORCPT
+        id S1731621AbgAIOXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:21:07 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35461 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgAIOVG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:21:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so7594632wro.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 06:21:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WK9gkU3m513Bp7Cu1KXOPb6NwVeeFqZuUplsaUVFOIk=;
-        b=ghO3EugBL0+/4U4+kMiJ6nLW+1QsNX88U6mry2WtI8EVV8HzkEHzR0K87NLTCQSos0
-         kihimaZh5YvIbuaSzQGGkHW8qo48pxNQDa+GEEa+n0X55v7xC6OrJB40TC21P3OIb2Jh
-         P6CmXgLCA/oiF8najEnmbqZ5hNYbpdIiI7R1JXjH0Ce2PX6fXWyFR1prAuR337wZljBu
-         vZtcohvXrDx9I3jNflVUw/E1UiC8k9swnJCkaFY+ZDImtNMEzpN3tw/m6f/nQgFe4FKp
-         JRo862ZtpCgPSmEZeIkqteJKZMFjytf90Roz9N1nDzwPNO92bXCALRQwg2Rcb7l9Dlh8
-         FPqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WK9gkU3m513Bp7Cu1KXOPb6NwVeeFqZuUplsaUVFOIk=;
-        b=Cc9VZJR6qvvTkO4yn9Yl06/FoFSCO0c9p1RVDQICsb666EROkgEtKw1Jj+6Z2ZI62z
-         l7c6KIBgDjUqRLY1L7FCMiFJGOVWGLPs5U2LWFg1we87uDYMNjbR//FtgMEDD2LWfKXB
-         TZEs+7XRm15DSC67rTX5kxVIVqkuAL04xu/PtKvVHrPQ0/LgXWShXa/WX7SD2oySvDn4
-         4eQKK6rYXh5mhJZov4qVUkokjS8mA00322tnY89/PmUP+XprOjMjfV9NFa7AkcVd3y6Y
-         GIwoNXVa6Go6DxJOdWaHa8XvutvKrYBbal4M1KgKNuATGY5Wuiea6BwSjTqvjWWp7ly+
-         hVAA==
-X-Gm-Message-State: APjAAAWlWISKEyLevQIKGDjeU6/8qzW6kHgp7R3IpFqs6kJAJR8gYckb
-        mNQpyw6qzgli+gGA6fu1p/s=
-X-Google-Smtp-Source: APXvYqwf5cjzGgESlCq81pbBePPTkbxeU1QNXFhPZqiJ69f3+QB80EdywpsFxWfxqtJMEgBWZVeCAg==
-X-Received: by 2002:adf:8b4f:: with SMTP id v15mr11505791wra.231.1578579664576;
-        Thu, 09 Jan 2020 06:21:04 -0800 (PST)
-Received: from localhost.localdomain ([197.254.95.38])
-        by smtp.googlemail.com with ESMTPSA id b17sm8337337wrp.49.2020.01.09.06.21.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 06:21:03 -0800 (PST)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     hjc@rock-chips.com, heiko@sntech.de, airlied@linux.ie,
-        daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/rockchip: use DIV_ROUND_UP macro for calculations.
-Date:   Thu,  9 Jan 2020 17:20:57 +0300
-Message-Id: <20200109142057.10744-1-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 Jan 2020 09:23:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727854AbgAIOXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 09:23:12 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 922B420661;
+        Thu,  9 Jan 2020 14:23:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578579792;
+        bh=NNCzD1lmxUFsxcsEkZYkrNX1RV1NIrNRacx8C8F8324=;
+        h=Date:From:To:cc:Subject:From;
+        b=b2Jssm/QMAFHhGUBvBvC5kpmsGjW6Rm2+jF6vX38o4oHHHCD3//7gUesKAZrmlMai
+         PuNHGQr4YSw+2T5YWKfFJYm0ZFRmI5CclYu0ARMlwP2W5gSwP8rEfvj/T6nLUPOJVw
+         asdTdTlwipSK5FnVkM3S/3OwkIJ6sdaX27fpWkYE=
+Date:   Thu, 9 Jan 2020 15:23:09 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [GIT PULL] HID fixes
+Message-ID: <nycvar.YFH.7.76.2001091519080.31058@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the open coded calculation with the more concise and readable
-DIV_ROUND_UP macro.
+Linus,
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/gpu/drm/rockchip/rockchip_drm_vop.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+please pull from
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-index 0b3d18c457b2..cc672620d6e0 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-@@ -328,7 +328,7 @@ static inline uint16_t scl_get_bili_dn_vskip(int src_h, int dst_h,
- {
- 	int act_height;
- 
--	act_height = (src_h + vskiplines - 1) / vskiplines;
-+	act_height = DIV_ROUND_UP(src_h, vskiplines);
- 
- 	if (act_height == dst_h)
- 		return GET_SCL_FT_BILI_DN(src_h, dst_h) / vskiplines;
+  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+
+to get fixes for HID subsystem:
+
+=====
+- fix for OOB in hiddev, from Dmitry Torokhov
+- _poll API fixes for hidraw, from Marcel Holtmann
+- functional fix for Steam driver, from Rodrigo Rivas Costa
+- a few new device IDs / device-specific quirks and other assorted
+  smaller fixes
+=====
+
+Thanks.
+
+----------------------------------------------------------------
+Aaron Ma (1):
+      HID: multitouch: Add LG MELF0410 I2C touchscreen support
+
+Alan Stern (1):
+      HID: Fix slab-out-of-bounds read in hid_field_extract
+
+Dmitry Torokhov (2):
+      HID: hid-input: clear unmapped usages
+      HID: hiddev: fix mess in hiddev_open()
+
+Even Xu (1):
+      HID: intel-ish-hid: ipc: add CMP device id
+
+Hans de Goede (2):
+      HID: ite: Add USB id match for Acer SW5-012 keyboard dock
+      HID: asus: Ignore Asus vendor-page usage-code 0xff events
+
+Jason Gerecke (1):
+      HID: wacom: Recognize new MobileStudio Pro PID
+
+Marcel Holtmann (2):
+      HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
+      HID: uhid: Fix returning EPOLLOUT from uhid_char_poll
+
+Pan Zhang (1):
+      drivers/hid/hid-multitouch.c: fix a possible null pointer access.
+
+Pavel Balan (1):
+      HID: Add quirk for incorrect input length on Lenovo Y720
+
+Priit Laes (1):
+      HID: Add quirk for Xin-Mo Dual Controller
+
+Rodrigo Rivas Costa (1):
+      HID: steam: Fix input device disappearing
+
+Srinivas Pandruvada (1):
+      HID: intel-ish-hid: ipc: Add Tiger Lake PCI device ID
+
+ drivers/hid/hid-asus.c                  |  3 +-
+ drivers/hid/hid-core.c                  |  6 ++
+ drivers/hid/hid-ids.h                   |  3 +
+ drivers/hid/hid-input.c                 | 16 ++++--
+ drivers/hid/hid-ite.c                   |  3 +
+ drivers/hid/hid-multitouch.c            |  5 +-
+ drivers/hid/hid-quirks.c                |  1 +
+ drivers/hid/hid-steam.c                 |  4 ++
+ drivers/hid/hidraw.c                    |  4 +-
+ drivers/hid/i2c-hid/i2c-hid-core.c      | 16 +++++-
+ drivers/hid/intel-ish-hid/ipc/hw-ish.h  |  2 +
+ drivers/hid/intel-ish-hid/ipc/pci-ish.c |  2 +
+ drivers/hid/uhid.c                      |  2 +-
+ drivers/hid/usbhid/hiddev.c             | 97 ++++++++++++++-------------------
+ drivers/hid/wacom_wac.c                 |  6 +-
+ 15 files changed, 101 insertions(+), 69 deletions(-)
+
 -- 
-2.17.1
+Jiri Kosina
+SUSE Labs
 
