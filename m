@@ -2,97 +2,137 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C5FC32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0714CC33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C212067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:17:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjvHnzbE"
+	by mail.kernel.org (Postfix) with ESMTP id DACDA2075D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 12:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgAIMRu (ORCPT
+        id S1730881AbgAIMUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:17:50 -0500
-Received: from mail-lj1-f169.google.com ([209.85.208.169]:43837 "EHLO
-        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728974AbgAIMRt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:17:49 -0500
-Received: by mail-lj1-f169.google.com with SMTP id a13so6962841ljm.10;
-        Thu, 09 Jan 2020 04:17:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kJr9DdZZf2/ANld+Ul9RudgAsohen5RqZzNVnbAqTsg=;
-        b=mjvHnzbEaIbsQ0NrLtzCJRIhUTVzBGpQVrz43beSCllrFgzbAODIdEWPM6fiwSkcIu
-         xD/gC+72yKJXiV0m/oD9K9IyhwgwpCMl2rrp0ynPOetXgn3z4+wy5Frbb36/2PqTqZHn
-         HcHBVnCKltDcjjTRy+NsKATYq8umfzgbRbIroF1FYyTOLdBhKJsARpLUQ/uDGdqqtnRj
-         x6IL2kwuJCygf3xZtI5IguBxcK4MlZjaYTVcrO9+PrG2dTV90SlbpjXZByf6qskfTMDL
-         OqSqTQJLRYLbZkRDtN7X6jbLlHh+aBwkl7O0axkckjmj46m89yeyNbKH73C2Pohga2Pk
-         CpfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kJr9DdZZf2/ANld+Ul9RudgAsohen5RqZzNVnbAqTsg=;
-        b=mmnLCRenYuIpPcCYNIcskTbby5qXek840Tuo5PVMhsabt/6hLGMiFda6f0AtuoWMOv
-         4tgklh8KVwQerUkA9xC54GCqeOHfxSqiMjxF3ky46RV/9x9rkBJePy6zGAvSn3Wo2NcP
-         uK6MZaaayT2g70Ol0SErzZKaIs8C1WxxAzj87AuIJM9J2Jjd0C595kCwwzaBL3cjl+Uj
-         qIAbfHvIzYWtEXtO6SQDSXssZ6O+vZqNNjQ8lDjAurxIeOiG47DDj0FFAbFh+DgMLPG4
-         OLkRG6iFzaX9oYn+VzNxeP80kk2QiGzTn7zy7JLxdU5jf9BJUbplX69fe9w/c2Jq7gyH
-         +dOw==
-X-Gm-Message-State: APjAAAWsOdZ/DKgQL8pGsPnLn6IdT/t3ACzHPs4IDw6bdsFSPcdHohcX
-        J7ttc8iXIwwhS8LTPTu4PRCuF/IP6UIVthhCeQE=
-X-Google-Smtp-Source: APXvYqwTcIlvIE0lUCJi3FRLOlS1u3VgGMOmgYWiU57KWCLBT1IzZv7XrENayxwaVo2Wm+OfP7BbhpaMMuEa7apsGDA=
-X-Received: by 2002:a2e:943:: with SMTP id 64mr6356480ljj.17.1578572266871;
- Thu, 09 Jan 2020 04:17:46 -0800 (PST)
-MIME-Version: 1.0
-References: <08794fde-cdd0-287c-62bf-e2e3b8c80686@gmail.com>
- <20191203101509.wte47aad5k4mqu2y@pengutronix.de> <CAOMZO5Cn993y9VeFN6hPO3-cfNnUKiuFd_rqAZ8htz=dO6t6ig@mail.gmail.com>
- <CAOMZO5BniszDhWKkoWY=P62kv9cY160r9P=pjpbSOZasxJvdBA@mail.gmail.com> <77fff313-3f40-6b5e-fe30-5a65a189bdff@gmail.com>
-In-Reply-To: <77fff313-3f40-6b5e-fe30-5a65a189bdff@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 9 Jan 2020 09:17:35 -0300
-Message-ID: <CAOMZO5DyJ_niuoBX62B1NLkKRpYQQtKUiX06L62TmA6PNMKO5A@mail.gmail.com>
-Subject: Re: Issue with imx_get_temp()
-To:     Igor Plyatov <plyatov@gmail.com>
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Thu, 9 Jan 2020 07:20:46 -0500
+Received: from mx.socionext.com ([202.248.49.38]:22845 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728974AbgAIMUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 07:20:45 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 09 Jan 2020 21:20:44 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 345DE180093;
+        Thu,  9 Jan 2020 21:20:44 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 9 Jan 2020 21:21:34 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id EB0AE1A01CF;
+        Thu,  9 Jan 2020 21:20:43 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id B48FF120456;
+        Thu,  9 Jan 2020 21:20:43 +0900 (JST)
+Date:   Thu, 09 Jan 2020 21:20:43 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20200108035537.GA7843@bogus>
+References: <1576630620-1977-2-git-send-email-hayashi.kunihiko@socionext.com> <20200108035537.GA7843@bogus>
+Message-Id: <20200109212043.5800.4A936039@socionext.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Igor,
+Hi Rob,
+Thank you for your comment.
 
-On Tue, Dec 3, 2019 at 11:36 AM Igor Plyatov <plyatov@gmail.com> wrote:
->
-> Dear Fabio,
->
-> > Does the following patch help?
-> > http://code.bulix.org/l3rz2e-982595
->
-> Thank you!
->
-> Patch applied and will be tested.
->
-> I will inform you about results.
+On Tue, 7 Jan 2020 21:55:37 -0600 <robh@kernel.org> wrote:
 
-Have you had a chance to test the patch?
+> On Wed, Dec 18, 2019 at 09:56:59AM +0900, Kunihiko Hayashi wrote:
+> > Add external DMA controller bindings implemented in Socionext UniPhier
+> > SoCs.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  .../devicetree/bindings/dma/uniphier-xdmac.txt     | 86 ++++++++++++++++++++++
+> >  1 file changed, 86 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/uniphier-xdmac.txt
+> 
+> Please make this a DT schema. See 
+> Documentation/devicetree/writing-schema.rst.
+
+Although I'm not familiar with this format, I'll try to make it.
+
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/uniphier-xdmac.txt b/Documentation/devicetree/bindings/dma/uniphier-xdmac.txt
+> > new file mode 100644
+> > index 00000000..4e3927f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/uniphier-xdmac.txt
+> > @@ -0,0 +1,86 @@
+> > +Socionext UniPhier external DMA controller bindings
+> > +
+> > +This describes the devicetree bindings for an external DMA engine to perform
+> > +memory-to-memory or peripheral-to-memory data transfer, implemented in
+> > +Socionext UniPhier SoCs.
+> > +
+> > +* DMA controller
+> > +
+> > +Required properties:
+> > +- compatible: Should be "socionext,uniphier-xdmac".
+> > +- reg: Specifies offset and length of the register set for the device.
+> > +- interrupts: An interrupt specifier associated with the DMA controller.
+> > +- #dma-cells: Must be <2>. The first cell represents the channel index.
+> > +	The second cell represents the factor for transfer request.
+> > +	This is mentioned in DMA client section.
+> > +- dma-channels : Number of DMA channels supported. Should be 16.
+> 
+> If always 16, then why do you need this?
+
+Oh, currently this means 16 or less, though, this is the number supported
+by the controller. I'll fix it.
+
+> 
+> > +
+> > +Example:
+> > +	xdmac: dma-controller@5fc10000 {
+> > +		compatible = "socionext,uniphier-xdmac";
+> > +		reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
+> > +		interrupts = <0 188 4>;
+> > +		#dma-cells = <2>;
+> > +		dma-channels = <16>;
+> > +	};
+> > +
+> > +* DMA client
+> > +
+> > +Required properties:
+> > +- dmas: A list of DMA channel requests.
+> > +- dma-names: Names of the requested channels corresponding to dmas.
+> > +
+> > +DMA clients must use the format described in the dma.txt file, using a two cell
+> > +specifier for each channel.
+> 
+> No need to redefine the client binding here. Just need the cell format 
+> as below.
+
+I see. I'll replace with the cell format.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
+
