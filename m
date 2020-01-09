@@ -2,112 +2,165 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6EDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22679C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DDF20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sXFXkHka"
+	by mail.kernel.org (Postfix) with ESMTP id E70BE2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 20:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578602804;
+	bh=6J063jnpyCXZpSUr94ai5NB8cJFOa/nnW0mo8gZm2qI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=19guQYWtDOuZwwKiPXGVT0ODnUlPWV4RVWLOHMlgCbvJ3J7J+mRSJuFzXr6LXDNRb
+	 2VpdaVkqKFH3mnXnCFxw7Jjo2muRSdp4mCRx43XjG5SwJApPMKZCf9Teo2R89JZlE6
+	 BSdPWmLbujx5pxG4DBeZaOwIv8V/Z7L+JJv6DAEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731439AbgAIUnT (ORCPT
+        id S1728184AbgAIUqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 15:43:19 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:38909 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731407AbgAIUnT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 15:43:19 -0500
-Received: by mail-qv1-f68.google.com with SMTP id t6so3581785qvs.5;
-        Thu, 09 Jan 2020 12:43:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=ef9/tFIDN6mikvhUQb4XMvHbbgBUrjC1EBqGZF+FLsk=;
-        b=sXFXkHka6oKVtQKVKZiBjE9C/sNZvR9m0AACc3oWtVDWSoMaHGL02DqGyopAKIUsxv
-         NCXnuHkaPglMJsl6oWOfQL3ICcECz229wJdXw5bxIfUtxQZNfY8G4AOEVWt9tFHfzcNI
-         2WzPUiExo5v+4FOtJPA1ARVI9eA9kK8j6PlRuSJVxajHDSZddB3J+oIRHtXmnMFJvSuO
-         wH3Jp9vqCGHD06jOJdG/TS/oKvzGsMXGWD0YcxH8BejChxm5UC7Hrd8Q+/WQ1MBuZXGO
-         JMXao3zFB6DIjqCTXt5F1PV2yd0n7pldDn4hMgzzQou4FggV+q7AZw0dRpJpuUTxVAfK
-         M2fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ef9/tFIDN6mikvhUQb4XMvHbbgBUrjC1EBqGZF+FLsk=;
-        b=EdvYvNyS52Hg+kifedt2EUDM2UG8oa01i3nCingWhfM2CHU0gTyD/v54dlQ1B0y/sS
-         Wgw4Pi3yygIRSop0Wb1r1dFZJXUOqvZtL7hku0oSMF+bsPgFBj1caDRehVmoKP9d4RQ8
-         l8SW+y3UxCPVfubzcbNh+4vyUFT3SBnuYbE7PmQTcM7oIKEi66WEFKjxkrMr6xj095OJ
-         PfVLrXmqKYpQIVuF8Bt7opuPLNR0PcUGcPwznGo1a5lh66K0E2wj9HM/utj+nFsLo1rd
-         AS9XxEnxpY5K7O2YiBRWT3RTKUTG2D2TvNTXwS3hsQNBnnRx2gQpM9XHyBDOOxNh0lIp
-         UixQ==
-X-Gm-Message-State: APjAAAXTD7j7pnGmsD4B+RbVmnfAIJHnbFivLT4V9xyIcWHnTj8ezqoY
-        x9Xem50yIqMl2EVKXQMBLEE=
-X-Google-Smtp-Source: APXvYqyy/kx651cOXGkIrrG6zslGb9MsDswmcdV/3oXSGQgr334qQh80B8EWLVv92a39Y/yyg/53Lw==
-X-Received: by 2002:a05:6214:38c:: with SMTP id l12mr10604400qvy.224.1578602597906;
-        Thu, 09 Jan 2020 12:43:17 -0800 (PST)
-Received: from ?IPv6:2804:14d:72b1:8920:a2ce:f815:f14d:bfac? ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id u52sm4018315qta.23.2020.01.09.12.43.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jan 2020 12:43:17 -0800 (PST)
-Subject: Re: [PATCH 1/1] media: dvb_dummy_tuner: implement driver skeleton
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mchehab@kernel.org, sean@mess.org, tglx@linutronix.de,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200109152408.919325-1-dwlsalmeida@gmail.com>
- <20200109152408.919325-2-dwlsalmeida@gmail.com>
- <20200109155437.GA568342@kroah.com>
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Message-ID: <c242068a-ad8c-be27-4c95-22cb5ff17216@gmail.com>
-Date:   Thu, 9 Jan 2020 17:43:13 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 9 Jan 2020 15:46:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726267AbgAIUqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 15:46:42 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA6F820721;
+        Thu,  9 Jan 2020 20:46:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578602801;
+        bh=6J063jnpyCXZpSUr94ai5NB8cJFOa/nnW0mo8gZm2qI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=TJDZxhO9TM8TPFdfXvYo1lFxFcxpTRV5xGRwmeKBmSoQt0R+JlEb/OFxDywKrjPW9
+         K+J+6KU6WVkwk+Ki3GL8GBangaQSkEErFV/A1/MGOj6s96QVP+XSqg6zgvknZ5H/3g
+         lzIAwhfKRjeEcKliXGJeBaLLZ7zP8ra5vC8u59Dg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7775D352272E; Thu,  9 Jan 2020 12:46:41 -0800 (PST)
+Date:   Thu, 9 Jan 2020 12:46:41 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -rcu 0/2] kcsan: Improvements to reporting
+Message-ID: <20200109204641.GW13449@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200109152322.104466-1-elver@google.com>
+ <20200109162739.GS13449@paulmck-ThinkPad-P72>
+ <CANpmjNOR4oT+yuGsjajMjWduKjQOGg9Ybd97L2jwY2ZJN8hgqg@mail.gmail.com>
+ <20200109173127.GU13449@paulmck-ThinkPad-P72>
+ <CANpmjNP=8cfqgXkz7f8D6STTn1-2h9qzUery4qMHeTTeNJOdxQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200109155437.GA568342@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNP=8cfqgXkz7f8D6STTn1-2h9qzUery4qMHeTTeNJOdxQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg! Thanks for chiming in.
+On Thu, Jan 09, 2020 at 06:42:16PM +0100, Marco Elver wrote:
+> On Thu, 9 Jan 2020 at 18:31, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Thu, Jan 09, 2020 at 06:03:39PM +0100, Marco Elver wrote:
+> > > On Thu, 9 Jan 2020 at 17:27, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > >
+> > > > On Thu, Jan 09, 2020 at 04:23:20PM +0100, Marco Elver wrote:
+> > > > > Improvements to KCSAN data race reporting:
+> > > > > 1. Show if access is marked (*_ONCE, atomic, etc.).
+> > > > > 2. Rate limit reporting to avoid spamming console.
+> > > > >
+> > > > > Marco Elver (2):
+> > > > >   kcsan: Show full access type in report
+> > > > >   kcsan: Rate-limit reporting per data races
+> > > >
+> > > > Queued and pushed, thank you!  I edited the commit logs a bit, so could
+> > > > you please check to make sure that I didn't mess anything up?
+> > >
+> > > Looks good to me, thank you.
+> > >
+> > > > At some point, boot-time-allocated per-CPU arrays might be needed to
+> > > > avoid contention on large systems, but one step at a time.  ;-)
+> > >
+> > > I certainly hope the rate of fixing/avoiding data races will not be
+> > > eclipsed by the rate at which new ones are introduced. :-)
+> >
+> > Me too!
+> >
+> > However, on a large system, duplicate reports might happen quite
+> > frequently, which might cause slowdowns given the single global
+> > array.  Or maybe not -- I guess we will find out soon enough. ;-)
+> >
+> > But I must confess that I am missing how concurrent access to the
+> > report_times[] array is handled.  I would have expected that
+> > rate_limit_report() would choose a random starting entry and
+> > search circularly.  And I would expect that the code at the end
+> > of that function would instead look something like this:
+> >
+> >         if (ktime_before(oldtime, invalid_before) &&
+> >             cmpxchg(&use_entry->time, oldtime, now) == oldtime) {
+> >                 use_entry->frame1 = frame1;
+> >                 use_entry->frame2 = frame2;
+> >         } else {
+> >                 // Too bad, next duplicate report won't be suppressed.
+> >         }
+> >
+> > Where "oldtime" is captured from the entry during the scan, and from the
+> > first entry scanned.  This cmpxchg() approach is of course vulnerable
+> > to the ->frame1 and ->frame2 assignments taking more than three seconds
+> > (by default), but if that becomes a problem, a WARN_ON() could be added:
+> >
+> >         if (ktime_before(oldtime, invalid_before) &&
+> >             cmpxchg(&use_entry->time, oldtime, now) == oldtime) {
+> >                 use_entry->frame1 = frame1;
+> >                 use_entry->frame2 = frame2;
+> >                 WARN_ON_ONCE(use_entry->time != now);
+> >         } else {
+> >                 // Too bad, next duplicate report won't be suppressed.
+> >         }
+> >
+> > So what am I missing here?
+> 
+> Ah right, sorry, I should have clarified or commented in the code that
+> all of this is happening under 'report_lock' (taken in prepare_report,
+> held in print_report->rate_limit_report, released in release_report).
+> That also means that any optimization here won't matter until
+> report_lock is removed.
 
+Got it, thank you!  And yes, lock contention on report_lock might be
+a problem on large systems.  But let's see how it goes.
 
-> As you are a driver, you should never need to call any pr_* calls,
-> instead use dev_*().  For this, you can use dev_dbg(), but really, why
-> is that even needed except for your debugging bringup.  And for that,
-> you can use ftrace, right?  So no need for any printing of anything
-> here.
-> Again, dev_err() would be proper, but there's no need for any error
-> message here.
+							Thanx, Paul
 
-Let's take these out in v2 then.
-
-
-> Don't you need to register the tuner ops with something in this
-> function?
-> Don't you need to unregister the tuner ops in here?
-
-It is my understanding that bridge drivers are the ones responsible for 
-this. For instance, I don't see this with either xc4000.c, xc5000.c or 
-mt2060.c. I could be wrong, though. Maybe Mauro could clarify this?
-
-What I did miss in this patch was an attach function. Let's also add 
-this in v2.
-
-
-Thanks again,
-
-- Daniel.
-
+> Thanks,
+> -- Marco
+> 
+> >                                                         Thanx, Paul
+> >
+> > > Thanks,
+> > > -- Marco
+> > >
+> > > >                                                         Thanx, Paul
+> > > >
+> > > > >  kernel/kcsan/core.c   |  15 +++--
+> > > > >  kernel/kcsan/kcsan.h  |   2 +-
+> > > > >  kernel/kcsan/report.c | 153 +++++++++++++++++++++++++++++++++++-------
+> > > > >  lib/Kconfig.kcsan     |  10 +++
+> > > > >  4 files changed, 148 insertions(+), 32 deletions(-)
+> > > > >
+> > > > > --
+> > > > > 2.25.0.rc1.283.g88dfdc4193-goog
+> > > > >
+> > > >
+> > > > --
+> > > > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> > > > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> > > > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200109162739.GS13449%40paulmck-ThinkPad-P72.
