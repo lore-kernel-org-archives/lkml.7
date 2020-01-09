@@ -6,74 +6,105 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC048C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993DFC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD97E2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2FB208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 14:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbgAIOOk (ORCPT
+        id S1731579AbgAIOOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:14:40 -0500
-Received: from verein.lst.de ([213.95.11.211]:54875 "EHLO verein.lst.de"
+        Thu, 9 Jan 2020 09:14:48 -0500
+Received: from foss.arm.com ([217.140.110.172]:59928 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731559AbgAIOOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 09:14:40 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 30C4468C4E; Thu,  9 Jan 2020 15:14:37 +0100 (CET)
-Date:   Thu, 9 Jan 2020 15:14:36 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Woody Suwalski <terraluna977@gmail.com>
-Cc:     hch@lst.de, DRI mailing list <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: Regression in 5.4 kernel on 32-bit Radeon IBM T40
-Message-ID: <20200109141436.GA22111@lst.de>
-References: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
+        id S1731559AbgAIOOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 09:14:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D33C81FB;
+        Thu,  9 Jan 2020 06:14:46 -0800 (PST)
+Received: from [10.1.27.38] (unknown [10.1.27.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 254C93F534;
+        Thu,  9 Jan 2020 06:14:43 -0800 (PST)
+Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
+ for the GPU
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+References: <20200108052337.65916-1-drinkcat@chromium.org>
+ <20200108052337.65916-5-drinkcat@chromium.org>
+ <20200108132302.GA3817@sirena.org.uk>
+ <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <09ddfac3-da8d-c039-92a0-d0f51dc3fea5@arm.com>
+Date:   Thu, 9 Jan 2020 14:14:42 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <400f6ce9-e360-0860-ca2a-fb8bccdcdc9b@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Woody,
+On 08/01/2020 22:52, Nicolas Boichat wrote:
+> On Wed, Jan 8, 2020 at 9:23 PM Mark Brown <broonie@kernel.org> wrote:
+>>
+>> On Wed, Jan 08, 2020 at 01:23:34PM +0800, Nicolas Boichat wrote:
+>>
+>>> Some GPUs, namely, the bifrost/g72 part on MT8183, have a second
+>>> regulator for their SRAM, let's add support for that.
+>>
+>>> +     pfdev->regulator_sram = devm_regulator_get_optional(pfdev->dev, "sram");
+>>> +     if (IS_ERR(pfdev->regulator_sram)) {
+>>
+>> This supply is required for the devices that need it so I'd therefore
+>> expect the driver to request the supply non-optionally based on the
+>> compatible string rather than just hoping that a missing regulator isn't
+>> important.
+> 
+> That'd be a bit awkward to match, though... Currently all bifrost
+> share the same compatible "arm,mali-bifrost", and it'd seem
+> weird/wrong to match "mediatek,mt8183-mali" in this driver? I have no
+> idea if any other Mali implementation will require a second regulator,
+> but with the MT8183 we do need it, see below.
+> 
+>> Though I do have to wonder given the lack of any active
+>> management of the supply if this is *really* part of the GPU or if it's
+>> more of a SoC thing, it's not clear what exactly adding this code is
+>> achieving.
+> 
+> Well if devfreq was working (see patch 7
+> https://patchwork.kernel.org/patch/11322851/ for a partial
+> implementation), it would adjust both mali and sram regulators, see
+> the OPP table in patch 2
+> (https://patchwork.kernel.org/patch/11322825/): SRAM voltage needs to
+> be increased for frequencies >=698Mhz.
+> 
+> Now if you have some better idea how to implement this, I'm all ears!
 
-sorry for the late reply, I've been off to a vacation over the holidays.
+I'm not sure if it's better, but could we just encode the list of regulators into device tree. I'm a bit worried about special casing an "sram" regulator given that other platforms might have a similar situation but call the second regulator a different name.
 
-On Sat, Dec 14, 2019 at 10:17:15PM -0500, Woody Suwalski wrote:
-> Regression in 5.4 kernel on 32-bit Radeon IBM T40
-> triggered by
-> commit 33b3ad3788aba846fc8b9a065fe2685a0b64f713
-> Author: Christoph Hellwig <hch@lst.de>
-> Date:   Thu Aug 15 09:27:00 2019 +0200
->
-> Howdy,
-> The above patch has triggered a display problem on IBM Thinkpad T40, where 
-> the screen is covered with a lots of random short black horizontal lines, 
-> or distorted letters in X terms.
->
-> The culprit seems to be that the dma_get_required_mask() is returning a 
-> value 0x3fffffff
-> which is smaller than dma_get_mask()0xffffffff.That results in 
-> dma_addressing_limited()==0 in ttm_bo_device(), and using 40-bits dma 
-> instead of 32-bits.
+Steve
 
-Which is the intended behavior assuming your system has 1GB of memory.
-Does it?
+> Thanks.
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
 
-> If I hardcode "1" as the last parameter to ttm_bo_device_init() in place of 
-> a call to dma_addressing_limited(),the problem goes away.
-
-I'll need some help from the drm / radeon / TTM maintainers if there are
-any other side effects from not passing the need_dma32 paramters.
-Obviously if the device doesn't have more than 32-bits worth of dram and
-no DMA offset we can't feed unaddressable memory to the device.
-Unfortunately I have a very hard time following the implementation of
-the TTM pool if it does anything else in this case.
