@@ -2,173 +2,91 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F03C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87161C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D82F20721
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:37:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Al59LvQ5"
+	by mail.kernel.org (Postfix) with ESMTP id 6310820721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731297AbgAITho (ORCPT
+        id S1731363AbgAITir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:37:44 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33786 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730617AbgAITho (ORCPT
+        Thu, 9 Jan 2020 14:38:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39064 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730825AbgAITir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:37:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578598663;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PbCIN5cwKivHka0nMOY+vdaUO3w2adhPc+3Yrr27jdo=;
-        b=Al59LvQ5StAFsD1yYm+vRSrqwfBePrjnYcEOe41sR5LuYxou0Xnf+83F7AS5iDDZUacvad
-        OvG/6S3Evgkvx/67u6vNw9BjPJoo9pN/PAN/b7Bkkkqb2M6UpXOmEBdes5cImHkcej1yrN
-        wuFTtMnjEuSE+ew/FMG8fXPE0NluOcI=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-xZs_dQbQOnaLLNCSIBeAvA-1; Thu, 09 Jan 2020 14:37:41 -0500
-X-MC-Unique: xZs_dQbQOnaLLNCSIBeAvA-1
-Received: by mail-qk1-f197.google.com with SMTP id m13so4845468qka.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:37:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PbCIN5cwKivHka0nMOY+vdaUO3w2adhPc+3Yrr27jdo=;
-        b=sLv0HaNpscN30TutQMVWLNimbv/c3OP27wY1RQVPSVfpX5dM4utsZOGXyBjI9Unt/6
-         V1tWwqrYMhcnj82xfFSQwwSLYpyXsabXbYJEbOW0KFs9enWmdMGkrTYwfg8YKnTFLKl7
-         qkLUYPi1ZDU/ooZX+t2z1hlUYYnwyH56YYDJ8rEjlPeV0K1YmzHj8aoWHpUbJkiALwNp
-         dRBkcavCIq3DRUro2yMsFH+d2bsBJ5qHXpJ1bESQu8nhGU0f913Sxo0a4Oi1ZX6gMZKR
-         eKSawYLBhGqy+CrOia5quk4WMloNdcXttjIghfPIC2b/EBjrsCEIPwzJi73m4s1VJQx9
-         rVcg==
-X-Gm-Message-State: APjAAAVcoEFu3o4p2TJ2ccSr8A7s8Xc+fW2dMjLDRA+4KMV+7FBrgX98
-        VADyEa17xEnAZfFhbFpGEHfz7Nw5743QpNDbQ6BPI5NEl9PBMLbxSENMUq2N2uCp/lfUE0be6Ke
-        ZdP7PBGNfewBj0PWdz92indXy
-X-Received: by 2002:a37:9c0f:: with SMTP id f15mr11339160qke.297.1578598661334;
-        Thu, 09 Jan 2020 11:37:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx1OIjnd6/LxXyh8xSqsQa+K54P9fyHHwvQ8E1nUaaWAdPLHr6JtOY55VdBQU35QIiCqFSwyQ==
-X-Received: by 2002:a37:9c0f:: with SMTP id f15mr11339138qke.297.1578598661050;
-        Thu, 09 Jan 2020 11:37:41 -0800 (PST)
-Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
-        by smtp.gmail.com with ESMTPSA id c184sm3472280qke.118.2020.01.09.11.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 11:37:40 -0800 (PST)
-Date:   Thu, 9 Jan 2020 14:37:34 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>
-Subject: Re: [PATCH v3 00/21] KVM: Dirty ring interface
-Message-ID: <20200109143716-mutt-send-email-mst@kernel.org>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109094711.00eb96b1@w520.home>
- <20200109175808.GC36997@xz-x1>
- <20200109140948-mutt-send-email-mst@kernel.org>
- <20200109192318.GF36997@xz-x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109192318.GF36997@xz-x1>
+        Thu, 9 Jan 2020 14:38:47 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009JWFqA119757
+        for <linux-kernel@vger.kernel.org>; Thu, 9 Jan 2020 14:38:46 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xe98mjnd8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 14:38:46 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 9 Jan 2020 19:38:43 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 Jan 2020 19:38:40 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 009Jcdug62652578
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Jan 2020 19:38:39 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1FF0311C04C;
+        Thu,  9 Jan 2020 19:38:39 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E268B11C04A;
+        Thu,  9 Jan 2020 19:38:37 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.194.147])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Jan 2020 19:38:37 +0000 (GMT)
+Subject: Re: [PATCH] IMA: fix measuring early boot asymmetric keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     dhowells@redhat.com, arnd@arndb.de, matthewgarrett@google.com,
+        sashal@kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+Date:   Thu, 09 Jan 2020 14:38:37 -0500
+In-Reply-To: <20200109175046.4024-1-nramas@linux.microsoft.com>
+References: <20200109175046.4024-1-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010919-0020-0000-0000-0000039F56A8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010919-0021-0000-0000-000021F6BC16
+Message-Id: <1578598717.5147.71.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-09_04:2020-01-09,2020-01-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 malwarescore=0 mlxlogscore=693
+ adultscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001090162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:23:18PM -0500, Peter Xu wrote:
-> On Thu, Jan 09, 2020 at 02:13:54PM -0500, Michael S. Tsirkin wrote:
-> > On Thu, Jan 09, 2020 at 12:58:08PM -0500, Peter Xu wrote:
-> > > On Thu, Jan 09, 2020 at 09:47:11AM -0700, Alex Williamson wrote:
-> > > > On Thu,  9 Jan 2020 09:57:08 -0500
-> > > > Peter Xu <peterx@redhat.com> wrote:
-> > > > 
-> > > > > Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
-> > > > > (based on kvm/queue)
-> > > > > 
-> > > > > Please refer to either the previous cover letters, or documentation
-> > > > > update in patch 12 for the big picture.  Previous posts:
-> > > > > 
-> > > > > V1: https://lore.kernel.org/kvm/20191129213505.18472-1-peterx@redhat.com
-> > > > > V2: https://lore.kernel.org/kvm/20191221014938.58831-1-peterx@redhat.com
-> > > > > 
-> > > > > The major change in V3 is that we dropped the whole waitqueue and the
-> > > > > global lock. With that, we have clean per-vcpu ring and no default
-> > > > > ring any more.  The two kvmgt refactoring patches were also included
-> > > > > to show the dependency of the works.
-> > > > 
-> > > > Hi Peter,
-> > > 
-> > > Hi, Alex,
-> > > 
-> > > > 
-> > > > Would you recommend this style of interface for vfio dirty page
-> > > > tracking as well?  This mechanism seems very tuned to sparse page
-> > > > dirtying, how well does it handle fully dirty, or even significantly
-> > > > dirty regions?
-> > > 
-> > > That's truely the point why I think the dirty bitmap can still be used
-> > > and should be kept.  IIUC the dirty ring starts from COLO where (1)
-> > > dirty rate is very low, and (2) sync happens frequently.  That's a
-> > > perfect ground for dirty ring.  However it for sure does not mean that
-> > > dirty ring can solve all the issues.  As you said, I believe the full
-> > > dirty is another extreme in that dirty bitmap could perform better.
-> > > 
-> > > > We also don't really have "active" dirty page tracking
-> > > > in vfio, we simply assume that if a page is pinned or otherwise mapped
-> > > > that it's dirty, so I think we'd constantly be trying to re-populate
-> > > > the dirty ring with pages that we've seen the user consume, which
-> > > > doesn't seem like a good fit versus a bitmap solution.  Thanks,
-> > > 
-> > > Right, so I confess I don't know whether dirty ring is the ideal
-> > > solutioon for vfio either.  Actually if we're tracking by page maps or
-> > > pinnings, then IMHO it also means that it could be more suitable to
-> > > use an modified version of dirty ring buffer (as you suggested in the
-> > > other thread), in that we can track dirty using (addr, len) range
-> > > rather than a single page address.  That could be hard for KVM because
-> > > in KVM the page will be mostly trapped in 4K granularity in page
-> > > faults, and it'll also be hard to merge continuous entries with
-> > > previous ones because the userspace could be reading the entries (so
-> > > after we publish the previous 4K dirty page, we should not modify the
-> > > entry any more).
-> > 
-> > An easy way would be to keep a couple of entries around, not pushing
-> > them into the ring until later.  In fact deferring queue write until
-> > there's a bunch of data to be pushed is a very handy optimization.
-> 
-> I feel like I proposed similar thing in the other thread. :-)
-> 
-> > 
-> > When building UAPI's it makes sense to try and keep them generic
-> > rather than tying them to a given implementation.
-> > 
-> > That's one of the reasons I called for using something
-> > resembling vring_packed_desc.
-> 
-> But again, I just want to make sure I don't over-engineer...
+On Thu, 2020-01-09 at 09:50 -0800, Lakshmi Ramasubramanian wrote:
 
+> This patch uses this new config CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
+> to declare the early boot key measurement functions.
 
-You will now when you start profiling in earnest.
+Thanks!  I've squashed this patch with "4217fbe396c4 IMA: Define
+workqueue for early boot key measurements".
 
-> I'll wait for further feedback from others for this.
-> 
-> Thanks,
-> 
-> -- 
-> Peter Xu
+Mimi
 
