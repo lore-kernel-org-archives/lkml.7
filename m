@@ -2,106 +2,112 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458C5C33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9370C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F6D20678
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:52:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="F2yrOYUt"
+	by mail.kernel.org (Postfix) with ESMTP id AE7F720678
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 17:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388363AbgAIRwh (ORCPT
+        id S2388373AbgAIR4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 12:52:37 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:55070 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730326AbgAIRwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 12:52:37 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47ttxG2WM3z9txHp;
-        Thu,  9 Jan 2020 18:52:34 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=F2yrOYUt; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id D9ctLdBUZqbw; Thu,  9 Jan 2020 18:52:34 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47ttxG1NMwz9txHl;
-        Thu,  9 Jan 2020 18:52:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1578592354; bh=FYx4kyu0guKehGok9fASqGVuxxVoy/XJcQO7YPTYaQc=;
-        h=From:Subject:To:Cc:References:Date:In-Reply-To:From;
-        b=F2yrOYUt44TvH+5O/nMl5vMshj2XKIRHohr5s+oeadn2dM2WIQzI2nCl/M7lAIkXW
-         JxBLJ5s3We6Cyg3fWHtSz+ys/3or+bNkpzqXxrzX1drGWe8AHYgvp4LxAr7x2nNkum
-         EEx91AF9jbgNwX3yge3UCqm+YIsT3UIhyIUywk4Y=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E09AE8B82E;
-        Thu,  9 Jan 2020 18:52:35 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id za-1hAB_sfui; Thu,  9 Jan 2020 18:52:35 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F7B48B82D;
-        Thu,  9 Jan 2020 18:52:35 +0100 (CET)
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: Surprising code generated for vdso_read_begin()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
-        tglx@linutronix.de, vincenzo.frascino@arm.com, luto@kernel.org,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org
-References: <cover.1577111363.git.christophe.leroy@c-s.fr>
-Message-ID: <bd4557a7-9715-59aa-5d8e-488c5e516a98@c-s.fr>
-Date:   Thu, 9 Jan 2020 17:52:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 9 Jan 2020 12:56:45 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55186 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728653AbgAIR4p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 12:56:45 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ipc2y-0000X4-HN; Thu, 09 Jan 2020 18:56:40 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1B8FD1C2CF2;
+        Thu,  9 Jan 2020 18:56:40 +0100 (CET)
+Date:   Thu, 09 Jan 2020 17:56:39 -0000
+From:   "tip-bot2 for Paul Cercueil" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] time/sched_clock: Disable interrupts in
+ sched_clock_register()
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200107010630.954648-1-paul@crapouillou.net>
+References: <20200107010630.954648-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <cover.1577111363.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+Message-ID: <157859259991.30329.14883934581378219356.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wondering why we get something so complicated/redundant for 
-vdso_read_begin() <include/vdso/helpers.h>
+The following commit has been merged into the timers/core branch of tip:
 
-static __always_inline u32 vdso_read_begin(const struct vdso_data *vd)
-{
-	u32 seq;
+Commit-ID:     2707745533d6d38fa7d3a2212f1fd599c3879491
+Gitweb:        https://git.kernel.org/tip/2707745533d6d38fa7d3a2212f1fd599c3879491
+Author:        Paul Cercueil <paul@crapouillou.net>
+AuthorDate:    Tue, 07 Jan 2020 02:06:29 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 09 Jan 2020 18:50:18 +01:00
 
-	while ((seq = READ_ONCE(vd->seq)) & 1)
-		cpu_relax();
+time/sched_clock: Disable interrupts in sched_clock_register()
 
-	smp_rmb();
-	return seq;
-}
+Instead of issueing a warning if sched_clock_register() is called from a
+context where IRQs are enabled, the code now ensures that IRQs are indeed
+disabled.
 
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200107010630.954648-1-paul@crapouillou.net
 
-  6e0:   81 05 00 f0     lwz     r8,240(r5)
-  6e4:   71 09 00 01     andi.   r9,r8,1
-  6e8:   41 82 00 10     beq     6f8 <__c_kernel_clock_gettime+0x158>
-  6ec:   81 05 00 f0     lwz     r8,240(r5)
-  6f0:   71 0a 00 01     andi.   r10,r8,1
-  6f4:   40 82 ff f8     bne     6ec <__c_kernel_clock_gettime+0x14c>
-  6f8:
+---
+ kernel/time/sched_clock.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-r5 being vd pointer
-
-Why the first triplet, not only the second triplet ? Something wrong 
-with using READ_ONCE() for that ?
-
-Christophe
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index dbd6905..e4332e3 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -169,14 +169,15 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
+ {
+ 	u64 res, wrap, new_mask, new_epoch, cyc, ns;
+ 	u32 new_mult, new_shift;
+-	unsigned long r;
++	unsigned long r, flags;
+ 	char r_unit;
+ 	struct clock_read_data rd;
+ 
+ 	if (cd.rate > rate)
+ 		return;
+ 
+-	WARN_ON(!irqs_disabled());
++	/* Cannot register a sched_clock with interrupts on */
++	local_irq_save(flags);
+ 
+ 	/* Calculate the mult/shift to convert counter ticks to ns. */
+ 	clocks_calc_mult_shift(&new_mult, &new_shift, rate, NSEC_PER_SEC, 3600);
+@@ -233,6 +234,8 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
+ 	if (irqtime > 0 || (irqtime == -1 && rate >= 1000000))
+ 		enable_sched_clock_irqtime();
+ 
++	local_irq_restore(flags);
++
+ 	pr_debug("Registered %pS as sched_clock source\n", read);
+ }
+ 
