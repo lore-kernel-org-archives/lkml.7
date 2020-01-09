@@ -2,113 +2,189 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AF0C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B966CC33CA3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716302072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0812072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 11:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725922AbgAILgb (ORCPT
+        id S1727703AbgAILhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:36:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:57584 "EHLO foss.arm.com"
+        Thu, 9 Jan 2020 06:37:02 -0500
+Received: from mga01.intel.com ([192.55.52.88]:55961 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgAILga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:36:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0A0831B;
-        Thu,  9 Jan 2020 03:36:27 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A80053F703;
-        Thu,  9 Jan 2020 03:36:25 -0800 (PST)
-Date:   Thu, 9 Jan 2020 11:36:23 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Quentin Perret <qperret@google.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        id S1725997AbgAILhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 06:37:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 03:37:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
+   d="scan'208";a="216275607"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 09 Jan 2020 03:36:59 -0800
+Received: from [10.125.253.127] (abudanko-mobl.ccr.corp.intel.com [10.125.253.127])
+        by linux.intel.com (Postfix) with ESMTP id 2707C58043A;
+        Thu,  9 Jan 2020 03:36:50 -0800 (PST)
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-Message-ID: <20200109113623.jk4yth6koyq2wwh7@e107158-lin.cambridge.arm.com>
-References: <20191220164838.31619-1-qais.yousef@arm.com>
- <20200107134234.GA158998@google.com>
- <8bb17e84-d43f-615f-d04d-c36bb6ede5e0@arm.com>
- <20200108095108.GA153171@google.com>
+        Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, oprofile-list@lists.sf.net
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+ <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
+Date:   Thu, 9 Jan 2020 14:36:50 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
+In-Reply-To: <20200108160713.GI2844@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200108095108.GA153171@google.com>
-User-Agent: NeoMutt/20171215
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/08/20 09:51, Quentin Perret wrote:
-> On Tuesday 07 Jan 2020 at 20:30:36 (+0100), Dietmar Eggemann wrote:
-> > On 07/01/2020 14:42, Quentin Perret wrote:
-> > > Hi Qais,
-> > > 
-> > > On Friday 20 Dec 2019 at 16:48:38 (+0000), Qais Yousef wrote:
-> > 
-> > [...]
-> > 
-> > >> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> > >> index e591d40fd645..19572dfc175b 100644
-> > >> --- a/kernel/sched/rt.c
-> > >> +++ b/kernel/sched/rt.c
-> > >> @@ -2147,6 +2147,12 @@ static void pull_rt_task(struct rq *this_rq)
-> > >>   */
-> > >>  static void task_woken_rt(struct rq *rq, struct task_struct *p)
-> > >>  {
-> > >> +	/*
-> > >> +	 * When sysctl_sched_rt_uclamp_util_min value is changed by the user,
-> > >> +	 * we apply any new value on the next wakeup, which is here.
-> > >> +	 */
-> > >> +	uclamp_rt_sync_default_util_min(p);
-> > > 
-> > > The task has already been enqueued and sugov has been called by then I
-> > > think, so this is a bit late. You could do that in uclamp_rq_inc() maybe?
-> > 
-> > That's probably better.
-> > Just to be sure ...we want this feature (an existing rt task gets its
-> > UCLAMP_MIN value set when the sysctl changes) because there could be rt
-> > tasks running before the sysctl is set?
+
+On 08.01.2020 19:07, Peter Zijlstra wrote:
+> On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
+>>
+>> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
+>> processes. For backward compatibility reasons access to perf_events
+>> subsystem remains open for CAP_SYS_ADMIN privileged processes but
+>> CAP_SYS_ADMIN usage for secure perf_events monitoring is discouraged
+>> with respect to CAP_SYS_PERFMON capability.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  include/linux/perf_event.h | 6 +++---
+>>  kernel/events/core.c       | 6 +++---
+>>  2 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 34c7c6910026..f46acd69425f 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -1285,7 +1285,7 @@ static inline int perf_is_paranoid(void)
+>>  
+>>  static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>>  {
+>> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+>>  		return -EACCES;
+>>  
+>>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+>> @@ -1293,7 +1293,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>>  
+>>  static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>>  {
+>> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
+>>  		return -EACCES;
+>>  
+>>  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+>> @@ -1301,7 +1301,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>>  
+>>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+>>  {
+>> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
+>>  		return -EPERM;
+>>  
+>>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
 > 
-> Yeah, I was wondering the same thing, but I'd expect sysadmin to want
-> this. We could change the min clamp of existing RT tasks in userspace
-> instead, but given how simple Qais' lazy update code is, the in-kernel
-> looks reasonable to me. No strong opinion, though.
+> These are OK I suppose.
+> 
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 059ee7116008..d9db414f2197 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
+>>  	if (event->attr.type != perf_kprobe.type)
+>>  		return -ENOENT;
+>>  
+>> -	if (!capable(CAP_SYS_ADMIN))
+>> +	if (!perfmon_capable())
+>>  		return -EACCES;
+>>  
+>>  	/*
+> 
+> This one only allows attaching to already extant kprobes, right? It does
+> not allow creation of kprobes.
 
-The way I see this being used is set in init.rc. If any RT tasks were created
-(most likely kthreads) before that they'll just be updated on the next
-wakeup.
+This unblocks creation of local trace kprobes and uprobes by CAP_SYS_PERFMON 
+privileged process, exactly the same as for CAP_SYS_ADMIN privileged process.
 
-Of course this approach allows the value to change any point of time when the
-system is running without having to do a reboot/recompile or kick a special
-script/app to modify all existing RT tasks and continuously monitor new ones.
-
-Another advantage is that apps that have special requirement (like professional
-audio) can use the per-task uclamp API to bump their uclamp_min without
-conflicting with the desired generic value for all other RT tasks.
-
-IOW, we can easily at run time control the baseline performance for RT tasks
-with a single knob without interfering with RT tasks that opt-in to modify
-their own uclamp values.
-
---
-Qais Yousef
+> 
+>> @@ -9116,7 +9116,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
+>>  	if (event->attr.type != perf_uprobe.type)
+>>  		return -ENOENT;
+>>  
+>> -	if (!capable(CAP_SYS_ADMIN))
+>> +	if (!perfmon_capable())
+>>  		return -EACCES;
+>>  
+>>  	/*
+> 
+> Idem, I presume.
+> 
+>> @@ -11157,7 +11157,7 @@ SYSCALL_DEFINE5(perf_event_open,
+>>  	}
+>>  
+>>  	if (attr.namespaces) {
+>> -		if (!capable(CAP_SYS_ADMIN))
+>> +		if (!perfmon_capable())
+>>  			return -EACCES;
+>>  	}
+> 
+> And given we basically make the entire kernel observable with this CAP,
+> busting namespaces shoulnd't be a problem either.
+> 
+> So yeah, I suppose that works.
+> 
