@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D869C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AC8C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE432067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A002067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 15:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732604AbgAIPox (ORCPT
+        id S1732622AbgAIPpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 10:44:53 -0500
-Received: from mga04.intel.com ([192.55.52.120]:31989 "EHLO mga04.intel.com"
+        Thu, 9 Jan 2020 10:45:21 -0500
+Received: from mga18.intel.com ([134.134.136.126]:35711 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732509AbgAIPoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 10:44:38 -0500
+        id S1728357AbgAIPpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 10:45:20 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:44:37 -0800
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:45:07 -0800
 X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="218395583"
+   d="scan'208";a="303904700"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:44:35 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 07:45:05 -0800
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 1D7A320EC8;
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 14ABE207DD;
         Thu,  9 Jan 2020 17:44:33 +0200 (EET)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1ipa01-00055B-Ew; Thu, 09 Jan 2020 17:45:29 +0200
+        id 1ipa01-000555-Ck; Thu, 09 Jan 2020 17:45:29 +0200
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa@the-dreams.de>,
@@ -40,9 +40,9 @@ Cc:     Wolfram Sang <wsa@the-dreams.de>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v3 3/5] ov5670: Support probe whilst the device is in a low power state
-Date:   Thu,  9 Jan 2020 17:45:27 +0200
-Message-Id: <20200109154529.19484-4-sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 1/5] i2c: Allow driver to manage the device's power state during probe
+Date:   Thu,  9 Jan 2020 17:45:25 +0200
+Message-Id: <20200109154529.19484-2-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
 References: <20200109154529.19484-1-sakari.ailus@linux.intel.com>
@@ -53,77 +53,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tell ACPI device PM code that the driver supports the device being in a
-low power state when the driver's probe function is entered.
+Enable drivers to tell ACPI that there's no need to power on a device for
+probe. Drivers should still perform this by themselves if there's a need
+to. In some cases powering on the device during probe is undesirable, and
+this change enables a driver to choose what fits best for it.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/i2c/ov5670.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/i2c/i2c-core-base.c | 15 ++++++++++++---
+ include/linux/i2c.h         |  3 +++
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
-index 041fcbb4eebdf..9b10b1c0e1f8f 100644
---- a/drivers/media/i2c/ov5670.c
-+++ b/drivers/media/i2c/ov5670.c
-@@ -2444,6 +2444,7 @@ static int ov5670_probe(struct i2c_client *client)
- 	struct ov5670 *ov5670;
- 	const char *err_msg;
- 	u32 input_clk = 0;
-+	bool low_power;
- 	int ret;
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 9f8dcd3f83850..7bf1699c9044d 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -303,6 +303,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+ 	return irq > 0 ? irq : -ENXIO;
+ }
  
- 	device_property_read_u32(&client->dev, "clock-frequency", &input_clk);
-@@ -2460,11 +2461,14 @@ static int ov5670_probe(struct i2c_client *client)
- 	/* Initialize subdev */
- 	v4l2_i2c_subdev_init(&ov5670->sd, client, &ov5670_subdev_ops);
++static bool probe_low_power(struct device *dev)
++{
++	struct i2c_driver *driver = to_i2c_driver(dev->driver);
++
++	return driver->probe_low_power &&
++		device_property_present(dev, "probe-low-power");
++}
++
+ static int i2c_device_probe(struct device *dev)
+ {
+ 	struct i2c_client	*client = i2c_verify_client(dev);
+@@ -375,7 +383,8 @@ static int i2c_device_probe(struct device *dev)
+ 	if (status < 0)
+ 		goto err_clear_wakeup_irq;
  
--	/* Check module identity */
--	ret = ov5670_identify_module(ov5670);
--	if (ret) {
--		err_msg = "ov5670_identify_module() error";
--		goto error_print;
-+	low_power = acpi_dev_low_power_state_probe(&client->dev);
-+	if (!low_power) {
-+		/* Check module identity */
-+		ret = ov5670_identify_module(ov5670);
-+		if (ret) {
-+			err_msg = "ov5670_identify_module() error";
-+			goto error_print;
-+		}
+-	status = dev_pm_domain_attach(&client->dev, true);
++	status = dev_pm_domain_attach(&client->dev,
++				      !probe_low_power(&client->dev));
+ 	if (status)
+ 		goto err_clear_wakeup_irq;
+ 
+@@ -397,7 +406,7 @@ static int i2c_device_probe(struct device *dev)
+ 	return 0;
+ 
+ err_detach_pm_domain:
+-	dev_pm_domain_detach(&client->dev, true);
++	dev_pm_domain_detach(&client->dev, !probe_low_power(&client->dev));
+ err_clear_wakeup_irq:
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
+@@ -419,7 +428,7 @@ static int i2c_device_remove(struct device *dev)
+ 		status = driver->remove(client);
  	}
  
- 	mutex_init(&ov5670->mutex);
-@@ -2501,10 +2505,10 @@ static int ov5670_probe(struct i2c_client *client)
- 	ov5670->streaming = false;
+-	dev_pm_domain_detach(&client->dev, true);
++	dev_pm_domain_detach(&client->dev, !probe_low_power(&client->dev));
  
- 	/*
--	 * Device is already turned on by i2c-core with ACPI domain PM.
--	 * Enable runtime PM and turn off the device.
-+	 * Don't set the device's state to active if it's in a low power state.
- 	 */
--	pm_runtime_set_active(&client->dev);
-+	if (!low_power)
-+		pm_runtime_set_active(&client->dev);
- 	pm_runtime_enable(&client->dev);
- 	pm_runtime_idle(&client->dev);
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 582ef05ec07ed..6d0d6af393c56 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -229,6 +229,8 @@ enum i2c_alert_protocol {
+  * @address_list: The I2C addresses to probe (for detect)
+  * @clients: List of detected clients we created (for i2c-core use only)
+  * @disable_i2c_core_irq_mapping: Tell the i2c-core to not do irq-mapping
++ * @probe_low_power: Let the driver manage the device's power state
++ *		     during probe and remove.
+  *
+  * The driver.owner field should be set to the module owner of this driver.
+  * The driver.name field should be set to the name of this driver.
+@@ -289,6 +291,7 @@ struct i2c_driver {
+ 	struct list_head clients;
  
-@@ -2546,7 +2550,7 @@ static const struct dev_pm_ops ov5670_pm_ops = {
- 
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id ov5670_acpi_ids[] = {
--	{"INT3479"},
-+	{ "INT3479" },
- 	{ /* sentinel */ }
+ 	bool disable_i2c_core_irq_mapping;
++	bool probe_low_power;
  };
+ #define to_i2c_driver(d) container_of(d, struct i2c_driver, driver)
  
-@@ -2561,6 +2565,7 @@ static struct i2c_driver ov5670_i2c_driver = {
- 	},
- 	.probe_new = ov5670_probe,
- 	.remove = ov5670_remove,
-+	.probe_low_power = true,
- };
- 
- module_i2c_driver(ov5670_i2c_driver);
 -- 
 2.20.1
 
