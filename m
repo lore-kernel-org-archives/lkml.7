@@ -2,112 +2,124 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36C6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C585C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B599A206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eklIOp+z"
+	by mail.kernel.org (Postfix) with ESMTP id 28B95206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 18:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578595952;
+	bh=dS3/M+a35lZrY3UAJ8s/f9PwWzJpPdroeYz+K3FWL/4=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=w+BTNkCqL+RNerGRY6M/gQdXTZZyyvIAf9DbxJ6YGn0xa9LjBLaadz5ajhqEjHJNr
+	 m7g7QzhAxjD1czx96IBEsecfk+IQCmBMJ6+u4ouBpUbbFbqDb5QUs9G83QBrE97QGX
+	 uzGvx4b8HuWn6vmqHREgJD7F4wLaTROqXNGGuPq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388589AbgAISwF (ORCPT
+        id S2388601AbgAISwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:52:05 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:51916 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730273AbgAISwE (ORCPT
+        Thu, 9 Jan 2020 13:52:31 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36551 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730273AbgAISwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 13:52:04 -0500
-Received: by mail-pj1-f68.google.com with SMTP id j11so1508334pjs.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 10:52:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=2BBH+3AnXzeFa/U3IS7qGFZcMtEqxZT7wCj3mRBcmeM=;
-        b=eklIOp+zakQC1CE30sXqMuWzAwbyxZX8INDxq4BFkauoMMbdQ17lXR/YY65/cbXQ45
-         WaN7oI/vJTlxvxToHdamg6mLQomJzQulnRCGUbZceY2CzjGzTD8sJeTKHRgIKWwwEevq
-         rYiw6LQC0MJ7yxDH44OqGwqt74Nt03fWbVUE+CV+sFa+mMVT9MXWSPjDJB9QEKeWbMkS
-         pu/xIlbtYzrdTy2A0YpgtvbfD6SPFwyDz7bhKJdo/Fqrxw9RrPP9Ya2Lv6KnwMa3B29w
-         Q4qCIzysKksxVLY80Wshbr7UR+tk8nkzbwA6lSE1ht7jWyXNE8DH00YJQGQzk4S8T1hZ
-         jd3A==
+        Thu, 9 Jan 2020 13:52:31 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k3so3641243pgc.3;
+        Thu, 09 Jan 2020 10:52:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=2BBH+3AnXzeFa/U3IS7qGFZcMtEqxZT7wCj3mRBcmeM=;
-        b=MHS6feiNFoT6HxofNcox2rpOgGdCJ57q8BfaZ+ZWtLbNAj++VxQZld+qqg/YYF+R62
-         vp03aNlsmeGxwtgguyYjO3yRyuv3gKw3blZDn8g3yePIZxoKiDbCnySJO5bU0VZXKAp2
-         +WClaBO/gpk/Plbtdbq4j3u0QJxSyCOf1geif3TjDEe8DIfJ7D4HyBoRA2v/Dr9OLACb
-         ahXDyOQ67lotmbMw5G/i7iDBfzxIjatmgpZeLFCOczZQRLaR0b++F8s0abJAIyX5pwO6
-         Xl2Yt9mUqZJtOjPPATem7pl73yE4iWnGGp0WZrma7FtRnOB/XTaKj7VDCMrYSJ3xIMIR
-         Wg/w==
-X-Gm-Message-State: APjAAAUzq+pQRQ29E4v7YWGvda9PSYabxYcigbzVd/U/AaRY2zY3X0Xc
-        kFE2rBY1hgYLYsw5jbI76liKpw==
-X-Google-Smtp-Source: APXvYqzu1AT5fUNssLnQhi7nJ1GkArk3aIGlfIGILpdyhzsUwYdHio63+zgbvvMa4cim9caHMu4yxw==
-X-Received: by 2002:a17:902:6bc3:: with SMTP id m3mr12900090plt.185.1578595923103;
-        Thu, 09 Jan 2020 10:52:03 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id y14sm8351242pfe.147.2020.01.09.10.52.02
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=/BAqD0l+U83NH1RGSfzcWZQsiJzjl7183QqqyS1Fo7Q=;
+        b=M4eGhbsgisg+94qlBajzj3M2JwTjI9PiYDGiso3fenQa2TcMmjODG8jcYkc9i8ZOI8
+         wf4vRzVtNXUkmwLlSvelx1IMNEqHcLfL0bpKtFKGKS5m/YHjwJzownKjSreEUUUASUVV
+         JvI7CZI9TohaWXinZWIwJrukflTnbaclF3683MK5xvNLLUUJWhaQ9CIDukGTEHHYXJtc
+         0kzqKcV8BWO/TvBE6NJgJA1xnEcsIJfpM/3qtP7TDethzzJ6OIrf/FmHA6NoZhwLQuLt
+         YX4THryXr5Y/vrnVvfS43cvabygL2rzYZw0LGiAItMxMVWd3t4XJp6XOy41TrmnazufD
+         PHMw==
+X-Gm-Message-State: APjAAAWvpQSD7KR5VL8ESebWYtcwDXcJvNU+IZdPI+/2Jmgn9X9QsfTo
+        lIg3R68dZMzfmQ173CA9GNg=
+X-Google-Smtp-Source: APXvYqyZpF90AQBz/1Us2pQyaSH42OFP5AqFZ5uOYa6ViVC/ACpU6AhH3y1g8yuh7AoDADOMEIndAw==
+X-Received: by 2002:aa7:96c7:: with SMTP id h7mr12316286pfq.211.1578595950166;
+        Thu, 09 Jan 2020 10:52:30 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id z64sm8902610pfz.23.2020.01.09.10.52.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 10:52:02 -0800 (PST)
-Date:   Thu, 9 Jan 2020 10:52:01 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Wei Yang <richardw.yang@linux.intel.com>
-cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        alexander.duyck@gmail.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer
- list
-In-Reply-To: <20200109143054.13203-1-richardw.yang@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.2001091051160.57374@chino.kir.corp.google.com>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 09 Jan 2020 10:52:29 -0800 (PST)
+Message-ID: <5e17766d.1c69fb81.71d2b.581c@mx.google.com>
+Date:   Thu, 09 Jan 2020 10:52:28 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     =?utf-8?b?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+CC:     linux-mips@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, alexandre.belloni@bootlin.com,
+        ralf@linux-mips.org, heiko@sntech.de, icenowy@aosc.io,
+        ak@linux.intel.com, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, keescook@chromium.org,
+        ebiederm@xmission.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH v8 1/4] MIPS: Ingenic: Add Ingenic X1000 support.
+References:  <1575979363-25956-2-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To:  <1575979363-25956-2-git-send-email-zhouyanjie@wanyeetech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jan 2020, Wei Yang wrote:
+Hello,
 
-> As all the other places, we grab the lock before manipulate the defer list.
-> Current implementation may face a race condition.
-> 
-> For example, the potential race would be:
-> 
->     CPU1                      CPU2
->     mem_cgroup_move_account   split_huge_page_to_list
->       !list_empty
->                                 lock
->                                 !list_empty
->                                 list_del
->                                 unlock
->       lock
->       # !list_empty might not hold anymore
->       list_del_init
->       unlock
-> 
-> When this sequence happens, the list_del_init() in
-> mem_cgroup_move_account() would crash if CONFIG_DEBUG_LIST since the
-> page is already been removed by list_del in split_huge_page_to_list().
-> 
-> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
-> 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> Acked-by: David Rientjes <rientjes@google.com>
+周琰杰 (Zhou Yanjie) wrote:
+> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
+> This is left unselectable in Kconfig until a X1000 based board is
+> added in a later commit.
 
-Thanks Wei!
+Series applied to mips-next.
 
-Andrew, I'd also suggest:
+> MIPS: Ingenic: Add Ingenic X1000 support.
+>   commit 7a16ccd300c2
+>   https://git.kernel.org/mips/c/7a16ccd300c2
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> dt-bindings: Document yna vendor-prefix.
+>   commit 9d022be3c192
+>   https://git.kernel.org/mips/c/9d022be3c192
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Acked-by: Rob Herring <robh@kernel.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> dt-bindings: MIPS: Add Ingenic XBurst based boards.
+>   commit 4b396e56a0b8
+>   https://git.kernel.org/mips/c/4b396e56a0b8
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Reviewed-by: Rob Herring <robh@kernel.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
+>   commit 0cd2c6e5701e
+>   https://git.kernel.org/mips/c/0cd2c6e5701e
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Acked-by: Paul Cercueil <paul@crapouillou.net>
+>   [paulburton@kernel.org:
+>     Drop stale mention of previously unselectable Kconfig entry.]
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
 
-Cc: stable@vger.kernel.org # 5.4+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
