@@ -2,97 +2,116 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E929C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3CFC33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99C32072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB221206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 10:15:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lgrnbfU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgAIKP3 (ORCPT
+        id S1729992AbgAIKPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:15:29 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:58619 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728588AbgAIKP3 (ORCPT
+        Thu, 9 Jan 2020 05:15:40 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46041 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728588AbgAIKPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:15:29 -0500
-Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M1pfy-1irghj1B7o-002ESQ for <linux-kernel@vger.kernel.org>; Thu, 09 Jan
- 2020 11:15:27 +0100
-Received: by mail-qt1-f175.google.com with SMTP id d5so5432986qto.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:15:27 -0800 (PST)
-X-Gm-Message-State: APjAAAWeEAe4ETeznO3GbdhuyZ3+xjhHJqjLRippVDnevcjJkxZg4QhD
-        wtfUjSFLGUvAI0HZZzG7FINrClP6hWvJgWCY0v8=
-X-Google-Smtp-Source: APXvYqzHV85HzfRjo8JlOR7BQz04so9X1K640UDSw+epDZK35idc8VpNX/nwHxi15Ydw7e0XfccuvrKcfiArbEs3SrU=
-X-Received: by 2002:ac8:6153:: with SMTP id d19mr7257120qtm.18.1578564926199;
- Thu, 09 Jan 2020 02:15:26 -0800 (PST)
+        Thu, 9 Jan 2020 05:15:40 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j42so6686685wrj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 02:15:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OCtmiCqI2P9xqNVNxOtkPbW3MhGrPJGbIhxNJ1nkAW0=;
+        b=lgrnbfU1H/MNfYfjNyPKCLX8Dupk4Xxp802m2khDE6FAH+jUO/Q3rujArNbNp2srK6
+         AfNTQhK48EeK13IfM0XUEaJdZp95ZAuuWu9Pntf0yr3/sp6bThHoHwsonQ/DSRIRC0/l
+         Iu5Gp1tC3S1tnQ/3MbLIqdHeOdxG7vfRUjitNgCPvGzAa8l94U+hzydiaLVTk8knZD/i
+         N3HVpz8pngzUeuEzphEVCNcsRI7dzQPoQ87bbf2zHSgiyiyo77hRZhx3o/NvtzcV7/P6
+         /fQx0nCINET1HpGXUBhr5qqwuRBsOOa0hullENg6hfApAy9N0TTTx0by95HdDWYRf/s0
+         +A0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OCtmiCqI2P9xqNVNxOtkPbW3MhGrPJGbIhxNJ1nkAW0=;
+        b=AEG0kx/apSVQ/+DFq7IdNSQmt//+CkMGK9LFQExdQze5Kh8VqViK59vDPoedxrfCRk
+         cgtQ0N0rxYLwkmxFbtx528meDvO1puHmLuf5XeXYxhLVlGvlqKUIgPrJb40T6wPdBIJO
+         iIw+MehBUIYwXCdDAFl1FVkMiXheYX7ZqsG6Hkwn2lbpRBJEq84rmdeBYPb7TCzjweD1
+         7smiKaYZp1f7RWr+TCn0HLgD+5b4gvCsmI0LlY65yV3FoA2epmVF73a0rNIcSNkWwMMj
+         F5/aV7tiDdmA/QjoN7Gf3Boope2PiJ6gEYILunUXs0qx1A7a09fMrgqj70+8EBFgDs4B
+         aW5g==
+X-Gm-Message-State: APjAAAW/FqMEr6986KPtlUIbu7B/USVbw7r3AiGU+i6/AWSL5xb+VMqU
+        +pCEJdCaO8ztGMhi9EXp3Qm0jA==
+X-Google-Smtp-Source: APXvYqztrhFHOZkOTr83Eod3hS6kUXgxLZedODaQHDCw+HCLHCGGyJQ6p/fPteX91I44SSRh4Tqxhg==
+X-Received: by 2002:a05:6000:11c3:: with SMTP id i3mr9946380wrx.244.1578564937945;
+        Thu, 09 Jan 2020 02:15:37 -0800 (PST)
+Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q19sm2250460wmc.12.2020.01.09.02.15.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 02:15:37 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     balbi@kernel.org, khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] arm64: g12-common: parkmode_disable_ss_quirk on DWC3 controller
+Date:   Thu,  9 Jan 2020 11:15:32 +0100
+Message-Id: <20200109101535.26812-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
- <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com> <20200109093442.4jt44eu2zlmjaq3f@vireshk-i7>
-In-Reply-To: <20200109093442.4jt44eu2zlmjaq3f@vireshk-i7>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 9 Jan 2020 11:15:09 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3wnn3E9DEfAoXNAurZ3Yop-Y3d_9+3mARY2v5y2B5dAw@mail.gmail.com>
-Message-ID: <CAK8P3a3wnn3E9DEfAoXNAurZ3Yop-Y3d_9+3mARY2v5y2B5dAw@mail.gmail.com>
-Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
- transport type
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, peng.fan@nxp.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:CqTd4qZC67ym+p5h/uuW+mbbanvKbbqb3v0pSh43/1kGmRagk8r
- 6PEoY7oAilBHDfDijR0paIm3JTh0IDt9JI7aq5z4ULVKYqzEvkltPyc94GZpvE7gmXV+p5g
- NZx0H6YG3EVWHVu0NgHbc57CJ2SObALV6jaF0XwBUEJDqhPWInsB+X0xYoR6qJPVAy22pTc
- Af9KjGmRHJZg0MY6jpx5A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Im2U+1dhrSs=:Z+yOeBP8SvmRdTHVLpAC5J
- eRCxrCBqPSVZXrUleWcthJO2SChPPwRtGnbSkpjOJ1gr6n/s2w5advJ2OaxNkd1DmAUVp0+JN
- lHQAsfcmWJKxKAH9tU1WCxx3wvRkWv7z8qkQP719bhl6pm0ySMyuH/262isq80iLfGIBBAxOp
- 5dt2QZSIeYhR2DYnzTNKu5rD/PHG4x+YUI+ePCQYtLLt2UvJF3CfMDxnbLvT6fUD8PSTSB5Fl
- a/W2AHZ7NSB+ac2iIYVCKdcExUjKYHoG9n9kb7BiIuJ9dXoFfcQMx+4WHnH2dDkSXY+fG0M5y
- KgMR9NSQ69xFzW57OAWddRBiNkahGSDS9UzDlwvYpo8k3KHqInbkErTW6T8Kkl2Rfe5Bx5DJ9
- GWzQZovYuAjb/BvqcX+HCRPsZmLxy33L8WyhCXl3EYZ9SuB5/LtKUYtN7+E+H0o0JtUJHKpl7
- c3n4iPc9aKpn238bBAJoFBqns2C/CpgRa4/KryJfJ4Y0wzwW2AB+rJN9Akwyt2NAaPZQTivNC
- BLVWZ30bxqk55iiyo7kZEyoq0SAA8dQe6FgdhFN9jDaN4Ja/T7PgwQjjIqGr8JA5VsG3fh6m9
- KeRcehVZuYWxH0QxUVsg3hEK4/hWmg6OWU21gQ1z7FQISVwaznE4BpZQotlP4S4FPrzXQGxLi
- ov+Ipmzhh8j6k50/lEbEOY7P7upflN6gJQ870PAyNgzgY8VmVZnCFICXO3TlBptdttnq/oAip
- 6UKxtVZlAn9j81rPhqDKOMMtITT/knoaNqf0DWwi+l4eyDTi4Qupqt/ZllpPIZqbdbASSmrKH
- E6lZ39L9WtGdmQf0S+4RAKR+rXez2RHanKBZ3SV4H94kNbOLu+348q0puG9XgA39keLCSLNE4
- 7c/qY/IvRkyHElxvgV2w==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 10:34 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 09-01-20, 09:18, Arnd Bergmann wrote:
-> > On Fri, Nov 29, 2019 at 10:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+In certain circumstances, the XHCI SuperSpeed instance in park mode
+can fail to recover, thus on Amlogic G12A/G12B/SM1 SoCs when there is high
+load on the single XHCI SuperSpeed instance, the controller can crash like:
+xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
+xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
+xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
+xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
+hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
+xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+usb 2-1.1-port1: cannot reset (err = -22)
 
-> > This looks odd: rather than guessing the transport type based on
-> > random DT properties, I would prefer to have it determined by
-> > the device compatible string, and have different drivers bind
-> > to one of them each, with each driver linking against a common
-> > base implementation, either as separate modules or in one file.
->
-> Since there are no platforms using the scmi binding in mainline kernel
-> for now, it won't be difficult to add new compatible strings. So
-> should this be done like:
->
->         compatible = "arm,scmi", "arm,scmi-mailbox";
->
-> or just
->         compatible = "arm,scmi-mailbox";
+Setting the PARKMODE_DISABLE_SS bit in the DWC3_USB3_GUCTL1 mitigates
+the issue. The bit is described as :
+"When this bit is set to '1' all SS bus instances in park mode are disabled"
 
-I would keep compatibility with the existing binding and make a plain "arm,scmi"
-mean the version with the mailbox, while for new transports, I would
-require them to have both the existing compatible string and a more specific
-one.
+The bug has been reproduced by Jun Li <lijun.kernel@gmail.com> and confirmed
+by Thinh Nguyen <Thinh.Nguyen@synopsys.com> with the explanation:
+> The GUCTL1.PARKMODE_DISABLE_SS is only available in dwc_usb3 controller 
+> running in host mode. This should not be set for other IPs.
+> This can be disabled by default based on IP, but I recommend to have a 
+> property to enable this feature for devices that need this.
 
-        Arnd
+Changes since v1 at [1]:
+- added rob review tag
+- added Thinh Nguyen in commit log
+
+[1] https://lore.kernel.org/linux-amlogic/20191014141718.22603-1-narmstrong@baylibre.com
+
+Neil Armstrong (3):
+  doc: dt: bindings: usb: dwc3: Update entries for disabling SS
+    instances in park mode
+  usb: dwc3: gadget: Add support for disabling SS instances in park mode
+  arm64: dts: g12-common: add parkmode_disable_ss_quirk on DWC3
+    controller
+
+ Documentation/devicetree/bindings/usb/dwc3.txt    | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 1 +
+ drivers/usb/dwc3/core.c                           | 5 +++++
+ drivers/usb/dwc3/core.h                           | 4 ++++
+ 4 files changed, 12 insertions(+)
+
+-- 
+2.22.0
+
