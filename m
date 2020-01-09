@@ -2,114 +2,77 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BC5C33CA1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CD4C33CA1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E799F20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32A12072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 09:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578563905;
+	bh=W22YMCGf72ulx5GiyptyQL4HmT2B/Gtirt7M/S2L2Ng=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2eNwQnJL46KuOjp786dZ0+JJEqH8qd8238P+VYwUqTMzEm0zBJNpZnYMliS+ipIRt
+	 mPO5Rt2jomcskyIUfJkxkX8VMdBPMAkuZ3om1p229KwC1QdHQdattfNwFb6TRx6Kgf
+	 DBCx6paHgYXr4gGwyd7ePM6cboA0LMRJXIHWzW80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgAIJ5w (ORCPT
+        id S1729982AbgAIJ6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:57:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38054 "EHLO mx2.suse.de"
+        Thu, 9 Jan 2020 04:58:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729944AbgAIJ5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 04:57:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 702DBC27F;
-        Thu,  9 Jan 2020 09:57:49 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 09:42:28 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 06/12] i2c: taos-evm: convert to use
- i2c_new_client_device()
-Message-ID: <20200109094228.2e058653@endymion>
-In-Reply-To: <20200108115822.20871d77@endymion>
-References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
-        <20200107174748.9616-7-wsa+renesas@sang-engineering.com>
-        <20200108115822.20871d77@endymion>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S1729885AbgAIJ6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 04:58:23 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BA162072A;
+        Thu,  9 Jan 2020 09:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578563903;
+        bh=W22YMCGf72ulx5GiyptyQL4HmT2B/Gtirt7M/S2L2Ng=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=DOJeDhmhrVHdsx3uZNP4YVe5V64IX2VpvppEpLywf8HUw58fw/A44aHXqhJTMT1J+
+         X2TImR3XWR2Z5TABf5wne53ae4f/bTf974ynS06CMoaU6P7DCJBMt0Eg6x6+h5vykh
+         oW4Blzag/uKPswv44hELlA0IllQYM2lEhs3tEU6U=
+Date:   Thu, 9 Jan 2020 10:58:13 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>
+Subject: Re: [PATCH] HID: steam: Fix input device disappearing
+In-Reply-To: <20200107194813.162038-1-rodrigorivascosta@gmail.com>
+Message-ID: <nycvar.YFH.7.76.2001091058020.31058@cbobk.fhfr.pm>
+References: <20200107194813.162038-1-rodrigorivascosta@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi again Wolfram,
+On Tue, 7 Jan 2020, Rodrigo Rivas Costa wrote:
 
-On Wed, 8 Jan 2020 11:58:22 +0100, Jean Delvare wrote:
-> On Tue, 7 Jan 2020 18:47:40 +0100, Wolfram Sang wrote:
-> > Move away from the deprecated API and return the shiny new ERRPTR where
-> > useful.
-> > 
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > ---
-> > Build tested only.
-> > 
-> >  drivers/i2c/busses/i2c-taos-evm.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-taos-evm.c b/drivers/i2c/busses/i2c-taos-evm.c
-> > index 0bff3f3a8779..b4050f5b6746 100644
-> > --- a/drivers/i2c/busses/i2c-taos-evm.c
-> > +++ b/drivers/i2c/busses/i2c-taos-evm.c
-> > @@ -49,10 +49,10 @@ static struct i2c_client *taos_instantiate_device(struct i2c_adapter *adapter)
-> >  	if (!strncmp(adapter->name, "TAOS TSL2550 EVM", 16)) {
-> >  		dev_info(&adapter->dev, "Instantiating device %s at 0x%02x\n",
-> >  			tsl2550_info.type, tsl2550_info.addr);
-> > -		return i2c_new_device(adapter, &tsl2550_info);
-> > +		return i2c_new_client_device(adapter, &tsl2550_info);
-> >  	}
-> >  
-> > -	return NULL;
-> > +	return ERR_PTR(-ENODEV);
-> >  }
-> >  
-> >  static int taos_smbus_xfer(struct i2c_adapter *adapter, u16 addr,  
+> The `connected` value for wired devices was not properly initialized,
+> it must be set to `true` upon creation, because wired devices do not
+> generate connection events.
 > 
-> Looks good to me, although ideally the caller should handle the error
-> instead of ignoring it. But that's out of scope for this conversion
-> patch, I'll look into submitting an update on top.
-
-I take that back. taos_instantiate_device() is instantiating an
-optional slave device on the bus. If that fails, the bus is still
-usable, therefore failing the whole registration would be inappropriate.
-
-Makes me wonder if return ERR_PTR(-ENODEV) is the right thing to do in
-the fallback case. The i2c-taos-evm driver was designed to support
-multiple TAOS evaluation module types, even though the only one fully
-supported right now is the only one I own (TSL2550). The driver can
-still be used with other modules, just no slave device will be
-instantiated. It can still be done later from user-space.
-
-In my opinion -ENODEV should only be used for "I expected a device but
-could not find it". For the case where we simply don't know what slave
-device to instantiate, NULL seems more appropriate, as it's not an
-error.
-
-What do you think? Either way I agree it doesn't make much practical
-difference in the end as i2c_unregister_device() will deal gracefully
-with both.
-
-> So:
+> When a raw client (the Steam Client) uses the device, the input device
+> is destroyed. Then, when the raw client finishes, it must be recreated.
+> But since the `connected` variable was false this never happended.
 > 
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> 
-> I'll also try to revive my evaluation module to give it some testing.
+> Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
 
-That I did, and it works fine, as expected :-)
-
-Tested-by: Jean Delvare <jdelvare@suse.de>
+Applied, thanks.
 
 -- 
-Jean Delvare
-SUSE L3 Support
+Jiri Kosina
+SUSE Labs
+
