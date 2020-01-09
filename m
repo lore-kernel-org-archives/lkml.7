@@ -2,114 +2,100 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A2CC33CA3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6315C33CA2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FFB206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:46:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="abGVxG8c"
+	by mail.kernel.org (Postfix) with ESMTP id 977AA2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 08:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgAIIqd (ORCPT
+        id S1728692AbgAIIsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:46:33 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49930 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728448AbgAIIqc (ORCPT
+        Thu, 9 Jan 2020 03:48:01 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:47331 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbgAIIsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:46:32 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0098j471008889;
-        Thu, 9 Jan 2020 09:46:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=uLATKF9ODz3kL4U3DLHRNE8pm/VoFFXN89GnTjH1WkU=;
- b=abGVxG8c7OxepqjZZQzy4p8LDf0vbN++fRIq9wAPLeOABBnWmLpMfqslmtrsgvINEdj7
- HCo9leQUvagMKl5kHeGMRuQ7y+6mHKhpUz93qBDUYWCcMQ7WAepVtcPsVCRV32/EYhxN
- Ajh5nxOnxPZq7vrDOOahTppdiurgyOfy4s/pBaN0WS8OEH2TFn7U9bvf0FPGKb4nzaUM
- geYLwaFwOBleCeogpzEs8ciocGvugqBT3yGy8af28wJTOny85HpMBkPhkxI7AUIvMk9M
- QEepVW/3XyK/VF1H5YFQLHlf+sVF9Euq/eJessKycjpnBR4TpRxOVDclhpVU8j3g8R4B NA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2xdw8b14d1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 09:46:20 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 23CD510003E;
-        Thu,  9 Jan 2020 09:46:14 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA514221FD0;
-        Thu,  9 Jan 2020 09:46:13 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 Jan
- 2020 09:46:13 +0100
-Subject: Re: [PATCH v2] ARM: dts: stm32: update mlahb node according to the
- bindings
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>
-References: <20191219121815.22987-1-arnaud.pouliquen@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <1df021db-98c4-706d-391a-393c40a3aff3@st.com>
-Date:   Thu, 9 Jan 2020 09:46:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 03:48:01 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mw99Y-1jey8c0CyC-00s2rY; Thu, 09 Jan 2020 09:47:46 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Moni Shoua <monis@mellanox.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] IB/core: Fix build failure without hugepages
+Date:   Thu,  9 Jan 2020 09:47:30 +0100
+Message-Id: <20200109084740.2872079-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20191219121815.22987-1-arnaud.pouliquen@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:mkrhrw40NErOvP8CxwUXSW4llRsS42HydBRTLlnckgzOAZHs4E/
+ hAw/7GSlComduAO87UIxsrWBEWcIF+7ft/buqQtfeeqxApMdprqOpGlFDlfIhDQNy1E1LEd
+ 2Q9J9QMoA8Lp7KAaqUzbTAxbc2w0PjVgVJZEnlMdjvNGiewGek9MojVygyqKU2Zpmx+rZW7
+ 7C0RDFSmDuAbfH6Rn18MA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:03kATHjJVDc=:OV0JtzVoDE39MIMzD9tJrj
+ IYkYlVS89skmK73I+iAs19WcYvxf9Z3w+YV/Ly32JQYhnaTysEDXIRG85ttV280GphHPno7A9
+ 3PW7EbmUUQJPqSFUyVfjJ/P4WnmW4i4SN4iSDyJgP7cowHA9cyTtQTeDYN9xArJwqXuHp0GA4
+ LdK+cF8PEE1b03EtnlVrhibhltwQm+zEG/RI8fLHpv8GMRdRB4SjN/M5+acPjjwnirz1sHU9O
+ mb8hDzwVWeI6jP/52JbUbyOV4RRoITZkIC1BKNkCWO7/AI+1hwxAevhCO6Htqy7R1HV+WqHzq
+ Ruq174DQRlJuJxTHTJnylvvjr2pC1UAKFQcD4s8VqiVgnJK9t4NrtblGD3tNP/Zj0Fhi1fK2p
+ NJkTKkMWoojSKEFeSKrvLgtAGJl1LCHM8wuWeK1142iS1f20/rF0+VPldBCkJZjFtvagAkucB
+ KePnVLLnAjgjR44CI1Op9TGJSzd2ndiwVrl7hdgYJ0LtmvlIrPnPhExQ86wJ248dtRTYng6Bt
+ sD0+tdqXMuEQo5Hk/6KcuoRZiwj3O9jWKE/OwLNiDb/vfzaeUw4vEfdGsY3nkxD5FsuEMQx28
+ HRYnUBRCaiWan6Ikit6MNNwROhFc1m2EAW72evrSNRuu4CyL1kT6XOlAFiiCFBq8srPZaum1C
+ bUOoouGoI3+15NHBpOBq58N6eqWzMzjVvHLwdYnBlUYKTAbFCigx2iBzS0P4N7CIrbjH1V+ue
+ v+/LDRj2iLUivulKIWDOtN9fM6AAbBSHEM9rldw1UXeTz8lSM9IfBr5KkeNAg3nrdslG5BlCn
+ FZhY52Vgf+zP4b2XZgIrgxxqfYFlIvJdnFFlDFIB6w206b8OEh2tDP31rfqCl2hnRZL8wwK2J
+ xMKRZdN0K9IHPNvz8lfg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaud
+HPAGE_SHIFT is only defined on architectures that support hugepages:
 
-On 12/19/19 1:18 PM, Arnaud Pouliquen wrote:
-> Update of the mlahb node according to to DT bindings using json-schema
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp151.dtsi | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-> index 3dd570b10181..047051c56ef7 100644
-> --- a/arch/arm/boot/dts/stm32mp151.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp151.dtsi
-> @@ -1669,10 +1669,11 @@
->   		};
->   	};
->   
-> -	mlahb {
-> -		compatible = "simple-bus";
-> +	mlahb: ahb {
-> +		compatible = "st,mlahb", "simple-bus";
->   		#address-cells = <1>;
->   		#size-cells = <1>;
-> +		ranges;
->   		dma-ranges = <0x00000000 0x38000000 0x10000>,
->   			     <0x10000000 0x10000000 0x60000>,
->   			     <0x30000000 0x30000000 0x60000>;
-> 
+drivers/infiniband/core/umem_odp.c: In function 'ib_umem_odp_get':
+drivers/infiniband/core/umem_odp.c:245:26: error: 'HPAGE_SHIFT' undeclared (first use in this function); did you mean 'PAGE_SHIFT'?
 
-Applied on stm32-next.
+Enclose this in an #ifdef.
 
-Thanks
-Alex
+Fixes: 9ff1b6466a29 ("IB/core: Fix ODP with IB_ACCESS_HUGETLB handling")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/infiniband/core/umem_odp.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+index f42fa31c24a2..b9baf7d0a5cb 100644
+--- a/drivers/infiniband/core/umem_odp.c
++++ b/drivers/infiniband/core/umem_odp.c
+@@ -241,10 +241,11 @@ struct ib_umem_odp *ib_umem_odp_get(struct ib_udata *udata, unsigned long addr,
+ 	umem_odp->umem.owning_mm = mm = current->mm;
+ 	umem_odp->notifier.ops = ops;
+ 
++	umem_odp->page_shift = PAGE_SHIFT;
++#ifdef CONFIG_HUGETLB_PAGE
+ 	if (access & IB_ACCESS_HUGETLB)
+ 		umem_odp->page_shift = HPAGE_SHIFT;
+-	else
+-		umem_odp->page_shift = PAGE_SHIFT;
++#endif
+ 
+ 	umem_odp->tgid = get_task_pid(current->group_leader, PIDTYPE_PID);
+ 	ret = ib_init_umem_odp(umem_odp, ops);
+-- 
+2.20.0
+
