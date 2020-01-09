@@ -2,65 +2,66 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774FFC33CA2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F03C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F80206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D82F20721
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 19:37:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OmyXfLOZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Al59LvQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgAIThG (ORCPT
+        id S1731297AbgAITho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:37:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23834 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729854AbgAIThG (ORCPT
+        Thu, 9 Jan 2020 14:37:44 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33786 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730617AbgAITho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:37:06 -0500
+        Thu, 9 Jan 2020 14:37:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578598625;
+        s=mimecast20190719; t=1578598663;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=u2L+6QoH0unQY1zZnaaxRdBowT9MR5BCuv5QzmnWT7U=;
-        b=OmyXfLOZO+NTzgYZAeJirVFSrxR9ChVx3LcpJtJZhJeu+WwtCLbBfFanNEd/kSn7Xz5Acr
-        Nxqp/MQg7qGCtfwngPlk9P+mqbwRSDvDetLHz6TCHkxQo5cCnCGwsLgbKEgnTQxGpVW+Io
-        Q7BX1SxHregFpgFeVZxUEHmK/Tvyp7w=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-BSjt9MTFPGCqt-sKEjcRXg-1; Thu, 09 Jan 2020 14:37:04 -0500
-X-MC-Unique: BSjt9MTFPGCqt-sKEjcRXg-1
-Received: by mail-qt1-f200.google.com with SMTP id m15so4229162qtc.18
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:37:03 -0800 (PST)
+        bh=PbCIN5cwKivHka0nMOY+vdaUO3w2adhPc+3Yrr27jdo=;
+        b=Al59LvQ5StAFsD1yYm+vRSrqwfBePrjnYcEOe41sR5LuYxou0Xnf+83F7AS5iDDZUacvad
+        OvG/6S3Evgkvx/67u6vNw9BjPJoo9pN/PAN/b7Bkkkqb2M6UpXOmEBdes5cImHkcej1yrN
+        wuFTtMnjEuSE+ew/FMG8fXPE0NluOcI=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-xZs_dQbQOnaLLNCSIBeAvA-1; Thu, 09 Jan 2020 14:37:41 -0500
+X-MC-Unique: xZs_dQbQOnaLLNCSIBeAvA-1
+Received: by mail-qk1-f197.google.com with SMTP id m13so4845468qka.9
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 11:37:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=u2L+6QoH0unQY1zZnaaxRdBowT9MR5BCuv5QzmnWT7U=;
-        b=Es+nB1lLA1kv0NVXZKQ5mBDF8M69MKPv/V/pvdc6vfXy4Xf8jjoPhsUMKTn7C33CDV
-         RNk9Pq1P+bPc6zQ96gf9O+Od3nozCJ+87W7VNbGKL5C3NWaobJ2HqysPfm34dopQwnfs
-         3Q2cVtuhy1PqmxvFb+M+MH1sorTJhMNhyI8xZjGCYGTRtWmnpdhXojiQFQdLa4ELnqDZ
-         qieodhtnfSunrA5pHrOOx8sD4C9pykscYFgAX7H2t1x9/i9fExrBmi+N6aEJFPn5Npd7
-         EiT5WnNXoiCO3gHaEEStfO9gw/dqLsv9Mg14Fxad3IfHb1DNqRzmUu07y28/cNh+8zex
-         upwQ==
-X-Gm-Message-State: APjAAAWGrw5UnDdLeXvENm6kjbo2b5g22nYxVNji7u3bYXGtVJIxD84F
-        KtUBRKS89RcNciihABavrBfsSeZ/U/TRTf2PlQBwngADfLFQhBXjutwdaqt5/JiogOY3I5roo6e
-        pJwR7cv+aFubxdEbpcAW1ZZnC
-X-Received: by 2002:a05:620a:143b:: with SMTP id k27mr10644212qkj.262.1578598623566;
-        Thu, 09 Jan 2020 11:37:03 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwBkyC8ff/t9Z0cRBa2GyWP8ASoK/Sw3be4MYuzdIQJb+iilhmNlhJeXq+yhgWbj0EEsyDvHw==
-X-Received: by 2002:a05:620a:143b:: with SMTP id k27mr10644192qkj.262.1578598623356;
-        Thu, 09 Jan 2020 11:37:03 -0800 (PST)
+        bh=PbCIN5cwKivHka0nMOY+vdaUO3w2adhPc+3Yrr27jdo=;
+        b=sLv0HaNpscN30TutQMVWLNimbv/c3OP27wY1RQVPSVfpX5dM4utsZOGXyBjI9Unt/6
+         V1tWwqrYMhcnj82xfFSQwwSLYpyXsabXbYJEbOW0KFs9enWmdMGkrTYwfg8YKnTFLKl7
+         qkLUYPi1ZDU/ooZX+t2z1hlUYYnwyH56YYDJ8rEjlPeV0K1YmzHj8aoWHpUbJkiALwNp
+         dRBkcavCIq3DRUro2yMsFH+d2bsBJ5qHXpJ1bESQu8nhGU0f913Sxo0a4Oi1ZX6gMZKR
+         eKSawYLBhGqy+CrOia5quk4WMloNdcXttjIghfPIC2b/EBjrsCEIPwzJi73m4s1VJQx9
+         rVcg==
+X-Gm-Message-State: APjAAAVcoEFu3o4p2TJ2ccSr8A7s8Xc+fW2dMjLDRA+4KMV+7FBrgX98
+        VADyEa17xEnAZfFhbFpGEHfz7Nw5743QpNDbQ6BPI5NEl9PBMLbxSENMUq2N2uCp/lfUE0be6Ke
+        ZdP7PBGNfewBj0PWdz92indXy
+X-Received: by 2002:a37:9c0f:: with SMTP id f15mr11339160qke.297.1578598661334;
+        Thu, 09 Jan 2020 11:37:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx1OIjnd6/LxXyh8xSqsQa+K54P9fyHHwvQ8E1nUaaWAdPLHr6JtOY55VdBQU35QIiCqFSwyQ==
+X-Received: by 2002:a37:9c0f:: with SMTP id f15mr11339138qke.297.1578598661050;
+        Thu, 09 Jan 2020 11:37:41 -0800 (PST)
 Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
-        by smtp.gmail.com with ESMTPSA id f5sm3537502qke.109.2020.01.09.11.36.58
+        by smtp.gmail.com with ESMTPSA id c184sm3472280qke.118.2020.01.09.11.37.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 11:37:02 -0800 (PST)
-Date:   Thu, 9 Jan 2020 14:36:56 -0500
+        Thu, 09 Jan 2020 11:37:40 -0800 (PST)
+Date:   Thu, 9 Jan 2020 14:37:34 -0500
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     Peter Xu <peterx@redhat.com>
 Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
@@ -73,61 +74,101 @@ Cc:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
         Kevin Kevin <kevin.tian@intel.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
- tracking
-Message-ID: <20200109143620-mutt-send-email-mst@kernel.org>
+        Kirti Wankhede <kwankhede@nvidia.com>
+Subject: Re: [PATCH v3 00/21] KVM: Dirty ring interface
+Message-ID: <20200109143716-mutt-send-email-mst@kernel.org>
 References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-13-peterx@redhat.com>
- <20200109110110-mutt-send-email-mst@kernel.org>
- <20200109095610.167cd9f0@w520.home>
- <20200109192116.GE36997@xz-x1>
+ <20200109094711.00eb96b1@w520.home>
+ <20200109175808.GC36997@xz-x1>
+ <20200109140948-mutt-send-email-mst@kernel.org>
+ <20200109192318.GF36997@xz-x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200109192116.GE36997@xz-x1>
+In-Reply-To: <20200109192318.GF36997@xz-x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:21:16PM -0500, Peter Xu wrote:
-> On Thu, Jan 09, 2020 at 09:56:10AM -0700, Alex Williamson wrote:
-> 
-> [...]
-> 
-> > > > +Dirty GFNs (Guest Frame Numbers) are stored in the dirty_gfns array.
-> > > > +For each of the dirty entry it's defined as:
-> > > > +
-> > > > +struct kvm_dirty_gfn {
-> > > > +        __u32 pad;  
+On Thu, Jan 09, 2020 at 02:23:18PM -0500, Peter Xu wrote:
+> On Thu, Jan 09, 2020 at 02:13:54PM -0500, Michael S. Tsirkin wrote:
+> > On Thu, Jan 09, 2020 at 12:58:08PM -0500, Peter Xu wrote:
+> > > On Thu, Jan 09, 2020 at 09:47:11AM -0700, Alex Williamson wrote:
+> > > > On Thu,  9 Jan 2020 09:57:08 -0500
+> > > > Peter Xu <peterx@redhat.com> wrote:
+> > > > 
+> > > > > Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
+> > > > > (based on kvm/queue)
+> > > > > 
+> > > > > Please refer to either the previous cover letters, or documentation
+> > > > > update in patch 12 for the big picture.  Previous posts:
+> > > > > 
+> > > > > V1: https://lore.kernel.org/kvm/20191129213505.18472-1-peterx@redhat.com
+> > > > > V2: https://lore.kernel.org/kvm/20191221014938.58831-1-peterx@redhat.com
+> > > > > 
+> > > > > The major change in V3 is that we dropped the whole waitqueue and the
+> > > > > global lock. With that, we have clean per-vcpu ring and no default
+> > > > > ring any more.  The two kvmgt refactoring patches were also included
+> > > > > to show the dependency of the works.
+> > > > 
+> > > > Hi Peter,
 > > > 
-> > > How about sticking a length here?
-> > > This way huge pages can be dirtied in one go.
+> > > Hi, Alex,
+> > > 
+> > > > 
+> > > > Would you recommend this style of interface for vfio dirty page
+> > > > tracking as well?  This mechanism seems very tuned to sparse page
+> > > > dirtying, how well does it handle fully dirty, or even significantly
+> > > > dirty regions?
+> > > 
+> > > That's truely the point why I think the dirty bitmap can still be used
+> > > and should be kept.  IIUC the dirty ring starts from COLO where (1)
+> > > dirty rate is very low, and (2) sync happens frequently.  That's a
+> > > perfect ground for dirty ring.  However it for sure does not mean that
+> > > dirty ring can solve all the issues.  As you said, I believe the full
+> > > dirty is another extreme in that dirty bitmap could perform better.
+> > > 
+> > > > We also don't really have "active" dirty page tracking
+> > > > in vfio, we simply assume that if a page is pinned or otherwise mapped
+> > > > that it's dirty, so I think we'd constantly be trying to re-populate
+> > > > the dirty ring with pages that we've seen the user consume, which
+> > > > doesn't seem like a good fit versus a bitmap solution.  Thanks,
+> > > 
+> > > Right, so I confess I don't know whether dirty ring is the ideal
+> > > solutioon for vfio either.  Actually if we're tracking by page maps or
+> > > pinnings, then IMHO it also means that it could be more suitable to
+> > > use an modified version of dirty ring buffer (as you suggested in the
+> > > other thread), in that we can track dirty using (addr, len) range
+> > > rather than a single page address.  That could be hard for KVM because
+> > > in KVM the page will be mostly trapped in 4K granularity in page
+> > > faults, and it'll also be hard to merge continuous entries with
+> > > previous ones because the userspace could be reading the entries (so
+> > > after we publish the previous 4K dirty page, we should not modify the
+> > > entry any more).
 > > 
-> > Not just huge pages, but any contiguous range of dirty pages could be
-> > reported far more concisely.  Thanks,
+> > An easy way would be to keep a couple of entries around, not pushing
+> > them into the ring until later.  In fact deferring queue write until
+> > there's a bunch of data to be pushed is a very handy optimization.
 > 
-> I replied in the other thread on why I thought KVM might not suite
-> that (while vfio may).
+> I feel like I proposed similar thing in the other thread. :-)
 > 
-> Actually we can even do that for KVM as long as we keep a per-vcpu
-> last-dirtied GFN range cache (so we don't publish a dirty GFN right
-> after it's dirtied), then we grow that cached dirtied range as long as
-> the continuous next/previous page is dirtied.  If we found that the
-> current dirty GFN is not continuous to the cached range, we publish
-> the cached range and let the new GFN be the starting of last-dirtied
-> GFN range cache.
+> > 
+> > When building UAPI's it makes sense to try and keep them generic
+> > rather than tying them to a given implementation.
+> > 
+> > That's one of the reasons I called for using something
+> > resembling vring_packed_desc.
 > 
-> However I am not sure how much we'll gain from it.  Maybe we can do
-> that when we have a real use case for it.  For now I'm not sure
-> whether it would worth the effort.
+> But again, I just want to make sure I don't over-engineer...
+
+
+You will now when you start profiling in earnest.
+
+> I'll wait for further feedback from others for this.
 > 
 > Thanks,
-
-I agree for the implementation but I think UAPI should support that
-from ground up so we don't need to support two kinds of formats.
-
+> 
 > -- 
 > Peter Xu
 
