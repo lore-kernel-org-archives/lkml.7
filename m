@@ -2,72 +2,67 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03333C32771
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1078AC32771
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC59D20673
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD78720673
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 07:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgAIHdK (ORCPT
+        id S1728289AbgAIHew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:33:10 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42335 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbgAIHdK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:33:10 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ipSJX-0001FH-C0; Thu, 09 Jan 2020 08:33:07 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ipSJV-00065H-KM; Thu, 09 Jan 2020 08:33:05 +0100
-Date:   Thu, 9 Jan 2020 08:33:05 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Richard Genoud <richard.genoud@gmail.com>
-Cc:     Codrin.Ciubotariu@microchip.com, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, jslaby@suse.com
-Subject: Re: [PATCH] tty/serial: atmel: RS485 & ISO7816: wait for TXRDY
- before sending data
-Message-ID: <20200109073305.yn5y6sgomjniwwj6@pengutronix.de>
-References: <20200107111656.26308-1-codrin.ciubotariu@microchip.com>
- <b11e47c3-8b94-7915-ae5a-d9e8f5b02047@gmail.com>
+        Thu, 9 Jan 2020 02:34:52 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:40496 "EHLO manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728164AbgAIHew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 02:34:52 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by manjaro.org (Postfix) with ESMTP id 4FE1936E4161;
+        Thu,  9 Jan 2020 08:34:51 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id r6a5lqKyRSmw; Thu,  9 Jan 2020 08:34:49 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH v2 0/1] Regression in rockchipdrm
+Date:   Thu,  9 Jan 2020 08:31:28 +0100
+Message-Id: <20200109073129.378507-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b11e47c3-8b94-7915-ae5a-d9e8f5b02047@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+commit 2589c4025f13 ("drm/rockchip: Avoid drm_dp_link helpers") changed
+the datatype used for storing the display port data rate to u8.
+A u8 is not sufficient to store the data rate, resulting in a crash due
+to incorrect calculations.
 
-On Wed, Jan 08, 2020 at 02:45:05PM +0100, Richard Genoud wrote:
-> NB: MS exchange has added some =3D and =20 here and there, but git am
-> doesn't seems to be bothered by them.
+This series resolves the issue by restoring the data type changed in
+commit 2589c4025f13 to their original type.
 
-Unless I missed something I cannot confirm. In mutt I don't see any =3D
-or =20.
+Thanks to CrystalGamma for identifying the commit causing the regression.
 
-Best regards
-Uwe
+v2: Keep lane count as u8
+
+Tobias Schramm (1):
+  drm/rockchip: fix integer type used for storing dp data rate
+
+ drivers/gpu/drm/rockchip/cdn-dp-core.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.24.1
+
