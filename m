@@ -2,175 +2,93 @@ Return-Path: <SRS0=a4+J=26=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA1DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9164AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BF3206ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60316206ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 Jan 2020 01:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgAIBHj convert rfc822-to-8bit (ORCPT
+        id S1727782AbgAIBKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Jan 2020 20:07:39 -0500
-Received: from mga09.intel.com ([134.134.136.24]:25129 "EHLO mga09.intel.com"
+        Wed, 8 Jan 2020 20:10:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36584 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgAIBHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Jan 2020 20:07:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 17:07:38 -0800
-X-IronPort-AV: E=Sophos;i="5.69,412,1571727600"; 
-   d="scan'208";a="218223786"
-Received: from aguedesl-mac01.jf.intel.com (HELO localhost) ([10.24.12.236])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 17:07:37 -0800
-Content-Type: text/plain; charset="utf-8"
+        id S1726654AbgAIBKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Jan 2020 20:10:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D9118AAA6;
+        Thu,  9 Jan 2020 01:10:38 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 7D357DA791; Thu,  9 Jan 2020 02:10:26 +0100 (CET)
+Date:   Thu, 9 Jan 2020 02:10:25 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+Message-ID: <20200109011025.GM3929@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Zaslonko Mikhail <zaslonko@linux.ibm.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200107143058.GU3929@twin.jikos.cz>
+ <20200108105103.29028-1-zaslonko@linux.ibm.com>
+ <75a2d45c-fd7b-9542-403d-caea7d977add@toxicpanda.com>
+ <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <b7e1cb8b-b6b1-c0fa-3864-4036750f3164@ti.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com> <157603276975.18462.4638422874481955289@pipeline> <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com> <87eex43pzm.fsf@linux.intel.com> <20191219004322.GA20146@khorivan> <87lfr9axm8.fsf@linux.intel.com> <b7e1cb8b-b6b1-c0fa-3864-4036750f3164@ti.com>
-Subject: Re: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
-From:   Andre Guedes <andre.guedes@linux.intel.com>
-Cc:     Po Liu <po.liu@nxp.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Message-ID: <157853205713.36295.17877768211004089754@aguedesl-mac01.jf.intel.com>
-User-Agent: alot/0.8.1
-Date:   Wed, 08 Jan 2020 17:07:37 -0800
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-> >>> 1. add support in taprio to be configured without any schedule in the
-> >>> "full offload" mode. In practice, allowing taprio to work somewhat
-> >>> similar to (mqprio + frame-preemption), changes in the code should de
-> >>> fairly small;
-> >>
-> >> +
-> >>
-> >> And if follow mqprio settings logic then preemption also can be enabled
-> >> immediately while configuring taprio first time, and similarly new ADMIN
-> >> can't change it and can be set w/o preemption option afterwards.
-> >>
-> >> So that following is correct:
-> >>
-> >> OPER
-> >> $ tc qdisc add dev IFACE parent root handle 100 taprio \
-> >>        base-time 10000000 \
-> >>        num_tc 3 \
-> >>        map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
-> >>        queues 1@0 1@1 2@2 \
-> >>        preemption 0 1 1 1
-> >>        flags 1
-> >>
-> >> then
-> >> ADMIN
-> >> $ tc qdisc add dev IFACE parent root handle 100 taprio \
-> >>        base-time 12000000 \
-> >>        num_tc 3 \
-> >>        map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
-> >>        queues 1@0 1@1 2@2 \
-> >>        preemption 0 1 1 1
-> >>        sched-entry S 01 300000 \
-> >>        sched-entry S 02 300000 \
-> >>        flags 1
-> >>
-> >> then
-> >> ADMIN
-> >> $ tc qdisc add dev IFACE parent root handle 100 taprio \
-> >>        base-time 13000000 \
-> >>        sched-entry S 01 300000 \
-> >>        sched-entry S 02 300000 \
-> >>        flags 1
-> >>
-> >> BUT:
-> >>
-> >> 1) The question is only should it be in this way? I mean preemption to be
-> >> enabled immediately? Also should include other parameters like
-> >> fragment size.
+On Wed, Jan 08, 2020 at 07:48:31PM +0100, Zaslonko Mikhail wrote:
+> >> +        } else if (workspace->strm.avail_out == 0) {
+> >> +            /* get another page for the stream end */
+> >> +            kunmap(out_page);
+> >> +            if (nr_pages == nr_dest_pages) {
+> >> +                out_page = NULL;
+> >> +                ret = -E2BIG;
+> >> +                goto out;
+> >> +            }
+> >> +            out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
+> >> +            if (out_page == NULL) {
+> >> +                ret = -ENOMEM;
+> >> +                goto out;
+> >> +            }
 > > 
-> > We can decide what things are allowed/useful here. For example, it might
-> > make sense to allow "preemption" to be changed. We can extend taprio to
-> > support changing the fragment size, if that makes sense.
-> > 
-> >>
-> >> 2) What if I want to use frame preemption with another "transmission selection
-> >> algorithm"? Say another one "time sensitive" - CBS? How is it going to be
-> >> stacked?
-> > 
-> > I am not seeing any (conceptual*) problems when plugging a cbs (for
-> > example) qdisc into one of taprio children. Or, are you talking about a
-> > more general problem?
-> > 
-> > * here I am considering that support for taprio without an schedule is
-> >   added.
-> > 
-> >>
-> >> In this case ethtool looks better, allowing this "MAC level" feature, to be
-> >> configured separately.
-> > 
-> > My only issue with using ethtool is that then we would have two
-> > different interfaces for "complementary" features. And it would make
-> > things even harder to configure and debug. The fact that one talks about
-> > traffic classes and the other transmission queues doesn't make me more
-> > comfortable as well.
-> > 
-> > On the other hand, as there isn't a way to implement frame preemption in
-> > software, I agree that it makes it kind of awkward to have it in the tc
-> > subsystem.
-> Absolutely. I think frame pre-emption feature flag, per queue express/
-> pre-empt state, frag size, timers (hold/release) to be configured
-> independently (perhaps through ethtool) and then taprio should check
-> this with the lower device and then allow supporting additional Gate
-> operations such as Hold/release if supported by underlying device.
+> > Do we need zlib_deflateEnd() for the above error cases?  Thanks,
 > 
-> What do you think? Why to abuse tc for this?
-> 
+> The original btrfs code did not call zlib_deflateEnd() for -E2BIG and 
+> -ENOMEM cases, so I stick to the same logic.
+> Unlike userspace zlib where deflateEnd() frees all dynamically allocated 
+> memory, in the kernel it doesn't do much apart from setting the return 
+> code (since all the memory allocations for kernel zlib are performed in advance).
 
-After reading all this great discussion and revisiting the 802.1Q and 802.3br
-specs, I'm now leaning towards to not coupling Frame Preemption support under
-taprio qdisc. Besides what have been discussed, Annex S.2 from 802.1Q-2018
-foresees FP without EST so it makes me feel like we should keep them separate.
-
-Regarding the FP configuration knobs, the following seems reasonable to me:
-    * Enable/disable FP feature
-    * Preemptable queue mapping
-    * Fragment size multiplier
-
-I'm not sure about the knob 'timers (hold/release)' described in the quotes
-above. I couldn't find a match in the specs. If it refers to 'holdAdvance' and
-'releaseAdvance' parameters described in 802.1Q-2018, I believe they are not
-configurable. Do we know any hardware where they are configurable?
-
-Regards,
-
-Andre
+Agreed, deflateEnd is not necessary in the error cases.
